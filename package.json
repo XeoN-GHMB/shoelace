@@ -64,7 +64,6 @@
     "lit": "^2.1.4",
     "qr-creator": "^1.0.0",
     "string-natural-compare": "^3.0.1",
-    "vditor": "^3.8.13",
     "crypto-js": "^4.1.1",
     "path-to-regexp": "^6.2.0",
     "leaflet": "^1.7.1"

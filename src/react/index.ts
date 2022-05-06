@@ -1,7 +1,7 @@
 export { default as SlAcPanel } from './ac-panel';
-export { default as SlAlert } from './alert';
-export { default as SlAnimatedImage } from './animated-image';
 export { default as SlAnimation } from './animation';
+export { default as SlAnimatedImage } from './animated-image';
+export { default as SlAlert } from './alert';
 export { default as SlAvatar } from './avatar';
 export { default as SlBackToTop } from './back-to-top';
 export { default as SlBadge } from './badge';
@@ -34,7 +34,6 @@ export { default as SlInclude } from './include';
 export { default as SlInput } from './input';
 export { default as SlLayout } from './layout';
 export { default as SlMap } from './map';
-export { default as SlMarkdownElement } from './markdown-element';
 export { default as SlMenu } from './menu';
 export { default as SlMenuItem } from './menu-item';
 export { default as SlMenuLabel } from './menu-label';
