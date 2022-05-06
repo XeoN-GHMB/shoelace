@@ -3,11 +3,12 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
-import '~/components/icon/icon';
-import { emit } from '~/internal/event';
-import { FormSubmitController } from '~/internal/form';
-import { HasSlotController } from '~/internal/slot';
-import { watch } from '~/internal/watch';
+import '../../components/icon/icon';
+import { emit } from '../../internal/event';
+import { FormSubmitController } from '../../internal/form';
+import { HasSlotController } from '../../internal/slot';
+import { watch } from '../../internal/watch';
+import { LocalizeController } from '../../utilities/localize';
 import styles from './input.styles';
 
 /**
@@ -49,6 +50,7 @@ export default class SlInput extends LitElement {
 
   private readonly formSubmitController = new FormSubmitController(this);
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
+  private readonly localize = new LocalizeController(this);
 
   @state() private hasFocus = false;
   @state() private isPasswordVisible = false;
@@ -131,6 +133,12 @@ export default class SlInput extends LitElement {
 
   /** The input's autofocus attribute. */
   @property({ type: Boolean }) autofocus: boolean;
+
+  /**
+   * The input's enterkeyhint attribute. This can be used to customize the label or icon of the Enter key on virtual
+   * keyboards.
+   */
+  @property() enterkeyhint: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
 
   /** Enables spell checking on the input. */
   @property({ type: Boolean }) spellcheck: boolean;
@@ -350,6 +358,7 @@ export default class SlInput extends LitElement {
               ?autofocus=${this.autofocus}
               spellcheck=${ifDefined(this.spellcheck)}
               pattern=${ifDefined(this.pattern)}
+              enterkeyhint=${ifDefined(this.enterkeyhint)}
               inputmode=${ifDefined(this.inputmode)}
               aria-describedby="help-text"
               aria-invalid=${this.invalid ? 'true' : 'false'}
@@ -367,7 +376,7 @@ export default class SlInput extends LitElement {
                     part="clear-button"
                     class="input__clear"
                     type="button"
-                    aria-hidden="true"
+                    aria-label=${this.localize.term('clearEntry')}
                     @click=${this.handleClearClick}
                     tabindex="-1"
                   >
@@ -383,7 +392,7 @@ export default class SlInput extends LitElement {
                     part="password-toggle-button"
                     class="input__password-toggle"
                     type="button"
-                    aria-hidden="true"
+                    aria-label=${this.localize.term(this.isPasswordVisible ? 'hidePassword' : 'showPassword')}
                     @click=${this.handlePasswordToggle}
                     tabindex="-1"
                   >

@@ -1,8 +1,8 @@
 import { LitElement, html, PropertyValues } from 'lit';
 import { customElement, eventOptions, property, query } from 'lit/decorators.js';
-import { emit } from '~/internal/event';
-import { throttle } from '~/internal/throttle';
-import { getCssValue } from '~/utilities/common';
+import { emit } from '../../internal/event';
+import { throttle } from '../../internal/throttle';
+import { getCssValue } from '../../utilities/common';
 import styles from './scroll.styles';
 
 /**

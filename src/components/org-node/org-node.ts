@@ -1,7 +1,7 @@
 import { LitElement, html, PropertyValues, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import { customElement, property, queryAll } from 'lit/decorators.js';
-import { emit } from '~/internal/event';
+import { emit } from '../../internal/event';
 import styles from './org-node.styles';
 export type OrgNodeDataType = {
   /**
@@ -27,7 +27,7 @@ export const defaultRoleRender = (data: OrgNodeDataType) => {
  * @since 2.0
  * @status experimental
  *
- 
+
  *  @event sl-node-click {data:any} - click node Data Element .
     @event sl-node-toogle {data:any} - toogle node Element .
     @event sl-node-before-toogle {data:any} -before toogle node Element .

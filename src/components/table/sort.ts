@@ -4,7 +4,7 @@ import { SortingEnum } from './tableHelper';
 const sortDown = svg`<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" id="chevron-down"><path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 01.753 1.659l-4.796 5.48a1 1 0 01-1.506 0z"></path></svg>`;
 const sortUp = svg`<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16" id="chevron-up"><path d="M7.247 4.86l-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 00.753-1.659l-4.796-5.48a1 1 0 00-1.506 0z"></path></svg>`;
 import { html, svg } from 'lit';
-import { emit } from '~/internal/event';
+import { emit } from '../../internal/event';
 export const renderSortHeaderTemplate = (table: SlTable, column: SlColumn, hander: EventListener) => {
   let sortValue = table.sortValue;
   let sortList: Array<{

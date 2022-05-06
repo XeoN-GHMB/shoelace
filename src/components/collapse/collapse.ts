@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { getChildrenElement } from '~/utilities/common';
+import { getChildrenElement } from '../../utilities/common';
 import SlAcPanel from '../ac-panel/ac-panel';
 import styles from './collapse.styles';
 

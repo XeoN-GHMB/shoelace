@@ -1,11 +1,11 @@
 import { html, LitElement, nothing, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { castDate, getDaysPanel, isEqualsDate, parseDate } from '~/internal/date.util';
-import { emit } from '~/internal/event';
-import resourceLocal from '~/internal/resourceLocal';
-import { watchProps } from '~/internal/watchProps';
-import { addEvent, animateCss, onEvent } from '~/utilities/common';
-import { getResouceValue } from '~/utilities/getResouce';
+import { castDate, getDaysPanel, isEqualsDate, parseDate } from '../../internal/date.util';
+import { emit } from '../../internal/event';
+import resourceLocal from '../../internal/resourceLocal';
+import { watchProps } from '../../internal/watchProps';
+import { addEvent, animateCss, onEvent } from '../../utilities/common';
+import { getResouceValue } from '../../utilities/getResouce';
 import styles from './date-panel.styles';
 
 /**

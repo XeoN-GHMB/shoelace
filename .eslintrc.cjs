@@ -121,6 +121,7 @@ module.exports = {
       extends: ['plugin:chai-expect/recommended', 'plugin:chai-friendly/recommended'],
       files: ['*.test.ts'],
       rules: {
+        '@typescript-eslint/no-unsafe-call': 'off',
         '@typescript-eslint/no-unused-expressions': 'off'
       }
     }
@@ -160,7 +161,7 @@ module.exports = {
     'no-useless-concat': 'error',
     'no-useless-return': 'warn',
     'prefer-promise-reject-errors': 'error',
-    radix: 'error',
+    radix: 'off',
     'require-await': 'error',
     'wrap-iife': ['warn', 'inside'],
     'no-shadow': 'error',
@@ -201,12 +202,6 @@ module.exports = {
     'no-restricted-imports': [
       'warn',
       {
-        patterns: [
-          {
-            group: ['../*'],
-            message: 'Usage of relative parent imports is not allowed.'
-          }
-        ],
         paths: [
           {
             name: '.',
@@ -225,10 +220,6 @@ module.exports = {
       {
         groups: ['builtin', 'external', 'internal', 'unknown', 'parent', 'sibling', 'index', 'object', 'type'],
         pathGroups: [
-          {
-            pattern: '~/**',
-            group: 'internal'
-          },
           {
             pattern: 'dist/**',
             group: 'external'

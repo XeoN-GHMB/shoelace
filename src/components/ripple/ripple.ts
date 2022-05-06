@@ -1,11 +1,11 @@
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { AriaRole } from '~/internal/ArialRole';
-import { getOpacity, normalizePointerEvent } from '~/internal/event';
-import { watch } from '~/internal/watch';
-import { addEvent } from '~/utilities/common';
-import { getTransformPara } from '~/utilities/getTransParam';
-import { DisposeObject } from '~/utilities/resize.util';
+import { AriaRole } from '../../internal/ArialRole';
+import { getOpacity, normalizePointerEvent } from '../../internal/event';
+import { watch } from '../../internal/watch';
+import { addEvent } from '../../utilities/common';
+import { getTransformPara } from '../../utilities/getTransParam';
+import { DisposeObject } from '../../utilities/resize.util';
 import styles from './ripple.styles';
 
 /**

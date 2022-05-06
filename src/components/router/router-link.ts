@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { emit } from '~/internal/event';
+import { emit } from '../../internal/event';
 import { PathNameResult } from './pathResovle';
 import { getRouterByName } from './router';
 /**

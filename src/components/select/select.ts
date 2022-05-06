@@ -1,20 +1,22 @@
 import { html, LitElement } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import '~/components/dropdown/dropdown';
-import type SlDropdown from '~/components/dropdown/dropdown';
-import '~/components/icon-button/icon-button';
-import type SlIconButton from '~/components/icon-button/icon-button';
-import '~/components/icon/icon';
-import type SlMenuItem from '~/components/menu-item/menu-item';
-import type SlMenu from '~/components/menu/menu';
-import type { MenuSelectEventDetail } from '~/components/menu/menu';
-import '~/components/tag/tag';
-import { emit } from '~/internal/event';
-import { FormSubmitController } from '~/internal/form';
-import { getTextContent, HasSlotController } from '~/internal/slot';
-import { watch } from '~/internal/watch';
+import '../../components/dropdown/dropdown';
+import '../../components/icon-button/icon-button';
+import '../../components/icon/icon';
+import '../../components/menu/menu';
+import '../../components/tag/tag';
+import { emit } from '../../internal/event';
+import { FormSubmitController } from '../../internal/form';
+import { getTextContent, HasSlotController } from '../../internal/slot';
+import { watch } from '../../internal/watch';
+import { LocalizeController } from '../../utilities/localize';
 import styles from './select.styles';
+import type SlDropdown from '../../components/dropdown/dropdown';
+import type SlIconButton from '../../components/icon-button/icon-button';
+import type SlMenuItem from '../../components/menu-item/menu-item';
+import type { MenuSelectEventDetail } from '../../components/menu/menu';
+import type SlMenu from '../../components/menu/menu';
 import type { TemplateResult } from 'lit';
 
 /**
@@ -69,6 +71,7 @@ export default class SlSelect extends LitElement {
   // @ts-expect-error -- Controller is currently unused
   private readonly formSubmitController = new FormSubmitController(this);
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
+  private readonly localize = new LocalizeController(this);
   private resizeObserver: ResizeObserver;
 
   @state() private hasFocus = false;
@@ -533,7 +536,13 @@ export default class SlSelect extends LitElement {
 
               ${this.clearable && hasSelection
                 ? html`
-                    <button part="clear-button" class="select__clear" @click=${this.handleClearClick} tabindex="-1">
+                    <button
+                      part="clear-button"
+                      class="select__clear"
+                      @click=${this.handleClearClick}
+                      aria-label=${this.localize.term('clearEntry')}
+                      tabindex="-1"
+                    >
                       <slot name="clear-icon">
                         <sl-icon name="x-circle-fill" library="system"></sl-icon>
                       </slot>

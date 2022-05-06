@@ -1,8 +1,8 @@
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
-import { castDate, isValidDate, parseDate } from '~/internal/date.util';
-import { emit } from '~/internal/event';
-import { watchProps } from '~/internal/watchProps';
+import { castDate, isValidDate, parseDate } from '../../internal/date.util';
+import { emit } from '../../internal/event';
+import { watchProps } from '../../internal/watchProps';
 import SlDatePanel from '../date-panel/date-panel';
 import SlDropdown from '../dropdown/dropdown';
 import SlInput from '../input/input';

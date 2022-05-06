@@ -1,14 +1,14 @@
 import { html, LitElement } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import '~/components/icon-button/icon-button';
-import type SlTabPanel from '~/components/tab-panel/tab-panel';
-import type SlTab from '~/components/tab/tab';
-import { emit } from '~/internal/event';
-import { scrollIntoView } from '~/internal/scroll';
-import { watch } from '~/internal/watch';
-import { LocalizeController } from '~/utilities/localize';
+import '../../components/icon-button/icon-button';
+import { emit } from '../../internal/event';
+import { scrollIntoView } from '../../internal/scroll';
+import { watch } from '../../internal/watch';
+import { LocalizeController } from '../../utilities/localize';
 import styles from './tab-group.styles';
+import type SlTabPanel from '../../components/tab-panel/tab-panel';
+import type SlTab from '../../components/tab/tab';
 
 /**
  * @since 2.0
@@ -190,12 +190,20 @@ export default class SlTabGroup extends LitElement {
           (['top', 'bottom'].includes(this.placement) && event.key === 'ArrowLeft') ||
           (['start', 'end'].includes(this.placement) && event.key === 'ArrowUp')
         ) {
-          index = Math.max(0, index - 1);
+          index--;
         } else if (
           (['top', 'bottom'].includes(this.placement) && event.key === 'ArrowRight') ||
           (['start', 'end'].includes(this.placement) && event.key === 'ArrowDown')
         ) {
-          index = Math.min(this.tabs.length - 1, index + 1);
+          index++;
+        }
+
+        if (index < 0) {
+          index = this.tabs.length - 1;
+        }
+
+        if (index > this.tabs.length - 1) {
+          index = 0;
         }
 
         this.tabs[index].focus({ preventScroll: true });

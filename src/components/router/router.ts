@@ -1,8 +1,8 @@
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { emit } from '~/internal/event';
-import { watch } from '~/internal/watch';
-//import { isFunction } from '~/utilities/common';
+import { emit } from '../../internal/event';
+import { watch } from '../../internal/watch';
+//import { isFunction } from '../../utilities/common';
 import { defaultResove, getPathNames, isPathURLMatchPattern, PathNameResult, ResovlePathInterface, stripExtraTrailingSlash } from './pathResovle';
 import styles from './router.styles';
 export type RouterItem = {

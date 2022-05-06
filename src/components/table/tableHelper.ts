@@ -1,4 +1,4 @@
-import { isFunction } from '~/utilities/common';
+import { isFunction } from '../../utilities/common';
 import SlColumn from '../column/column';
 /**
  * 定义排序，升序，降序,不显示
@@ -103,8 +103,8 @@ export const getColumnCacheData = (column: SlColumn) => {
 /**
  * 将表头排版布局，计算出 有多少行，每个单元格跨多少行，多少列，用于渲染表头，取colspan=4 的columnData来渲染tbody TD
  * @param columns 表头
- * @returns {   
- *   rows: 有多少个 TR 
+ * @returns {
+ *   rows: 有多少个 TR
       leafColumns:叶子TH， 用于渲染tbody
  * }
  */

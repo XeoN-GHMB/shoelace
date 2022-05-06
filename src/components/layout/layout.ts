@@ -1,6 +1,6 @@
 import { LitElement, html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { watchProps } from '~/internal/watchProps';
+import { watchProps } from '../../internal/watchProps';
 import styles from './layout.styles';
 
 /**

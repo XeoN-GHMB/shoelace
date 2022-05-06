@@ -1,7 +1,7 @@
-import { emit } from '~/internal/event';
-import { debounce, throttleTimeout } from '~/internal/throttle';
-import { addEvent, getCssValue, onEvent, onEventArray } from '~/utilities/common';
-import { dragOnHandler } from '~/utilities/dragHelper';
+import { emit } from '../../internal/event';
+import { debounce, throttleTimeout } from '../../internal/throttle';
+import { addEvent, getCssValue, onEvent, onEventArray } from '../../utilities/common';
+import { dragOnHandler } from '../../utilities/dragHelper';
 import SlColumn from '../column/column';
 import { iteratorNodeData, TreeNodeData } from '../tree-node/tree-node-util';
 import { editNone } from './edit';

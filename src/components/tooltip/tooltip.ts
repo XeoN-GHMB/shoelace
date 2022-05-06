@@ -2,10 +2,10 @@ import { arrow, autoUpdate, computePosition, flip, offset, shift } from '@floati
 import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { animateTo, parseDuration, stopAnimations } from '~/internal/animate';
-import { emit, waitForEvent } from '~/internal/event';
-import { watch } from '~/internal/watch';
-import { getAnimation, setDefaultAnimation } from '~/utilities/animation-registry';
+import { animateTo, parseDuration, stopAnimations } from '../../internal/animate';
+import { emit, waitForEvent } from '../../internal/event';
+import { watch } from '../../internal/watch';
+import { getAnimation, setDefaultAnimation } from '../../utilities/animation-registry';
 import styles from './tooltip.styles';
 
 /**
@@ -331,7 +331,7 @@ export default class SlTooltip extends LitElement {
           aria-hidden=${this.open ? 'false' : 'true'}
         >
           <div class="tooltip__arrow"></div>
-          <div class="tooltip__content">
+          <div class="tooltip__content" aria-live=${this.open ? 'polite' : 'off'}>
             <slot name="content"> ${this.content} </slot>
           </div>
         </div>

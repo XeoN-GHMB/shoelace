@@ -5,8 +5,8 @@ import type SlDropdown from '../dropdown/dropdown';
 import type SlMenu from '../menu/menu';
 import styles from './combobox.styles';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {scrollIntoView} from "~/internal/scroll";
-import {emit} from "~/internal/event";
+import {scrollIntoView} from "../../internal/scroll";
+import {emit} from "../../internal/event";
 
 export interface Suggestion {
   text: string;

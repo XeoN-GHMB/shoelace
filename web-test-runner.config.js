@@ -6,6 +6,7 @@ export default {
   rootDir: '.',
   files: 'src/**/*.test.ts',
   concurrentBrowsers: 2,
+  browserStartTimeout: 100000,
   nodeResolve: true,
   plugins: [
     esbuildPlugin({
@@ -15,11 +16,11 @@ export default {
   ],
   browsers: [
     playwrightLauncher({ product: 'chromium' }),
-    playwrightLauncher({ product: 'firefox' }),
+    //playwrightLauncher({ product: 'firefox' }),
     //playwrightLauncher({ product: 'webkit' })
   ],
   testRunnerHtml: testFramework => `
-    <html>
+    <html lang="en-US">
       <head></head>
       <body>
         <script type="module" src="dist/shoelace.js"></script>

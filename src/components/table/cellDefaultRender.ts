@@ -1,7 +1,7 @@
 import { html, TemplateResult } from 'lit';
 import { live } from 'lit/directives/live.js';
-import { emit } from '~/internal/event';
-import { isArray } from '~/utilities/common';
+import { emit } from '../../internal/event';
+import { isArray } from '../../utilities/common';
 import SlCheckbox from '../checkbox/checkbox';
 import SlColumn from '../column/column';
 import { iteratorNodeData, TreeNodeData } from '../tree-node/tree-node-util';

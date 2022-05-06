@@ -1,11 +1,11 @@
 import { html, LitElement, nothing, PropertyValues, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
-import { emit } from '~/internal/event';
-import resourceLocal from '~/internal/resourceLocal';
-import { watchProps } from '~/internal/watchProps';
-import { onEvent } from '~/utilities/common';
-import { getResouceValue } from '~/utilities/getResouce';
+import { emit } from '../../internal/event';
+import resourceLocal from '../../internal/resourceLocal';
+import { watchProps } from '../../internal/watchProps';
+import { onEvent } from '../../utilities/common';
+import { getResouceValue } from '../../utilities/getResouce';
 import SlButton from '../button/button';
 import '../icon/icon';
 import '../select/select';

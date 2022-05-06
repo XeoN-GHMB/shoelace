@@ -1,7 +1,7 @@
 import { LitElement, html, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import { customStyle } from '~/internal/customStyle';
-import { emit } from '~/internal/event';
+import { customStyle } from '../../internal/customStyle';
+import { emit } from '../../internal/event';
 import SlOrgNode, { defaultRoleRender, OrgNodeDataType } from '../org-node/org-node';
 import styles from './org-tree.styles';
 

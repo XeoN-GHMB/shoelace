@@ -1,4 +1,4 @@
-import { unWrapData, wrapData } from '~/utilities/wrapData';
+import { unWrapData, wrapData } from '../../utilities/wrapData';
 import { ResovlePathInterface, defaultResove } from './pathResovle';
 export const CryptoHashResovle: ResovlePathInterface = {
   resolvePath(hash) {

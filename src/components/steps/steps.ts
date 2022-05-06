@@ -1,7 +1,7 @@
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { customStyle } from '~/internal/customStyle';
-import { emit } from '~/internal/event';
+import { customStyle } from '../../internal/customStyle';
+import { emit } from '../../internal/event';
 import '../icon/icon';
 import SlStep from '../step/step';
 import styles from './steps.styles';

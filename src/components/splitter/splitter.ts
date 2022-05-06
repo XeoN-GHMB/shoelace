@@ -1,9 +1,9 @@
 import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { emit } from '~/internal/event';
-import { watch } from '~/internal/watch';
-import { getCssValue } from '~/utilities/common';
-import { dragHandler } from '~/utilities/dragHelper';
+import { emit } from '../../internal/event';
+import { watch } from '../../internal/watch';
+import { getCssValue } from '../../utilities/common';
+import { dragHandler } from '../../utilities/dragHelper';
 import styles from './splitter.styles';
 
 /**

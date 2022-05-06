@@ -2,17 +2,17 @@ import { autoUpdate, computePosition, flip, offset, shift, size } from '@floatin
 import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import type SlButton from '~/components/button/button';
-import type SlIconButton from '~/components/icon-button/icon-button';
-import type SlMenuItem from '~/components/menu-item/menu-item';
-import type SlMenu from '~/components/menu/menu';
-import { animateTo, stopAnimations } from '~/internal/animate';
-import { emit, waitForEvent } from '~/internal/event';
-import { scrollIntoView } from '~/internal/scroll';
-import { getTabbableBoundary } from '~/internal/tabbable';
-import { watch } from '~/internal/watch';
-import { getAnimation, setDefaultAnimation } from '~/utilities/animation-registry';
+import { animateTo, stopAnimations } from '../../internal/animate';
+import { emit, waitForEvent } from '../../internal/event';
+import { scrollIntoView } from '../../internal/scroll';
+import { getTabbableBoundary } from '../../internal/tabbable';
+import { watch } from '../../internal/watch';
+import { getAnimation, setDefaultAnimation } from '../../utilities/animation-registry';
 import styles from './dropdown.styles';
+import type SlButton from '../../components/button/button';
+import type SlIconButton from '../../components/icon-button/icon-button';
+import type SlMenuItem from '../../components/menu-item/menu-item';
+import type SlMenu from '../../components/menu/menu';
 
 /**
  * @since 2.0
@@ -106,12 +106,14 @@ export default class SlDropdown extends LitElement {
     // If the dropdown is visible on init, update its position
     if (this.open) {
       await this.updateComplete;
+      this.addOpenListeners();
       this.startPositioner();
     }
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
+    this.removeOpenListeners();
     this.hide();
     this.stopPositioner();
   }
@@ -209,11 +211,6 @@ export default class SlDropdown extends LitElement {
   }
 
   handleTriggerKeyDown(event: KeyboardEvent) {
-    const menu = this.getMenu()!;
-    const menuItems = menu.defaultSlot.assignedElements({ flatten: true }) as SlMenuItem[];
-    const firstMenuItem = menuItems[0];
-    const lastMenuItem = menuItems[menuItems.length - 1];
-
     // Close when escape or tab is pressed
     if (event.key === 'Escape') {
       this.focusOnTrigger();
@@ -229,35 +226,45 @@ export default class SlDropdown extends LitElement {
       return;
     }
 
-    // When up/down is pressed, we make the assumption that the user is familiar with the menu and plans to make a
-    // selection. Rather than toggle the panel, we focus on the menu (if one exists) and activate the first item for
-    // faster navigation.
-    if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
-      event.preventDefault();
+    const menu = this.getMenu();
 
-      // Show the menu if it's not already open
-      if (!this.open) {
-        this.show();
+    if (menu) {
+      const menuItems = menu.defaultSlot.assignedElements({ flatten: true }) as SlMenuItem[];
+      const firstMenuItem = menuItems[0];
+      const lastMenuItem = menuItems[menuItems.length - 1];
+
+      // When up/down is pressed, we make the assumption that the user is familiar with the menu and plans to make a
+      // selection. Rather than toggle the panel, we focus on the menu (if one exists) and activate the first item for
+      // faster navigation.
+      if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
+        event.preventDefault();
+
+        // Show the menu if it's not already open
+        if (!this.open) {
+          this.show();
+        }
+
+        if (menuItems.length > 0) {
+          // Focus on the first/last menu item after showing
+          requestAnimationFrame(() => {
+            if (event.key === 'ArrowDown' || event.key === 'Home') {
+              menu.setCurrentItem(firstMenuItem);
+              firstMenuItem.focus();
+            }
+
+            if (event.key === 'ArrowUp' || event.key === 'End') {
+              menu.setCurrentItem(lastMenuItem);
+              lastMenuItem.focus();
+            }
+          });
+        }
       }
 
-      // Focus on the first/last menu item after showing
-      requestAnimationFrame(() => {
-        if (event.key === 'ArrowDown' || event.key === 'Home') {
-          menu.setCurrentItem(firstMenuItem);
-          firstMenuItem.focus();
-        }
-
-        if (event.key === 'ArrowUp' || event.key === 'End') {
-          menu.setCurrentItem(lastMenuItem);
-          lastMenuItem.focus();
-        }
-      });
-    }
-
-    // Other keys bring focus to the menu and initiate type-to-select behavior
-    const ignoredKeys = ['Tab', 'Shift', 'Meta', 'Ctrl', 'Alt'];
-    if (this.open && !ignoredKeys.includes(event.key)) {
-      menu.typeToSelect(event);
+      // Other keys bring focus to the menu and initiate type-to-select behavior
+      const ignoredKeys = ['Tab', 'Shift', 'Meta', 'Ctrl', 'Alt'];
+      if (this.open && !ignoredKeys.includes(event.key)) {
+        menu.typeToSelect(event);
+      }
     }
   }
 
@@ -333,6 +340,20 @@ export default class SlDropdown extends LitElement {
     this.updatePositioner();
   }
 
+  addOpenListeners() {
+    this.panel.addEventListener('sl-activate', this.handleMenuItemActivate);
+    this.panel.addEventListener('sl-select', this.handlePanelSelect);
+    document.addEventListener('keydown', this.handleDocumentKeyDown);
+    document.addEventListener('mousedown', this.handleDocumentMouseDown);
+  }
+
+  removeOpenListeners() {
+    this.panel.removeEventListener('sl-activate', this.handleMenuItemActivate);
+    this.panel.removeEventListener('sl-select', this.handlePanelSelect);
+    document.removeEventListener('keydown', this.handleDocumentKeyDown);
+    document.removeEventListener('mousedown', this.handleDocumentMouseDown);
+  }
+
   @watch('open', { waitUntilFirstUpdate: true })
   async handleOpenChange() {
     if (this.disabled) {
@@ -345,10 +366,7 @@ export default class SlDropdown extends LitElement {
     if (this.open) {
       // Show
       emit(this, 'sl-show');
-      this.panel.addEventListener('sl-activate', this.handleMenuItemActivate);
-      this.panel.addEventListener('sl-select', this.handlePanelSelect);
-      document.addEventListener('keydown', this.handleDocumentKeyDown);
-      document.addEventListener('mousedown', this.handleDocumentMouseDown);
+      this.addOpenListeners();
 
       await stopAnimations(this);
       this.startPositioner();
@@ -360,10 +378,7 @@ export default class SlDropdown extends LitElement {
     } else {
       // Hide
       emit(this, 'sl-hide');
-      this.panel.removeEventListener('sl-activate', this.handleMenuItemActivate);
-      this.panel.removeEventListener('sl-select', this.handlePanelSelect);
-      document.removeEventListener('keydown', this.handleDocumentKeyDown);
-      document.removeEventListener('mousedown', this.handleDocumentMouseDown);
+      this.removeOpenListeners();
 
       await stopAnimations(this);
       const { keyframes, options } = getAnimation(this, 'dropdown.hide');

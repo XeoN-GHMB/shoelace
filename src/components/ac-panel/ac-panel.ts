@@ -1,8 +1,8 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { animateTo, animate_hide, animate_show, shimKeyframesHeightAuto } from '~/internal/animate';
-import { emit } from '~/internal/event';
-import { getCssValue } from '~/utilities/common';
+import { animateTo, animate_hide, animate_show, shimKeyframesHeightAuto } from '../../internal/animate';
+import { emit } from '../../internal/event';
+import { getCssValue } from '../../utilities/common';
 import SlCollapse from '../collapse/collapse';
 import '../icon/icon';
 import styles from './ac-panel.styles';

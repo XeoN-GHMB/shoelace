@@ -1,4 +1,4 @@
-import { getLocalCache, removeLocalCache, setLocalCache } from '~/utilities/localCache';
+import { getLocalCache, removeLocalCache, setLocalCache } from '../../utilities/localCache';
 import SlColumn from '../column/column';
 import SlTable from './table';
 

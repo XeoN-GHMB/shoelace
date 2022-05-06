@@ -2,7 +2,7 @@ import { html, LitElement, PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import styles from './markdown-element.styles';
 import Vditor from 'vditor';
-import { watch } from '~/internal/watch';
+import { watch } from '../../internal/watch';
 import ant from 'vditor/dist/css/content-theme/ant-design.css';
 import dark from 'vditor/dist/css/content-theme/dark.css';
 import light from 'vditor/dist/css/content-theme/light.css';
