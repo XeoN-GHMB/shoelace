@@ -301,12 +301,12 @@ const App = () => (
 );
 ```
 
-## Vertical Card
+## Horizontal Card
 
-Cards can use vertical parameter to place the image on the left side.
+Cards can use horizontal parameter to place the image on the left side.
 
 ```html preview
-<sl-card class="card-image" vertical>
+<sl-card class="card-image" horizontal>
   <img
     slot="image"
     src="https://images.unsplash.com/photo-1547191783-94d5f8f6d8b1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80"

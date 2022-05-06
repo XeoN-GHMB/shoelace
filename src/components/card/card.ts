@@ -30,7 +30,7 @@ export default class SlCard extends LitElement {
   static styles = styles;
 
   /** vertical card */
-  @property({ type: Boolean, reflect: true }) vertical = false;
+  @property({ type: Boolean, reflect: true }) horizontal = false;
 
   private readonly hasSlotController = new HasSlotController(this, 'footer', 'header', 'image');
 
@@ -40,7 +40,7 @@ export default class SlCard extends LitElement {
         part="base"
         class=${classMap({
           card: true,
-          'card-vertical':this.vertical,
+          'card-horizontal':this.horizontal,
           'card--has-footer': this.hasSlotController.test('footer'),
           'card--has-image': this.hasSlotController.test('image'),
           'card--has-header': this.hasSlotController.test('header')

@@ -65,16 +65,16 @@ export default css`
     display: flex;
     flex-direction: column;
   }
-  .card-vertical{
+  .card-horizontal{
     flex-direction: row;
   }
 
-  .card-vertical .card__image{
+  .card-horizontal .card__image{
     border-top-right-radius: 0;
     border-bottom-left-radius: var(--border-radius);
   }
 
-  .card-vertical .card__image ::slotted(img) {
+  .card-horizontal .card__image ::slotted(img) {
     height: 100%;
     object-fit: cover;
   }
