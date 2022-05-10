@@ -1,7 +1,7 @@
 export { default as SlAcPanel } from './ac-panel';
+export { default as SlAlert } from './alert';
 export { default as SlAnimation } from './animation';
 export { default as SlAnimatedImage } from './animated-image';
-export { default as SlAlert } from './alert';
 export { default as SlAvatar } from './avatar';
 export { default as SlBackToTop } from './back-to-top';
 export { default as SlBadge } from './badge';
@@ -76,7 +76,6 @@ export { default as SlTableWrapper } from './table-wrapper';
 export { default as SlTag } from './tag';
 export { default as SlTextarea } from './textarea';
 export { default as SlTooltip } from './tooltip';
-export { default as SlTransfer } from './transfer';
 export { default as SlTree } from './tree';
 export { default as SlTreeNode } from './tree-node';
 export { default as SlVisuallyHidden } from './visually-hidden';

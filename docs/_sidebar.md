@@ -70,26 +70,27 @@
   - [Combobox](/components/combobox)
   - [Slider](/components/slider)
   - [Details Group](/components/details-group)
-  - [Table Wrapper](/components/table-wrapper)
+  <!-- - [Table Wrapper](/components/table-wrapper)-->
   - [Back To Top](/components/back-to-top)
   - [Map](/components/map)
   - [Page Btn](/components/page-btn)
-  - [Gallery](/components/gallery)
+  <!-- - [Gallery](/components/gallery)-->
   - [Scroll](/components/scroll)
-  - [Collapse](/components/collapse)
+  <!-- - [Collapse](/components/collapse)-->
   <!-- - [Steps](/components/steps)-->
-  - [Transfer](/components/transfer)
-  - [Table](/components/table)
+  <!-- - [Transfer](/components/transfer)-->
+  <!--- [Table](/components/table)-->
   - [Org Tree](/components/org-tree)
-  - [Tree](/components/tree)
-  - [Tree Node](/components/tree-node)
-  <!-- - [Date Panel](/components/date-panel)-->
+  <!--- - [Tree](/components/tree)-->
+  <!--- - [Tree Node](/components/tree-node)-->
+  <!--- [Date Panel](/components/date-panel)-->
   <!--- [Date](/components/date)-->
   <!--- [Row](/components/row)-->
   <!--- [Layout](/components/layout)-->
   <!--- [Splitter](/components/splitter)-->
-  - [TreeTable](/components/treeTable)
+  <!--- [TreeTable](/components/treeTable)-->
   <!--- [EditTable](/components/tableEdit)-->
+  - [Table](/components/table)
   <!--plop:component-->
   
 - Utilities
