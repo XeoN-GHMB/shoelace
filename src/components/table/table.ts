@@ -34,17 +34,17 @@ export default class SlTable extends LitElement {
   @property({type:String, reflect: true}) search:String = ''
   @property({ type: Boolean, reflect: true }) moveablecolumns:Boolean = false;
 
-  @property({ type: Boolean, reflect: true }) rownumbers:Boolean = false;
+  @property({ type: Boolean, reflect: true }) rowindexes:Boolean = false;
   @property({ type: Boolean, reflect: true }) moveablerows:Boolean = false;
-  @property({ type: String, reflect: true }) rowselect:String = ""; //single / multiple
+  @property({ type: Boolean, reflect: true }) rowselect:Boolean = false;
+  @property({ type: Boolean, reflect: true }) columnsmenu:Boolean = false;
 
   @property({ type: Array, attribute: false }) skellist: Object;
   @property({ type: Object, attribute: false }) structure: Object;
   @property({ type: Object, attribute: false }) tableConfig: Object = {
       responsiveLayout:"hide",
       layout:"fitColumns",
-      reactiveData:true,
-      movableColumns:true
+      reactiveData:true
     };
 
   tableInstance:any;
@@ -58,22 +58,21 @@ export default class SlTable extends LitElement {
         this.previousStructure = this.structure
 
         this.buildStructure()
-        this.tableConfig["height"] = this.height
-        this.tableConfig["placeholder"] = this.placeholder
-        if (this.sort){
-           this.tableConfig["initialSort"] = [{column:this.sort, dir:"asc"}]
-        }
+        this.updateConfig()
         console.log(this.tableConfig)
 
         this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
         this.tableInstance.on("tableBuilt",()=>{
+            this.postBuildTable()
             this.tableInstance.setData(this.skellist)
             this.tableReady=true
         })
+
     }
     //update Data only if tableReady
     if(this.tableReady){
       this.tableInstance.setData(this.skellist)
+
     }
   }
 
@@ -125,6 +124,81 @@ export default class SlTable extends LitElement {
     this.tableConfig = {...this.tableConfig, ...currentstructure}
   }
 
+  updateConfig(){
+    this.tableConfig["height"] = this.height
+    this.tableConfig["placeholder"] = this.placeholder
+    if (this.sort){
+       this.tableConfig["initialSort"] = [{column:this.sort, dir:"asc"}]
+    }
+
+    if (this.moveablecolumns){
+      this.tableConfig["movableColumns"] = true
+    }
+    if(this.rowindexes){
+      let indexColumn = {formatter:"rownum", title:"ID", hozAlign:"center", width:65, headerSort:false}
+
+      if ( !Object.keys(this.tableConfig).includes("columns") || this.tableConfig["columns"].length===0){
+        this.tableConfig["columns"] = [indexColumn]
+      }else{
+        this.tableConfig["columns"] = [ indexColumn ,...this.tableConfig["columns"]]
+      }
+    }
+
+    if (this.rowselect){
+      let selectColumn = {formatter:"rowSelection", resizable:false, width:45, minWidth:45, titleFormatter:"rowSelection", hozAlign:"center", headerSort:false, cellClick:function(e, cell){
+        cell.getRow().toggleSelect();
+      }}
+
+      if ( !Object.keys(this.tableConfig).includes("columns") || this.tableConfig["columns"].length===0){
+        this.tableConfig["columns"] = [selectColumn]
+      }else{
+        this.tableConfig["columns"] = [ selectColumn ,...this.tableConfig["columns"]]
+      }
+
+    }
+
+    if(this.moveablerows){
+      this.tableConfig["movableRows"] = true 
+
+      let handleColumn = {rowHandle:true, resizable:false, formatter:"handle", headerSort:false, frozen:true, width:40, minWidth:40}
+
+      if ( !Object.keys(this.tableConfig).includes("columns") || this.tableConfig["columns"].length===0){
+        this.tableConfig["columns"] = [handleColumn]
+      }else{
+        this.tableConfig["columns"] = [ handleColumn ,...this.tableConfig["columns"]]
+      }
+    }
+
+    if (this.columnsmenu){
+        this.tableConfig["rowContextMenu"] = this.rowMenu
+
+        let menuColumn = {resizable:false, headerSort:false, frozen:true, width:4, minWidth:40, headerMenu:this.headerMenu}
+
+        if ( !Object.keys(this.tableConfig).includes("columns") || this.tableConfig["columns"].length===0){
+          this.tableConfig["columns"] = [menuColumn]
+        }else{
+          this.tableConfig["columns"] = [ menuColumn ,...this.tableConfig["columns"]]
+        }
+    }
+  }
+
+  headerMenu(){
+    return [{
+            label:"<span>hallo</span>",
+            action:(e)=>{console.log("HALLO")}
+    }]
+  }
+
+  rowMenu(){
+    return [{
+        label:"<span>hallo</span>",
+        action:function(e, row){
+            row.update({name:"Steve Bobberson"});
+        }
+    }]
+  }
+
+
   getTable(){
     /** store table element */
     // @ts-ignore
@@ -142,12 +216,24 @@ export default class SlTable extends LitElement {
 
   }
 
+  postBuildTable(){
+    this.tableInstance.on("rowSelectionChanged", (data, rows)=>{
+      emit(this,'sl-selectionChanged',{detail:{data:data,row:rows}})
+    })
+  }
+
+
   prebuildTable(){
     let tableElement = this.getTable()
+    this.updateConfig()
+    console.log(this.tableConfig)
     if(tableElement){
       this.tableInstance = new TabulatorFull(tableElement,
       this.tableConfig)
+
+      this.postBuildTable()
     }
+
   }
 
 
@@ -175,3 +261,4 @@ declare global {
     'sl-table': SlTable;
   }
 }
+

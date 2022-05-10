@@ -5,11 +5,11 @@
 A description of the component goes here.
 
 ```html preview
-<sl-table moveablecolumns="true" moveablecolumns>
+<sl-table id="exampletable" moveablecolumns moveablerows rowselect>
   <table>
     <thead>
         <tr>
-            <th>First Column</th>
+            <th width="150">First Column</th>
             <th>Second Column</th>
             <th>Thrid Column</th>
         </tr>
@@ -39,6 +39,19 @@ A description of the component goes here.
     </tbody>
   </table>
 </sl-table>
+<span id="selectionspan">Rows selected: 0</span>
+<script>
+let table1 = document.querySelector("#exampletable")
+table1.addEventListener("sl-selectionChanged",(event)=>{
+  console.log(event)
+  let span = document.querySelector("#selectionspan")
+  span.innerHTML = "Rows selected: "+event.detail.data.length
+
+})
+
+
+</script>
+
 ```
 
 ## Examples
