@@ -388,7 +388,7 @@ table.structure={
             "en"
         ],
         "emptyValue": "",
-        "multiple": true
+        "multiple": false
     },
     "users": {
         "descr": "Users",
@@ -721,7 +721,7 @@ table.skellist= [
             "creationdate": "2022-03-14T15:18:58+01:00",
             "changedate": "2022-03-14T15:18:58+01:00",
             "viurCurrentSeoKeys": {
-                "en": dfgdfgdfgdfg
+                "en": "dfgdfgdfgdfg"
             },
             "listgroups": [
                 "all"
@@ -746,7 +746,7 @@ table.skellist= [
             "creationdate": "2022-05-12T06:02:05+02:00",
             "changedate": "2022-05-12T06:02:05+02:00",
             "viurCurrentSeoKeys": {
-                "en": dfgdfgdfgdfg
+                "en": "dfgdfgdfgdfg"
             },
             "listgroups": [
                 "all"
@@ -769,10 +769,8 @@ table.skellist= [
                 "rel": null
             },
             "translations": {
-                "de": [
+                "de": 
                     "Test222",
-                    "Test44"
-                ],
                 "en": [
                     "Test55",
                     "Test677",

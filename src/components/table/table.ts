@@ -4,6 +4,8 @@ import { emit } from '../../internal/event';
 import { watch } from '../../internal/watch';
 import { watchProps } from '../../internal/watchProps';
 import styles from './table.styles';
+import {DateTime} from 'luxon';
+window.DateTime = DateTime;
 import {TabulatorFull, RowComponent, FormatModule} from './tabulator_esm.js';
 
 /**
@@ -123,12 +125,99 @@ export default class SlTable extends LitElement {
       if(Object.keys(item).includes("visible") && !item["visible"]){
         continue
       }
-      columns.push({title:item["descr"], field:itemName, formatterParams:item})
+
+      let format = this.typeToFormatName(item)
+      columns.push({title:item["descr"], field:itemName, formatter:format, formatterParams:item})
     }
 
     currentstructure["columns"] = columns
     this.tableConfig = {...this.tableConfig, ...currentstructure}
   }
+
+  typeToFormatName(item){
+    let formatter = "plain"
+    //if (item["type"].startsWith("text"))
+      console.log(item)
+    if(item["languages"] && item["multiple"]){
+      console.log("A")
+    }else if (item["languages"]){
+      formatter = this.multiLanguageFormatter
+    }else if(item["multiple"]){
+        console.log("C")
+    }else if (item["type"]){
+      console.log("D")
+      // not lang and not multi
+      if(item["type"].startsWith("date")){
+        formatter = "datetime"
+        item["outputFormat"] = "dd.MM.yyyy HH:mm:ss"
+        item["inputFormat"] = "iso"
+      }else if (item["type"].startsWith("text")){
+        formatter = "text"
+      }else if (item["type"].startsWith("select")){
+        //formatter = "lookup"
+      }else if (item["type"].startsWith("color")){
+        formatter = "color"
+      }
+    }
+
+    return formatter
+  }
+
+
+  multiLanguageFormatter(cell, formatterParams, onRendered){
+    let value = cell.getValue();
+
+
+    console.log(formatterParams)
+    let renderSingleValue = (value)=>{
+      console.log(value)
+      if(formatterParams["type"].startsWith("date")){
+        formatterParams["outputFormat"] = "dd.MM.yyyy HH:mm:ss"
+        formatterParams["inputFormat"] = "iso"
+        value = format_datetime(cell, formatterParams,onRendered, value)
+
+      }else if (formatterParams["type"].startsWith("text")){
+        value = format_textarea(cell, formatterParams,onRendered, value)
+
+      }else if (formatterParams["type"].startsWith("select")){
+        //formatter = "lookup"
+      }else if (formatterParams["type"].startsWith("color")){
+        value = format_color(cell, formatterParams,onRendered, value)
+
+      }else{
+        value = format_plaintext(cell, formatterParams,onRendered, value)
+         console.log(value)
+      }
+
+      if (typeof value === "string"){
+        value =document.createTextNode(value)
+      }
+      console.log(value)
+      return value
+    }
+
+    let returnValue = document.createElement("span")
+
+
+    for(let lang of formatterParams["languages"]){
+      if (formatterParams["multiple"]){
+
+      }else{
+
+        let langValue = value[lang] || '-'
+
+        returnValue.appendChild(document.createTextNode(lang+": "))
+        returnValue.appendChild(renderSingleValue(langValue))
+      }
+
+
+    }
+
+
+
+    return returnValue
+  }
+
 
   updateConfig(){
     this.tableConfig["height"] = this.height
@@ -192,7 +281,10 @@ export default class SlTable extends LitElement {
     }
 
     for(let col of this.tableConfig["columns"] ){
-      //col["formatter"] = this.vCellRenderer
+      if (!col["formatter"]){
+        //col["formatter"] = this.vCellRenderer
+      }
+
     }
 
   }
@@ -316,6 +408,22 @@ export default class SlTable extends LitElement {
     lang > multi > types
 
     * */
+    console.log(this.table)
+    console.log(this)
+
+    let xx = new FormatModule(this.table)
+    console.log(xx.getFormatter("plaintext")(cell, formatterParams, onRendered))
+    console.log(xx.formatters["plaintext"](cell, formatterParams, onRendered))
+    return "plain"
+  }
+  /*
+      console.log(this.table)
+    console.log()
+
+    return "X"
+    let formatMod = new FormatModule(this.tableInstance)
+    return formatMod.formatters.plaintext(cell,formatterParams,onRendered)
+
 
     let languageWrapper = ()=>{
 
@@ -324,14 +432,9 @@ export default class SlTable extends LitElement {
     let multipleWrapper = ()=>{
 
     }
-    console.log(this.table)
-    console.log(this)
 
+*/
 
-    let formatMod = new FormatModule(this.tableInstance)
-    return formatMod.formatters.plaintext(cell,formatterParams,onRendered)
-
-  }
 
 
   getTable(){
@@ -399,3 +502,139 @@ declare global {
 
 
 
+function sanitizeHTML(value){
+		if(value){
+			const entityMap = {
+				'&': '&amp;',
+				'<': '&lt;',
+				'>': '&gt;',
+				'"': '&quot;',
+				"'": '&#39;',
+				'/': '&#x2F;',
+				'`': '&#x60;',
+				'=': '&#x3D;'
+			};
+
+			return String(value).replace(/[&<>"'`=\/]/g, function (s) {
+				return entityMap[s];
+			});
+		}else {
+			return value;
+		}
+	}
+
+function emptyToSpace(value){
+		return value === null || typeof value === "undefined" || value === "" ? "&nbsp;" : value;
+	}
+
+function format_textarea(cell, formatterParams, onRendered,value=null){
+	cell.getElement().style.whiteSpace = "pre-wrap";
+
+  if (!value){
+    value = cell.getValue()
+  }
+	return emptyToSpace(sanitizeHTML(value));
+}
+
+function format_plaintext(cell, formatterParams, onRendered,value=null){
+  if (!value){
+    value = cell.getValue()
+  }
+	return emptyToSpace(sanitizeHTML(value));
+}
+
+function format_image(cell, formatterParams, onRendered,value=null){
+	var el = document.createElement("img"),
+	src = cell.getValue();
+
+	if(formatterParams.urlPrefix){
+		src = formatterParams.urlPrefix + cell.getValue();
+	}
+
+	if(formatterParams.urlSuffix){
+		src = src + formatterParams.urlSuffix;
+	}
+
+	el.setAttribute("src", src);
+
+	switch(typeof formatterParams.height){
+		case "number":
+		el.style.height = formatterParams.height + "px";
+		break;
+
+		case "string":
+		el.style.height = formatterParams.height;
+		break;
+	}
+
+	switch(typeof formatterParams.width){
+		case "number":
+		el.style.width = formatterParams.width + "px";
+		break;
+
+		case "string":
+		el.style.width = formatterParams.width;
+		break;
+	}
+
+	el.addEventListener("load", function(){
+		cell.getRow().normalizeHeight();
+	});
+
+	return el;
+}
+
+
+function format_datetime(cell, formatterParams, onRendered,value=null){
+	var DT = window.DateTime || luxon.DateTime;
+	var inputFormat = formatterParams.inputFormat || "yyyy-MM-dd HH:mm:ss";
+	var	outputFormat = formatterParams.outputFormat || "dd/MM/yyyy HH:mm:ss";
+	var	invalid = typeof formatterParams.invalidPlaceholder !== "undefined" ? formatterParams.invalidPlaceholder : "";
+	var value = cell.getValue();
+
+	if(typeof DT != "undefined"){
+		var newDatetime;
+
+		if(DT.isDateTime(value)){
+			 newDatetime = value;
+		 }else if(inputFormat === "iso"){
+			 newDatetime = DT.fromISO(String(value));
+		 }else {
+			 newDatetime = DT.fromFormat(String(value), inputFormat);
+		 }
+
+		if(newDatetime.isValid){
+			if(formatterParams.timezone){
+				newDatetime = newDatetime.setZone(formatterParams.timezone);
+			}
+
+			return newDatetime.toFormat(outputFormat);
+		}else {
+			if(invalid === true || !value){
+				return value;
+			}else if(typeof invalid === "function"){
+				return invalid(value);
+			}else {
+				return invalid;
+			}
+		}
+	}else {
+		console.error("Format Error - 'datetime' formatter is dependant on luxon.js");
+	}
+}
+
+function format_lookup (cell, formatterParams, onRendered,value=null) {
+	var value = cell.getValue();
+
+	if (typeof formatterParams[value] === "undefined") {
+		console.warn('Missing display value for ' + value);
+		return value;
+	}
+
+	return formatterParams[value];
+}
+
+function format_color(cell, formatterParams, onRendered,value=null){
+	cell.getElement().style.backgroundColor = this.sanitizeHTML(cell.getValue());
+	return "";
+}
