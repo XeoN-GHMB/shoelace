@@ -120,7 +120,682 @@ table.search = event.target.value;
 ```
 
 ### Second Example
+```html preview
+<sl-table id="exampletable4" minheight="400px">
+</sl-table>
+<script>
 
-TODO
+let table = document.querySelector("#exampletable4")
+table.structure={
+    "key": {
+        "descr": "key",
+        "type": "key",
+        "required": false,
+        "params": {},
+        "visible": false,
+        "readonly": true,
+        "unique": false,
+        "languages": null,
+        "emptyValue": null,
+        "multiple": false
+    },
+    "creationdate": {
+        "descr": "created at",
+        "type": "date",
+        "required": false,
+        "params": {},
+        "visible": true,
+        "readonly": true,
+        "unique": false,
+        "languages": null,
+        "emptyValue": null,
+        "multiple": false,
+        "date": true,
+        "time": true
+    },
+    "changedate": {
+        "descr": "updated at",
+        "type": "date",
+        "required": false,
+        "params": {},
+        "visible": false,
+        "readonly": true,
+        "unique": false,
+        "languages": null,
+        "emptyValue": null,
+        "multiple": false,
+        "date": true,
+        "time": true
+    },
+    "viurCurrentSeoKeys": {
+        "descr": "Seo-Keys",
+        "type": "str",
+        "required": false,
+        "params": {},
+        "visible": false,
+        "readonly": true,
+        "unique": false,
+        "languages": [
+            "en"
+        ],
+        "emptyValue": "",
+        "multiple": false
+    },
+    "listgroups": {
+        "descr": "groups",
+        "type": "str",
+        "required": false,
+        "params": {},
+        "visible": false,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": "",
+        "multiple": true
+    },
+    "listgroup": {
+        "descr": "group",
+        "type": "str",
+        "required": false,
+        "params": {},
+        "visible": false,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": "",
+        "multiple": false
+    },
+    "name": {
+        "descr": "Name",
+        "type": "str",
+        "required": true,
+        "params": {},
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": "",
+        "multiple": false
+    },
+    "sortindex": {
+        "descr": "Sort index",
+        "type": "numeric",
+        "required": true,
+        "params": {},
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": 0,
+        "multiple": false,
+        "precision": 0,
+        "min": -1073741824,
+        "max": 1073741824
+    },
+    "image": {
+        "descr": "Image",
+        "type": "relational.tree.leaf.file.file",
+        "required": false,
+        "params": {},
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": null,
+        "multiple": false,
+        "module": "file",
+        "format": "value['dest']['name']",
+        "using": null,
+        "relskel": [
+            [
+                "key",
+                {
+                    "descr": "key",
+                    "type": "key",
+                    "required": false,
+                    "params": {},
+                    "visible": false,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": null,
+                    "multiple": false
+                }
+            ],
+            [
+                "size",
+                {
+                    "descr": "Size",
+                    "type": "str",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ],
+            [
+                "dlkey",
+                {
+                    "descr": "Download-Key",
+                    "type": "str",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ],
+            [
+                "name",
+                {
+                    "descr": "Filename",
+                    "type": "str",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": false,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ],
+            [
+                "mimetype",
+                {
+                    "descr": "Mime-Info",
+                    "type": "str",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ],
+            [
+                "width",
+                {
+                    "descr": "Width",
+                    "type": "numeric",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": 0,
+                    "multiple": false,
+                    "precision": 0,
+                    "min": -1073741824,
+                    "max": 1073741824
+                }
+            ],
+            [
+                "height",
+                {
+                    "descr": "Height",
+                    "type": "numeric",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": 0,
+                    "multiple": false,
+                    "precision": 0,
+                    "min": -1073741824,
+                    "max": 1073741824
+                }
+            ],
+            [
+                "derived",
+                {
+                    "descr": "Derived Files",
+                    "type": "hidden",
+                    "required": false,
+                    "params": {},
+                    "visible": false,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": null,
+                    "multiple": false
+                }
+            ]
+        ]
+    },
+    "translations": {
+        "descr": "Langs",
+        "type": "str",
+        "required": true,
+        "params": {},
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": [
+            "de",
+            "en"
+        ],
+        "emptyValue": "",
+        "multiple": true
+    },
+    "users": {
+        "descr": "Users",
+        "type": "relational.user",
+        "required": false,
+        "params": {},
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": null,
+        "multiple": true,
+        "module": "user",
+        "format": "value['dest']['name']",
+        "using": null,
+        "relskel": [
+            [
+                "key",
+                {
+                    "descr": "key",
+                    "type": "key",
+                    "required": false,
+                    "params": {
+                        "category": "System"
+                    },
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": null,
+                    "multiple": false
+                }
+            ],
+            [
+                "name",
+                {
+                    "descr": "E-Mail",
+                    "type": "str.email",
+                    "required": true,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": 1,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ]
+        ]
+    },
+    "test": {
+        "descr": "FFF",
+        "type": "text",
+        "required": false,
+        "params": {},
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": "",
+        "multiple": false,
+        "validHtml": {
+            "validTags": [
+                "b",
+                "a",
+                "i",
+                "u",
+                "span",
+                "div",
+                "p",
+                "img",
+                "ol",
+                "ul",
+                "li",
+                "abbr",
+                "sub",
+                "sup",
+                "h1",
+                "h2",
+                "h3",
+                "h4",
+                "h5",
+                "h6",
+                "table",
+                "thead",
+                "tbody",
+                "tfoot",
+                "tr",
+                "td",
+                "th",
+                "br",
+                "hr",
+                "strong",
+                "blockquote",
+                "em"
+            ],
+            "validAttrs": {
+                "a": [
+                    "href",
+                    "target",
+                    "title"
+                ],
+                "abbr": [
+                    "title"
+                ],
+                "span": [
+                    "title"
+                ],
+                "img": [
+                    "src",
+                    "alt",
+                    "title"
+                ],
+                "td": [
+                    "colspan",
+                    "rowspan"
+                ],
+                "p": [
+                    "data-indent"
+                ],
+                "blockquote": [
+                    "cite"
+                ]
+            },
+            "validStyles": [
+                "color"
+            ],
+            "validClasses": [
+                "vitxt-*",
+                "viur-txt-*"
+            ],
+            "singleTags": [
+                "br",
+                "img",
+                "hr"
+            ]
+        }
+    },
+    "seo_title": {
+        "descr": "SEO Title",
+        "type": "str",
+        "required": false,
+        "params": {
+            "category": "SEO"
+        },
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": "",
+        "multiple": true
+    },
+    "seo_description": {
+        "descr": "SEO Description",
+        "type": "str",
+        "required": false,
+        "params": {
+            "category": "SEO"
+        },
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": "",
+        "multiple": false
+    },
+    "seo_keywords": {
+        "descr": "SEO Keywords",
+        "type": "str",
+        "required": false,
+        "params": {
+            "category": "SEO"
+        },
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": "",
+        "multiple": false
+    },
+    "seo_image": {
+        "descr": "SEO Preview Image",
+        "type": "relational.tree.leaf.file.file",
+        "required": false,
+        "params": {
+            "category": "SEO"
+        },
+        "visible": true,
+        "readonly": false,
+        "unique": false,
+        "languages": null,
+        "emptyValue": null,
+        "multiple": false,
+        "module": "file",
+        "format": "value['dest']['name']",
+        "using": null,
+        "relskel": [
+            [
+                "key",
+                {
+                    "descr": "key",
+                    "type": "key",
+                    "required": false,
+                    "params": {},
+                    "visible": false,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": null,
+                    "multiple": false
+                }
+            ],
+            [
+                "size",
+                {
+                    "descr": "Size",
+                    "type": "str",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ],
+            [
+                "dlkey",
+                {
+                    "descr": "Download-Key",
+                    "type": "str",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ],
+            [
+                "name",
+                {
+                    "descr": "Filename",
+                    "type": "str",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": false,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ],
+            [
+                "mimetype",
+                {
+                    "descr": "Mime-Info",
+                    "type": "str",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": "",
+                    "multiple": false
+                }
+            ],
+            [
+                "width",
+                {
+                    "descr": "Width",
+                    "type": "numeric",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": 0,
+                    "multiple": false,
+                    "precision": 0,
+                    "min": -1073741824,
+                    "max": 1073741824
+                }
+            ],
+            [
+                "height",
+                {
+                    "descr": "Height",
+                    "type": "numeric",
+                    "required": false,
+                    "params": {},
+                    "visible": true,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": 0,
+                    "multiple": false,
+                    "precision": 0,
+                    "min": -1073741824,
+                    "max": 1073741824
+                }
+            ],
+            [
+                "derived",
+                {
+                    "descr": "Derived Files",
+                    "type": "hidden",
+                    "required": false,
+                    "params": {},
+                    "visible": false,
+                    "readonly": true,
+                    "unique": false,
+                    "languages": null,
+                    "emptyValue": null,
+                    "multiple": false
+                }
+            ]
+        ]
+    }
+}
+table.skellist= [
+        {
+            "key": "dfgdfgdfgdfgdfgdfgdfg",
+            "creationdate": "2022-03-14T15:18:58+01:00",
+            "changedate": "2022-03-14T15:18:58+01:00",
+            "viurCurrentSeoKeys": {
+                "en": dfgdfgdfgdfg
+            },
+            "listgroups": [
+                "all"
+            ],
+            "listgroup": "all",
+            "name": "Test1",
+            "sortindex": 1,
+            "image": null,
+            "translations": {
+                "de": [],
+                "en": []
+            },
+            "users": null,
+            "test": "",
+            "seo_title": "",
+            "seo_description": "",
+            "seo_keywords": "",
+            "seo_image": null
+        },
+        {
+            "key": "gdfgfhgfhgfhgfh",
+            "creationdate": "2022-05-12T06:02:05+02:00",
+            "changedate": "2022-05-12T06:02:05+02:00",
+            "viurCurrentSeoKeys": {
+                "en": dfgdfgdfgdfg
+            },
+            "listgroups": [
+                "all"
+            ],
+            "listgroup": "all",
+            "name": "Test1",
+            "sortindex": 222,
+            "image": {
+                "dest": {
+                    "key": "dgdgdfg",
+                    "size": "5122",
+                    "dlkey": "dfgdfgdfgd",
+                    "name": "5dfgdfgdfg.png",
+                    "mimetype": "image/png",
+                    "width": 0,
+                    "height": 0,
+                    "derived": null,
+                    "downloadUrl": "/img/img.png"
+                },
+                "rel": null
+            },
+            "translations": {
+                "de": [
+                    "Test222",
+                    "Test44"
+                ],
+                "en": [
+                    "Test55",
+                    "Test677",
+                    "Tert666"
+                ]
+            },
+            "users": [
+                {
+                    "dest": {
+                        "key": "hfghfhfhgfhfghfghf65u56uzhzfj",
+                        "name": "me@example.com"
+                    },
+                    "rel": null
+                }
+            ],
+            "test": "AAAAAAA",
+            "seo_title": ["dsfg", "fdgdfg"],
+            "seo_description": "gfhgf",
+            "seo_keywords": "hfghfg",
+            "seo_image": null
+        }
+    ]
+</script>
+```
 
 [component-metadata:sl-table]
