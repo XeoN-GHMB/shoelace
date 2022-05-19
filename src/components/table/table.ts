@@ -1,9 +1,10 @@
+// @ts-nocheck
 import { LitElement, html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { emit } from '../../internal/event';
-import { watch } from '../../internal/watch';
 import { watchProps } from '../../internal/watchProps';
 import styles from './table.styles';
+//@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 
 /**
@@ -103,11 +104,12 @@ export default class SlTable extends LitElement {
       this.tableInstance.setData(this.skellist)
 
     }
+    return 1
   }
 
   @watchProps(['search'])
   performFilter(){
-    function matchAny(data, filterParams) {
+    function matchAny(data:any, filterParams:any) {
           //data - the data for the row being filtered
           //filterParams - params object passed to the filter
           //RegExp - modifier "i" - case insensitve
@@ -132,6 +134,7 @@ export default class SlTable extends LitElement {
     }
 
     this.tableInstance.setFilter(matchAny,{value:this.search})
+    return 1
   }
 
   buildStructure(){
@@ -241,7 +244,7 @@ export default class SlTable extends LitElement {
         //create menu item
         menu.push({
             label:label,
-            action:function(event){
+            action:function(event:Event){
                 event.stopPropagation();
                 event.preventDefault();
 
@@ -258,12 +261,12 @@ export default class SlTable extends LitElement {
 
   }
 
-  slRowSelection(cell, formatterParams, onRendered){
+  slRowSelection(cell:any, formatterParams:any, onRendered:any){
     var checkbox = document.createElement("sl-checkbox");
     var blocked = false;
 
     checkbox.setAttribute("aria-label", "Select Row");
-
+    //ts-ignore
     if(this.table.modExists("selectRow", true)){
 
       checkbox.addEventListener("click", (e) => {
@@ -297,10 +300,11 @@ export default class SlTable extends LitElement {
           checkbox.checked = row.isSelected && row.isSelected();
           this.table.modules.selectRow.registerRowSelectCheckbox(row, checkbox);
         }else {
+          //@ts-ignore
           checkbox = "";
         }
       }else {
-        checkbox.addEventListener("sl-change", (e) => {
+        checkbox.addEventListener("sl-change", (e:Event) => {
           if(this.table.modules.selectRow.selectedRows.length){
             this.table.deselectRow();
           }else {
@@ -333,7 +337,7 @@ export default class SlTable extends LitElement {
   }
 
   postBuildTable(){
-    this.tableInstance.on("rowSelectionChanged", (data, rows)=>{
+    this.tableInstance.on("rowSelectionChanged", (data:any, rows:any)=>{
       emit(this,'sl-selectionChanged',{detail:{data:data,row:rows}})
     })
     this.shadowtable.style.display="block";
@@ -356,9 +360,11 @@ export default class SlTable extends LitElement {
 
 
     }
+    return 1
   }
 
   slotContent(){
+     // @ts-ignore
      const childs = this.shadowRoot!.querySelector("slot").assignedElements({flatten: true})
       if (childs.length===0) {
         return []

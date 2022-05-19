@@ -75,7 +75,6 @@ export { default as SlDatePanel } from './components/date-panel/date-panel';
 export { default as SlDate } from './components/date/date';
 export { default as SlRow } from './components/row/row';
 export { default as SlLayout } from './components/layout/layout';
-export { default as SlColumn } from './components/column/column';
 export { default as SlRouter } from './components/router/router';
 export { default as SlRouterLink } from './components/router/router-link';
 export { default as SlTable } from './components/table/table';
