@@ -24217,8 +24217,6 @@ class Tabulator {
 			}
 
 			// replace table with div element
-      console.log(element)
-      console.log(element.parentNode)
 			element.parentNode.replaceChild(newElement, element);
 
 			this.element = element = newElement;

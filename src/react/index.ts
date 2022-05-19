@@ -71,7 +71,6 @@ export { default as SlTab } from './tab';
 export { default as SlTabGroup } from './tab-group';
 export { default as SlTabPanel } from './tab-panel';
 export { default as SlTable } from './table';
-export { default as SlTableWrapper } from './table-wrapper';
 export { default as SlTag } from './tag';
 export { default as SlTextarea } from './textarea';
 export { default as SlTooltip } from './tooltip';

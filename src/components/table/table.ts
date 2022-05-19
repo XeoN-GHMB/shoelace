@@ -49,6 +49,9 @@ export default class SlTable extends LitElement {
   /** are columns moveable?*/
   @property({ type: Boolean, reflect: true }) moveablecolumns:Boolean = false;
 
+  /** are columns moveable?*/
+  @property({ type: Boolean, reflect: true }) external:Boolean = false;
+
   /** are rows moveable?*/
   @property({ type: Boolean, reflect: true }) moveablerows:Boolean = false;
 
@@ -87,7 +90,6 @@ export default class SlTable extends LitElement {
 
         this.buildStructure()
         this.updateConfig()
-        console.log(this.tableConfig)
         if (!this.shadowtable){
           return 0
         }
@@ -323,14 +325,19 @@ export default class SlTable extends LitElement {
     /** store table element */
     // @ts-ignore
     let childs = this.slotContent()
-
     //prebuild Table
     if(childs.length>0 && childs[0].tagName === "TABLE"){
       let orgTable = childs[0]
       orgTable.classList.add("striped","celled")
+
+      if (this.external){
+        return orgTable
+      }
+
       let tableElement = this.shadowtable.appendChild(orgTable.cloneNode(true))
       orgTable.remove()
       return tableElement
+
     }
     return 0
 
@@ -345,21 +352,19 @@ export default class SlTable extends LitElement {
 
   prebuildTable(){
     let tableElement = this.getTable()
-    this.updateConfig()
 
-    if (!tableElement){
-          return 0
-        }
-    if(tableElement){
-      this.tableInstance = new TabulatorFull(tableElement,
-      this.tableConfig)
-      this.tableInstance.on("tableBuilt",()=>{
-            this.postBuildTable()
-            this.tableReady=true
-        })
-
-
+    if (!tableElement || !tableElement.parentNode || this.tableInstance){
+      return 0
     }
+
+    this.updateConfig()
+    this.tableInstance = new TabulatorFull(tableElement,
+    this.tableConfig)
+
+    this.tableInstance.on("tableBuilt",()=>{
+          this.postBuildTable()
+          this.tableReady=true
+     })
     return 1
   }
 
@@ -378,8 +383,9 @@ export default class SlTable extends LitElement {
         <div id="shadowtable" style="display: none" part="base" class="striped celled">
 
         </div>
+        <slot @slotchange="${this.prebuildTable}"></slot>
       </div>
-      <slot style="display: none" @slotchange="${this.prebuildTable}"></slot> `;
+      `;
   }
 }
 

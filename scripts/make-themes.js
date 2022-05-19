@@ -13,6 +13,7 @@ import {execSync} from "child_process";
 
 // build viur theme
 let ccode = execSync(`lessc src/ignite/shoelace.less`);
+ccode+ "\n/* _utility.css */\n/* _tables.css */"
 await fs.writeFileSync("./src/themes/viur.css", ccode,'utf8' );
 
 
