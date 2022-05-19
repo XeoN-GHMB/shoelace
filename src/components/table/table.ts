@@ -4,25 +4,25 @@ import { emit } from '../../internal/event';
 import { watch } from '../../internal/watch';
 import { watchProps } from '../../internal/watchProps';
 import styles from './table.styles';
-import {DateTime} from 'luxon';
-window.DateTime = DateTime;
-import {TabulatorFull, RowComponent, FormatModule} from './tabulator_esm.js';
+import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 
 /**
  * @since 2.0
  * @status experimental
  * @viur 0.5
  *
- * @dependency sl-example
+ * @event sl-selectionChanged - Emits selection change event
  *
- * @event sl-event-name - Emitted as an example.
- *
- * @slot - The default slot.
- * @slot example - An example slot.
+ * @slot - Place a Table
  *
  * @csspart base - The component's internal wrapper.
  *
- * @cssproperty --example - An example CSS custom property.
+ * @cssproperty --table-head-background - Table head background
+ * @cssproperty --table-head-color - Table head textcolor
+ * @cssproperty --table-head-background-hover - Table head background on hover
+ * @cssproperty --table-head-color-hover - Table head textcolor on hover
+ * @cssproperty --table-row-color-even - even row background color
+ * @cssproperty --table-row-color-hover - row hover color
  */
 @customElement('sl-table')
 export default class SlTable extends LitElement {
@@ -30,22 +30,43 @@ export default class SlTable extends LitElement {
 
   @query('#shadowtable') shadowtable: HTMLInputElement;
 
+  /** placeholder string for empty tables */
   @property({type:String, reflect: true}) placeholder:String = "No Data Available"
+
+  /** set table height */
   @property({type:String, reflect: true}) height:String = "auto"
+
+  /** set table min-height */
   @property({type:String, reflect: true}) minheight:String = "auto"
+
+  /** set initial sorting */
   @property({type:String, reflect: true}) sort:any = null
+
+  /** set search string to execute filter */
   @property({type:String, reflect: true}) search:String = ''
 
+  /** are columns moveable?*/
   @property({ type: Boolean, reflect: true }) moveablecolumns:Boolean = false;
+
+  /** are rows moveable?*/
   @property({ type: Boolean, reflect: true }) moveablerows:Boolean = false;
 
+  /** are rows have a index ?*/
   @property({ type: Boolean, reflect: true }) rowindexes:Boolean = false;
+
+  /** are rows selectable?*/
   @property({ type: Boolean, reflect: true }) rowselect:Boolean = false;
 
+  /** disable columnselection menu?*/
   @property({ type: Boolean, reflect: true }) nocolumnsmenu:Boolean = false;
 
+  /** set skellist as tabledata ?*/
   @property({ type: Array, attribute: false }) skellist: Object;
+
+  /** set a structure to generate table head */
   @property({ type: Object, attribute: false }) structure: Object;
+
+  /** Override table config Object */
   @property({ type: Object, attribute: false }) tableConfig: Object = {
       responsiveLayout:"hide",
       layout:"fitColumns",
@@ -125,99 +146,12 @@ export default class SlTable extends LitElement {
       if(Object.keys(item).includes("visible") && !item["visible"]){
         continue
       }
-
-      let format = this.typeToFormatName(item)
-      columns.push({title:item["descr"], field:itemName, formatter:format, formatterParams:item})
+      columns.push({title:item["descr"], field:itemName, formatterParams:item, formatter:"html"})
     }
 
     currentstructure["columns"] = columns
     this.tableConfig = {...this.tableConfig, ...currentstructure}
   }
-
-  typeToFormatName(item){
-    let formatter = "plain"
-    //if (item["type"].startsWith("text"))
-      console.log(item)
-    if(item["languages"] && item["multiple"]){
-      console.log("A")
-    }else if (item["languages"]){
-      formatter = this.multiLanguageFormatter
-    }else if(item["multiple"]){
-        console.log("C")
-    }else if (item["type"]){
-      console.log("D")
-      // not lang and not multi
-      if(item["type"].startsWith("date")){
-        formatter = "datetime"
-        item["outputFormat"] = "dd.MM.yyyy HH:mm:ss"
-        item["inputFormat"] = "iso"
-      }else if (item["type"].startsWith("text")){
-        formatter = "text"
-      }else if (item["type"].startsWith("select")){
-        //formatter = "lookup"
-      }else if (item["type"].startsWith("color")){
-        formatter = "color"
-      }
-    }
-
-    return formatter
-  }
-
-
-  multiLanguageFormatter(cell, formatterParams, onRendered){
-    let value = cell.getValue();
-
-
-    console.log(formatterParams)
-    let renderSingleValue = (value)=>{
-      console.log(value)
-      if(formatterParams["type"].startsWith("date")){
-        formatterParams["outputFormat"] = "dd.MM.yyyy HH:mm:ss"
-        formatterParams["inputFormat"] = "iso"
-        value = format_datetime(cell, formatterParams,onRendered, value)
-
-      }else if (formatterParams["type"].startsWith("text")){
-        value = format_textarea(cell, formatterParams,onRendered, value)
-
-      }else if (formatterParams["type"].startsWith("select")){
-        //formatter = "lookup"
-      }else if (formatterParams["type"].startsWith("color")){
-        value = format_color(cell, formatterParams,onRendered, value)
-
-      }else{
-        value = format_plaintext(cell, formatterParams,onRendered, value)
-         console.log(value)
-      }
-
-      if (typeof value === "string"){
-        value =document.createTextNode(value)
-      }
-      console.log(value)
-      return value
-    }
-
-    let returnValue = document.createElement("span")
-
-
-    for(let lang of formatterParams["languages"]){
-      if (formatterParams["multiple"]){
-
-      }else{
-
-        let langValue = value[lang] || '-'
-
-        returnValue.appendChild(document.createTextNode(lang+": "))
-        returnValue.appendChild(renderSingleValue(langValue))
-      }
-
-
-    }
-
-
-
-    return returnValue
-  }
-
 
   updateConfig(){
     this.tableConfig["height"] = this.height
@@ -276,17 +210,8 @@ export default class SlTable extends LitElement {
             }
             col["headerMenu"]=this.headerMenu
           }
-          //this.tableConfig["columns"] = [ menuColumn ,...this.tableConfig["columns"]]
         }
     }
-
-    for(let col of this.tableConfig["columns"] ){
-      if (!col["formatter"]){
-        //col["formatter"] = this.vCellRenderer
-      }
-
-    }
-
   }
 
   headerMenu(){
@@ -390,53 +315,6 @@ export default class SlTable extends LitElement {
     return checkbox;
   }
 
-  vCellRenderer(cell, formatterParams, onRendered){
-    /* Defaults
-    plaintext, textarea, html, money, image, link, datetime,
-    datetimediff, tickCross, color, star, traffic, progress,
-    lookup, buttonTick, buttonCross, rownum, handle,
-
-    select = lookup
-    file = image, link
-    plain = string, numeric
-    text = textare, html
-    date = datetime
-    color = color
-
-    http://tabulator.info/docs/5.2/format#format-custom
-
-    lang > multi > types
-
-    * */
-    console.log(this.table)
-    console.log(this)
-
-    let xx = new FormatModule(this.table)
-    console.log(xx.getFormatter("plaintext")(cell, formatterParams, onRendered))
-    console.log(xx.formatters["plaintext"](cell, formatterParams, onRendered))
-    return "plain"
-  }
-  /*
-      console.log(this.table)
-    console.log()
-
-    return "X"
-    let formatMod = new FormatModule(this.tableInstance)
-    return formatMod.formatters.plaintext(cell,formatterParams,onRendered)
-
-
-    let languageWrapper = ()=>{
-
-    }
-
-    let multipleWrapper = ()=>{
-
-    }
-
-*/
-
-
-
   getTable(){
     /** store table element */
     // @ts-ignore
@@ -458,20 +336,25 @@ export default class SlTable extends LitElement {
     this.tableInstance.on("rowSelectionChanged", (data, rows)=>{
       emit(this,'sl-selectionChanged',{detail:{data:data,row:rows}})
     })
+    this.shadowtable.style.display="block";
   }
 
   prebuildTable(){
     let tableElement = this.getTable()
     this.updateConfig()
-    console.log(this.tableConfig)
+
     if (!tableElement){
           return 0
         }
     if(tableElement){
       this.tableInstance = new TabulatorFull(tableElement,
       this.tableConfig)
+      this.tableInstance.on("tableBuilt",()=>{
+            this.postBuildTable()
+            this.tableReady=true
+        })
 
-      this.postBuildTable()
+
     }
   }
 
@@ -486,7 +369,7 @@ export default class SlTable extends LitElement {
   render() {
     return html`
       <div style="width:100%;height:100%">
-        <div id="shadowtable" part="base" class="striped celled">
+        <div id="shadowtable" style="display: none" part="base" class="striped celled">
 
         </div>
       </div>
@@ -498,143 +381,4 @@ declare global {
   interface HTMLElementTagNameMap {
     'sl-table': SlTable;
   }
-}
-
-
-
-function sanitizeHTML(value){
-		if(value){
-			const entityMap = {
-				'&': '&amp;',
-				'<': '&lt;',
-				'>': '&gt;',
-				'"': '&quot;',
-				"'": '&#39;',
-				'/': '&#x2F;',
-				'`': '&#x60;',
-				'=': '&#x3D;'
-			};
-
-			return String(value).replace(/[&<>"'`=\/]/g, function (s) {
-				return entityMap[s];
-			});
-		}else {
-			return value;
-		}
-	}
-
-function emptyToSpace(value){
-		return value === null || typeof value === "undefined" || value === "" ? "&nbsp;" : value;
-	}
-
-function format_textarea(cell, formatterParams, onRendered,value=null){
-	cell.getElement().style.whiteSpace = "pre-wrap";
-
-  if (!value){
-    value = cell.getValue()
-  }
-	return emptyToSpace(sanitizeHTML(value));
-}
-
-function format_plaintext(cell, formatterParams, onRendered,value=null){
-  if (!value){
-    value = cell.getValue()
-  }
-	return emptyToSpace(sanitizeHTML(value));
-}
-
-function format_image(cell, formatterParams, onRendered,value=null){
-	var el = document.createElement("img"),
-	src = cell.getValue();
-
-	if(formatterParams.urlPrefix){
-		src = formatterParams.urlPrefix + cell.getValue();
-	}
-
-	if(formatterParams.urlSuffix){
-		src = src + formatterParams.urlSuffix;
-	}
-
-	el.setAttribute("src", src);
-
-	switch(typeof formatterParams.height){
-		case "number":
-		el.style.height = formatterParams.height + "px";
-		break;
-
-		case "string":
-		el.style.height = formatterParams.height;
-		break;
-	}
-
-	switch(typeof formatterParams.width){
-		case "number":
-		el.style.width = formatterParams.width + "px";
-		break;
-
-		case "string":
-		el.style.width = formatterParams.width;
-		break;
-	}
-
-	el.addEventListener("load", function(){
-		cell.getRow().normalizeHeight();
-	});
-
-	return el;
-}
-
-
-function format_datetime(cell, formatterParams, onRendered,value=null){
-	var DT = window.DateTime || luxon.DateTime;
-	var inputFormat = formatterParams.inputFormat || "yyyy-MM-dd HH:mm:ss";
-	var	outputFormat = formatterParams.outputFormat || "dd/MM/yyyy HH:mm:ss";
-	var	invalid = typeof formatterParams.invalidPlaceholder !== "undefined" ? formatterParams.invalidPlaceholder : "";
-	var value = cell.getValue();
-
-	if(typeof DT != "undefined"){
-		var newDatetime;
-
-		if(DT.isDateTime(value)){
-			 newDatetime = value;
-		 }else if(inputFormat === "iso"){
-			 newDatetime = DT.fromISO(String(value));
-		 }else {
-			 newDatetime = DT.fromFormat(String(value), inputFormat);
-		 }
-
-		if(newDatetime.isValid){
-			if(formatterParams.timezone){
-				newDatetime = newDatetime.setZone(formatterParams.timezone);
-			}
-
-			return newDatetime.toFormat(outputFormat);
-		}else {
-			if(invalid === true || !value){
-				return value;
-			}else if(typeof invalid === "function"){
-				return invalid(value);
-			}else {
-				return invalid;
-			}
-		}
-	}else {
-		console.error("Format Error - 'datetime' formatter is dependant on luxon.js");
-	}
-}
-
-function format_lookup (cell, formatterParams, onRendered,value=null) {
-	var value = cell.getValue();
-
-	if (typeof formatterParams[value] === "undefined") {
-		console.warn('Missing display value for ' + value);
-		return value;
-	}
-
-	return formatterParams[value];
-}
-
-function format_color(cell, formatterParams, onRendered,value=null){
-	cell.getElement().style.backgroundColor = this.sanitizeHTML(cell.getValue());
-	return "";
 }

@@ -1431,5 +1431,4 @@ body.tabulator-print-fullscreen-hide > *:not(.tabulator-print-fullscreen) {
 .tabulator-print-table .tabulator-print-table-group span {
   color: var(--sl-color-neutral-500);
 }
-
 `;

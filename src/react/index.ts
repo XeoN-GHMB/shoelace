@@ -1,6 +1,6 @@
 export { default as SlAcPanel } from './ac-panel';
-export { default as SlAnimatedImage } from './animated-image';
 export { default as SlAlert } from './alert';
+export { default as SlAnimatedImage } from './animated-image';
 export { default as SlAnimation } from './animation';
 export { default as SlAvatar } from './avatar';
 export { default as SlBackToTop } from './back-to-top';
@@ -63,9 +63,9 @@ export { default as SlSkeleton } from './skeleton';
 export { default as SlSlider } from './slider';
 export { default as SlSpinner } from './spinner';
 export { default as SlSpinnerCircle } from './spinner-circle';
-export { default as SlSplitPanel } from './split-panel';
 export { default as SlSplitter } from './splitter';
 export { default as SlStep } from './step';
+export { default as SlSplitPanel } from './split-panel';
 export { default as SlSteps } from './steps';
 export { default as SlSwitch } from './switch';
 export { default as SlTab } from './tab';
