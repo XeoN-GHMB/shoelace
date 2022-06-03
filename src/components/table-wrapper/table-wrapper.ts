@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import styles from './table-wrapper.styles';
 // @ts-ignore
 import naturalCompare from 'string-natural-compare';
+import {watchProps} from "../../internal/watchProps";
 
 /**
  * @since 2.0
@@ -24,6 +25,8 @@ export default class SlTableWrapper extends LitElement {
 
   /** Wenn set table header is sortable */
   @property({ type: Boolean, reflect: true }) sortable = false;
+
+  @property({ type: String, reflect: true }) search = "";
 
 
 
@@ -65,7 +68,11 @@ export default class SlTableWrapper extends LitElement {
     if (childs.length===0){
       return 0
     }
-    this.tableElement = childs[0].querySelector("table")
+    if (childs[0].nodeName ==="TABLE"){
+      this.tableElement = childs[0]
+    }else{
+      this.tableElement = childs[0].querySelector("table")
+    }
     return 1
   }
 
@@ -75,7 +82,6 @@ export default class SlTableWrapper extends LitElement {
     if (!this.sortable){
       return 0
     }
-
     let cth = e.target.closest("th")
     if (e.target.closest("th")){
       let allTHs = this.tableElement.querySelectorAll("th")
@@ -84,10 +90,16 @@ export default class SlTableWrapper extends LitElement {
       }
 
       cth.dataset.sort=this.sortOrder[this.sortOrder.indexOf(cth.dataset.sort)===2?0:(this.sortOrder.indexOf(cth.dataset.sort)+1)%2]
-      cth.querySelector("sl-icon").setAttribute("name", cth.dataset.sort ==="asc"?"arrow-up":"arrow-down")
+      cth.querySelector("sl-icon").setAttribute("name", cth.dataset.sort ==="asc"?"chevron-up":"chevron-down")
       sortTable(this.tableElement,cth.dataset.column,cth.dataset.sort)
     }
     return 1
+  }
+
+  @watchProps(['search'])
+  performSearch() {
+    searchTable(this.tableElement,this.search)
+
   }
 
   filterTable(e:any){
@@ -161,6 +173,10 @@ function sortTable(table:HTMLTableElement,idx:number,direction:string) {
 
 /** Search in a givn table for searchString*/
 function searchTable(table:HTMLTableElement, searchString:string) {
+  if(!table){
+    return 0
+  }
+
   let tr = table.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
   for (let i = 0; i < tr.length; i++) {
     let tds = tr[i].getElementsByTagName("td");
