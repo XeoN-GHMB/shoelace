@@ -49,7 +49,7 @@ export default class SlCard extends LitElement {
         <div part="image" class="card__image">
           <slot name="image"></slot>
         </div>
-        <div class="card_group">
+        <div part="group" class="card_group">
           <div part="header" class="card__header">
             <slot name="header"></slot>
           </div>

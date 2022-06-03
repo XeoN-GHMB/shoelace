@@ -306,7 +306,7 @@ const App = () => (
 Cards can use horizontal parameter to place the image on the left side.
 
 ```html preview
-<sl-card class="card-image" horizontal>
+<sl-card horizontal>
   <img
     slot="image"
     src="https://images.unsplash.com/photo-1547191783-94d5f8f6d8b1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80"
@@ -316,9 +316,6 @@ Cards can use horizontal parameter to place the image on the left side.
 </sl-card>
 
 <style>
-  .card-image {
-    max-width: 300px;
-  }
 </style>
 ```
 

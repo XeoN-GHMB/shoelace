@@ -64,6 +64,7 @@ export default css`
   .card_group{
     display: flex;
     flex-direction: column;
+    flex:1;
   }
   .card-horizontal{
     flex-direction: row;
@@ -72,6 +73,7 @@ export default css`
   .card-horizontal .card__image{
     border-top-right-radius: 0;
     border-bottom-left-radius: var(--border-radius);
+    flex-basis: 30%;
   }
 
   .card-horizontal .card__image ::slotted(img) {
