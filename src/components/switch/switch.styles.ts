@@ -81,7 +81,8 @@ export default css`
     .switch__thumb {
     background-color: var(--sl-color-neutral-0);
     border-color: var(--sl-color-success-600);
-    box-shadow: var(--sl-focus-ring);
+    outline: var(--sl-focus-ring);
+    outline-offset: var(--sl-focus-ring-offset);
   }
 
   /* Checked */
@@ -120,7 +121,8 @@ export default css`
     .switch__thumb {
     background-color: var(--sl-color-neutral-0);
     border-color: var(--sl-color-success-600);
-    box-shadow: var(--sl-focus-ring);
+    outline: var(--sl-focus-ring);
+    outline-offset: var(--sl-focus-ring-offset);
   }
 
   /* Disabled */

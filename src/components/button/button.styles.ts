@@ -40,6 +40,11 @@ export default css`
     outline: none;
   }
 
+  .button${focusVisibleSelector} {
+    outline: var(--sl-focus-ring);
+    outline-offset: var(--sl-focus-ring-offset);
+  }
+
   .button--disabled {
     opacity: 0.7;
     background: none;
@@ -81,13 +86,6 @@ export default css`
     color: var(--sl-color-neutral-700);
   }
 
-  .button--standard.button--default${focusVisibleSelector}:not(.button--disabled) {
-    background-color: var(--sl-color-neutral-0);
-    border-color: var(--sl-color-neutral-200);
-    color: var(--sl-color-neutral-700);
-    box-shadow: var(--sl-focus-ring);
-  }
-
   .button--standard.button--default:active:not(.button--disabled) {
     background-color: var(--sl-color-neutral-0);
     border-color: var(--sl-color-neutral-200);
@@ -105,13 +103,6 @@ export default css`
     background-color: var(--sl-color-primary-400);
     border-color: var(--sl-color-primary-600);
     color: var(--sl-color-neutral-0);
-  }
-
-  .button--standard.button--primary${focusVisibleSelector}:not(.button--disabled) {
-    background-color: var(--sl-color-primary-500);
-    border-color: var(--sl-color-primary-700);
-    color: var(--sl-color-neutral-0);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--standard.button--primary:active:not(.button--disabled) {
@@ -133,13 +124,6 @@ export default css`
     color: var(--sl-color-neutral-0);
   }
 
-  .button--standard.button--success${focusVisibleSelector}:not(.button--disabled) {
-    background-color: var(--sl-color-success-500);
-    border-color: var(--sl-color-success-700);
-    color: var(--sl-color-neutral-0);
-    box-shadow: var(--sl-focus-ring);
-  }
-
   .button--standard.button--success:active:not(.button--disabled) {
     background-color: var(--sl-color-success-400);
     border-color: var(--sl-color-success-600);
@@ -157,13 +141,6 @@ export default css`
     background-color: var(--sl-color-neutral-400);
     border-color: var(--sl-color-neutral-600);
     color: var(--sl-color-neutral-0);
-  }
-
-  .button--standard.button--neutral${focusVisibleSelector}:not(.button--disabled) {
-    background-color: var(--sl-color-neutral-400);
-    border-color: var(--sl-color-neutral-600);
-    color: var(--sl-color-neutral-0);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--standard.button--neutral:active:not(.button--disabled) {
@@ -184,13 +161,6 @@ export default css`
     color: var(--sl-color-neutral-0);
   }
 
-  .button--standard.button--warning${focusVisibleSelector}:not(.button--disabled) {
-    background-color: var(--sl-color-warning-400);
-    border-color: var(--sl-color-warning-600);
-    color: var(--sl-color-neutral-0);
-    box-shadow: var(--sl-focus-ring);
-  }
-
   .button--standard.button--warning:active:not(.button--disabled) {
     background-color: var(--sl-color-warning-400);
     border-color: var(--sl-color-warning-600);
@@ -208,13 +178,6 @@ export default css`
     background-color: var(--sl-color-danger-400);
     border-color: var(--sl-color-danger-600);
     color: var(--sl-color-neutral-0);
-  }
-
-  .button--standard.button--danger${focusVisibleSelector}:not(.button--disabled) {
-    background-color: var(--sl-color-danger-400);
-    border-color: var(--sl-color-danger-600);
-    color: var(--sl-color-neutral-0);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--standard.button--danger:active:not(.button--disabled) {
@@ -298,11 +261,6 @@ export default css`
     color: var(--sl-color-neutral-0);
   }
 
-  .button--outline.button--default${focusVisibleSelector}:not(.button--disabled) {
-    border-color: var(--sl-color-primary-500);
-    box-shadow: var(--sl-focus-ring);
-  }
-
   .button--outline.button--default:active:not(.button--disabled) {
     border-color: var(--sl-color-primary-700);
     background-color: var(--sl-color-primary-700);
@@ -319,11 +277,6 @@ export default css`
   .button--outline.button--primary.button--checked:not(.button--disabled) {
     background-color: var(--sl-color-primary-600);
     color: var(--sl-color-neutral-0);
-  }
-
-  .button--outline.button--primary${focusVisibleSelector}:not(.button--disabled) {
-    border-color: var(--sl-color-primary-500);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--outline.button--primary:active:not(.button--disabled) {
@@ -344,11 +297,6 @@ export default css`
     color: var(--sl-color-neutral-0);
   }
 
-  .button--outline.button--success${focusVisibleSelector}:not(.button--disabled) {
-    border-color: var(--sl-color-success-500);
-    box-shadow: var(--sl-focus-ring);
-  }
-
   .button--outline.button--success:active:not(.button--disabled) {
     border-color: var(--sl-color-success-700);
     background-color: var(--sl-color-success-700);
@@ -365,11 +313,6 @@ export default css`
   .button--outline.button--neutral.button--checked:not(.button--disabled) {
     background-color: var(--sl-color-neutral-600);
     color: var(--sl-color-neutral-0);
-  }
-
-  .button--outline.button--neutral${focusVisibleSelector}:not(.button--disabled) {
-    border-color: var(--sl-color-neutral-500);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--outline.button--neutral:active:not(.button--disabled) {
@@ -390,11 +333,6 @@ export default css`
     color: var(--sl-color-neutral-0);
   }
 
-  .button--outline.button--warning${focusVisibleSelector}:not(.button--disabled) {
-    border-color: var(--sl-color-warning-500);
-    box-shadow: var(--sl-focus-ring);
-  }
-
   .button--outline.button--warning:active:not(.button--disabled) {
     border-color: var(--sl-color-warning-700);
     background-color: var(--sl-color-warning-700);
@@ -411,11 +349,6 @@ export default css`
   .button--outline.button--danger.button--checked:not(.button--disabled) {
     background-color: var(--sl-color-danger-600);
     color: var(--sl-color-neutral-0);
-  }
-
-  .button--outline.button--danger${focusVisibleSelector}:not(.button--disabled) {
-    border-color: var(--sl-color-danger-500);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--outline.button--danger:active:not(.button--disabled) {
@@ -489,7 +422,6 @@ export default css`
     background-color: transparent;
     border-color: transparent;
     color: var(--sl-color-primary-500);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--text:active:not(.button--disabled) {

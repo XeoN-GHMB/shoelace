@@ -8,7 +8,7 @@ import '../../components/menu/menu';
 import '../../components/tag/tag';
 import { emit } from '../../internal/event';
 import { FormSubmitController } from '../../internal/form';
-import { getTextContent, HasSlotController } from '../../internal/slot';
+import { HasSlotController } from '../../internal/slot';
 import { watch } from '../../internal/watch';
 import { LocalizeController } from '../../utilities/localize';
 import styles from './select.styles';
@@ -72,6 +72,7 @@ export default class SlSelect extends LitElement {
   private readonly formSubmitController = new FormSubmitController(this);
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private readonly localize = new LocalizeController(this);
+  private menuItems: SlMenuItem[] = [];
   private resizeObserver: ResizeObserver;
 
   @state() private hasFocus = false;
@@ -138,7 +139,6 @@ export default class SlSelect extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    this.handleMenuSlotChange = this.handleMenuSlotChange.bind(this);
     this.resizeObserver = new ResizeObserver(() => this.resizeMenu());
 
     this.updateComplete.then(() => {
@@ -165,15 +165,6 @@ export default class SlSelect extends LitElement {
   setCustomValidity(message: string) {
     this.input.setCustomValidity(message);
     this.invalid = !this.input.checkValidity();
-  }
-
-  getItemLabel(item: SlMenuItem) {
-    const slot = item.shadowRoot!.querySelector<HTMLSlotElement>('slot:not([name])');
-    return getTextContent(slot);
-  }
-
-  getItems() {
-    return [...this.querySelectorAll<SlMenuItem>('sl-menu-item')];
   }
 
   getValueAsArray() {
@@ -230,9 +221,8 @@ export default class SlSelect extends LitElement {
 
   handleKeyDown(event: KeyboardEvent) {
     const target = event.target as HTMLElement;
-    const items = this.getItems();
-    const firstItem = items[0];
-    const lastItem = items[items.length - 1];
+    const firstItem = this.menuItems[0];
+    const lastItem = this.menuItems[this.menuItems.length - 1];
 
     // Ignore key presses on tags
     if (target.tagName.toLowerCase() === 'sl-tag') {
@@ -314,6 +304,14 @@ export default class SlSelect extends LitElement {
     this.control.focus();
   }
 
+  handleMenuItemLabelChange() {
+    // Update the display label when checked menu item's label changes
+    if (!this.multiple) {
+      const checkedItem = this.menuItems.find(item => item.value === this.value);
+      this.displayLabel = checkedItem ? checkedItem.getTextLabel() : '';
+    }
+  }
+
   @watch('multiple')
   handleMultipleChange() {
     // Cast to array | string based on `this.multiple`
@@ -324,11 +322,11 @@ export default class SlSelect extends LitElement {
 
   async handleMenuSlotChange() {
     // Wait for items to render before gathering labels otherwise the slot won't exist
-    const items = this.getItems();
+    this.menuItems = [...this.querySelectorAll<SlMenuItem>('sl-menu-item')];
 
     // Check for duplicate values in menu items
     const values: string[] = [];
-    items.forEach(item => {
+    this.menuItems.forEach(item => {
       if (values.includes(item.value)) {
         console.error(`Duplicate value found in <sl-select> menu item: '${item.value}'`, item);
       }
@@ -336,7 +334,8 @@ export default class SlSelect extends LitElement {
       values.push(item.value);
     });
 
-    await Promise.all(items.map(item => item.render)).then(() => this.syncItemsFromValue());
+    await Promise.all(this.menuItems.map(item => item.render));
+    this.syncItemsFromValue();
   }
 
   handleTagInteraction(event: KeyboardEvent | MouseEvent) {
@@ -365,22 +364,20 @@ export default class SlSelect extends LitElement {
 
   resizeMenu() {
     this.menu.style.width = `${this.control.clientWidth}px`;
-
     this.dropdown.reposition();
   }
 
   syncItemsFromValue() {
-    const items = this.getItems();
     const value = this.getValueAsArray();
 
     // Sync checked states
-    items.map(item => (item.checked = value.includes(item.value)));
+    this.menuItems.forEach(item => (item.checked = value.includes(item.value)));
 
     // Sync display label and tags
     if (this.multiple) {
-      const checkedItems = items.filter(item => value.includes(item.value));
+      const checkedItems = this.menuItems.filter(item => value.includes(item.value));
 
-      this.displayLabel = checkedItems.length > 0 ? this.getItemLabel(checkedItems[0]) : '';
+      this.displayLabel = checkedItems.length > 0 ? checkedItems[0].getTextLabel() : '';
       this.displayTags = checkedItems.map((item: SlMenuItem) => {
         return html`
           <sl-tag
@@ -404,7 +401,7 @@ export default class SlSelect extends LitElement {
               }
             }}
           >
-            ${this.getItemLabel(item)}
+            ${item.getTextLabel()}
           </sl-tag>
         `;
       });
@@ -429,16 +426,15 @@ export default class SlSelect extends LitElement {
         `);
       }
     } else {
-      const checkedItem = items.find(item => item.value === value[0]);
+      const checkedItem = this.menuItems.find(item => item.value === value[0]);
 
-      this.displayLabel = checkedItem ? this.getItemLabel(checkedItem) : '';
+      this.displayLabel = checkedItem ? checkedItem.getTextLabel() : '';
       this.displayTags = [];
     }
   }
 
   syncValueFromItems() {
-    const items = this.getItems();
-    const checkedItems = items.filter(item => item.checked);
+    const checkedItems = this.menuItems.filter(item => item.checked);
     const checkedValues = checkedItems.map(item => item.value);
 
     if (this.multiple) {
@@ -454,6 +450,7 @@ export default class SlSelect extends LitElement {
     const hasSelection = this.multiple ? this.value.length > 0 : this.value !== '';
     const hasLabel = this.label ? true : !!hasLabelSlot;
     const hasHelpText = this.helpText ? true : !!hasHelpTextSlot;
+    const hasClearIcon = this.clearable && !this.disabled && hasSelection;
 
     return html`
       <div
@@ -488,7 +485,7 @@ export default class SlSelect extends LitElement {
             class=${classMap({
               select: true,
               'select--open': this.isOpen,
-              'select--empty': this.value.length === 0,
+              'select--empty': !this.value,
               'select--focused': this.hasFocus,
               'select--clearable': this.clearable,
               'select--disabled': this.disabled,
@@ -534,7 +531,7 @@ export default class SlSelect extends LitElement {
                   : this.placeholder}
               </div>
 
-              ${this.clearable && hasSelection
+              ${hasClearIcon
                 ? html`
                     <button
                       part="clear-button"
@@ -572,7 +569,7 @@ export default class SlSelect extends LitElement {
             </div>
 
             <sl-menu part="menu" id="menu" class="select__menu" @sl-select=${this.handleMenuSelect}>
-              <slot @slotchange=${this.handleMenuSlotChange}></slot>
+              <slot @slotchange=${this.handleMenuSlotChange} @sl-label-change=${this.handleMenuItemLabelChange}></slot>
             </sl-menu>
           </sl-dropdown>
         </div>

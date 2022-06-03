@@ -56,8 +56,17 @@ export default class SlInput extends LitElement {
   @state() private isPasswordVisible = false;
 
   /** The input's type. */
-  @property({ reflect: true }) type: 'date' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url' =
-    'text';
+  @property({ reflect: true }) type:
+    | 'date'
+    | 'datetime-local'
+    | 'email'
+    | 'number'
+    | 'password'
+    | 'search'
+    | 'tel'
+    | 'text'
+    | 'time'
+    | 'url' = 'text';
 
   /** The input's size. */
   @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
@@ -152,10 +161,8 @@ export default class SlInput extends LitElement {
   }
 
   set valueAsDate(newValue: Date | null) {
-    this.updateComplete.then(() => {
-      this.input.valueAsDate = newValue;
-      this.value = this.input.value;
-    });
+    this.input.valueAsDate = newValue;
+    this.value = this.input.value;
   }
 
   /** Gets or sets the current value as a number. */
@@ -164,10 +171,8 @@ export default class SlInput extends LitElement {
   }
 
   set valueAsNumber(newValue: number) {
-    this.updateComplete.then(() => {
-      this.input.valueAsNumber = newValue;
-      this.value = this.input.value;
-    });
+    this.input.valueAsNumber = newValue;
+    this.value = this.input.value;
   }
 
   firstUpdated() {
@@ -269,9 +274,14 @@ export default class SlInput extends LitElement {
   handleKeyDown(event: KeyboardEvent) {
     const hasModifier = event.metaKey || event.ctrlKey || event.shiftKey || event.altKey;
 
-    // Pressing enter when focused on an input should submit the form like a native input
+    // Pressing enter when focused on an input should submit the form like a native input, but we wait a tick before
+    // submitting to allow users to cancel the keydown event if they need to
     if (event.key === 'Enter' && !hasModifier) {
-      this.formSubmitController.submit();
+      setTimeout(() => {
+        if (!event.defaultPrevented) {
+          this.formSubmitController.submit();
+        }
+      });
     }
   }
 
@@ -289,6 +299,7 @@ export default class SlInput extends LitElement {
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
     const hasLabel = this.label ? true : !!hasLabelSlot;
     const hasHelpText = this.helpText ? true : !!hasHelpTextSlot;
+    const hasClearIcon = this.clearable && !this.disabled && !this.readonly && this.value.length > 0;
 
     return html`
       <div
@@ -328,7 +339,7 @@ export default class SlInput extends LitElement {
               'input--filled': this.filled,
               'input--disabled': this.disabled,
               'input--focused': this.hasFocus,
-              'input--empty': this.value.length === 0,
+              'input--empty': !this.value,
               'input--invalid': this.invalid
             })}
           >
@@ -370,7 +381,7 @@ export default class SlInput extends LitElement {
               @blur=${this.handleBlur}
             />
 
-            ${this.clearable && this.value.length > 0
+            ${hasClearIcon
               ? html`
                   <button
                     part="clear-button"
@@ -386,7 +397,7 @@ export default class SlInput extends LitElement {
                   </button>
                 `
               : ''}
-            ${this.togglePassword
+            ${this.togglePassword && !this.disabled
               ? html`
                   <button
                     part="password-toggle-button"

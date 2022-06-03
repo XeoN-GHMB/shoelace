@@ -77,6 +77,7 @@ export { default as SlLayout } from './components/layout/layout';
 export { default as SlRouter } from './components/router/router';
 export { default as SlRouterLink } from './components/router/router-link';
 export { default as SlTable } from './components/table/table';
+export { default as SlTableWrapper } from './components/table-wrapper/table-wrapper';
 /* plop:component */
 
 // Utilities

@@ -23,7 +23,6 @@ describe('<sl-input>', () => {
       const today = new Date();
 
       el.valueAsDate = today;
-      await el.updateComplete;
 
       expect(el.value).to.equal(today.toISOString().split('T')[0]);
     });
@@ -33,7 +32,6 @@ describe('<sl-input>', () => {
       const num = 12345;
 
       el.valueAsNumber = num;
-      await el.updateComplete;
 
       expect(el.value).to.equal(num.toString());
     });
@@ -103,6 +101,26 @@ describe('<sl-input>', () => {
       await waitUntil(() => submitHandler.calledOnce);
 
       expect(submitHandler).to.have.been.calledOnce;
+    });
+
+    it('should prevent submission when pressing enter in an input and canceling the keydown event', async () => {
+      const form = await fixture<HTMLFormElement>(html` <form><sl-input></sl-input></form> `);
+      const input = form.querySelector('sl-input')!;
+      const submitHandler = sinon.spy((event: SubmitEvent) => event.preventDefault());
+      const keydownHandler = sinon.spy((event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+      });
+
+      form.addEventListener('submit', submitHandler);
+      input.addEventListener('keydown', keydownHandler);
+      input.focus();
+      await sendKeys({ press: 'Enter' });
+      await waitUntil(() => keydownHandler.calledOnce);
+
+      expect(keydownHandler).to.have.been.calledOnce;
+      expect(submitHandler).to.not.have.been.called;
     });
   });
 });

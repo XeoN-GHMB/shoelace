@@ -21,7 +21,7 @@ describe('<sl-radio>', () => {
   it('should fire sl-change when clicked', async () => {
     const el = await fixture<SlRadio>(html` <sl-radio></sl-radio> `);
     setTimeout(() => el.input.click());
-    const event = await oneEvent(el, 'sl-change');
+    const event = (await oneEvent(el, 'sl-change')) as CustomEvent;
     expect(event.target).to.equal(el);
     expect(el.checked).to.be.true;
   });
@@ -30,7 +30,7 @@ describe('<sl-radio>', () => {
     const el = await fixture<SlRadio>(html` <sl-radio></sl-radio> `);
     el.input.focus();
     setTimeout(() => sendKeys({ press: ' ' }));
-    const event = await oneEvent(el, 'sl-change');
+    const event = (await oneEvent(el, 'sl-change')) as CustomEvent;
     expect(event.target).to.equal(el);
     expect(el.checked).to.be.true;
   });
@@ -46,7 +46,7 @@ describe('<sl-radio>', () => {
     const radio2 = radioGroup.querySelector<SlRadio>('#radio-2')!;
     radio1.input.focus();
     setTimeout(() => sendKeys({ press: 'ArrowRight' }));
-    const event = await oneEvent(radio2, 'sl-change');
+    const event = (await oneEvent(radio2, 'sl-change')) as CustomEvent;
     expect(event.target).to.equal(radio2);
     expect(radio2.checked).to.be.true;
   });
@@ -69,7 +69,7 @@ describe('<sl-radio>', () => {
   });
 
   describe('when submitting a form', () => {
-    it('should submit the correct value', async () => {
+    it('should submit the correct value when a value is provided', async () => {
       const form = await fixture<HTMLFormElement>(html`
         <form>
           <sl-radio-group>
@@ -96,6 +96,34 @@ describe('<sl-radio>', () => {
 
       expect(formData!.get('a')).to.equal('2');
     });
+  });
+
+  it('should submit "on" when no value is provided', async () => {
+    const form = await fixture<HTMLFormElement>(html`
+      <form>
+        <sl-radio-group>
+          <sl-radio id="radio-1" name="a" checked></sl-radio>
+          <sl-radio id="radio-2" name="a"></sl-radio>
+          <sl-radio id="radio-3" name="a"></sl-radio>
+        </sl-radio-group>
+        <sl-button type="submit">Submit</sl-button>
+      </form>
+    `);
+    const button = form.querySelector('sl-button')!;
+    const radio = form.querySelectorAll('sl-radio')[1]!;
+    const submitHandler = sinon.spy((event: SubmitEvent) => {
+      formData = new FormData(form);
+      event.preventDefault();
+    });
+    let formData: FormData;
+
+    form.addEventListener('submit', submitHandler);
+    radio.click();
+    button.click();
+
+    await waitUntil(() => submitHandler.calledOnce);
+
+    expect(formData!.get('a')).to.equal('on');
   });
 
   it('should show a constraint validation error when setCustomValidity() is called', async () => {

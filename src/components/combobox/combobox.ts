@@ -184,7 +184,7 @@ export default class SlCombobox extends LitElement {
     emit(this, 'sl-input');
 
     if (this.activeItemIndex !== -1) {
-      this.menu.getAllItems({includeDisabled: false})[this.activeItemIndex].active = false;
+      this.menu.getAllItems()[this.activeItemIndex].active = false;
       this.activeItemIndex = -1;
     }
 

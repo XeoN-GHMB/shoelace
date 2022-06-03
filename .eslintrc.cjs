@@ -74,7 +74,6 @@ module.exports = {
         '@typescript-eslint/non-nullable-type-assertion-style': 'warn',
         '@typescript-eslint/prefer-for-of': 'warn',
         '@typescript-eslint/prefer-optional-chain': 'warn',
-        '@typescript-eslint/prefer-readonly': 'warn',
         '@typescript-eslint/prefer-ts-expect-error': 'warn',
         '@typescript-eslint/prefer-return-this-type': 'error',
         '@typescript-eslint/prefer-string-starts-ends-with': 'warn',
@@ -84,34 +83,6 @@ module.exports = {
         '@typescript-eslint/consistent-type-definitions': ['warn', 'interface'],
         '@typescript-eslint/member-delimiter-style': 'warn',
         '@typescript-eslint/method-signature-style': 'warn',
-        '@typescript-eslint/naming-convention': [
-          'warn',
-          {
-            selector: 'default',
-            format: ['camelCase']
-          },
-          {
-            selector: ['function', 'enumMember', 'property'],
-            format: ['camelCase', 'PascalCase']
-          },
-          {
-            selector: 'variable',
-            modifiers: ['const'],
-            format: ['camelCase', 'PascalCase', 'UPPER_CASE']
-          },
-          {
-            selector: 'typeLike',
-            format: ['PascalCase']
-          },
-          {
-            selector: 'typeProperty',
-            format: ['camelCase', 'PascalCase', 'UPPER_CASE']
-          },
-          {
-            selector: 'objectLiteralProperty',
-            format: null
-          }
-        ],
         '@typescript-eslint/no-extraneous-class': 'error',
         '@typescript-eslint/no-parameter-properties': 'error',
         '@typescript-eslint/strict-boolean-expressions': 'off'
@@ -129,6 +100,7 @@ module.exports = {
   rules: {
     'no-template-curly-in-string': 'error',
     'array-callback-return': 'error',
+    'comma-dangle': 'off',
     'consistent-return': 'error',
     curly: 'off',
     'default-param-last': 'error',
@@ -180,25 +152,9 @@ module.exports = {
     'prefer-template': 'warn',
     'no-else-return': 'warn',
     'func-names': ['warn', 'never'],
-    'func-style': ['warn', 'declaration'],
     'one-var': ['warn', 'never'],
     'operator-assignment': 'warn',
     'prefer-arrow-callback': 'warn',
-    'no-restricted-syntax': [
-      'warn',
-      {
-        selector: "CallExpression[callee.name='String']",
-        message: "Don't use the String function. Use .toString() instead."
-      },
-      {
-        selector: "CallExpression[callee.name='Number']",
-        message: "Don't use the Number function. Use parseInt or parseFloat instead."
-      },
-      {
-        selector: "CallExpression[callee.name='Boolean']",
-        message: "Don't use the Boolean function. Use a strict comparison instead."
-      }
-    ],
     'no-restricted-imports': [
       'warn',
       {

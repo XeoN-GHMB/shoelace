@@ -91,6 +91,7 @@
   <!--- [TreeTable](/components/treeTable)-->
   <!--- [EditTable](/components/tableEdit)-->
   - [Table](/components/table)
+  - [Table Wrapper](/components/table-wrapper)
   <!--plop:component-->
   
 - Utilities

@@ -29,7 +29,7 @@ To customize a design token, simply override it in your stylesheet using a `:roo
 }
 ```
 
-Many design tokens are described further along in this documentation. For a complete list, refer to `src/themes/light.styles.ts` in the project's [source code](https://github.com/shoelace-style/shoelace/blob/current/src/themes/light.styles.ts).
+Many design tokens are described further along in this documentation. For a complete list, refer to `src/themes/light.css` in the project's [source code](https://github.com/shoelace-style/shoelace/blob/current/src/themes/light.css).
 
 !> **Never modify variables directly in `src/themes/light.styles.ts`** because your changes will be overwritten when you upgrade Shoelace. Even if you don't plan on upgrading, it's always better to override design tokens in your own stylesheet for better maintainability.
 
