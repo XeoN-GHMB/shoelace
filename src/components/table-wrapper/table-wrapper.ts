@@ -196,6 +196,7 @@ function searchTable(table:HTMLTableElement, searchString:string) {
       }
     }
   }
+  return 1
 }
 
 
