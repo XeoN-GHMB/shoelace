@@ -1,13 +1,8 @@
 {
   "name": "@viur/viur-shoelace",
   "description": "A forward-thinking library of web components.",
-<<<<<<< HEAD
   "version": "2.0.0-beta.76-viur-1",
   "homepage": "https://github.com/viur-framework/viur-shoelace",
-=======
-  "version": "2.0.0-beta.76",
-  "homepage": "https://github.com/shoelace-style/shoelace",
->>>>>>> upstream/next
   "author": "Cory LaViska",
   "contributors": [
     "Andreas H. Kelch"
