@@ -29,6 +29,26 @@ export default css`
     cursor: pointer;
   }
 
+  .details__header .details-item__prefix {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .details__header .details-item__prefix ::slotted(*) {
+    margin-inline-end: var(--sl-spacing-x-small);
+  }
+
+  .details__header .details-item__suffix {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+  }
+
+  .details__header .details-item__suffix ::slotted(*) {
+    margin-inline-start: var(--sl-spacing-x-small);
+  }
+
   .details__header:focus {
     outline: none;
   }
@@ -50,7 +70,6 @@ export default css`
   .details__summary {
     flex: 1 1 auto;
     display: flex;
-    align-items: center;
   }
 
   .details__summary-icon {

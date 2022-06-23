@@ -34,6 +34,7 @@ import type SlTab from '../../components/tab/tab';
  *
  * @cssproperty --indicator-color - The color of the active tab indicator.
  * @cssproperty --track-color - The color of the indicator's track (i.e. the line that separates tabs from panels).
+ * @cssproperty --track-width - The width of the indicator's track (the line that separates tabs from panels).
  */
 @customElement('sl-tab-group')
 export default class SlTabGroup extends LitElement {
@@ -178,6 +179,7 @@ export default class SlTabGroup extends LitElement {
     // Move focus left or right
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       const activeEl = document.activeElement;
+      const isRtl = this.localize.dir() === 'rtl';
 
       if (activeEl?.tagName.toLowerCase() === 'sl-tab') {
         let index = this.tabs.indexOf(activeEl as SlTab);
@@ -187,12 +189,12 @@ export default class SlTabGroup extends LitElement {
         } else if (event.key === 'End') {
           index = this.tabs.length - 1;
         } else if (
-          (['top', 'bottom'].includes(this.placement) && event.key === 'ArrowLeft') ||
+          (['top', 'bottom'].includes(this.placement) && event.key === (isRtl ? 'ArrowRight' : 'ArrowLeft')) ||
           (['start', 'end'].includes(this.placement) && event.key === 'ArrowUp')
         ) {
           index--;
         } else if (
-          (['top', 'bottom'].includes(this.placement) && event.key === 'ArrowRight') ||
+          (['top', 'bottom'].includes(this.placement) && event.key === (isRtl ? 'ArrowLeft' : 'ArrowRight')) ||
           (['start', 'end'].includes(this.placement) && event.key === 'ArrowDown')
         ) {
           index++;
@@ -223,14 +225,20 @@ export default class SlTabGroup extends LitElement {
 
   handleScrollToStart() {
     this.nav.scroll({
-      left: this.nav.scrollLeft - this.nav.clientWidth,
+      left:
+        this.localize.dir() === 'rtl'
+          ? this.nav.scrollLeft + this.nav.clientWidth
+          : this.nav.scrollLeft - this.nav.clientWidth,
       behavior: 'smooth'
     });
   }
 
   handleScrollToEnd() {
     this.nav.scroll({
-      left: this.nav.scrollLeft + this.nav.clientWidth,
+      left:
+        this.localize.dir() === 'rtl'
+          ? this.nav.scrollLeft - this.nav.clientWidth
+          : this.nav.scrollLeft + this.nav.clientWidth,
       behavior: 'smooth'
     });
   }
@@ -308,6 +316,7 @@ export default class SlTabGroup extends LitElement {
 
     const width = currentTab.clientWidth;
     const height = currentTab.clientHeight;
+    const isRtl = this.localize.dir() === 'rtl';
 
     // We can't used offsetLeft/offsetTop here due to a shadow parent issue where neither can getBoundingClientRect
     // because it provides invalid values for animating elements: https://bugs.chromium.org/p/chromium/issues/detail?id=920069
@@ -326,7 +335,7 @@ export default class SlTabGroup extends LitElement {
       case 'bottom':
         this.indicator.style.width = `${width}px`;
         this.indicator.style.height = 'auto';
-        this.indicator.style.transform = `translateX(${offset.left}px)`;
+        this.indicator.style.transform = isRtl ? `translateX(${-1 * offset.left}px)` : `translateX(${offset.left}px)`;
         break;
 
       case 'start':
@@ -357,6 +366,8 @@ export default class SlTabGroup extends LitElement {
   }
 
   render() {
+    const isRtl = this.localize.dir() === 'rtl';
+
     return html`
       <div
         part="base"
@@ -366,8 +377,8 @@ export default class SlTabGroup extends LitElement {
           'tab-group--bottom': this.placement === 'bottom',
           'tab-group--start': this.placement === 'start',
           'tab-group--end': this.placement === 'end',
-          'tab-group--has-scroll-controls': this.hasScrollControls,
-          'tab-group--variant-flap':this.variant === 'flap'
+          'tab-group--rtl': this.localize.dir() === 'rtl',
+          'tab-group--has-scroll-controls': this.hasScrollControls
         })}
         @click=${this.handleClick}
         @keydown=${this.handleKeyDown}
@@ -379,7 +390,7 @@ export default class SlTabGroup extends LitElement {
                   part="scroll-button scroll-button--start"
                   exportparts="base:scroll-button__base"
                   class="tab-group__scroll-button tab-group__scroll-button--start"
-                  name="chevron-left"
+                  name=${isRtl ? 'chevron-right' : 'chevron-left'}
                   library="system"
                   label=${this.localize.term('scrollToStart')}
                   @click=${this.handleScrollToStart}
@@ -400,7 +411,7 @@ export default class SlTabGroup extends LitElement {
                   part="scroll-button scroll-button--end"
                   exportparts="base:scroll-button__base"
                   class="tab-group__scroll-button tab-group__scroll-button--end"
-                  name="chevron-right"
+                  name=${isRtl ? 'chevron-left' : 'chevron-right'}
                   library="system"
                   label=${this.localize.term('scrollToEnd')}
                   @click=${this.handleScrollToEnd}

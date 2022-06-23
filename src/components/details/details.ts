@@ -6,6 +6,7 @@ import { animateTo, shimKeyframesHeightAuto, stopAnimations } from '../../intern
 import { emit, waitForEvent } from '../../internal/event';
 import { watch } from '../../internal/watch';
 import { getAnimation, setDefaultAnimation } from '../../utilities/animation-registry';
+import { LocalizeController } from '../../utilities/localize';
 import styles from './details.styles';
 
 /**
@@ -15,7 +16,9 @@ import styles from './details.styles';
  * @dependency sl-icon
  *
  * @slot - The details' content.
+ * @slot prefix - Used to prepend an icon or similar element to the menu item.
  * @slot summary - The details' summary. Alternatively, you can use the summary prop.
+ * @slot suffix - Used to append an icon or similar element to the menu item.
  *
  * @event sl-show - Emitted when the details opens.
  * @event sl-after-show - Emitted after the details opens and all animations are complete.
@@ -24,7 +27,9 @@ import styles from './details.styles';
  *
  * @csspart base - The component's internal wrapper.
  * @csspart header - The summary header.
+ * @csspart prefix - The prefix container.
  * @csspart summary - The details summary.
+ * @csspart suffix - The suffix container.
  * @csspart summary-icon - The expand/collapse summary icon.
  * @csspart content - The details content.
  *
@@ -39,11 +44,19 @@ export default class SlDetails extends LitElement {
   @query('.details__header') header: HTMLElement;
   @query('.details__body') body: HTMLElement;
 
+  private readonly localize = new LocalizeController(this);
+
   /** Indicates whether or not the details is open. You can use this in lieu of the show/hide methods. */
   @property({ type: Boolean, reflect: true }) open = false;
 
+  /** The prefix icon to show in the details header. */
+  @property() prefix: string;
+
   /** The summary to show in the details header. If you need to display HTML, use the `summary` slot instead. */
   @property() summary: string;
+
+  /** The suffix icon to show in the details header. */
+  @property() suffix: string;
 
   /** Disables the details so it can't be toggled. */
   @property({ type: Boolean, reflect: true }) disabled = false;
@@ -116,7 +129,7 @@ export default class SlDetails extends LitElement {
       await stopAnimations(this.body);
       this.body.hidden = false;
 
-      const { keyframes, options } = getAnimation(this, 'details.show');
+      const { keyframes, options } = getAnimation(this, 'details.show', { dir: this.localize.dir() });
       await animateTo(this.body, shimKeyframesHeightAuto(keyframes, this.body.scrollHeight), options);
       this.body.style.height = 'auto';
 
@@ -127,7 +140,7 @@ export default class SlDetails extends LitElement {
 
       await stopAnimations(this.body);
 
-      const { keyframes, options } = getAnimation(this, 'details.hide');
+      const { keyframes, options } = getAnimation(this, 'details.hide', { dir: this.localize.dir() });
       await animateTo(this.body, shimKeyframesHeightAuto(keyframes, this.body.scrollHeight), options);
       this.body.hidden = true;
       this.body.style.height = 'auto';
@@ -158,12 +171,20 @@ export default class SlDetails extends LitElement {
           @click=${this.handleSummaryClick}
           @keydown=${this.handleSummaryKeyDown}
         >
+          <span part="prefix" class="details-item__prefix">
+            <slot name="prefix"><sl-icon v-if="prefix" name="${this.prefix}"></sl-icon></slot>
+          </span>
           <div part="summary" class="details__summary">
             <slot name="summary">${this.summary}</slot>
           </div>
+          <span part="suffix" class="details-item__suffix">
+            <slot name="suffix"><sl-icon v-if="${this.suffix}" :name="${this.suffix}"></slot>
+          </span>
 
           <span part="summary-icon" class="details__summary-icon">
-            <sl-icon name="chevron-right" library="system"></sl-icon>
+            <slot name="summary-icon">
+              <sl-icon name="chevron-right" library="system"></sl-icon>
+            </slot>
           </span>
         </header>
 
