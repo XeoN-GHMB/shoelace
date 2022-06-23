@@ -65,7 +65,6 @@ export default class SlMenu extends LitElement {
   setCurrentItem(item: SlMenuItem) {
     const items = this.getAllItems({ includeDisabled: false });
     const activeItem = item.disabled ? items[0] : item;
-
     emit(this, 'sl-item-active', { detail: item });
 
     // Update tab indexes

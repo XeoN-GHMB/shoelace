@@ -95,6 +95,9 @@ export default class SlInput extends LitElement {
   /** Adds a password toggle button to password inputs. */
   @property({ attribute: 'toggle-password', type: Boolean }) togglePassword = false;
 
+  /** Hides the browser's built-in increment/decrement spin buttons for number inputs. */
+  @property({ attribute: 'no-spin-buttons', type: Boolean }) noSpinButtons = false;
+
   /** The input's placeholder text. */
   @property() placeholder: string;
 
@@ -161,8 +164,11 @@ export default class SlInput extends LitElement {
   }
 
   set valueAsDate(newValue: Date | null) {
-    this.input.valueAsDate = newValue;
-    this.value = this.input.value;
+    // We use an in-memory input instead of the one in the template because the property can be set before render
+    const input = document.createElement('input');
+    input.type = 'date';
+    input.valueAsDate = newValue;
+    this.value = input.value;
   }
 
   /** Gets or sets the current value as a number. */
@@ -171,8 +177,11 @@ export default class SlInput extends LitElement {
   }
 
   set valueAsNumber(newValue: number) {
-    this.input.valueAsNumber = newValue;
-    this.value = this.input.value;
+    // We use an in-memory input instead of the one in the template because the property can be set before render
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.valueAsNumber = newValue;
+    this.value = input.value;
   }
 
   firstUpdated() {
@@ -299,7 +308,8 @@ export default class SlInput extends LitElement {
     const hasHelpTextSlot = this.hasSlotController.test('help-text');
     const hasLabel = this.label ? true : !!hasLabelSlot;
     const hasHelpText = this.helpText ? true : !!hasHelpTextSlot;
-    const hasClearIcon = this.clearable && !this.disabled && !this.readonly && this.value.length > 0;
+    const hasClearIcon =
+      this.clearable && !this.disabled && !this.readonly && (typeof this.value === 'number' || this.value.length > 0);
 
     return html`
       <div
@@ -340,7 +350,14 @@ export default class SlInput extends LitElement {
               'input--disabled': this.disabled,
               'input--focused': this.hasFocus,
               'input--empty': !this.value,
-              'input--invalid': this.invalid
+              'input--invalid': this.invalid,
+              'input--no-spin-buttons': this.noSpinButtons,
+
+              // It's currently impossible to hide Firefox's built-in clear icon when using <input type="date|time">, so
+              // we need this check to apply a clip-path to hide it. I know, I know...user agent sniffing is nasty but
+              // if it fails, we only see a redundant clear icon so nothing important is breaking. The benefits outweigh
+              // the costs for this one. See the discussion at: https://github.com/shoelace-style/shoelace/pull/794
+              'input--is-firefox': navigator.userAgent.includes('Firefox')
             })}
           >
             <span part="prefix" class="input__prefix">
