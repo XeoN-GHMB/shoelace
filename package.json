@@ -5,7 +5,8 @@
   "homepage": "https://github.com/viur-framework/viur-shoelace",
   "author": "Cory LaViska",
   "contributors": [
-    "Andreas H. Kelch"
+    "Andreas H. Kelch",
+    "Stefan Kögl"
   ],
   "license": "MIT",
   "main": "dist/shoelace.js",
