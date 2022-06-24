@@ -557,6 +557,12 @@ export default css`
     pointer-events: none;
   }
 
+  .button--rtl ::slotted(sl-badge) {
+    right: auto;
+    left: 0;
+    transform: translateY(-50%) translateX(-50%);
+  }
+
   /*
    * Button spacing
    */
@@ -574,57 +580,57 @@ export default css`
   }
 
   .button--has-prefix.button--small {
-    padding-left: var(--sl-spacing-x-small);
+    padding-inline-start: var(--sl-spacing-x-small);
   }
 
   .button--has-prefix.button--small .button__label {
-    padding-left: var(--sl-spacing-x-small);
+    padding-inline-start: var(--sl-spacing-x-small);
   }
 
   .button--has-prefix.button--medium {
-    padding-left: var(--sl-spacing-small);
+    padding-inline-start: var(--sl-spacing-small);
   }
 
   .button--has-prefix.button--medium .button__label {
-    padding-left: var(--sl-spacing-small);
+    padding-inline-start: var(--sl-spacing-small);
   }
 
   .button--has-prefix.button--large {
-    padding-left: var(--sl-spacing-small);
+    padding-inline-start: var(--sl-spacing-small);
   }
 
   .button--has-prefix.button--large .button__label {
-    padding-left: var(--sl-spacing-small);
+    padding-inline-start: var(--sl-spacing-small);
   }
 
   .button--has-suffix.button--small,
   .button--caret.button--small {
-    padding-right: var(--sl-spacing-x-small);
+    padding-inline-end: var(--sl-spacing-x-small);
   }
 
   .button--has-suffix.button--small .button__label,
   .button--caret.button--small .button__label {
-    padding-right: var(--sl-spacing-x-small);
+    padding-inline-end: var(--sl-spacing-x-small);
   }
 
   .button--has-suffix.button--medium,
   .button--caret.button--medium {
-    padding-right: var(--sl-spacing-small);
+    padding-inline-end: var(--sl-spacing-small);
   }
 
   .button--has-suffix.button--medium .button__label,
   .button--caret.button--medium .button__label {
-    padding-right: var(--sl-spacing-small);
+    padding-inline-end: var(--sl-spacing-small);
   }
 
   .button--has-suffix.button--large,
   .button--caret.button--large {
-    padding-right: var(--sl-spacing-small);
+    padding-inline-end: var(--sl-spacing-small);
   }
 
   .button--has-suffix.button--large .button__label,
   .button--caret.button--large .button__label {
-    padding-right: var(--sl-spacing-small);
+    padding-inline-end: var(--sl-spacing-small);
   }
 
   /*

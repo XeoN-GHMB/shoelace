@@ -51,9 +51,9 @@ export default css`
   .select--standard.select--focused:not(.select--disabled) .select__control {
     background-color: var(--sl-input-background-color-focus);
     border-color: var(--sl-input-border-color-focus);
-    outline: var(--sl-focus-ring-style) var(--sl-focus-ring-width) var(--sl-input-focus-ring-color);
-    outline-offset: var(--sl-input-focus-ring-offset);
     color: var(--sl-input-color-focus);
+    box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-input-focus-ring-color);
+    outline: none;
   }
 
   .select--standard.select--disabled .select__control {
@@ -167,7 +167,7 @@ export default css`
     align-items: center;
     flex-wrap: wrap;
     justify-content: left;
-    margin-left: var(--sl-spacing-2x-small);
+    margin-inline-start: var(--sl-spacing-2x-small);
   }
 
   /* Hidden input (for form control validation to show) */
@@ -195,7 +195,7 @@ export default css`
   }
 
   .select--small .select__prefix ::slotted(*) {
-    margin-left: var(--sl-input-spacing-small);
+    margin-inline-start: var(--sl-input-spacing-small);
   }
 
   .select--small .select__label {
@@ -203,15 +203,15 @@ export default css`
   }
 
   .select--small .select__clear {
-    margin-right: var(--sl-input-spacing-small);
+    margin-inline-end: var(--sl-input-spacing-small);
   }
 
   .select--small .select__suffix ::slotted(*) {
-    margin-right: var(--sl-input-spacing-small);
+    margin-inline-end: var(--sl-input-spacing-small);
   }
 
   .select--small .select__icon {
-    margin-right: var(--sl-input-spacing-small);
+    margin-inline-end: var(--sl-input-spacing-small);
   }
 
   .select--small .select__tags {
@@ -223,11 +223,11 @@ export default css`
   }
 
   .select--small .select__tags sl-tag:not(:last-of-type) {
-    margin-right: var(--sl-spacing-2x-small);
+    margin-inline-end: var(--sl-spacing-2x-small);
   }
 
   .select--small.select--has-tags .select__label {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   /* Medium */
@@ -238,7 +238,7 @@ export default css`
   }
 
   .select--medium .select__prefix ::slotted(*) {
-    margin-left: var(--sl-input-spacing-medium);
+    margin-inline-start: var(--sl-input-spacing-medium);
   }
 
   .select--medium .select__label {
@@ -246,15 +246,15 @@ export default css`
   }
 
   .select--medium .select__clear {
-    margin-right: var(--sl-input-spacing-medium);
+    margin-inline-end: var(--sl-input-spacing-medium);
   }
 
   .select--medium .select__suffix ::slotted(*) {
-    margin-right: var(--sl-input-spacing-medium);
+    margin-inline-end: var(--sl-input-spacing-medium);
   }
 
   .select--medium .select__icon {
-    margin-right: var(--sl-input-spacing-medium);
+    margin-inline-end: var(--sl-input-spacing-medium);
   }
 
   .select--medium .select__tags {
@@ -266,11 +266,11 @@ export default css`
   }
 
   .select--medium .select__tags sl-tag:not(:last-of-type) {
-    margin-right: var(--sl-spacing-2x-small);
+    margin-inline-end: var(--sl-spacing-2x-small);
   }
 
   .select--medium.select--has-tags .select__label {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   /* Large */
@@ -281,7 +281,7 @@ export default css`
   }
 
   .select--large .select__prefix ::slotted(*) {
-    margin-left: var(--sl-input-spacing-large);
+    margin-inline-start: var(--sl-input-spacing-large);
   }
 
   .select--large .select__label {
@@ -289,15 +289,15 @@ export default css`
   }
 
   .select--large .select__clear {
-    margin-right: var(--sl-input-spacing-large);
+    margin-inline-end: var(--sl-input-spacing-large);
   }
 
   .select--large .select__suffix ::slotted(*) {
-    margin-right: var(--sl-input-spacing-large);
+    margin-inline-end: var(--sl-input-spacing-large);
   }
 
   .select--large .select__icon {
-    margin-right: var(--sl-input-spacing-large);
+    margin-inline-end: var(--sl-input-spacing-large);
   }
 
   .select--large .select__tags {
@@ -308,11 +308,11 @@ export default css`
   }
 
   .select--large .select__tags sl-tag:not(:last-of-type) {
-    margin-right: var(--sl-spacing-2x-small);
+    margin-inline-end: var(--sl-spacing-2x-small);
   }
 
   .select--large.select--has-tags .select__label {
-    margin-left: 0;
+    margin-inline-start: 0;
   }
 
   /*

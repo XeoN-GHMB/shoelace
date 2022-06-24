@@ -6,6 +6,22 @@ Components with the <sl-badge variant="warning" pill>Experimental</sl-badge> bad
 
 _During the beta period, these restrictions may be relaxed in the event of a mission-critical bug._ 🐛
 
+## 2.0.0-beta.75
+
+- Added Persian translation [#774](https://github.com/shoelace-style/shoelace/pull/774)
+- Added `color-scheme` to light and dark themes to improve rendering of browser-provided UI [#776](https://github.com/shoelace-style/shoelace/issues/776)
+- Added `--track-width` custom property to `<sl-tab-group>`
+- Fixed focus rings for `<sl-input>`, `<sl-select>`, and `<sl-textarea>` in Safari since they don't use `:focus-visible` [#767](https://github.com/shoelace-style/shoelace/issues/767)
+- Fixed a bug where calling `HTMLFormElement.reportValidity()` would skip Shoelace form controls [#772](https://github.com/shoelace-style/shoelace/issues/772)
+- Fixed a bug that prevented `<sl-tooltip>` from closing when disabled [#775](https://github.com/shoelace-style/shoelace/issues/775)
+- Fixed a bug that allowed `<sl-icon-button>` to emit a `click` event when disabled [#781](https://github.com/shoelace-style/shoelace/issues/781)
+- Improved the default icon for `<sl-image-comparer>` so it's more intuitive and removed `grip-vertical` from system icon library
+- Improved RTL styles for many components [#768](https://github.com/shoelace-style/shoelace/pull/768)
+- Improved base path logic to execute only when `getBasePath()` is first called to better support SSR [#778](https://github.com/shoelace-style/shoelace/issues/778)
+- Improved `DOMParser` instantiation in `<sl-icon>` to better support SSR [#778](https://github.com/shoelace-style/shoelace/issues/778)
+- Reverted menu item caching due to regression [#766](https://github.com/shoelace-style/shoelace/issues/766)
+- Updated Floating UI to 0.5.2
+
 ## 2.0.0-beta.74
 
 - 🚨 BREAKING: reworked focus rings to use outlines instead of box shadows
