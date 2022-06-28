@@ -10,7 +10,6 @@ A wrapper around the details component to simulate a group or "accordion" where 
     <sl-icon slot="prefix" name="plus"></sl-icon>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
     aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-    <sl-icon slot="suffix" name="minus"></sl-icon>
     <sl-icon slot="summary-icon" name="megaphone"></sl-icon>
   </sl-details>
 
