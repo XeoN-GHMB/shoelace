@@ -52,11 +52,18 @@ export default class SlDetails extends LitElement {
   /** The prefix icon to show in the details header. */
   @property() prefix: string;
 
+  /** The name of a registered custom icon library for the prefix icon. */
+  @property({ reflect: true }) prefixLibrary = 'default';
+
   /** The summary to show in the details header. If you need to display HTML, use the `summary` slot instead. */
   @property() summary: string;
 
   /** The suffix icon to show in the details header. */
   @property() suffix: string;
+
+  /** The name of a registered custom icon library for the suffix icon. */
+  @property({ reflect: true }) suffixLibrary = 'default';
+
 
   /** Disables the details so it can't be toggled. */
   @property({ type: Boolean, reflect: true }) disabled = false;
@@ -172,13 +179,17 @@ export default class SlDetails extends LitElement {
           @keydown=${this.handleSummaryKeyDown}
         >
           <span part="prefix" class="details-item__prefix">
-            <slot name="prefix"><sl-icon v-if="prefix" name="${this.prefix}"></sl-icon></slot>
+            <slot name="prefix">
+              <sl-icon v-if="prefix" name="${this.prefix}" library="${this.prefixLibrary}"></sl-icon>
+            </slot>
           </span>
           <div part="summary" class="details__summary">
             <slot name="summary">${this.summary}</slot>
           </div>
           <span part="suffix" class="details-item__suffix">
-            <slot name="suffix"><sl-icon v-if="${this.suffix}" :name="${this.suffix}"></slot>
+            <slot name="suffix">
+              <sl-icon v-if="suffix" name="${this.suffix}" library="${this.suffixLibrary}"></sl-icon>
+            </slot>
           </span>
 
           <span part="summary-icon" class="details__summary-icon">
