@@ -16,9 +16,10 @@ import styles from './details.styles';
  * @dependency sl-icon
  *
  * @slot - The details' content.
- * @slot prefix - Used to prepend an icon or similar element to the menu item.
+ * @slot prefix - Used to prepend an icon or similar element to the details' header summary.
  * @slot summary - The details' summary. Alternatively, you can use the summary prop.
- * @slot suffix - Used to append an icon or similar element to the menu item.
+ * @slot suffix - Used to append an icon or similar element to the details' header summary.
+ * @slot summary-icon - The expand/collapse icon.
  *
  * @event sl-show - Emitted when the details opens.
  * @event sl-after-show - Emitted after the details opens and all animations are complete.
