@@ -1,9 +1,11 @@
 // @ts-nocheck
-import { LitElement, html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
-import { watchProps } from '../../internal/watchProps';
+import {LitElement, html} from 'lit';
+import {customElement, property, query} from 'lit/decorators.js';
+import {emit} from '../../internal/event';
+import {watchProps} from '../../internal/watchProps';
 import styles from './table.styles';
+import {boneFormatter} from "./cellRenderer.tsx";
+import {boneEditor} from "./cellEditorRenderer.tsx";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 
@@ -152,12 +154,18 @@ export default class SlTable extends LitElement {
       if (Object.keys(item).includes("visible") && !item["visible"]) {
         continue
       }
-      columns.push({title: item["descr"], field: itemName, formatterParams: item, formatter: "html"})
+      columns.push({title: item["descr"], field: itemName,
+        formatterParams: item, formatter: boneFormatter,
+        editorParams:item,editor:boneEditor})
     }
 
     currentstructure["columns"] = columns
     this.tableConfig = {...this.tableConfig, ...currentstructure}
   }
+
+
+
+
 
   updateConfig() {
     this.tableConfig["height"] = this.height
