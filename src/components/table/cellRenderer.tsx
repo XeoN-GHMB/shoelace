@@ -164,13 +164,11 @@ function getTabs(boneStructure: any) {
 }
 
 function getTabPannels(boneValue: any, boneStructure: any) {
+
   let tabpannels: string = ``;
   if (boneStructure["multiple"]) {
     for (const lang of boneStructure["languages"]) {
-
       tabpannels += `<sl-tab-panel name="${lang}">${boneValue[lang].join("<br>")}</sl-tab-panel>`;
-
-      console.log(tabpannels)
     }
   } else {
 
@@ -183,6 +181,7 @@ function getTabPannels(boneValue: any, boneStructure: any) {
 
     }
   }
+
   return tabpannels;
 
 
