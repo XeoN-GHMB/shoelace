@@ -72,6 +72,7 @@ function dateBoneRenderer(boneStructure: object, boneValue: any): any {
 
 function recordBoneRenderer(boneStructure: any, boneValue: any) {
   if (boneStructure["multiple"]) {
+    console.log(boneValue)
     return boneValue.map((ele: any) => {
       return `${formatstring(ele, boneStructure["format"])}<br>`
     }).join("<br>");
