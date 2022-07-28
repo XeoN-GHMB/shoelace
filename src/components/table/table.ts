@@ -156,13 +156,18 @@ export default class SlTable extends LitElement {
       }
       columns.push({title: item["descr"], field: itemName,
         formatterParams: item, formatter: boneFormatter,
-        editorParams:item,editor:boneEditor})
+        editorParams:item,editor:boneEditor,
+        editable:this.editCheck
+      })
     }
 
     currentstructure["columns"] = columns
     this.tableConfig = {...this.tableConfig, ...currentstructure}
   }
-
+  editCheck(cell)
+  {
+    return true
+  }
 
 
 

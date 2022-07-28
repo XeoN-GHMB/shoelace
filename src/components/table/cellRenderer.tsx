@@ -1,8 +1,13 @@
-import {formatstring} from "../../../../deploy/vi-vue/src/utils/string";
-
 export function boneFormatter(cell: any, boneStructure: object, onRendered: any): any {
 
-  const boneValue: any = cell.getValue()
+  let boneValue;
+  if (typeof (cell.getValue()) === "object") {
+    boneValue = JSON.parse(JSON.stringify(cell.getValue()));//DEEP Copy
+  } else {
+    boneValue = cell.getValue()
+  }
+
+
   switch (boneStructure["type"].split(".")[0]) {
     case "str":
       return stringBoneRenderer(boneStructure, boneValue)
@@ -20,7 +25,7 @@ export function boneFormatter(cell: any, boneStructure: object, onRendered: any)
   return ""
 }
 
-function stringBoneRenderer(boneStructure: object, boneValue: any): any {
+function rawBoneRenderer(boneStructure: object, boneValue: any) {
   if (boneValue === null) {
     return "-";
   }
@@ -42,22 +47,25 @@ function stringBoneRenderer(boneStructure: object, boneValue: any): any {
   } else {
 
     if (boneStructure["multiple"]) {
+      for (const index in boneValue) {
 
+        boneValue[index] = formatstring(boneValue[index], boneStructure, null, index);
+      }
       return `${boneValue.join("<br>")} `
     }
   }
 
 
-  return boneValue.toLocaleString();
+  return formatstring(boneValue, boneStructure);
+}
+
+function stringBoneRenderer(boneStructure: object, boneValue: any): any {
+  return rawBoneRenderer(boneStructure, boneValue)
 }
 
 
 function numericBoneRenderer(boneStructure: object, boneValue: any): any {
-  if (boneStructure["multiple"]) {
-    return `${boneValue.join("<br>")}`
-
-  }
-  return boneValue.toString()
+  return rawBoneRenderer(boneStructure, boneValue)
 }
 
 function dateBoneRenderer(boneStructure: object, boneValue: any): any {
@@ -71,26 +79,23 @@ function dateBoneRenderer(boneStructure: object, boneValue: any): any {
 }
 
 function recordBoneRenderer(boneStructure: any, boneValue: any) {
-  if (boneStructure["multiple"]) {
-    console.log(boneValue)
-    return boneValue.map((ele: any) => {
-      return `${formatstring(ele, boneStructure["format"])}<br>`
-    }).join("<br>");
-  } else {
-    return `${formatstring(boneValue, boneStructure["format"])}<br>`
-  }
+  console.log("render Record")
+  console.log(boneStructure)
+  console.log(boneValue)
+  return rawBoneRenderer(boneStructure, boneValue)
+
 }
 
 function relationalBoneRenderer(boneStructure: any, boneValue: any) {
 
   if (boneStructure["multiple"] && boneValue !== null) {
     return boneValue.map((ele: any) => {
-      return `${formatstring(ele, boneStructure["format"])}<br>`
+      return `${formatstring(ele, boneStructure)}<br>`
     }).join("<br>");
 
 
   } else {
-    return `${formatstring(boneValue, boneStructure["format"])}<br>`
+    return `${formatstring(boneValue, boneStructure)}<br>`
   }
 }
 
@@ -98,14 +103,13 @@ function selectBoneRenderer(boneStructure: any, boneValue: any) {
 
   if (boneStructure["multiple"] && boneValue !== null) {
     let tmpl = ``
-    for (const tmpboneValue of boneValue)
-    {
+    for (const tmpboneValue of boneValue) {
       for (const value: any of boneStructure["values"]) {
-      if (value[0] === tmpboneValue) {
-        tmpl += `${value[1]}<br>`;
-        continue;
+        if (value[0] === tmpboneValue) {
+          tmpl += `${value[1]}<br>`;
+          continue;
+        }
       }
-    }
     }
 
     return tmpl;
@@ -121,39 +125,96 @@ function selectBoneRenderer(boneStructure: any, boneValue: any) {
 }
 
 ////////////HELPER FUNCTIONS////////////////
-function formatstring(data: any, format: any) {
-  if (data === null) {
-    return null;
+
+function formatstring(data, boneStructure, lang = null, index = null) {
+  console.log("start format")
+  console.log(index)
+  console.log(data, boneStructure, lang, index)
+  if (boneStructure["format"] === undefined) {
+    return data;
   }
-  format = format.split(" ");
-  var displayText: string = ""
-  for (let expression of format) {
 
-    if (!expression.startsWith("$")) {
-      displayText += expression + " "
-      continue
+  if (Array.isArray(boneStructure["using"])) {
+    let newUsing = {}
+    for (const item of boneStructure["using"]) {
+
+      newUsing[item[0]] = item[1]
+
     }
-    expression = expression.substr(2, expression.length - 3)
+    boneStructure["using"] = newUsing;
+  }
+  let re = /\$\(([^)]+)\)/g;
 
-    var pathData = data;
-    for (const path of expression.split(".")) {
-      if (path === "dest") // Check if dest because when add whe dont have it
-      {
-        if ('dest' in pathData) {
-          pathData = pathData[path]
+  let format = boneStructure["format"]
+  let text = boneStructure["format"]
+  for (const match of format.matchAll(re)) {
+
+    if (!boneStructure["languages"]) {
+      if (boneStructure["multiple"]) {
+        if (boneStructure["using"][match[1]]["type"] === "record") {
+          if (boneStructure["using"][match[1]]["multiple"]) {
+            console.log("multiple record in record")
+          }
+
+          const tmp = formatstring(getPath(data, match[1]), boneStructure["using"][match[1]])
+          console.log("tmp is", tmp)
+          text = text.replace(match[0], tmp)
+
+        } else {
+          console.log("data is ", data, match)
+          console.log("path is", getPath(data, match[1]))
+          text = text.replace(match[0], getPath(data, match[1]));
         }
 
       } else {
-        pathData = pathData[path]
+
+        if (boneStructure["using"][match[1]]["type"] === "record") {
+          const tmp = formatstring(getPath(data, match[1]), boneStructure["using"][match[1]])
+          console.log(tmp);
+          text = text.replace(match[0], tmp)
+        } else {
+          text = text.replace(match[0], getPath(data, match[1]));
+        }
+
       }
 
-
+    } else {
+      if (boneStructure["multiple"]) {
+        text = text.replace(match[0], data[lang][index][match[1]]);
+      } else {
+        text = text.replace(match[0], data[lang][match[1]]);
+      }
     }
 
-    displayText += pathData + " "
+
   }
-  return displayText;
+
+  return text
+
+
 }
+
+function getPath(obj, path) {
+
+  path = typeof path === 'string' ? path.split('.') : path;
+  let current = obj;
+  while (path.length > 0) {
+    let [head, ...tail] = path;
+    path = tail;
+    if (!Number.isNaN(parseInt(head))) {
+      head = parseInt(head)
+    }
+    if (current[head] === undefined) {
+      return undefined;
+    }
+    current = current[head];
+
+
+  }
+
+  return current;
+}
+
 
 function getTabs(boneStructure: any) {
   let tabs: string = ``;
@@ -165,21 +226,45 @@ function getTabs(boneStructure: any) {
 }
 
 function getTabPannels(boneValue: any, boneStructure: any) {
-
+  //We are when languages not null
   let tabpannels: string = ``;
-  if (boneStructure["multiple"]) {
-    for (const lang of boneStructure["languages"]) {
-      tabpannels += `<sl-tab-panel name="${lang}">${boneValue[lang].join("<br>")}</sl-tab-panel>`;
+  if (boneStructure["format"] === undefined) {
+    if (boneStructure["multiple"]) {
+      for (const lang of boneStructure["languages"]) {
+        tabpannels += `<sl-tab-panel name="${lang}">${boneValue[lang].join("<br>")}</sl-tab-panel>`;
+      }
+    } else {
+
+      for (const lang of boneStructure["languages"]) {
+        if (boneValue[lang] === null) {
+          tabpannels += `<sl-tab-panel name="${lang}">-</sl-tab-panel>`;
+        } else {
+          tabpannels += `<sl-tab-panel name="${lang}">${boneValue[lang].toString()}</sl-tab-panel>`;
+        }
+
+      }
     }
   } else {
+    if (boneStructure["multiple"]) {
+      for (const lang of boneStructure["languages"]) {
+        for (const index in boneValue[lang]) {
 
-    for (const lang of boneStructure["languages"]) {
-      if (boneValue[lang] === null) {
-        tabpannels += `<sl-tab-panel name="${lang}">-</sl-tab-panel>`;
-      } else {
-        tabpannels += `<sl-tab-panel name="${lang}">${boneValue[lang].toString()}</sl-tab-panel>`;
+          boneValue[lang][index] = formatstring(boneValue, boneStructure, lang, index);
+        }
+
+
+        tabpannels += `<sl-tab-panel name="${lang}">${boneValue[lang].join("<br>")}</sl-tab-panel>`;
       }
+    } else {
 
+      for (const lang of boneStructure["languages"]) {
+        if (boneValue[lang] === null) {
+          tabpannels += `<sl-tab-panel name="${lang}">-</sl-tab-panel>`;
+        } else {
+          tabpannels += `<sl-tab-panel name="${lang}">${formatstring(boneValue, boneStructure, lang)}</sl-tab-panel>`;
+        }
+
+      }
     }
   }
 

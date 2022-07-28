@@ -1,4 +1,6 @@
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, boneName = null, boneValue = null): any {
+  console.log("start editor",boneName,boneValue)
+  console.log("cell", cell._cell.column.field,cell.getValue())
   const rowHeight = cell.getElement().style.height;
   cell.getRow().getElement().style.height = "auto";
   cell.getElement().style.height = "auto"
@@ -22,13 +24,13 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
 
     for (const lang of boneStructure["languages"]) {
 
-
       const tab_panel = document.createElement("sl-tab-panel")
       tab_panel.name = lang;
       if (boneStructure["multiple"]) {
         const inputWrapper = document.createElement("div");
-        for (const tmpValue of boneValue[lang]) {
-          const newboneName = boneName + "." + lang
+        for (const [index, tmpValue] of boneValue[lang].entries()) {
+          const newboneName = boneName + "." + lang + "." + index;
+
           const inputElement = getEditor(boneStructure)(cell, onRendered, success, cancel, boneStructure, tmpValue, lang, newboneName);
           inputWrapper.appendChild(inputElement);
         }
@@ -54,6 +56,8 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
       //No Lang , Multiple
       const inputWrapper = document.createElement("div");
       inputWrapper.dataset.boneName = boneName;
+
+      console.log("boneValue",boneValue)
       for (const [index, tmpValue] of boneValue.entries()) {
         const newboneName = boneStructure["type"] === "record" ? boneName + "." + index : boneName
         const inputElement = getEditor(boneStructure)(cell, onRendered, success, cancel, boneStructure, tmpValue, null, newboneName);
@@ -90,6 +94,12 @@ function getEditor(boneStructure: any) {
   switch (boneStructure["type"].split(".")[0]) {
     case "str":
       return stringBoneEditorRenderer
+    case "numeric":
+      return numericBoneEditorRenderer
+    case "date":
+      return dateBoneEditorRenderer
+    case "bool":
+      return booleanBoneEditorRenderer
     case "record":
       return recordBoneEditorRenderer
     default:
@@ -122,8 +132,56 @@ function stringBoneEditorRenderer(cell: any, onRendered: any, success: any, canc
   return rawBoneEditorRenderer(cell, onRendered, success, cancel, boneStructure, value, lang, boneName)
 }
 
+function numericBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = null) {
+
+  const numericBone = rawBoneEditorRenderer(cell, onRendered, success, cancel, boneStructure, value, lang, boneName);
+  numericBone.type = "number"
+  numericBone.min = boneStructure["min"];
+  numericBone.max = boneStructure["max"];
+  return numericBone;
+}
+
+function dateBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = null) {
+
+  const dateBone = rawBoneEditorRenderer(cell, onRendered, success, cancel, boneStructure, value, lang, boneName);
+
+  if (boneStructure["time"]) {
+
+    dateBone.type = "datetime-local"
+    dateBone.value = value.split('+')[0]
+  } else {
+    dateBone.type = "date"
+    dateBone.value = (new Date(value)).toISOString().substr(0, 10);
+  }
+
+
+  return dateBone;
+}
+
+function booleanBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = null) {
+
+  const inputElement = document.createElement("sl-switch");
+  inputElement.dataset.boneName = boneName
+  inputElement.value = value;
+  if (lang !== null) {
+    inputElement.dataset.lang = lang;
+  }
+
+  inputElement.addEventListener("keypress", (event) => {
+    if (boneName === null) {
+      boneName = cell._cell.column.field;
+    }
+
+    const skelKey = cell._cell.row.data.key;
+    keyPress(event, success, cancel, boneName, boneStructure, skelKey, cell, successFunc)
+  })
+  return inputElement;
+}
+
 function recordBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = null) {
   console.log("start record")
+  console.log(boneName)
+  console.log(value)
 
   const inputWrapper = document.createElement("div");
 
@@ -131,6 +189,7 @@ function recordBoneEditorRenderer(cell: any, onRendered: any, success: any, canc
   for (const bone of boneStructure["using"]) {
     const recordBoneName = bone[0];
     const recordBoneStructure = bone[1];
+
     const recordBoneValue = value[bone[0]];
 
     const newBoneName = boneName + "." + recordBoneName
