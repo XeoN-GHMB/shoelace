@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { HasSlotController } from '../../internal/slot';
 import styles from './card.styles';
 import {property} from "lit/decorators.js";
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -27,7 +28,7 @@ import {property} from "lit/decorators.js";
  */
 @customElement('sl-card')
 export default class SlCard extends LitElement {
-  static styles = styles;
+  static styles: CSSResultGroup = styles;
 
   /** vertical card */
   @property({ type: Boolean, reflect: true }) horizontal = false;

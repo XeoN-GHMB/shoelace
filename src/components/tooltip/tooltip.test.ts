@@ -134,4 +134,18 @@ describe('<sl-tooltip>', () => {
     expect(afterHideHandler).to.have.been.calledOnce;
     expect(base.hidden).to.be.true;
   });
+
+  it('should recalculate its target when the slotted element changes', async () => {
+    const el = await fixture<SlTooltip>(html`
+      <sl-tooltip content="This is a tooltip" open>
+        <sl-button>Hover me</sl-button>
+      </sl-tooltip>
+    `);
+
+    el.innerHTML = '<sl-button>New element</sl-button>';
+    await el.updateComplete;
+
+    // @ts-expect-error - target is a private property
+    expect(el.target.innerHTML).to.equal('New element');
+  });
 });

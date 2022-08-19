@@ -4,6 +4,7 @@ import { emit } from '../../internal/event';
 import { getTextContent } from '../../internal/slot';
 import styles from './menu.styles';
 import type SlMenuItem from '../../components/menu-item/menu-item';
+import type { CSSResultGroup } from 'lit';
 export interface MenuSelectEventDetail {
   item: SlMenuItem;
 }
@@ -20,7 +21,7 @@ export interface MenuSelectEventDetail {
  */
 @customElement('sl-menu')
 export default class SlMenu extends LitElement {
-  static styles = styles;
+  static styles: CSSResultGroup = styles;
 
   @query('.menu') menu: HTMLElement;
   @query('slot') defaultSlot: HTMLSlotElement;
@@ -31,21 +32,14 @@ export default class SlMenu extends LitElement {
   private typeToSelectString = '';
   private typeToSelectTimeout: number;
 
-  firstUpdated() {
+  connectedCallback() {
+    super.connectedCallback();
     this.setAttribute('role', 'menu');
   }
 
-  getAllItems(options: { includeDisabled: boolean } = { includeDisabled: true }) {
+  getAllItems() {
     return [...this.defaultSlot.assignedElements({ flatten: true })].filter((el: HTMLElement) => {
-      if (el.getAttribute('role') !== 'menuitem') {
-        return false;
-      }
-
-      if (!options.includeDisabled && (el as SlMenuItem).disabled) {
-        return false;
-      }
-
-      return true;
+      return el.getAttribute('role') === 'menuitem';
     }) as SlMenuItem[];
   }
 
@@ -54,7 +48,7 @@ export default class SlMenu extends LitElement {
    * The menu item may or may not have focus, but for keyboard interaction purposes it's considered the "active" item.
    */
   getCurrentItem() {
-    return this.getAllItems({ includeDisabled: false }).find(i => i.getAttribute('tabindex') === '0');
+    return this.getAllItems().find(i => i.getAttribute('tabindex') === '0');
   }
 
   /**
@@ -62,8 +56,8 @@ export default class SlMenu extends LitElement {
    * `tabindex="-1"` to all other items. This method must be called prior to setting focus on a menu item.
    */
   setCurrentItem(item: SlMenuItem) {
-    const items = this.getAllItems({ includeDisabled: false });
-    const activeItem = item.disabled ? items[0] : item;
+    const items = this.getAllItems();
+    const activeItem = item ?? items[0];
 
     emit(this, 'sl-item-active', { detail: item });
 
@@ -80,7 +74,8 @@ export default class SlMenu extends LitElement {
    * type-to-select behavior when the menu doesn't have focus.
    */
   typeToSelect(event: KeyboardEvent) {
-    const items = this.getAllItems({ includeDisabled: false });
+
+    const items = this.getAllItems();
 
     clearTimeout(this.typeToSelectTimeout);
     this.typeToSelectTimeout = window.setTimeout(() => (this.typeToSelectString = ''), 1000);
@@ -134,7 +129,7 @@ export default class SlMenu extends LitElement {
 
     // Move the selection when pressing down or up
     if (['ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
-      const items = this.getAllItems({ includeDisabled: false });
+      const items = this.getAllItems();
       const activeItem = this.getCurrentItem();
       let index = activeItem ? items.indexOf(activeItem) : 0;
 
@@ -177,7 +172,7 @@ export default class SlMenu extends LitElement {
   }
 
   handleSlotChange() {
-    const items = this.getAllItems({ includeDisabled: false });
+    const items = this.getAllItems();
 
     // Reset the roving tab index when the slotted items change
     if (items.length > 0) {

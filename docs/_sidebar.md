@@ -65,12 +65,13 @@
   - [Tag](/components/tag)
   - [Textarea](/components/textarea)
   - [Tooltip](/components/tooltip)
-  
+  - [Tree](/components/tree)
+  - [Tree Item](/components/tree-item)
+
 - Extension
   - [Combobox](/components/combobox)
   - [Slider](/components/slider)
   - [Details Group](/components/details-group)
-  <!-- - [Table Wrapper](/components/table-wrapper)-->
   - [Back To Top](/components/back-to-top)
   - [Map](/components/map)
   - [Page Btn](/components/page-btn)
@@ -81,8 +82,6 @@
   <!-- - [Transfer](/components/transfer)-->
   <!--- [Table](/components/table)-->
   - [Org Tree](/components/org-tree)
-  <!--- - [Tree](/components/tree)-->
-  <!--- - [Tree Node](/components/tree-node)-->
   <!--- [Date Panel](/components/date-panel)-->
   <!--- [Date](/components/date)-->
   <!--- [Row](/components/row)-->
@@ -92,6 +91,7 @@
   <!--- [EditTable](/components/tableEdit)-->
   - [Table](/components/table)
   - [Table Wrapper](/components/table-wrapper)
+
   <!--plop:component-->
   
 - Utilities

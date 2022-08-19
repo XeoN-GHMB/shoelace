@@ -4,7 +4,7 @@
 import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import copy from 'recursive-copy';
-import del from 'del';
+import { deleteAsync } from 'del';
 import download from 'download';
 import fm from 'front-matter';
 import { readFileSync, mkdirSync } from 'fs';
@@ -37,7 +37,7 @@ let numIcons = 0;
 
     // Copy icons
     console.log(`Copying icons and license`);
-    await del([iconDir]);
+    await deleteAsync([iconDir]);
     mkdirSync(iconDir, { recursive: true });
     await Promise.all([
       copy(`${srcPath}/icons`, iconDir),
@@ -93,7 +93,7 @@ const iconDir2 = path.join(outdir, '/assets/icons');
 
     // Copy icons
     console.log(`Copying icons and license`);
-    await del([iconDir2]);
+    await deleteAsync([iconDir2]);
     mkdirSync(iconDir2, { recursive: true });
     await Promise.all([
       copy(`${srcPath}`, iconDir2)

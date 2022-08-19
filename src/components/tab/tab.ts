@@ -4,8 +4,10 @@ import { classMap } from 'lit/directives/class-map.js';
 import '../../components/icon-button/icon-button';
 import { autoIncrement } from '../../internal/auto-increment';
 import { emit } from '../../internal/event';
+import { watch } from '../../internal/watch';
 import { LocalizeController } from '../../utilities/localize';
 import styles from './tab.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -23,7 +25,7 @@ import styles from './tab.styles';
  */
 @customElement('sl-tab')
 export default class SlTab extends LitElement {
-  static styles = styles;
+  static styles: CSSResultGroup = styles;
   private readonly localize = new LocalizeController(this);
 
   @query('.tab') tab: HTMLElement;
@@ -46,6 +48,11 @@ export default class SlTab extends LitElement {
   /** The locale to render the component in. */
   @property() lang: string;
 
+  connectedCallback() {
+    super.connectedCallback();
+    this.setAttribute('role', 'tab');
+  }
+
   /** Sets focus to the tab. */
   focus(options?: FocusOptions) {
     this.tab.focus(options);
@@ -58,6 +65,16 @@ export default class SlTab extends LitElement {
 
   handleCloseClick() {
     emit(this, 'sl-close');
+  }
+
+  @watch('active')
+  handleActiveChange() {
+    this.setAttribute('aria-selected', this.active ? 'true' : 'false');
+  }
+
+  @watch('disabled')
+  handleDisabledChange() {
+    this.setAttribute('aria-disabled', this.disabled ? 'true' : 'false');
   }
 
   render() {
@@ -73,10 +90,7 @@ export default class SlTab extends LitElement {
           'tab--closable': this.closable,
           'tab--disabled': this.disabled
         })}
-        role="tab"
-        aria-disabled=${this.disabled ? 'true' : 'false'}
-        aria-selected=${this.active ? 'true' : 'false'}
-        tabindex=${this.disabled || !this.active ? '-1' : '0'}
+        tabindex="0"
       >
         <slot></slot>
         ${this.closable

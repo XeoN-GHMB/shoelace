@@ -8,6 +8,7 @@ import { watch } from '../../internal/watch';
 import { getAnimation, setDefaultAnimation } from '../../utilities/animation-registry';
 import { LocalizeController } from '../../utilities/localize';
 import styles from './tooltip.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -32,7 +33,7 @@ import styles from './tooltip.styles';
  */
 @customElement('sl-tooltip')
 export default class SlTooltip extends LitElement {
-  static styles = styles;
+  static styles: CSSResultGroup = styles;
 
   @query('.tooltip-positioner') positioner: HTMLElement;
   @query('.tooltip') tooltip: HTMLElement;
@@ -197,7 +198,7 @@ export default class SlTooltip extends LitElement {
     if (this.hasTrigger('hover')) {
       const delay = parseDuration(getComputedStyle(this).getPropertyValue('--show-delay'));
       clearTimeout(this.hoverTimeout);
-      this.hoverTimeout = window.setTimeout(() => void this.show(), delay);
+      this.hoverTimeout = window.setTimeout(() => this.show(), delay);
     }
   }
 
@@ -205,7 +206,7 @@ export default class SlTooltip extends LitElement {
     if (this.hasTrigger('hover')) {
       const delay = parseDuration(getComputedStyle(this).getPropertyValue('--hide-delay'));
       clearTimeout(this.hoverTimeout);
-      this.hoverTimeout = window.setTimeout(() => void this.hide(), delay);
+      this.hoverTimeout = window.setTimeout(() => this.hide(), delay);
     }
   }
 
@@ -261,9 +262,13 @@ export default class SlTooltip extends LitElement {
     return triggers.includes(triggerType);
   }
 
+  handleSlotChange() {
+    this.target = this.getTarget();
+  }
+
   private startPositioner() {
     this.stopPositioner();
-    this.updatePositioner();
+    requestAnimationFrame(() => this.updatePositioner());
     this.positionerCleanup = autoUpdate(this.target, this.positioner, this.updatePositioner.bind(this));
   }
 
@@ -318,7 +323,7 @@ export default class SlTooltip extends LitElement {
   render() {
     return html`
       <div class="tooltip-target" aria-describedby="tooltip">
-        <slot></slot>
+        <slot @slotchange=${this.handleSlotChange}></slot>
       </div>
 
       <div class="tooltip-positioner">

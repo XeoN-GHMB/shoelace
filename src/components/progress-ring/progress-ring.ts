@@ -2,6 +2,7 @@ import { html, LitElement } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { LocalizeController } from '../../utilities/localize';
 import styles from './progress-ring.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -15,11 +16,12 @@ import styles from './progress-ring.styles';
  * @cssproperty --size - The diameter of the progress ring (cannot be a percentage).
  * @cssproperty --track-width - The width of the track.
  * @cssproperty --track-color - The color of the track.
+ * @cssproperty --indicator-width - The width of the indicator. Defaults to the track width.
  * @cssproperty --indicator-color - The indicator color.
  */
 @customElement('sl-progress-ring')
 export default class SlProgressRing extends LitElement {
-  static styles = styles;
+  static styles: CSSResultGroup = styles;
   private readonly localize = new LocalizeController(this);
 
   @query('.progress-ring__indicator') indicator: SVGCircleElement;

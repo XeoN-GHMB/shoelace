@@ -2,248 +2,458 @@
 
 [component-header:sl-tree]
 
-Tree component: the most important thing is to define the data source `rootNodeData`, rendering function `nodeRender`, selection mode support `check`, `radio`, `single`, `node`, internal package `sl-tree-node`, support filtering, support custom rendering
-
-### Node data source `nodeData` 
-```javascript
- export type TreeNodeData = {
-  id?: string | number; /* ID  */
-  parentID?:string|number;/** Parent Node ID**/
-  name?: string; /*Node Name*/
-  icon?: string; /*Node Icon */
-  close?: boolean; /* Whether to close */
-  closeable?: boolean; /*false, means the node cannot be collapsed  */
-  disable?: boolean; /*true,Indicates a node disble, Cannot be selected */
-  [key:string]:unknown; /*Custom Properties */
-  children?: TreeNodeData[]; /*Subordinate Nodes */
-
-}
-```
+Trees allow you to display a hierarchical list of selectable [tree items](/components/tree-item). Items with children can be expanded and collapsed as desired by the user.
 
 ```html preview
-<sl-button-group id='buttonGroup'>
-    <sl-button value='check'>Checkbox</sl-button>
-    <sl-button value='radio'>Radio</sl-button>
-    <sl-button value='none'>None</sl-button>
-    <sl-button type='primary' value='single'>single</sl-button>
-    
-    <sl-checkbox style='margin-left:20px' id='checkFilter'>Enable or disable filtering</sl-checkbox>
-    <sl-checkbox style='margin-left:20px' id='select_hight'>Highlighting</sl-checkbox>
-</sl-button-group>
- <div style='margin:10px 0;' id='checkGroup'>
-     <sl-checkbox checked style='margin-left:20px' id='includeRoot' > Whether to include the root node</sl-checkbox>
-    <sl-checkbox checked style='margin-left:20px' id='checkCasecade' > Check whether to cascade down</sl-checkbox>
-    <sl-checkbox checked style='margin-left:20px' id='checkOffCasecade' >Uncheck whether to cascade down</sl-checkbox>
- </div>
-<div id='checkTreeValue' style='margin:10px 0;max-height:60px;overflow:hidden;' ></div>
-<sl-tree id='sl-tree-div' filter-input-placeholder='Please enter the city name'>
-    <div slot='no-data'>No data</div>
-    <sl-button slot='footer'>footer</sl-button>
+<sl-tree>
+  <sl-tree-item>
+    Deciduous
+    <sl-tree-item>Birch</sl-tree-item>
+    <sl-tree-item>
+      Maple
+      <sl-tree-item>Field maple</sl-tree-item>
+      <sl-tree-item>Red maple</sl-tree-item>
+      <sl-tree-item>Sugar maple</sl-tree-item>
+    </sl-tree-item>
+    <sl-tree-item>Oak</sl-tree-item>
+  </sl-tree-item>
+
+  <sl-tree-item>
+    Coniferous
+    <sl-tree-item>Cedar</sl-tree-item>
+    <sl-tree-item>Pine</sl-tree-item>
+    <sl-tree-item>Spruce</sl-tree-item>
+  </sl-tree-item>
+
+  <sl-tree-item>
+    Non-trees
+    <sl-tree-item>Bamboo</sl-tree-item>
+    <sl-tree-item>Cactus</sl-tree-item>
+    <sl-tree-item>Fern</sl-tree-item>
+  </sl-tree-item>
 </sl-tree>
-<style >
-#sl-tree-div::part(base){
-    max-height:600px;
-}
-</style>
+```
+
+<!-- prettier-ignore -->
+```jsx react
+import { SlTree, SlTreeItem } from '@shoelace-style/shoelace/dist/react';
+
+const App = () => (
+  <SlTree>
+    <SlTreeItem>
+      Deciduous
+      <SlTreeItem>Birch</SlTreeItem>
+      <SlTreeItem>
+        Maple
+        <SlTreeItem>Field maple</SlTreeItem>
+        <SlTreeItem>Red maple</SlTreeItem>
+        <SlTreeItem>Sugar maple</SlTreeItem>
+      </SlTreeItem>
+      <SlTreeItem>Oak</SlTreeItem>
+    </SlTreeItem>
+
+    <SlTreeItem>
+      Coniferous
+      <SlTreeItem>Cedar</SlTreeItem>
+      <SlTreeItem>Pine</SlTreeItem>
+      <SlTreeItem>Spruce</SlTreeItem>
+    </SlTreeItem>
+
+    <SlTreeItem>
+      Non-trees
+      <SlTreeItem>Bamboo</SlTreeItem>
+      <SlTreeItem>Cactus</SlTreeItem>
+      <SlTreeItem>Fern</SlTreeItem>
+    </SlTreeItem>
+  </SlTree>
+);
+```
+
+## Examples
+
+### Selection Modes
+
+Use the `selection` attribute to change the selection behavior of the tree.
+
+- Set `single` to allow the selection of a single item (default).
+- Set `multiple` to allow the selection of multiple items.
+- Set `leaf` to allow the selection of a single leaf node. Clicking on a parent node will expand/collapse the node.
+
+```html preview
+<sl-select id="selection-mode" value="single" label="Selection">
+  <sl-menu-item value="single">Single</sl-menu-item>
+  <sl-menu-item value="multiple">Multiple</sl-menu-item>
+  <sl-menu-item value="leaf">Leaf</sl-menu-item>
+</sl-select>
+
+<br />
+
+<sl-tree class="tree-selectable">
+  <sl-tree-item>
+    Item 1
+    <sl-tree-item>
+      Item A
+      <sl-tree-item>Item Z</sl-tree-item>
+      <sl-tree-item>Item Y</sl-tree-item>
+      <sl-tree-item>Item X</sl-tree-item>
+    </sl-tree-item>
+    <sl-tree-item>Item B</sl-tree-item>
+    <sl-tree-item>Item C</sl-tree-item>
+  </sl-tree-item>
+  <sl-tree-item>Item 2</sl-tree-item>
+  <sl-tree-item>Item 3</sl-tree-item>
+</sl-tree>
+
 <script>
-    let treeDiv=document.querySelector('#sl-tree-div');
-    let groupDIV=document.querySelector('#buttonGroup');
-    let group=groupDIV.querySelectorAll('sl-button');
-    for(let k of group){
-        k.addEventListener('click',(e)=>{
-            let target=e.target;
-            treeDiv.selectMode=target.getAttribute('value');
-            for(let k of group){
-                k.type='default';
-                if(k==target){
-                    k.type='primary';
-                }
-            }
-        })
-    }
-    document.querySelector('#checkGroup').addEventListener('sl-change',(event)=>{
-        let target=event.target;
-        if(target.id=='checkCasecade'){
-            treeDiv.checkCasecade=target.checked;
-        }else if(target.id=='checkOffCasecade'){
-            treeDiv.checkOffCasecade=target.checked;
-        }
-    })
-    document.querySelector('#includeRoot').addEventListener('sl-change',(event)=>{
-        let target=event.target;
-        treeDiv.includeRoot=target.checked;
-    });
-    document.querySelector('#select_hight').addEventListener('sl-change',(event)=>{
-        let target=event.target;
-        treeDiv.select_highlight=target.checked;
-    });
- //   treeDiv.customStyle='.redColor{color:red}';
-    treeDiv.nodeRender=(data,index,parentData)=>{
-        const html=window.html;
-        return html`<span class='redColor'>${parentData?index+1:''} ${data.value} ${data.children&&data.children.length>0? '('+data.children.length+')':''}</span>`;
-    };
-    treeDiv.filterMethod=function(data,filterString){
-        return data.value.indexOf(filterString)>=0;
-    }
-    treeDiv.addEventListener('sl-tree-node-toogle',(event)=>{
-        let openData=localStorage.getItem('tree-data');//Store all open nodes
-        if(!openData){
-            openData=[];
-        }else{
-            openData=JSON.parse(openData);
-        }
-        const data=event.detail.nodeData;
-        if(data.close){//Close
-            let index=openData.indexOf(data.id);
-            if(index>=0){
-                openData.splice(index,1);
-            }
-        }else{
-            openData.push(data.id);
-        }
-        localStorage.setItem('tree-data',JSON.stringify(openData));
-        console.log(JSON.stringify(event.detail.nodeData.id));
-    });
-     treeDiv.addEventListener('sl-tree-node-click',(event)=>{
-         const el=event.path[0];
-         //console.trace('Current clicked tree-node',el);
-         console.log(event.detail.node.nodeData.value);
-     });
-     treeDiv.addEventListener('sl-tree-checkKeys-change',(event)=>{
-         document.querySelector('#checkTreeValue').textContent=JSON.stringify(treeDiv.checkedKeys);
-     })
-  const request = fetch('assets/examples/tree-node-demo.json').then(response=>response.json()).then((json)=>{
-    treeDiv.rootNodeData={
-        value:'China',
-        disable:true,
-        children:json
-    };
+  const selectionMode = document.querySelector('#selection-mode');
+  const tree = document.querySelector('.tree-selectable');
 
-    //Normative data, this json source id is not unique, now adjust the next.
-    const setNodeID=(node,parent)=>{
-        if(parent){
-            node.id=parent.id+'/'+node.value;
-        }else{
-            node.id=node.value;
-        }
-        if(Math.random()>0.5){
-            node.disable=true;
-        }
-        const children=node.children;
-        if(children){
-          for(let k of children){
-            setNodeID(k,node);
-          }
-        }
-    }
-    setNodeID(treeDiv.rootNodeData);
-
-
-    /*Iteration Recovery Node Contraction State*/
-    const iteratorNodeData=(data,callback)=>{
-        callback(data);
-        const children=data.children;
-        if(children){
-          for(let k of children){
-            iteratorNodeData(k,callback);
-          }
-        }
-    }
-    let openData=localStorage.getItem('tree-data');
-    if(!openData){
-        openData=[];
-    }else{
-        openData=JSON.parse(openData);
-     }
-    const callFun=function(tempData){
-       if(openData.indexOf(tempData.id)>=0){
-           tempData.close=false;
-       }else{
-           //tempData.close=true;
-       }
-    }
-    iteratorNodeData(treeDiv.rootNodeData,callFun);
-});
- document.querySelector('#checkFilter').addEventListener('sl-change',(event)=>{
-        treeDiv.enableFilter=event.target.checked;
-    });
+  selectionMode.addEventListener('sl-change', () => {
+    tree.querySelectorAll('sl-tree-item').forEach(item => (item.selected = false));
+    tree.selection = selectionMode.value;
+  });
 </script>
 ```
 
-### Custom rendering `nodeRender`
-Receive nodeData , return the tree node custom return data
-```javascript
-/**
- * Node custom rendering
- * (data: TreeNodeData, index?:number, parentData?:TreeNodeData,): TemplateResult<1>;
- */
-export interface NodeRenderInterface {
-  /** data:Node Data Source， index: Order number in the upper level，parentData:Parent Node Data */
-  (data: TreeNodeData, index?: number, parentData?: TreeNodeData): TemplateResult<1>;
-}
+<!-- prettier-ignore -->
+```jsx react
+import { SlTree, SlTreeItem } from '@shoelace-style/shoelace/dist/react';
+
+const App = () => {
+  const [selection, setSelection] = useState('single');
+
+  return (
+    <>
+      <SlSelect label="Selection" value={value} onSlChange={event => setSelection(event.target.value)}>
+        <SlMenuItem value="single">single</SlMenuItem>
+        <SlMenuItem value="multiple">multiple</SlMenuItem>
+        <SlMenuItem value="leaf">leaf</SlMenuItem>
+      </SlSelect>
+
+      <br />
+
+      <SlTree class="tree-selectable">
+        <SlTreeItem>
+          Item 1
+          <SlTreeItem>
+            Item A
+            <SlTreeItem>Item Z</SlTreeItem>
+            <SlTreeItem>Item Y</SlTreeItem>
+            <SlTreeItem>Item X</SlTreeItem>
+          </SlTreeItem>
+          <SlTreeItem>Item B</SlTreeItem>
+          <SlTreeItem>Item C</SlTreeItem>
+        </SlTreeItem>
+        <SlTreeItem>Item 2</SlTreeItem>
+        <SlTreeItem>Item 3</SlTreeItem>
+      </SlTree>
+    </>
+  );
+};
 ```
 
-### Built-in filtering
- `filter`：Enable or disable filtering, if enabled, one more input filter by default (you can also slot=[name=filter] to replace the custom internal filter)
- `filterString`:Filtering parameters
- `filterMethod`:The filter function receives nodeData and determines whether the node matches.
-```javascript
- export interface TreeNodeFilter{
-    /**
-     * data:Need to match the data, the developer does not have to recurse the child data
-     */
-    (data:TreeNodeData, ...searchData:unknown[]):boolean;
+### Showing Indent Guides
+
+Indent guides can be drawn by setting `--indent-guide-width`. You can also change the color, offset, and style, using `--indent-guide-color`, `--indent-guide-style`, and `--indent-guide-offset`, respectively.
+
+```html preview
+<sl-tree class="tree-with-lines">
+  <sl-tree-item expanded>
+    Deciduous
+    <sl-tree-item>Birch</sl-tree-item>
+    <sl-tree-item expanded>
+      Maple
+      <sl-tree-item>Field maple</sl-tree-item>
+      <sl-tree-item>Red maple</sl-tree-item>
+      <sl-tree-item>Sugar maple</sl-tree-item>
+    </sl-tree-item>
+    <sl-tree-item>Oak</sl-tree-item>
+  </sl-tree-item>
+
+  <sl-tree-item>
+    Coniferous
+    <sl-tree-item>Cedar</sl-tree-item>
+    <sl-tree-item>Pine</sl-tree-item>
+    <sl-tree-item>Spruce</sl-tree-item>
+  </sl-tree-item>
+
+  <sl-tree-item>
+    Non-trees
+    <sl-tree-item>Bamboo</sl-tree-item>
+    <sl-tree-item>Cactus</sl-tree-item>
+    <sl-tree-item>Fern</sl-tree-item>
+  </sl-tree-item>
+</sl-tree>
+
+<style>
+  .tree-with-lines {
+    --indent-guide-width: 1px;
   }
-```
-### Tree node data traverser works with `iteratorNodeData`,`NodeVistor`.
-```javascript
- /** Node traverser    (node: TreeNodeData, index:number=0,parentNode?: TreeNodeData) */
-export interface NodeVistor {
-  /** @node:Nodes to be traversed，paretNode:Parent Node,index:Same level order number */
-  (node: TreeNodeData,  parentNode?: TreeNodeData,index?:number)
-}
-interface iteratorNodeDataType {
-  /** data:TreeNodeData, callback:Traverser functions，parentData：Higher level data，parentChildrenIndex:The order of data in the superordinate  **/
-  (data: TreeNodeData, callback: NodeVistor, parentData?: TreeNodeData,parentChildrenIndex:number=0)=>void;
-} 
-
-import {iteratorNodeData} from 'tree-node-util';
-const data=tree.rootNodeData;
-const result=[];
-const callBack=(node,parentNode)=>{
-    if(node.disable){ //Collect all disable nodes
-        result.push(node);
-    }
-}
-//iteratorNodeData internally encapsulates the auto-recursive child nodes
-iteratorNodeData(data,callBack);
-```
-### `tree-node-util` `convertListToTreeNodeData` converts an array of {id,parentID,name } objects into TreeNodeData 
-```javascript
-    import {convertListToTreeNodeData} from 'tree-node-util';
-    const array=[{
-        id:10,
-        parentID:0,
-        name:'A',
-    },{
-        id:11,
-        parentID:0,
-        name:'B',
-    },{
-        id:12,
-        parentID:11,
-        name:'B_1',
-    }]
-    const root={id:0,name:root};
-    convertListToTreeNodeData(array,root);
-    //After execution root.children has two children `A, B` . The `B` node has a child node `B_1`
+</style>
 ```
 
+<!-- prettier-ignore -->
+```jsx react
+import { SlTree, SlTreeItem } from '@shoelace-style/shoelace/dist/react';
 
-TODO Tree node dragging, moving up and down, upgrade and downgrade functions
+const App = () => (
+  <SlTree class="tree-with-lines" style={{ '--indent-guide-width': '1px' }}>
+    <SlTreeItem expanded>
+      Deciduous
+      <SlTreeItem>Birch</SlTreeItem>
+      <SlTreeItem expanded>
+        Maple
+        <SlTreeItem>Field maple</SlTreeItem>
+        <SlTreeItem>Red maple</SlTreeItem>
+        <SlTreeItem>Sugar maple</SlTreeItem>
+      </SlTreeItem>
+      <SlTreeItem>Oak</SlTreeItem>
+    </SlTreeItem>
 
-### Second Example
+    <SlTreeItem>
+      Coniferous
+      <SlTreeItem>Cedar</SlTreeItem>
+      <SlTreeItem>Pine</SlTreeItem>
+      <SlTreeItem>Spruce</SlTreeItem>
+    </SlTreeItem>
 
-TODO
+    <SlTreeItem>
+      Non-trees
+      <SlTreeItem>Bamboo</SlTreeItem>
+      <SlTreeItem>Cactus</SlTreeItem>
+      <SlTreeItem>Fern</SlTreeItem>
+    </SlTreeItem>
+  </SlTree>
+);
+```
+
+### Lazy Loading
+
+Use the `lazy` attribute on a tree item to indicate that the content is not yet present and will be loaded later. When the user tries to expand the node, the `loading` state is set to `true` and the `sl-lazy-load` event will be emitted to allow you to load data asynchronously. The item will remain in a loading state until its content is changed.
+
+If you want to disable this behavior after the first load, simply remove the `lazy` attribute and, on the next expand, the existing content will be shown instead.
+
+```html preview
+<sl-tree selection="leaf">
+  <sl-tree-item lazy>Available Trees</sl-tree-item>
+</sl-tree>
+
+<script type="module">
+  const lazyItem = document.querySelector('sl-tree-item[lazy]');
+
+  lazyItem.addEventListener('sl-lazy-load', () => {
+    // Simulate asynchronous loading
+    setTimeout(() => {
+      const subItems = ['Birch', 'Cedar', 'Maple', 'Pine'];
+
+      for (const item of subItems) {
+        const treeItem = document.createElement('sl-tree-item');
+        treeItem.innerText = item;
+        lazyItem.append(treeItem);
+      }
+
+      // Disable lazy mode once the content has been loaded
+      lazyItem.lazy = false;
+    }, 1000);
+  });
+</script>
+```
+
+```jsx react
+import { SlTree, SlTreeItem } from '@shoelace-style/shoelace/dist/react';
+
+const App = () => {
+  const [childItems, setChildItems] = useState([]);
+  const [lazy, setLazy] = useState(true);
+
+  const handleLazyLoad = () => {
+    // Simulate asynchronous loading
+    setTimeout(() => {
+      setChildItems(['Birch', 'Cedar', 'Maple', 'Pine']);
+
+      // Disable lazy mode once the content has been loaded
+      setLazy(false);
+    }, 1000);
+  };
+
+  return (
+    <SlTree selection="leaf">
+      <SlTreeItem lazy={lazy} onSlLazyLoad={handleLazyLoad}>
+        Available Trees
+        {childItems.map(item => (
+          <SlTreeItem>{item}</SlTreeItem>
+        ))}
+      </SlTreeItem>
+    </SlTree>
+  );
+};
+```
+
+### Custom expanded/collapsed icons
+
+Use the `expanded-icon` or `collapsed-icon` slots to change the expanded and collapsed tree element icons respectively.
+
+```html preview
+<sl-tree selection="leaf">
+  <sl-icon name="plus-square" slot="collapsed-icon"></sl-icon>
+  <sl-icon name="dash-square" slot="expanded-icon"></sl-icon>
+
+  <sl-tree-item>
+    Deciduous
+    <sl-tree-item>Birch</sl-tree-item>
+    <sl-tree-item>
+      Maple
+      <sl-tree-item>Field maple</sl-tree-item>
+      <sl-tree-item>Red maple</sl-tree-item>
+      <sl-tree-item>Sugar maple</sl-tree-item>
+    </sl-tree-item>
+    <sl-tree-item>Oak</sl-tree-item>
+  </sl-tree-item>
+
+  <sl-tree-item>
+    Coniferous
+    <sl-tree-item>Cedar</sl-tree-item>
+    <sl-tree-item>Pine</sl-tree-item>
+    <sl-tree-item>Spruce</sl-tree-item>
+  </sl-tree-item>
+
+  <sl-tree-item>
+    Non-trees
+    <sl-tree-item>Bamboo</sl-tree-item>
+    <sl-tree-item>Cactus</sl-tree-item>
+    <sl-tree-item>Fern</sl-tree-item>
+  </sl-tree-item>
+</sl-tree>
+```
+
+<!-- prettier-ignore -->
+```jsx react
+import { SlTree, SlTreeItem } from '@shoelace-style/shoelace/dist/react';
+
+const App = () => (
+  <SlTree>
+    <SlIcon name="plus-square" slot="collapsed-icon"></SlIcon>
+    <SlIcon name="dash-square" slot="expanded-icon"></SlIcon>
+
+    <SlTreeItem>
+      Deciduous
+      <SlTreeItem>Birch</SlTreeItem>
+      <SlTreeItem>
+        Maple
+        <SlTreeItem>Field maple</SlTreeItem>
+        <SlTreeItem>Red maple</SlTreeItem>
+        <SlTreeItem>Sugar maple</SlTreeItem>
+      </SlTreeItem>
+      <SlTreeItem>Oak</SlTreeItem>
+    </SlTreeItem>
+
+    <SlTreeItem>
+      Coniferous
+      <SlTreeItem>Cedar</SlTreeItem>
+      <SlTreeItem>Pine</SlTreeItem>
+      <SlTreeItem>Spruce</SlTreeItem>
+    </SlTreeItem>
+
+    <SlTreeItem>
+      Non-trees
+      <SlTreeItem>Bamboo</SlTreeItem>
+      <SlTreeItem>Cactus</SlTreeItem>
+      <SlTreeItem>Fern</SlTreeItem>
+    </SlTreeItem>
+  </SlTree>
+);
+```
+
+### With Icons
+
+Decorative icons can be used before labels to provide hints for each node.
+
+```html preview
+<sl-tree class="tree-with-icons">
+  <sl-tree-item expanded>
+    <sl-icon name="folder"></sl-icon>
+    Root
+
+    <sl-tree-item>
+      <sl-icon name="folder"> </sl-icon>
+      Folder 1
+      <sl-tree-item>
+        <sl-icon name="files"></sl-icon>
+        File 1 - 1
+      </sl-tree-item>
+      <sl-tree-item disabled>
+        <sl-icon name="files"></sl-icon>
+        File 1 - 2
+      </sl-tree-item>
+      <sl-tree-item>
+        <sl-icon name="files"></sl-icon>
+        File 1 - 3
+      </sl-tree-item>
+    </sl-tree-item>
+
+    <sl-tree-item>
+      <sl-icon name="files"></sl-icon>
+      Folder 2
+      <sl-tree-item>
+        <sl-icon name="files"></sl-icon>
+        File 2 - 1
+      </sl-tree-item>
+      <sl-tree-item>
+        <sl-icon name="files"></sl-icon>
+        File 2 - 2
+      </sl-tree-item>
+    </sl-tree-item>
+    <sl-tree-item>
+      <sl-icon name="files"></sl-icon>
+      File 1
+    </sl-tree-item>
+  </sl-tree-item>
+</sl-tree>
+```
+
+```jsx react
+import { SlIcon, SlTree, SlTreeItem } from '@shoelace-style/shoelace/dist/react';
+
+const App = () => {
+  return (
+    <SlTree class="tree-with-icons">
+      <SlTreeItem expanded>
+        <SlIcon name="folder" />
+        Root
+        <SlTreeItem>
+          <SlIcon name="folder" />
+          Folder 1<SlTreeItem>
+            <SlIcon name="files" />
+            File 1 - 1
+          </SlTreeItem>
+          <SlTreeItem disabled>
+            <SlIcon name="files" />
+            File 1 - 2
+          </SlTreeItem>
+          <SlTreeItem>
+            <SlIcon name="files" />
+            File 1 - 3
+          </SlTreeItem>
+        </SlTreeItem>
+        <SlTreeItem>
+          <SlIcon name="files" />
+          Folder 2<SlTreeItem>
+            <SlIcon name="files" />
+            File 2 - 1
+          </SlTreeItem>
+          <SlTreeItem>
+            <SlIcon name="files" />
+            File 2 - 2
+          </SlTreeItem>
+        </SlTreeItem>
+        <SlTreeItem>
+          <SlIcon name="files" />
+          File 1
+        </SlTreeItem>
+      </SlTreeItem>
+    </SlTree>
+  );
+};
+```
 
 [component-metadata:sl-tree]

@@ -7,6 +7,7 @@ import { watch } from '../../internal/watch';
 import styles from './icon.styles';
 import { getIconLibrary, unwatchIcon, watchIcon } from './library';
 import { requestIcon } from './request';
+import type { CSSResultGroup } from 'lit';
 
 let parser: DOMParser;
 
@@ -22,7 +23,7 @@ let parser: DOMParser;
  */
 @customElement('sl-icon')
 export default class SlIcon extends LitElement {
-  static styles = styles;
+  static styles: CSSResultGroup = styles;
 
   @state() private svg = '';
 

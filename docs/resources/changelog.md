@@ -8,12 +8,32 @@ New versions of Shoelace are released as-needed and generally occur when a criti
 
 _During the beta period, these restrictions may be relaxed in the event of a mission-critical bug._ 🐛
 
+## 2.0.0-beta.79
+
+- Added experimental `<sl-tree>` and `<sl-tree-item>` components [#823](https://github.com/shoelace-style/shoelace/pull/823)
+- Added `--indicator-width` custom property to `<sl-progress-ring>` [#837](https://github.com/shoelace-style/shoelace/issues/837)
+- Added Swedish translation [#838](https://github.com/shoelace-style/shoelace/pull/838)
+- Added support for `step="any"` for `<sl-input type="number">` [#839](https://github.com/shoelace-style/shoelace/issues/839)
+- Changed the type of component styles from `CSSResult` to `CSSResultGroup` [#828](https://github.com/shoelace-style/shoelace/issues/828)
+- Fixed a bug in `<sl-color-picker>` where using <kbd>Left<kbd> and <kbd>Right</kbd> would select the wrong color
+- Fixed a bug in `<sl-dropdown>` that caused the position to be incorrect on the first show when using `hoist` [#843](https://github.com/shoelace-style/shoelace/issues/843)
+- Fixed a bug in `<sl-tab-group>` where the divider was on the wrong side when using `placement="end"`
+- Fixed a bug in `<sl-tab-group>` that caused nested tab groups to scroll when using `placement="start|end"` [#815](https://github.com/shoelace-style/shoelace/issues/815)
+- Fixed a bug in `<sl-tooltip>` that caused the target to be lost after a slot change [#831](https://github.com/shoelace-style/shoelace/pull/831)
+- Fixed a bug in `<sl-tooltip>` that caused the position to be incorrect on the first show when using `hoist`
+- Improved accessibility of `<sl-tab-group>`, `<sl-tab>`, and `<sl-tab-panel>` to announce better in screen readers and by allowing focus on disabled items
+- Improved accessibility of `<sl-menu>` and `<sl-menu-item>` by allowing focus on disabled items
+- Updated Lit to 2.2.8
+- Update esbuild to 0.14.50
+- Updated Bootstrap Icons to 1.9.1
+- Updated Floating UI to 1.0.0
+- Updated all other dependencies to latest versions
 
 ## 2.0.0-beta.78
 
 - 🚨 BREAKING: Moved the `checked-icon` and `indeterminate-icon` parts from a wrapper `<span>` to the `<svg>` in `<sl-checkbox>` [#786](https://github.com/shoelace-style/shoelace/issues/786)
 - 🚨 BREAKING: Moved the `checked-icon` part from a wrapper `<span>` to the `<svg>` in `<sl-radio>` [#786](https://github.com/shoelace-style/shoelace/issues/786)
-- Added the `--track-active-offset` CSS custom property to `<sl-range>` [#806](https://github.com/shoelace-style/shoelace/issues/806)
+- Added the `--track-active-offset` custom property to `<sl-range>` [#806](https://github.com/shoelace-style/shoelace/issues/806)
 - Fixed a bug that caused `<sl-select>` to sometimes have two vertical scrollbars [#814](https://github.com/shoelace-style/shoelace/issues/814)
 - Fixed a bug that caused a gray line to appear between radio buttons [#821](https://github.com/shoelace-style/shoelace/discussions/821)
 - Fixed a bug that caused `<sl-animated-image>` to not render anything when using the `play` attribute initially [#824](https://github.com/shoelace-style/shoelace/issues/824)
@@ -211,7 +231,7 @@ _During the beta period, these restrictions may be relaxed in the event of a mis
 
 - 🚨 BREAKING: the `unit` property of `<sl-format-bytes>` has changed to `byte | bit` instead of `bytes | bits`
 - Added `display-label` part to `<sl-select>` [#650](https://github.com/shoelace-style/shoelace/issues/650)
-- Added `--spacing` CSS custom property to `<sl-divider>` [#664](https://github.com/shoelace-style/shoelace/pull/664)
+- Added `--spacing` custom property to `<sl-divider>` [#664](https://github.com/shoelace-style/shoelace/pull/664)
 - Added `event.detail.source` to the `sl-request-close` event in `<sl-dialog>` and `<sl-drawer>`
 - Fixed a bug that caused `<sl-progress-ring>` to render the wrong size when `--track-width` was increased [#656](https://github.com/shoelace-style/shoelace/issues/656)
 - Fixed a bug that allowed `<sl-details>` to open and close when disabled using a screen reader [#658](https://github.com/shoelace-style/shoelace/issues/658)
