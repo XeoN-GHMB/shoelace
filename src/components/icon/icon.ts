@@ -46,13 +46,16 @@ export default class SlIcon extends LitElement {
   /** Enforce v-once for vueJs */
   @property({reflect: true, type: Boolean, attribute: 'v-once'}) vueonce = true;
 
+  /** allows to use a sprite map instead of copying the svg as inline code */
+  @property({reflect: true, type: Boolean}) sprite = false;
+
   connectedCallback() {
     super.connectedCallback();
     watchIcon(this);
   }
 
   firstUpdated() {
-    this.setIcon();
+    if (!this.sprite) this.setIcon();
   }
 
   disconnectedCallback() {
@@ -68,9 +71,14 @@ export default class SlIcon extends LitElement {
     return this.src;
   }
 
+  private getDir(){
+    const url = this.getUrl();
+    return url?.substring(0, url?.lastIndexOf("/"))
+  }
+
   /** @internal Fetches the icon and redraws it. Used to handle library registrations. */
   redraw() {
-    this.setIcon();
+    if (!this.sprite) this.setIcon();
   }
 
   @watch('name')
@@ -118,7 +126,8 @@ export default class SlIcon extends LitElement {
   }
 
   handleChange() {
-    this.setIcon();
+    if (!this.sprite) this.setIcon();
+
   }
 
   render() {
@@ -131,7 +140,13 @@ export default class SlIcon extends LitElement {
       aria-label=${ifDefined(hasLabel ? this.label : undefined)}
       aria-hidden=${ifDefined(hasLabel ? undefined : 'true')}
     >
-      ${unsafeSVG(this.svg)}
+
+    ${this.sprite?
+      html`<svg width="1em" height="1em">
+            <use href="${this.getDir()}/_sprite.svg#${this.name}"></use>
+          </svg>`
+      :html`${unsafeSVG(this.svg)}`}
+
     </div>`;
   }
 }
