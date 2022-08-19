@@ -1,5 +1,4 @@
 import { css } from 'lit';
-import { focusVisibleSelector } from '../../internal/focus-visible';
 import componentStyles from '../../styles/component.styles';
 import formControlStyles from '../../styles/form-control.styles';
 
@@ -12,6 +11,7 @@ export default css`
     --tooltip-offset: 10px;
     --track-color-active: var(--sl-color-neutral-200);
     --track-color-inactive: var(--sl-color-neutral-200);
+    --track-active-offset: 0%;
     --track-height: 6px;
 
     display: block;
@@ -22,6 +22,7 @@ export default css`
   }
 
   .range__control {
+    --percent: 0%;
     -webkit-appearance: none;
     border-radius: 3px;
     width: 100%;
@@ -29,6 +30,16 @@ export default css`
     background: transparent;
     line-height: var(--sl-input-height-medium);
     vertical-align: middle;
+
+    background-image: linear-gradient(
+      to right,
+      var(--track-color-inactive) 0%,
+      var(--track-color-inactive) min(var(--percent), var(--track-active-offset)),
+      var(--track-color-active) min(var(--percent), var(--track-active-offset)),
+      var(--track-color-active) max(var(--percent), var(--track-active-offset)),
+      var(--track-color-inactive) max(var(--percent), var(--track-active-offset)),
+      var(--track-color-inactive) 100%
+    );
   }
 
   /* Webkit */
@@ -58,7 +69,7 @@ export default css`
     border-color: var(--sl-color-primary-500);
   }
 
-  .range__control:enabled${focusVisibleSelector}::-webkit-slider-thumb {
+  .range__control:enabled:focus-visible::-webkit-slider-thumb {
     outline: var(--sl-focus-ring);
     outline-offset: var(--sl-focus-ring-offset);
   }
@@ -105,7 +116,7 @@ export default css`
     border-color: var(--sl-color-primary-500);
   }
 
-  .range__control:enabled${focusVisibleSelector}::-moz-range-thumb {
+  .range__control:enabled:focus-visible::-moz-range-thumb {
     outline: var(--sl-focus-ring);
     outline-offset: var(--sl-focus-ring-offset);
   }
@@ -117,7 +128,7 @@ export default css`
   }
 
   /* States */
-  .range__control${focusVisibleSelector} {
+  .range__control:focus-visible {
     outline: none;
   }
 

@@ -1,5 +1,4 @@
 import { css } from 'lit';
-import { focusVisibleSelector } from '../../internal/focus-visible';
 import componentStyles from '../../styles/component.styles';
 
 //language=CSS
@@ -40,7 +39,7 @@ export default css`
     outline: none;
   }
 
-  .button${focusVisibleSelector} {
+  .button:focus-visible {
     outline: var(--sl-focus-ring);
     outline-offset: var(--sl-focus-ring-offset);
   }
@@ -199,13 +198,6 @@ export default css`
     color: var(--sl-color-neutral-0);
   }
 
-  .button--standard.button--info${focusVisibleSelector}:not(.button--disabled) {
-    background-color: var(--sl-color-info-500);
-    border-color: var(--sl-color-info-700);
-    color: var(--sl-color-neutral-0);
-    box-shadow: var(--sl-focus-ring);
-  }
-
   .button--standard.button--info:active:not(.button--disabled) {
     background-color: var(--sl-color-info-500);
     border-color: var(--sl-color-info-700);
@@ -223,13 +215,6 @@ export default css`
     background-color: var(--sl-color-secondary-400);
     border-color: var(--sl-color-secondary-600);
     color: var(--sl-color-neutral-0);
-  }
-
-  .button--standard.button--secondary${focusVisibleSelector}:not(.button--disabled) {
-    background-color: var(--sl-color-secondary-500);
-    border-color: var(--sl-color-secondary-700);
-    color: var(--sl-color-neutral-0);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--standard.button--secondary:active:not(.button--disabled) {
@@ -368,11 +353,6 @@ export default css`
     color: var(--sl-color-neutral-0);
   }
 
-  .button--outline.button--info${focusVisibleSelector}:not(.button--disabled) {
-    border-color: var(--sl-color-info-500);
-    box-shadow: var(--sl-focus-ring);
-  }
-
   .button--outline.button--info:active:not(.button--disabled) {
     border-color: var(--sl-color-info-700);
     background-color: var(--sl-color-info-700);
@@ -388,11 +368,6 @@ export default css`
   .button--outline.button--secondary:hover:not(.button--disabled) {
     background-color: var(--sl-color-secondary-600);
     color: var(--sl-color-neutral-0);
-  }
-
-  .button--outline.button--secondary${focusVisibleSelector}:not(.button--disabled) {
-    border-color: var(--sl-color-secondary-500);
-    box-shadow: var(--sl-focus-ring);
   }
 
   .button--outline.button--secondary:active:not(.button--disabled) {
@@ -418,7 +393,7 @@ export default css`
     color: var(--sl-color-primary-500);
   }
 
-  .button--text${focusVisibleSelector}:not(.button--disabled) {
+  .button--text:focus-visible:not(.button--disabled) {
     background-color: transparent;
     border-color: transparent;
     color: var(--sl-color-primary-500);
@@ -660,7 +635,7 @@ export default css`
   }
 
   /* Add a visual separator between solid buttons */
-  :host(.sl-button-group__button:not(.sl-button-group__button--focus, .sl-button-group__button--first, [variant='default']):not(:hover, :active, :focus))
+  :host(.sl-button-group__button:not(.sl-button-group__button--focus, .sl-button-group__button--first, .sl-button-group__button--radio, [variant='default']):not(:hover, :active, :focus))
     .button:after {
     content: '';
     position: absolute;

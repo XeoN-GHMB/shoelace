@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 import '../../components/icon/icon';
+import { defaultValue } from '../../internal/default-value';
 import { emit } from '../../internal/event';
 import { FormSubmitController } from '../../internal/form';
 import { HasSlotController } from '../../internal/slot';
@@ -76,6 +77,10 @@ export default class SlInput extends LitElement {
 
   /** The input's value attribute. */
   @property() value = '';
+
+  /** Gets or sets the default value used to reset this element. The initial value corresponds to the one originally specified in the HTML that created this element. */
+  @defaultValue()
+  defaultValue = '';
 
   /** Draws a filled input. */
   @property({ type: Boolean, reflect: true }) filled = false;
@@ -363,9 +368,9 @@ export default class SlInput extends LitElement {
               max=${ifDefined(this.max)}
               step=${ifDefined(this.step)}
               .value=${live(this.value)}
-              autocapitalize=${ifDefined(this.autocapitalize)}
-              autocomplete=${ifDefined(this.autocomplete)}
-              autocorrect=${ifDefined(this.autocorrect)}
+              autocapitalize=${ifDefined(this.type === 'password' ? 'off' : this.autocapitalize)}
+              autocomplete=${ifDefined(this.type === 'password' ? 'off' : this.autocomplete)}
+              autocorrect=${ifDefined(this.type === 'password' ? 'off' : this.autocorrect)}
               ?autofocus=${this.autofocus}
               spellcheck=${ifDefined(this.spellcheck)}
               pattern=${ifDefined(this.pattern)}

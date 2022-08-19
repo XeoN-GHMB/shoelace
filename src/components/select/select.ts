@@ -6,6 +6,7 @@ import '../../components/icon-button/icon-button';
 import '../../components/icon/icon';
 import '../../components/menu/menu';
 import '../../components/tag/tag';
+import { defaultValue } from '../../internal/default-value';
 import { emit } from '../../internal/event';
 import { FormSubmitController } from '../../internal/form';
 import { HasSlotController } from '../../internal/slot';
@@ -136,6 +137,10 @@ export default class SlSelect extends LitElement {
 
   /** This will be true when the control is in an invalid state. Validity is determined by the `required` prop. */
   @property({ type: Boolean, reflect: true }) invalid = false;
+
+  /** Gets or sets the default value used to reset this element. The initial value corresponds to the one originally specified in the HTML that created this element. */
+  @defaultValue()
+  defaultValue = '';
 
   connectedCallback() {
     super.connectedCallback();

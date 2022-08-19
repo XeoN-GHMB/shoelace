@@ -4,7 +4,43 @@ Shoelace follows [Semantic Versioning](https://semver.org/). Breaking changes in
 
 Components with the <sl-badge variant="warning" pill>Experimental</sl-badge> badge should not be used in production. They are made available as release candidates for development and testing purposes. As such, changes to experimental components will not be subject to semantic versioning.
 
+New versions of Shoelace are released as-needed and generally occur when a critical mass of changes have accumulated. At any time, you can see what's coming in the next release by visiting [next.shoelace.style](https://next.shoelace.style).
+
 _During the beta period, these restrictions may be relaxed in the event of a mission-critical bug._ 🐛
+
+
+## 2.0.0-beta.78
+
+- 🚨 BREAKING: Moved the `checked-icon` and `indeterminate-icon` parts from a wrapper `<span>` to the `<svg>` in `<sl-checkbox>` [#786](https://github.com/shoelace-style/shoelace/issues/786)
+- 🚨 BREAKING: Moved the `checked-icon` part from a wrapper `<span>` to the `<svg>` in `<sl-radio>` [#786](https://github.com/shoelace-style/shoelace/issues/786)
+- Added the `--track-active-offset` CSS custom property to `<sl-range>` [#806](https://github.com/shoelace-style/shoelace/issues/806)
+- Fixed a bug that caused `<sl-select>` to sometimes have two vertical scrollbars [#814](https://github.com/shoelace-style/shoelace/issues/814)
+- Fixed a bug that caused a gray line to appear between radio buttons [#821](https://github.com/shoelace-style/shoelace/discussions/821)
+- Fixed a bug that caused `<sl-animated-image>` to not render anything when using the `play` attribute initially [#824](https://github.com/shoelace-style/shoelace/issues/824)
+- Removed `:focus-visible` shim now that the last two major versions of Safari support it
+- Updated Bootstrap Icons to 1.9.0
+- Updated esbuild to 0.14.49
+- Updated Floating UI to 0.5.4
+- Updated Lit to 2.2.7
+- Updated all other dependencies to latest versions
+
+## 2.0.0-beta.77
+
+- Added styles to required form controls so they show an asterisk next to the label by default
+- Added the `--sl-input-required-content` design token
+- Added the `required` attribute to `<sl-radio-group>` and fixed constraint validation logic to support custom validation
+- Added the `checked-icon` part to `<sl-menu-item>`
+- Added the `no-spin-buttons` attribute to `<sl-input type="number">` [#798](https://github.com/shoelace-style/shoelace/issues/798)
+- Added support for resetting forms using `<sl-button type="reset">` [#799](https://github.com/shoelace-style/shoelace/pull/799)
+- Fixed a bug where a duplicate clear button showed in Firefox [#791](https://github.com/shoelace-style/shoelace/issues/791)
+- Fixed a bug where setting `valueAsDate` or `valueAsNumber` too early on `<sl-input>` would throw an error [#796](https://github.com/shoelace-style/shoelace/issues/796)
+- Fixed a bug in `<sl-color-picker>` where empty values weren't properly supported [#797](https://github.com/shoelace-style/shoelace/issues/797)
+- Fixed a bug in `<sl-color-picker>` where values were logged to the console when using the keyboard
+- Fixed a bug in `<sl-input>` where password controls would try to autocorrect/autocomplete/autocapitalize when the password is visible
+- Fixed label alignment in `<sl-checkbox>` and `<sl-radio>` so they align to the top of the control instead of the center when wrapping
+- Fixed labels in `<sl-checkbox>` and `<sl-radio>` so they use the `--sl-input-label-color` design token
+- Improved performance of the tabbable utility which can prevent the browser from temporarily locking up in focus traps [#800](https://github.com/shoelace-style/shoelace/pull/800)
+- Updated the `fieldset` attribute so it reflects in `<sl-radio-group>`
 
 ## 2.0.0-beta.76
 

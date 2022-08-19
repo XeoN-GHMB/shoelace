@@ -3,6 +3,7 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
+import { defaultValue } from '../../internal/default-value';
 import { emit } from '../../internal/event';
 import { FormSubmitController } from '../../internal/form';
 import { HasSlotController } from '../../internal/slot';
@@ -34,6 +35,7 @@ import styles from './range.styles';
  * @cssproperty --track-color-active - The color of the portion of the track that represents the current value.
  * @cssproperty --track-color-inactive - The of the portion of the track that represents the remaining value.
  * @cssproperty --track-height - The height of the track.
+ * @cssproperty --track-active-offset - The point of origin of the active track.
  */
 @customElement('sl-range')
 export default class SlRange extends LitElement {
@@ -90,13 +92,14 @@ export default class SlRange extends LitElement {
   /** A function used to format the tooltip's value. */
   @property({ attribute: false }) tooltipFormatter: (value: number) => string = (value: number) => value.toString();
 
+  /** Gets or sets the default value used to reset this element. The initial value corresponds to the one originally specified in the HTML that created this element. */
+  @defaultValue()
+  defaultValue = 0;
+
   connectedCallback() {
     super.connectedCallback();
     this.resizeObserver = new ResizeObserver(() => this.syncRange());
 
-    if (!this.value) {
-      this.value = this.min;
-    }
     if (this.value < this.min) {
       this.value = this.min;
     }
@@ -188,9 +191,7 @@ export default class SlRange extends LitElement {
   }
 
   syncProgress(percent: number) {
-    this.input.style.background = `linear-gradient(to right, var(--track-color-active) 0%, var(--track-color-active) ${
-      percent * 100
-    }%, var(--track-color-inactive) ${percent * 100}%, var(--track-color-inactive) 100%)`;
+    this.input.style.setProperty('--percent', `${percent * 100}%`);
   }
 
   syncTooltip(percent: number) {

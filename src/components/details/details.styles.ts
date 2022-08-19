@@ -1,5 +1,4 @@
 import { css } from 'lit';
-import { focusVisibleSelector } from '../../internal/focus-visible';
 import componentStyles from '../../styles/component.styles';
 
 export default css`
@@ -53,7 +52,7 @@ export default css`
     outline: none;
   }
 
-  .details__header${focusVisibleSelector} {
+  .details__header:focus-visible {
     outline: var(--sl-focus-ring);
     outline-offset: calc(1px + var(--sl-focus-ring-offset));
   }
@@ -62,7 +61,7 @@ export default css`
     cursor: not-allowed;
   }
 
-  .details--disabled .details__header${focusVisibleSelector} {
+  .details--disabled .details__header:focus-visible {
     outline: none;
     box-shadow: none;
   }
