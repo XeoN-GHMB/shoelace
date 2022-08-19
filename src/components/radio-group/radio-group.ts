@@ -63,6 +63,9 @@ export default class SlRadioGroup extends LitElement {
   /** Shows the fieldset and legend that surrounds the radio group. */
   @property({ type: Boolean, attribute: 'fieldset' }) fieldset = false;
 
+  /** Ensures a child radio is checked before allowing the containing form to submit. */
+  @property({ type: Boolean, reflect: true }) required = false;
+
   @watch('value')
   handleValueChange() {
     if (this.hasUpdated) {

@@ -265,7 +265,7 @@ export default class SlCombobox extends LitElement {
           slot="trigger"
           type="text"
           role="combobox"
-          aria-expanded=${this.dropdown?.open}
+          aria-expanded=${this.dropdown? 'true' : 'false'}
           size=${this.size}
           label=${this.label}
           placeholder=${this.placeholder}
