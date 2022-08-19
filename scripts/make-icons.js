@@ -13,6 +13,7 @@ import { globby } from 'globby';
 import path from 'path';
 import jsdom from 'jsdom';
 const { JSDOM } = jsdom;
+import {optimize} from 'svgo'
 
 const { outdir } = commandLineArgs({ name: 'outdir', type: String });
 const iconDir = path.join(outdir, '/assets/bootstrap-icons');
@@ -124,7 +125,11 @@ const iconDir2 = path.join(outdir, '/assets/icons');
       files.map(async file => {
         const name = path.basename(file, path.extname(file));
         const data = fm(await readFile(file, 'utf8'));
-        let svg = dom.window.document.createRange().createContextualFragment(data['body']).firstElementChild;
+
+        let opti_svg = optimize(data['body'],{multipass:true})
+        await writeFile(path.join(iconDir2, path.basename(file)), opti_svg.data, 'utf8');
+
+        let svg = dom.window.document.createRange().createContextualFragment(opti_svg.data).firstElementChild;
         let svgcode = svg.innerHTML;
 
         svgcode = svgcode.toString().replace(/<title>.*?<\/title>/g, '');
