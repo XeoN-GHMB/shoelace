@@ -1,23 +1,23 @@
 import { html, LitElement } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import '../../components/dropdown/dropdown';
-import '../../components/icon-button/icon-button';
-import '../../components/icon/icon';
-import '../../components/menu/menu';
-import '../../components/tag/tag';
 import { defaultValue } from '../../internal/default-value';
 import { emit } from '../../internal/event';
 import { FormSubmitController } from '../../internal/form';
 import { HasSlotController } from '../../internal/slot';
 import { watch } from '../../internal/watch';
 import { LocalizeController } from '../../utilities/localize';
+import '../dropdown/dropdown';
+import '../icon-button/icon-button';
+import '../icon/icon';
+import '../menu/menu';
+import '../tag/tag';
 import styles from './select.styles';
-import type SlDropdown from '../../components/dropdown/dropdown';
-import type SlIconButton from '../../components/icon-button/icon-button';
-import type SlMenuItem from '../../components/menu-item/menu-item';
-import type { MenuSelectEventDetail } from '../../components/menu/menu';
-import type SlMenu from '../../components/menu/menu';
+import type SlDropdown from '../dropdown/dropdown';
+import type SlIconButton from '../icon-button/icon-button';
+import type SlMenuItem from '../menu-item/menu-item';
+import type { MenuSelectEventDetail } from '../menu/menu';
+import type SlMenu from '../menu/menu';
 import type { TemplateResult, CSSResultGroup } from 'lit';
 
 /**
@@ -34,8 +34,8 @@ import type { TemplateResult, CSSResultGroup } from 'lit';
  * @slot prefix - Used to prepend an icon or similar element to the select.
  * @slot suffix - Used to append an icon or similar element to the select.
  * @slot clear-icon - An icon to use in lieu of the default clear icon.
- * @slot label - The select's label. Alternatively, you can use the label prop.
- * @slot help-text - Help text that describes how to use the select.
+ * @slot label - The select's label. Alternatively, you can use the `label` attribute.
+ * @slot help-text - Help text that describes how to use the select. Alternatively, you can use the `help-text` attribute.
  *
  * @event sl-clear - Emitted when the clear button is activated.
  * @event sl-change - Emitted when the control's value changes.
@@ -117,7 +117,7 @@ export default class SlSelect extends LitElement {
   /** Draws a pill-style select with rounded edges. */
   @property({ type: Boolean, reflect: true }) pill = false;
 
-  /** The select's label. Alternatively, you can use the label slot. */
+  /** The select's label. If you need to display HTML, you can use the `label` slot instead. */
   @property() label = '';
 
   /**
@@ -126,7 +126,7 @@ export default class SlSelect extends LitElement {
    */
   @property() placement: 'top' | 'bottom' = 'bottom';
 
-  /** The select's help text. Alternatively, you can use the help-text slot. */
+  /** The select's help text. If you need to display HTML, you can use the `help-text` slot instead. */
   @property({ attribute: 'help-text' }) helpText = '';
 
   /** The select's required attribute. */

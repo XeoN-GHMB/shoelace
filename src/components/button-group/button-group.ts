@@ -1,9 +1,9 @@
 import { LitElement, html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { customElement, property, query, state } from 'lit/decorators.js';
 import styles from './button-group.styles';
 import type { CSSResultGroup } from 'lit';
 
-const BUTTON_CHILDREN = ['sl-button', 'sl-radio-button', 'sl-input', 'sl-select'];
+const BUTTON_CHILDREN = ['sl-button', 'sl-radio-button', 'sl-input', 'sl-select', 'sl-combobox'];
 
 /**
  * @since 2.0
@@ -18,6 +18,8 @@ export default class SlButtonGroup extends LitElement {
   static styles: CSSResultGroup = styles;
 
   @query('slot') defaultSlot: HTMLSlotElement;
+
+  @state() disableRole = false;
 
   /** A label to use for the button group's `aria-label` attribute. */
   @property() label = '';
@@ -65,14 +67,14 @@ export default class SlButtonGroup extends LitElement {
       <div
         part="base"
         class="button-group"
-        role="group"
+        role="${this.disableRole ? 'presentation' : 'group'}"
         aria-label=${this.label}
         @focusout=${this.handleBlur}
         @focusin=${this.handleFocus}
         @mouseover=${this.handleMouseOver}
         @mouseout=${this.handleMouseOut}
       >
-        <slot @slotchange=${this.handleSlotChange}></slot>
+        <slot @slotchange=${this.handleSlotChange} role="none"></slot>
       </div>
     `;
   }
@@ -80,7 +82,6 @@ export default class SlButtonGroup extends LitElement {
 
 function findButton(el: HTMLElement) {
   return BUTTON_CHILDREN.includes(el.tagName.toLowerCase()) ? el : el.querySelector(BUTTON_CHILDREN.join(','));
-
 }
 
 declare global {

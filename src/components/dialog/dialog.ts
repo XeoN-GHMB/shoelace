@@ -2,7 +2,6 @@ import { html, LitElement } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import '../../components/icon-button/icon-button';
 import { animateTo, stopAnimations } from '../../internal/animate';
 import { emit, waitForEvent } from '../../internal/event';
 import Modal from '../../internal/modal';
@@ -11,6 +10,7 @@ import { HasSlotController } from '../../internal/slot';
 import { watch } from '../../internal/watch';
 import { getAnimation, setDefaultAnimation } from '../../utilities/animation-registry';
 import { LocalizeController } from '../../utilities/localize';
+import '../icon-button/icon-button';
 import styles from './dialog.styles';
 import type { CSSResultGroup } from 'lit';
 
@@ -21,7 +21,7 @@ import type { CSSResultGroup } from 'lit';
  * @dependency sl-icon-button
  *
  * @slot - The dialog's content.
- * @slot label - The dialog's label. Alternatively, you can use the label prop.
+ * @slot label - The dialog's label. Alternatively, you can use the `label` attribute.
  * @slot footer - The dialog's footer, usually one or more buttons representing various options.
  *
  * @event sl-show - Emitted when the dialog opens.
@@ -74,7 +74,8 @@ export default class SlDialog extends LitElement {
 
   /**
    * The dialog's label as displayed in the header. You should always include a relevant label even when using
-   * `no-header`, as it is required for proper accessibility.
+   * `no-header`, as it is required for proper accessibility. If you need to display HTML, you can use the `label` slot
+   * instead.
    */
   @property({ reflect: true }) label = '';
 

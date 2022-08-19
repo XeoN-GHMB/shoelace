@@ -24,7 +24,6 @@ export default css`
   }
 
   ::slotted(sl-radio:not(:last-of-type)) {
-    display: block;
     margin-bottom: var(--sl-spacing-2x-small);
   }
 
@@ -44,4 +43,22 @@ export default css`
     overflow: hidden;
     white-space: nowrap;
   }
+
+  .radio-group--required .radio-group__label::after {
+    content: var(--sl-input-required-content);
+    margin-inline-start: var(--sl-input-required-content-offset);
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
 `;

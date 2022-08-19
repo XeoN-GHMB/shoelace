@@ -63,8 +63,8 @@ export default css`
     outline: none;
   }
 
-  :host(:hover) .menu-item,
-  :host(:focus-visible:not(.sl-focus-invisible)) .menu-item {
+  :host(:hover:not([aria-disabled='true'])) .menu-item,
+  :host(:focus-visible:not(.sl-focus-invisible):not([aria-disabled='true'])) .menu-item {
     outline: none;
     background-color: var(--sl-color-primary-600);
     color: var(--sl-color-neutral-0);
@@ -72,6 +72,7 @@ export default css`
 
   .menu-item .menu-item__check,
   .menu-item .menu-item__chevron {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;

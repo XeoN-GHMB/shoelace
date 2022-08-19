@@ -8,6 +8,28 @@ New versions of Shoelace are released as-needed and generally occur when a criti
 
 _During the beta period, these restrictions may be relaxed in the event of a mission-critical bug._ 🐛
 
+## 2.0.0-beta.80
+
+This release breaks radio buttons, which is something that needed to happen to solve a longstanding accessibility issue where screen readers announced an incorrect number of radios, e.g. "1 of 1" instead of "1 of 3." Many attempts to solve this without breaking the existing API were made, but none worked across the board. The new implementation upgrades `<sl-radio-group>` to serve as the "form control" while `<sl-radio>` and `<sl-radio-button>` serve as options within the form control.
+
+To upgrade to this version, you will need to rework your radio controls by moving `name` up to the radio group. And instead of setting `checked` to select a specific radio, you can set `value` on the radio group and the checked item will update automatically.
+
+- 🚨 BREAKING: improved accessibility of `<sl-radio-group>`, `<sl-radio>`, and `<sl-radio-button>` so they announce properly in screen readers
+  - Added the `name` attribute to `<sl-radio-group>` and removed it from `<sl-radio>` and `<sl-radio-button>`
+  - Added the `value` attribute to `<sl-radio-group>` (use this to control which radio is checked)
+  - Added the `sl-change` event to `sl-radio-group`
+  - Added `setCustomValidity()` and `reportValidity()` to `<sl-radio-group>`
+  - Removed the `checked` attribute from `<sl-radio>` and `<sl-radio-button>` (use the radio group's `value` attribute instead)
+  - Removed the `sl-change` event from `<sl-radio>` and `<sl-radio-button>` (listen for it on the radio group instead)
+  - Removed the `invalid` attribute from `<sl-radio>` and `<sl-radio-button>`
+  - Removed `setCustomValidity()` and `reportValidity()` from `<sl-radio>` and `<sl-radio-button>` (now available on the radio group)
+- Added the experimental `<sl-popup>` component
+- Fixed a bug in `<sl-menu-item>` where labels weren't always aligned correctly
+- Fixed a bug in `<sl-range>` that caused the tooltip to be positioned incorrectly when switching between LTR/RTL
+- Refactored `<sl-dropdown>` to use `<sl-popup>`
+- Refactored `<sl-tooltip>` to use `<sl-popup>` and added the `body` part
+- Revert disabled focus behavior in `<sl-tab-group>`, `<sl-menu>`, and `<sl-tree>` to be consistent with native form controls and menus [#845](https://github.com/shoelace-style/shoelace/issues/845)
+
 ## 2.0.0-beta.79
 
 - Added experimental `<sl-tree>` and `<sl-tree-item>` components [#823](https://github.com/shoelace-style/shoelace/pull/823)
@@ -15,7 +37,7 @@ _During the beta period, these restrictions may be relaxed in the event of a mis
 - Added Swedish translation [#838](https://github.com/shoelace-style/shoelace/pull/838)
 - Added support for `step="any"` for `<sl-input type="number">` [#839](https://github.com/shoelace-style/shoelace/issues/839)
 - Changed the type of component styles from `CSSResult` to `CSSResultGroup` [#828](https://github.com/shoelace-style/shoelace/issues/828)
-- Fixed a bug in `<sl-color-picker>` where using <kbd>Left<kbd> and <kbd>Right</kbd> would select the wrong color
+- Fixed a bug in `<sl-color-picker>` where using <kbd>Left</kbd> and <kbd>Right</kbd> would select the wrong color
 - Fixed a bug in `<sl-dropdown>` that caused the position to be incorrect on the first show when using `hoist` [#843](https://github.com/shoelace-style/shoelace/issues/843)
 - Fixed a bug in `<sl-tab-group>` where the divider was on the wrong side when using `placement="end"`
 - Fixed a bug in `<sl-tab-group>` that caused nested tab groups to scroll when using `placement="start|end"` [#815](https://github.com/shoelace-style/shoelace/issues/815)

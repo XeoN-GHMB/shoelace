@@ -1,14 +1,14 @@
 import { html, LitElement } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import '../../components/icon-button/icon-button';
 import { emit } from '../../internal/event';
 import { scrollIntoView } from '../../internal/scroll';
 import { watch } from '../../internal/watch';
 import { LocalizeController } from '../../utilities/localize';
+import '../icon-button/icon-button';
 import styles from './tab-group.styles';
-import type SlTabPanel from '../../components/tab-panel/tab-panel';
-import type SlTab from '../../components/tab/tab';
+import type SlTabPanel from '../tab-panel/tab-panel';
+import type SlTab from '../tab/tab';
 import type { CSSResultGroup } from 'lit';
 
 /**
@@ -125,9 +125,14 @@ export default class SlTabGroup extends LitElement {
     }
   }
 
-  getAllTabs() {
+  getAllTabs(options: { includeDisabled: boolean } = { includeDisabled: true }) {
     const slot = this.shadowRoot!.querySelector<HTMLSlotElement>('slot[name="nav"]')!;
-    return [...(slot.assignedElements() as SlTab[])].filter(el => el.tagName.toLowerCase() === 'sl-tab');
+
+    return [...(slot.assignedElements() as SlTab[])].filter(el => {
+      return options.includeDisabled
+        ? el.tagName.toLowerCase() === 'sl-tab'
+        : el.tagName.toLowerCase() === 'sl-tab' && !el.disabled;
+    });
   }
 
   getAllPanels() {
@@ -356,7 +361,7 @@ export default class SlTabGroup extends LitElement {
 
   // This stores tabs and panels so we can refer to a cache instead of calling querySelectorAll() multiple times.
   syncTabsAndPanels() {
-    this.tabs = this.getAllTabs();
+    this.tabs = this.getAllTabs({ includeDisabled: false });
     this.panels = this.getAllPanels();
     this.syncIndicator();
   }
