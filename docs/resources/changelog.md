@@ -8,6 +8,25 @@ New versions of Shoelace are released as-needed and generally occur when a criti
 
 _During the beta period, these restrictions may be relaxed in the event of a mission-critical bug._ 🐛
 
+## 2.0.0-beta.81
+
+- 🚨 BREAKING: removed the `base` part from `<sl-menu>` and removed an unnecessary `<div>` that made styling more difficult
+- Added the `anchor` property to `<sl-popup>` to support external anchors
+- Added read-only custom properties `--auto-size-available-width` and `--auto-size-available-height` to `<sl-popup>` to improve support for overflowing popup content
+- Added `label` to `<sl-rating>` to improve accessibility for screen readers
+- Added the `base__popup` and `base__arrow` parts to `<sl-tooltip>` [#858](https://github.com/shoelace-style/shoelace/issues/858)
+- Fixed a bug where auto-size wasn't being applied to `<sl-dropdown>` and `<sl-select>`
+- Fixed a bug in `<sl-popup>` that caused auto-size to kick in before flip
+- Fixed a bug in `<sl-popup>` that prevented the `arrow-padding` attribute from working as expected
+- Fixed a bug in `<sl-tooltip>` that prevented the popup from appearing with the correct z-index [#854](https://github.com/shoelace-style/shoelace/issues/854)
+- Improved accessibility of `<sl-rating>` so keyboard nav works better and screen readers announce it properly
+- Improved accessibility of `<sl-spinner>` so screen readers no longer skip over it
+- Removed a user agent sniffing notice that appeared in Chrome [#855](https://github.com/shoelace-style/shoelace/issues/855)
+- Removed the default hover effect in `<sl-tree-items>` to make selections more obvious
+- Updated Floating UI to 1.0.1
+- Updated esbuild to 0.15.1
+- Updated all other dependencies to latest versions
+
 ## 2.0.0-beta.80
 
 This release breaks radio buttons, which is something that needed to happen to solve a longstanding accessibility issue where screen readers announced an incorrect number of radios, e.g. "1 of 1" instead of "1 of 3." Many attempts to solve this without breaking the existing API were made, but none worked across the board. The new implementation upgrades `<sl-radio-group>` to serve as the "form control" while `<sl-radio>` and `<sl-radio-button>` serve as options within the form control.

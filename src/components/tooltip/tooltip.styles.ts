@@ -17,6 +17,11 @@ export default css`
     --arrow-color: var(--sl-tooltip-background-color);
   }
 
+  .tooltip::part(popup) {
+    pointer-events: none;
+    z-index: var(--sl-z-index-tooltip);
+  }
+
   .tooltip[placement^='top']::part(popup) {
     transform-origin: bottom;
   }
@@ -44,6 +49,5 @@ export default css`
     color: var(--sl-tooltip-color);
     padding: var(--sl-tooltip-padding);
     pointer-events: none;
-    z-index: var(--sl-z-index-tooltip);
   }
 `;

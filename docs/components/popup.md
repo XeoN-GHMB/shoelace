@@ -6,7 +6,7 @@ Popup is a utility that lets you declaratively anchor "popup" containers to anot
 
 This component's name is inspired by [`<popup>`](https://github.com/MicrosoftEdge/MSEdgeExplainers/blob/main/Popup/explainer.md). It uses [Floating UI](https://floating-ui.com/) under the hood to provide a well-tested, lightweight, and fully declarative positioning utility for tooltips, dropdowns, and more.
 
-The popup's preferred placement, distance, and skidding (offset) can be configured using attributes. An arrow that points to the anchor can be shown and customized to your liking. Additional positioning options are available and described in more detail below.
+Popup doesn't provide any styles — just positioning! The popup's preferred placement, distance, and skidding (offset) can be configured using attributes. An arrow that points to the anchor can be shown and customized to your liking. Additional positioning options are available and described in more detail below.
 
 ```html preview
 <div class="popup-overview">
@@ -194,7 +194,7 @@ const App = () => {
             type="number"
             name="skidding"
             label="Skidding"
-            value={distance}
+            value={skidding}
             onSlInput={event => setSkidding(event.target.value)}
           />
         </div>
@@ -215,11 +215,11 @@ const App = () => {
 };
 ```
 
-?> A popup's anchor should never be styled with `display: contents` since the coordinates will not be eligible for calculation. However, if the anchor is a `<slot>` element, popup will use the first assigned element as the anchor. This behavior allows other components to pass anchors through more easily via composition.
+?> A popup's anchor should not be styled with `display: contents` since the coordinates will not be eligible for calculation. However, if the anchor is a `<slot>` element, popup will use the first assigned element as the anchor. This behavior allows other components to pass anchors through more easily via composition.
 
 ## Examples
 
-### Active
+### Activating
 
 Popups are inactive and hidden until the `active` attribute is applied. Removing the attribute will tear down all positioning logic and listeners, meaning you can have many idle popups on the page without affecting performance.
 
@@ -297,6 +297,70 @@ const App = () => {
           Active
         </SlSwitch>
       </div>
+
+      <style>{css}</style>
+    </>
+  );
+};
+```
+
+### External Anchors
+
+By default, anchors are slotted into the popup using the `anchor` slot. If your anchor needs to live outside of the popup, you can pass the anchor's `id` to the `anchor` attribute. Alternatively, you can pass an element reference to the `anchor` property to achieve the same effect without using an `id`.
+
+```html preview
+<span id="external-anchor"></span>
+
+<sl-popup anchor="external-anchor" placement="top" active>
+  <div class="box"></div>
+</sl-popup>
+
+<style>
+  #external-anchor {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border: dashed 2px var(--sl-color-neutral-600);
+    margin: 50px 0 0 50px;
+  }
+
+  #external-anchor ~ sl-popup .box {
+    width: 100px;
+    height: 50px;
+    background: var(--sl-color-primary-600);
+    border-radius: var(--sl-border-radius-medium);
+  }
+</style>
+```
+
+```jsx react
+import { SlPopup } from '@shoelace-style/shoelace/dist/react';
+
+const css = `
+  #external-anchor {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border: dashed 2px var(--sl-color-neutral-600);
+    margin: 50px 0 0 50px;
+  }
+
+  #external-anchor ~ sl-popup .box {
+    width: 100px;
+    height: 50px;
+    background: var(--sl-color-primary-600);
+    border-radius: var(--sl-border-radius-medium);
+  }
+`;
+
+const App = () => {
+  return (
+    <>
+      <span id="external-anchor" />
+
+      <SlPopup anchor="external-anchor" placement="top" active>
+        <div class="box" />
+      </SlPopup>
 
       <style>{css}</style>
     </>
@@ -810,7 +874,7 @@ const App = () => {
           </SlPopup>
         </div>
 
-        <SlSwitch checked={fixed} onSlChange={event => setFixed(event.target.value)}>
+        <SlSwitch checked={fixed} onSlChange={event => setFixed(event.target.checked)}>
           Fixed
         </SlSwitch>
       </div>
@@ -1029,16 +1093,16 @@ const App = () => {
 
 ### Auto-size
 
-Use the `auto-size` attribute to tell the popup to resize when necessary to prevent it from overflowing. You can use `autoSizeBoundary` and `auto-size-padding` to customize the behavior of this option.
+Use the `auto-size` attribute to tell the popup to resize when necessary to prevent it from getting clipped. You can use `autoSizeBoundary` and `auto-size-padding` to customize the behavior of this option. Auto-size works well with `flip`, but if you're using `auto-size-padding` make sure `flip-padding` is the same value.
 
-For best results, set a preferred width/height on the `popup` part and set `width: 100%; height: 100%;` on your content's wrapper. Auto-size works well with `flip`, but if you're using `auto-size-padding` make sure `flip-padding` is the same value.
+When using auto-size, two read-only custom properties called `--auto-size-available-width` and `--auto-size-available-height` will be applied to the host element. These values determine the available space the popover has before clipping will occur. Since they cascade, you can use them to set a max-width/height on your popup's content and easily control its overflow.
 
-Scroll the container to see auto-size in action.
+Scroll the container to see the popup resize as its available space changes.
 
 ```html preview
 <div class="popup-auto-size">
   <div class="overflow">
-    <sl-popup placement="bottom" auto-size active>
+    <sl-popup placement="top" auto-size auto-size-padding="10" active>
       <span slot="anchor"></span>
       <div class="box"></div>
     </sl-popup>
@@ -1061,19 +1125,21 @@ Scroll the container to see auto-size in action.
     width: 150px;
     height: 150px;
     border: dashed 2px var(--sl-color-neutral-600);
-    margin: 100px 50px 250px 50px;
-  }
-
-  .popup-auto-size sl-popup::part(popup) {
-    width: 100px;
-    height: 200px;
+    margin: 250px 50px 100px 50px;
   }
 
   .popup-auto-size .box {
-    width: 100%;
-    height: 100%;
     background: var(--sl-color-primary-600);
     border-radius: var(--sl-border-radius-medium);
+
+    /* This sets the preferred size of the popup's content */
+    width: 100px;
+    height: 200px;
+
+    /* This sets the maximum dimensions and allows scrolling when auto-size kicks in */
+    max-width: var(--auto-size-available-width);
+    max-height: var(--auto-size-available-height);
+    overflow: auto;
   }
 </style>
 
@@ -1103,19 +1169,21 @@ const css = `
     width: 150px;
     height: 150px;
     border: dashed 2px var(--sl-color-neutral-600);
-    margin: 100px 50px 250px 50px;
-  }
-
-  .popup-auto-size sl-popup::part(popup) {
-    width: 100px;
-    height: 200px;
+    margin: 250px 50px 100px 50px;
   }
 
   .popup-auto-size .box {
-    width: 100%;
-    height: 100%;
     background: var(--sl-color-primary-600);
     border-radius: var(--sl-border-radius-medium);
+
+    /* This sets the preferred size of the popup's content */
+    width: 100px;
+    height: 200px;
+
+    /* This sets the maximum dimensions and allows scrolling when auto-size kicks in */
+    max-width: var(--auto-size-available-width);
+    max-height: var(--auto-size-available-height);
+    overflow: auto;
   }
 `;
 
@@ -1126,7 +1194,7 @@ const App = () => {
     <>
       <div className="popup-auto-size">
         <div className="overflow">
-          <SlPopup placement="bottom" auto-size={autoSize || null} auto-size-padding="10" active>
+          <SlPopup placement="top" auto-size={autoSize || null} auto-size-padding="10" active>
             <span slot="anchor" />
             <div className="box" />
           </SlPopup>

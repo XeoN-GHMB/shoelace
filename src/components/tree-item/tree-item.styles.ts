@@ -24,6 +24,7 @@ export default css`
     align-items: stretch;
     flex-direction: column;
     color: var(--sl-color-neutral-700);
+    cursor: pointer;
     user-select: none;
     white-space: nowrap;
   }
@@ -79,10 +80,6 @@ export default css`
     opacity: 0.5;
     outline: none;
     cursor: not-allowed;
-  }
-
-  :host(:not([aria-disabled='true'])) .tree-item__item:hover {
-    background-color: var(--sl-color-neutral-100);
   }
 
   :host(:focus-visible) .tree-item__item {

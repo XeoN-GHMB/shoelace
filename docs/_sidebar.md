@@ -104,7 +104,7 @@
   - [Format Number](/components/format-number)
   - [Include](/components/include)
   - [Mutation Observer](/components/mutation-observer)
-  - [Popup](/components/Popup)
+  - [Popup](/components/popup)
   - [Relative Time](/components/relative-time)
   - [Resize Observer](/components/resize-observer)
   - [Responsive Media](/components/responsive-media)
