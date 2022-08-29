@@ -1,3 +1,5 @@
+import json = Mocha.reporters.json;
+
 export function boneFormatter(cell: any, boneStructure: object, onRendered: any): any {
 
   let boneValue;
@@ -18,6 +20,10 @@ export function boneFormatter(cell: any, boneStructure: object, onRendered: any)
     case "record":
       return recordBoneRenderer(boneStructure, boneValue)
     case "relational":
+      if (boneStructure["type"].startsWith("relational.tree.leaf.file")) {
+        return fileBoneRenderer(boneStructure, boneValue)
+      }
+
       return relationalBoneRenderer(boneStructure, boneValue)
     case "select":
       return selectBoneRenderer(boneStructure, boneValue)
@@ -49,7 +55,7 @@ function rawBoneRenderer(boneStructure: object, boneValue: any) {
     if (boneStructure["multiple"]) {
       for (const index in boneValue) {
 
-        boneValue[index] = formatstring(boneValue[index], boneStructure, null, index);
+        boneValue[index] = formatstring(boneValue[index], boneStructure, null);
       }
       return `${boneValue.join("<br>")} `
     }
@@ -79,123 +85,197 @@ function dateBoneRenderer(boneStructure: object, boneValue: any): any {
 }
 
 function recordBoneRenderer(boneStructure: any, boneValue: any) {
-  console.log("render Record")
-  console.log(boneStructure)
-  console.log(boneValue)
   return rawBoneRenderer(boneStructure, boneValue)
 
 }
 
 function relationalBoneRenderer(boneStructure: any, boneValue: any) {
+  return rawBoneRenderer(boneStructure, boneValue)
 
-  if (boneStructure["multiple"] && boneValue !== null) {
-    return boneValue.map((ele: any) => {
-      return `${formatstring(ele, boneStructure)}<br>`
-    }).join("<br>");
+}
 
+function fileBoneRenderer(boneStructure: any, boneValue: any) {
+  //TODO what we need more ?
+  return rawBoneRenderer(boneStructure, boneValue)
 
-  } else {
-    return `${formatstring(boneValue, boneStructure)}<br>`
-  }
 }
 
 function selectBoneRenderer(boneStructure: any, boneValue: any) {
-
-  if (boneStructure["multiple"] && boneValue !== null) {
-    let tmpl = ``
-    for (const tmpboneValue of boneValue) {
-      for (const value: any of boneStructure["values"]) {
-        if (value[0] === tmpboneValue) {
-          tmpl += `${value[1]}<br>`;
-          continue;
+  console.log(boneValue)
+  //Map bonevalue to item in obj
+  if (boneStructure["languages"] !== null) {
+    if (boneStructure["multiple"]) {
+      for (const lang of boneStructure["languages"]) {
+        for (const i in boneValue[lang]) {
+          boneStructure["values"].forEach((value: any) => {
+            if (boneValue[lang][i] === value[0]) {
+              boneValue[lang][i]= value[1];
+            }
+          })
         }
       }
-    }
 
-    return tmpl;
-
-  } else {
-    for (const value: any of boneStructure["values"]) {
-      if (value[0] === boneValue) {
-        return value[1]
+    } else {
+      for (const lang of boneStructure["languages"]) {
+        boneStructure["values"].forEach((value: any) => {
+          if (boneValue[lang] === value[0]) {
+            boneValue[lang] = value[1];
+          }
+        })
       }
     }
+  } else {
+    if (boneStructure["multiple"]) {
+      for (const i in boneValue) {
+        boneStructure["values"].forEach((value: any) => {
+          if (boneValue[i] === value[0]) {
+            boneValue[i] = value[1];
+          }
+        })
+      }
 
+
+    } else {
+      boneStructure["values"].forEach((value: any) => {
+        if (boneValue === value[0]) {
+          boneValue = value[1];
+          return;
+        }
+      })
+    }
   }
+
+
+  return rawBoneRenderer(boneStructure, boneValue)
+
 }
 
 ////////////HELPER FUNCTIONS////////////////
 
-function formatstring(data, boneStructure, lang = null, index = null) {
-  console.log("start format")
-  console.log(index)
-  console.log(data, boneStructure, lang, index)
+
+export function formatstring(data, boneStructure, lang = null) {
+
+  if (!boneStructure) {
+
+    return data;
+  }
   if (boneStructure["format"] === undefined) {
     return data;
   }
+  let re = /\$\(([^)]+)\)/g;
+  let newboneStructure = {};
+  const isRelational = boneStructure["type"].startsWith("relational")
+  if (isRelational) {
+    if (Array.isArray(boneStructure["relskel"])) {
 
-  if (Array.isArray(boneStructure["using"])) {
-    let newUsing = {}
-    for (const item of boneStructure["using"]) {
 
-      newUsing[item[0]] = item[1]
+      for (let i = 0; i < boneStructure["relskel"].length; i++) {
+        for (let j = 0; j < boneStructure["relskel"][i].length; j += 2) {
+
+          newboneStructure[boneStructure["relskel"][i][j]] = boneStructure["relskel"][i][j + 1]
+
+        }
+      }
 
     }
-    boneStructure["using"] = newUsing;
+  } else {
+    if (Array.isArray(boneStructure["using"])) {
+
+
+      for (let i = 0; i < boneStructure["using"].length; i++) {
+        for (let j = 0; j < boneStructure["using"][i].length; j += 2) {
+
+          newboneStructure[boneStructure["using"][i][j]] = boneStructure["using"][i][j + 1]
+
+        }
+      }
+
+    }
   }
-  let re = /\$\(([^)]+)\)/g;
 
   let format = boneStructure["format"]
   let text = boneStructure["format"]
+  let rvalue = []
+  let textArray = []
   for (const match of format.matchAll(re)) {
 
-    if (!boneStructure["languages"]) {
+    let insidematch = match[1];
+
+    if (boneStructure["languages"]) {
       if (boneStructure["multiple"]) {
-        if (boneStructure["using"][match[1]]["type"] === "record") {
-          if (boneStructure["using"][match[1]]["multiple"]) {
-            console.log("multiple record in record")
+        if (textArray.length === 0) {
+          for (const i in data[lang]) {
+            textArray.push(text);
+          }
+        }
+
+        for (const i in data[lang]) {
+
+          console.log(i)
+          console.log("data", data)
+          console.log("data2", data[lang][i])
+          console.log(insidematch)
+          console.log(getPath(data[lang][i], insidematch))
+
+
+          const insidematchLang = insidematch.replace("dest.", "")
+          const x = formatstring(getPath(data[lang][i], insidematch), newboneStructure[insidematchLang], lang);
+
+          if (newboneStructure[insidematchLang]["type"] == "record") {
+            textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"))
+          } else if (getPath(newboneStructure, insidematchLang)["type"].startsWith("relational")) {
+            textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"))
+          } else {
+            textArray[i] = textArray[i].replaceAll(match[0], x.toString())
           }
 
-          const tmp = formatstring(getPath(data, match[1]), boneStructure["using"][match[1]])
-          console.log("tmp is", tmp)
-          text = text.replace(match[0], tmp)
 
-        } else {
-          console.log("data is ", data, match)
-          console.log("path is", getPath(data, match[1]))
-          text = text.replace(match[0], getPath(data, match[1]));
         }
 
       } else {
 
-        if (boneStructure["using"][match[1]]["type"] === "record") {
-          const tmp = formatstring(getPath(data, match[1]), boneStructure["using"][match[1]])
-          console.log(tmp);
-          text = text.replace(match[0], tmp)
-        } else {
-          text = text.replace(match[0], getPath(data, match[1]));
-        }
-
+        text = text.replaceAll(match[0], formatstring(getPath(data[lang], insidematch), newboneStructure[insidematch], lang).toString())
       }
 
     } else {
-      if (boneStructure["multiple"]) {
-        text = text.replace(match[0], data[lang][index][match[1]]);
+      if (boneStructure["multiple"] && !isRelational) {
+
+        if (textArray.length === 0) {
+          for (const i in data) {
+            textArray.push(text);
+          }
+
+        }
+
+        for (const i in data) {
+
+          const x = formatstring(getPath(data[i], insidematch), newboneStructure[insidematch], lang);
+
+          if (newboneStructure[insidematch]["type"] == "record") {
+            textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"))
+          } else {
+            textArray[i] = textArray[i].replaceAll(match[0], x.toString())
+          }
+
+
+        }
       } else {
-        text = text.replace(match[0], data[lang][match[1]]);
+
+        text = text.replaceAll(match[0], formatstring(getPath(data, insidematch), newboneStructure[insidematch], lang).toString())
       }
+
     }
 
-
+  }
+  if (boneStructure["multiple"] && (!isRelational || boneStructure["languages"])) {
+    return textArray;
   }
 
   return text
-
-
 }
 
 function getPath(obj, path) {
-
+  obj = JSON.parse(JSON.stringify(obj))
   path = typeof path === 'string' ? path.split('.') : path;
   let current = obj;
   while (path.length > 0) {
@@ -247,10 +327,9 @@ function getTabPannels(boneValue: any, boneStructure: any) {
   } else {
     if (boneStructure["multiple"]) {
       for (const lang of boneStructure["languages"]) {
-        for (const index in boneValue[lang]) {
 
-          boneValue[lang][index] = formatstring(boneValue, boneStructure, lang, index);
-        }
+        console.log("call format", boneValue,)
+        boneValue[lang] = formatstring(boneValue, boneStructure, lang);
 
 
         tabpannels += `<sl-tab-panel name="${lang}">${boneValue[lang].join("<br>")}</sl-tab-panel>`;

@@ -157,7 +157,8 @@ export default class SlTable extends LitElement {
       columns.push({title: item["descr"], field: itemName,
         formatterParams: item, formatter: boneFormatter,
         editorParams:item,editor:boneEditor,
-        editable:this.editCheck
+        editable:this.editCheck,
+        variableHeight:true
       })
     }
 

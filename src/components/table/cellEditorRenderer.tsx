@@ -1,9 +1,15 @@
+import {formatstring} from "./cellRenderer";
+
+
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, boneName = null, boneValue = null): any {
-  console.log("start editor",boneName,boneValue)
-  console.log("cell", cell._cell.column.field,cell.getValue())
+  console.log("start editor", boneName, boneValue)
+  console.log("cell", cell._cell.column.field, cell.getValue())
   const rowHeight = cell.getElement().style.height;
   cell.getRow().getElement().style.height = "auto";
+  cell.getRow().getElement().style.overflow = "visible";
+
   cell.getElement().style.height = "auto"
+  cell.getElement().style.overflow = "visible";
 
   if (boneValue === null) {
     boneValue = cell.getValue()
@@ -52,12 +58,12 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
 
   } else {
 
-    if (boneStructure["multiple"]) {
+    if (boneStructure["multiple"] && boneStructure["type"] !== "select") {
       //No Lang , Multiple
       const inputWrapper = document.createElement("div");
       inputWrapper.dataset.boneName = boneName;
 
-      console.log("boneValue",boneValue)
+      console.log("boneValue", boneValue)
       for (const [index, tmpValue] of boneValue.entries()) {
         const newboneName = boneStructure["type"] === "record" ? boneName + "." + index : boneName
         const inputElement = getEditor(boneStructure)(cell, onRendered, success, cancel, boneStructure, tmpValue, null, newboneName);
@@ -93,17 +99,24 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
 function getEditor(boneStructure: any) {
   switch (boneStructure["type"].split(".")[0]) {
     case "str":
-      return stringBoneEditorRenderer
+      return stringBoneEditorRenderer;
     case "numeric":
-      return numericBoneEditorRenderer
+      return numericBoneEditorRenderer;
     case "date":
-      return dateBoneEditorRenderer
+      return dateBoneEditorRenderer;
     case "bool":
-      return booleanBoneEditorRenderer
+      return booleanBoneEditorRenderer;
     case "record":
-      return recordBoneEditorRenderer
+      return recordBoneEditorRenderer;
+    case "relational":
+      if (boneStructure["type"].startsWith("relational.tree.leaf.file")) {
+        return fileBoneEditorRenderer;
+      }
+      return relationBoneEditorRenderer;
+    case "select":
+      return selectBoneEditorRenderer;
     default:
-      return rawBoneEditorRenderer
+      return rawBoneEditorRenderer;
   }
 }
 
@@ -179,9 +192,7 @@ function booleanBoneEditorRenderer(cell: any, onRendered: any, success: any, can
 }
 
 function recordBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = null) {
-  console.log("start record")
-  console.log(boneName)
-  console.log(value)
+
 
   const inputWrapper = document.createElement("div");
 
@@ -189,7 +200,6 @@ function recordBoneEditorRenderer(cell: any, onRendered: any, success: any, canc
   for (const bone of boneStructure["using"]) {
     const recordBoneName = bone[0];
     const recordBoneStructure = bone[1];
-
     const recordBoneValue = value[bone[0]];
 
     const newBoneName = boneName + "." + recordBoneName
@@ -206,6 +216,114 @@ function recordBoneEditorRenderer(cell: any, onRendered: any, success: any, canc
 
 }
 
+function relationBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = null) {
+  const inputWrapper = document.createElement("div");
+  inputWrapper.style.height = "200px";
+  console.log("relationBoneEditorRenderer")
+  const searchBox = document.createElement("sl-combobox");
+  //searchBox.hoist =true
+  const url = "http://localhost:8080/json/country/list?search={q}"
+
+
+  searchBox.style.width = "100%";
+  searchBox.style.boxSizing = "border-box";
+  searchBox.dataset.boneName = boneName;
+  console.log(value)
+  searchBox.dataset.boneValue = value["dest"]["key"];
+
+  searchBox.source = (search) => {
+    return fetch(url.replace('{q}', search))
+      .then(res => res.json())
+      .then((data) => {
+
+          console.log("??")
+          const skellist = data["skellist"]
+          return skellist.map(d => {
+            return {
+              text: formatstring({dest: d}, boneStructure),
+              value: d.key
+            };
+
+          })
+        }
+      );
+  };
+  inputWrapper.appendChild(searchBox);
+
+  searchBox.addEventListener("sl-item-select", (e) => {
+
+    searchBox.dataset.boneValue = e.detail.item.__value;
+    updateRelationalBone(searchBox, cell, success)
+  });
+  searchBox.addEventListener("sl-change", (e) => {
+    console.log("e cahnge")
+    console.log(e)
+  });
+
+  return inputWrapper;
+
+
+}
+
+function fileBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = null) {
+  console.log("filebone?=")
+}
+
+function selectBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = null) {
+  console.log(cell._cell.table)
+  //TODO Find a Better way
+  cell._cell.table.element.style.overflow = "visible";
+  cell._cell.table.rowManager.element.style.overflow = "visible";
+  if (boneName === null) {
+    boneName = cell._cell.column.field;
+  }
+
+  const inputSelect = document.createElement("sl-select");
+  inputSelect.multiple = boneStructure["multiple"]
+  inputSelect.dataset.boneName = boneName
+
+  inputSelect.value = value;
+
+  inputSelect.addEventListener("sl-change", (event) => {
+
+
+    const skelKey = cell._cell.row.data.key;
+    const formData = new FormData();
+
+
+    for (const child of cell.getElement().querySelectorAll("sl-select")) {
+      if (boneStructure["multiple"]) {
+        child.value.forEach((val:any) => {
+          formData.append(child.dataset.boneName, val);
+        })
+
+      } else {
+        formData.append(child.dataset.boneName, child.value);
+      }
+
+
+    }
+    var obj = {}
+    for (const key of formData.keys()) {
+      let value = formData.getAll(key).length > 1 ? formData.getAll(key) : formData.get(key)
+      obj = createPath(obj, key, value)
+    }
+
+    updateData(formData, skelKey);
+    success(obj[boneName.split(".")[0]])
+    //keyPress(event, success, cancel, boneName, boneStructure, skelKey, cell, successFunc)
+  })
+  for (const value of boneStructure["values"]) {
+    console.log(value);
+    const option = document.createElement("sl-menu-item");
+    option.value = value[0];
+    option.innerText = value[1];
+    inputSelect.appendChild(option);
+  }
+  return inputSelect;
+
+
+}
 
 function successFunc(inElement: HTMLElement, boneStructure: any, boneName: any, skelKey: any, success: any, cell: any) {
 
@@ -275,18 +393,40 @@ function addButtonClick(wrapper: any) {
   console.log(wrapper);
 }
 
+function updateRelationalBone(searchBox, cell, success) {
+
+  const skelKey = cell._cell.row.data.key;
+  const formData = new FormData();
+  for (const child of cell.getElement().querySelectorAll("sl-combobox")) {
+    formData.append(child.dataset.boneName, child.dataset.boneValue);
+
+  }
+  var obj = {}
+  for (const key of formData.keys()) {
+    let value = formData.getAll(key).length > 1 ? formData.getAll(key) : formData.get(key)
+    obj = createPath(obj, key, value)
+  }
+
+  updateData(formData, skelKey).then((newBoneData) => {
+    console.log(newBoneData)
+    success(newBoneData["values"][searchBox.dataset.boneName.split(".")[0]])
+  });
+}
+
 /////////////////HELPER FUNCTRIONS/////////////////
 
 function updateData(formData, skelKey) {
-  fetch("http://localhost:8080/json/skey").then(response => response.json()).then((skey) => {
+  return new Promise((resolve, reject) => {
+    fetch("http://localhost:8080/json/skey").then(response => response.json()).then((skey) => {
 
-    formData.append("key", skelKey)
-    formData.append("skey", skey)
+      formData.append("key", skelKey)
+      formData.append("skey", skey)
 
 
-    fetch('http://localhost:8080/json/test/edit', {
-      method: 'POST',
-      body: formData
-    })
+      fetch('http://localhost:8080/json/test/edit', {
+        method: 'POST',
+        body: formData
+      }).then(resp => resp.json().then(data => resolve(data)))
+    });
   });
 }
