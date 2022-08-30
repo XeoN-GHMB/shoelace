@@ -1,83 +1,75 @@
-import json = Mocha.reporters.json;
-
 export function boneFormatter(cell: any, boneStructure: object, onRendered: any): any {
 
   let boneValue;
   if (typeof (cell.getValue()) === "object") {
     boneValue = JSON.parse(JSON.stringify(cell.getValue()));//DEEP Copy
   } else {
-    boneValue = cell.getValue()
+    boneValue = cell.getValue();
   }
 
 
   switch (boneStructure["type"].split(".")[0]) {
     case "str":
-      return stringBoneRenderer(boneStructure, boneValue)
+      return stringBoneRenderer(boneStructure, boneValue);
     case "numeric":
-      return numericBoneRenderer(boneStructure, boneValue)
+      return numericBoneRenderer(boneStructure, boneValue);
     case "date":
-      return dateBoneRenderer(boneStructure, boneValue)
+      return dateBoneRenderer(boneStructure, boneValue);
     case "record":
-      return recordBoneRenderer(boneStructure, boneValue)
+      return recordBoneRenderer(boneStructure, boneValue);
     case "relational":
       if (boneStructure["type"].startsWith("relational.tree.leaf.file")) {
-        return fileBoneRenderer(boneStructure, boneValue)
+        return fileBoneRenderer(boneStructure, boneValue);
       }
 
-      return relationalBoneRenderer(boneStructure, boneValue)
+      return relationalBoneRenderer(boneStructure, boneValue);
     case "select":
-      return selectBoneRenderer(boneStructure, boneValue)
+      return selectBoneRenderer(boneStructure, boneValue);
   }
   return ""
 }
 
-function rawBoneRenderer(boneStructure: object, boneValue: any) {
+function rawBoneRenderer(boneStructure: object, boneValue: any, formater: Function = formatstring) {
   if (boneValue === null) {
     return "-";
   }
   if (boneStructure["languages"] !== null) {
 
-    if (boneStructure["multiple"]) {
-      return `
+
+    return `
         <sl-tab-group>
           ${getTabs(boneStructure)}
-          ${getTabPannels(boneValue, boneStructure)}
+          ${getTabPannels(boneValue, boneStructure, formater)}
         </sl-tab-group>`;
-    } else {
-      return `
-        <sl-tab-group>
-          ${getTabs(boneStructure)}
-          ${getTabPannels(boneValue, boneStructure)}
-        </sl-tab-group>`;
-    }
+
   } else {
 
     if (boneStructure["multiple"]) {
       for (const index in boneValue) {
 
-        boneValue[index] = formatstring(boneValue[index], boneStructure, null);
+        boneValue[index] = formater(boneValue[index], boneStructure, null);
       }
       return `${boneValue.join("<br>")} `
     }
   }
 
 
-  return formatstring(boneValue, boneStructure);
+  return formater(boneValue, boneStructure);
 }
 
 function stringBoneRenderer(boneStructure: object, boneValue: any): any {
-  return rawBoneRenderer(boneStructure, boneValue)
+  return rawBoneRenderer(boneStructure, boneValue);
 }
 
 
 function numericBoneRenderer(boneStructure: object, boneValue: any): any {
-  return rawBoneRenderer(boneStructure, boneValue)
+  return rawBoneRenderer(boneStructure, boneValue);
 }
 
 function dateBoneRenderer(boneStructure: object, boneValue: any): any {
   if (boneStructure["multiple"]) {
-    return `${boneValue.map((ele) => {
-      return new Date(ele).toLocaleString()
+    return `${boneValue.map((ele: any) => {
+      return new Date(ele).toLocaleString();
     }).join("<br>")}`
 
   }
@@ -85,20 +77,38 @@ function dateBoneRenderer(boneStructure: object, boneValue: any): any {
 }
 
 function recordBoneRenderer(boneStructure: any, boneValue: any) {
-  return rawBoneRenderer(boneStructure, boneValue)
+  return rawBoneRenderer(boneStructure, boneValue);
 
 }
 
 function relationalBoneRenderer(boneStructure: any, boneValue: any) {
-  return rawBoneRenderer(boneStructure, boneValue)
+  return rawBoneRenderer(boneStructure, boneValue);
 
 }
 
 function fileBoneRenderer(boneStructure: any, boneValue: any) {
-  //TODO what we need more ?
-  return rawBoneRenderer(boneStructure, boneValue)
+  function appendImage(data, boneStructure, lang = null) {
+    let val = formatstring(data, boneStructure, lang);
+    if (lang !== null) {
+      if (boneStructure["multiple"]) {
+        for (const i in val) {
+          val[i]= `<img src="${data[lang][i]["dest"]["downloadUrl"]}">` + val[i]
+        }
+      } else {
+        val = `<img src="${data[lang]["dest"]["downloadUrl"]}">` + val
+      }
+
+    } else {
+      val = `<img src="${data["dest"]["downloadUrl"]}">` + val
+    }
+
+    return val;
+  }
+
+  return rawBoneRenderer(boneStructure, boneValue, appendImage);
 
 }
+
 
 function selectBoneRenderer(boneStructure: any, boneValue: any) {
   console.log(boneValue)
@@ -109,7 +119,7 @@ function selectBoneRenderer(boneStructure: any, boneValue: any) {
         for (const i in boneValue[lang]) {
           boneStructure["values"].forEach((value: any) => {
             if (boneValue[lang][i] === value[0]) {
-              boneValue[lang][i]= value[1];
+              boneValue[lang][i] = value[1];
             }
           })
         }
@@ -146,7 +156,7 @@ function selectBoneRenderer(boneStructure: any, boneValue: any) {
   }
 
 
-  return rawBoneRenderer(boneStructure, boneValue)
+  return rawBoneRenderer(boneStructure, boneValue);
 
 }
 
@@ -172,7 +182,7 @@ export function formatstring(data, boneStructure, lang = null) {
       for (let i = 0; i < boneStructure["relskel"].length; i++) {
         for (let j = 0; j < boneStructure["relskel"][i].length; j += 2) {
 
-          newboneStructure[boneStructure["relskel"][i][j]] = boneStructure["relskel"][i][j + 1]
+          newboneStructure[boneStructure["relskel"][i][j]] = boneStructure["relskel"][i][j + 1];
 
         }
       }
@@ -185,7 +195,7 @@ export function formatstring(data, boneStructure, lang = null) {
       for (let i = 0; i < boneStructure["using"].length; i++) {
         for (let j = 0; j < boneStructure["using"][i].length; j += 2) {
 
-          newboneStructure[boneStructure["using"][i][j]] = boneStructure["using"][i][j + 1]
+          newboneStructure[boneStructure["using"][i][j]] = boneStructure["using"][i][j + 1];
 
         }
       }
@@ -193,10 +203,9 @@ export function formatstring(data, boneStructure, lang = null) {
     }
   }
 
-  let format = boneStructure["format"]
-  let text = boneStructure["format"]
-  let rvalue = []
-  let textArray = []
+  let format = boneStructure["format"];
+  let text = boneStructure["format"];
+  let textArray = [];
   for (const match of format.matchAll(re)) {
 
     let insidematch = match[1];
@@ -211,20 +220,14 @@ export function formatstring(data, boneStructure, lang = null) {
 
         for (const i in data[lang]) {
 
-          console.log(i)
-          console.log("data", data)
-          console.log("data2", data[lang][i])
-          console.log(insidematch)
-          console.log(getPath(data[lang][i], insidematch))
 
-
-          const insidematchLang = insidematch.replace("dest.", "")
+          const insidematchLang = insidematch.replace("dest.", "");
           const x = formatstring(getPath(data[lang][i], insidematch), newboneStructure[insidematchLang], lang);
 
           if (newboneStructure[insidematchLang]["type"] == "record") {
-            textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"))
+            textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"));
           } else if (getPath(newboneStructure, insidematchLang)["type"].startsWith("relational")) {
-            textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"))
+            textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"));
           } else {
             textArray[i] = textArray[i].replaceAll(match[0], x.toString())
           }
@@ -233,8 +236,11 @@ export function formatstring(data, boneStructure, lang = null) {
         }
 
       } else {
-
-        text = text.replaceAll(match[0], formatstring(getPath(data[lang], insidematch), newboneStructure[insidematch], lang).toString())
+        let tmp = formatstring(getPath(data[lang], insidematch), newboneStructure[insidematch], lang);
+        if (tmp === undefined) {
+          tmp = "";
+        }
+        text = text.replaceAll(match[0], tmp.toString());
       }
 
     } else {
@@ -260,8 +266,11 @@ export function formatstring(data, boneStructure, lang = null) {
 
         }
       } else {
-
-        text = text.replaceAll(match[0], formatstring(getPath(data, insidematch), newboneStructure[insidematch], lang).toString())
+        let tmp = formatstring(getPath(data, insidematch), newboneStructure[insidematch], lang);
+        if (tmp === undefined) {
+          tmp = "";
+        }
+        text = text.replaceAll(match[0], tmp)
       }
 
     }
@@ -305,7 +314,7 @@ function getTabs(boneStructure: any) {
   return tabs
 }
 
-function getTabPannels(boneValue: any, boneStructure: any) {
+function getTabPannels(boneValue: any, boneStructure: any, formater: Function = formatstring) {
   //We are when languages not null
   let tabpannels: string = ``;
   if (boneStructure["format"] === undefined) {
@@ -329,7 +338,7 @@ function getTabPannels(boneValue: any, boneStructure: any) {
       for (const lang of boneStructure["languages"]) {
 
         console.log("call format", boneValue,)
-        boneValue[lang] = formatstring(boneValue, boneStructure, lang);
+        boneValue[lang] = formater(boneValue, boneStructure, lang);
 
 
         tabpannels += `<sl-tab-panel name="${lang}">${boneValue[lang].join("<br>")}</sl-tab-panel>`;
@@ -340,7 +349,7 @@ function getTabPannels(boneValue: any, boneStructure: any) {
         if (boneValue[lang] === null) {
           tabpannels += `<sl-tab-panel name="${lang}">-</sl-tab-panel>`;
         } else {
-          tabpannels += `<sl-tab-panel name="${lang}">${formatstring(boneValue, boneStructure, lang)}</sl-tab-panel>`;
+          tabpannels += `<sl-tab-panel name="${lang}">${formater(boneValue, boneStructure, lang)}</sl-tab-panel>`;
         }
 
       }
