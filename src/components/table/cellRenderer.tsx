@@ -87,19 +87,21 @@ function relationalBoneRenderer(boneStructure: any, boneValue: any) {
 }
 
 function fileBoneRenderer(boneStructure: any, boneValue: any) {
+  console.log("create file bone")
+  console.trace();
   function appendImage(data, boneStructure, lang = null) {
     let val = formatstring(data, boneStructure, lang);
     if (lang !== null) {
       if (boneStructure["multiple"]) {
         for (const i in val) {
-          val[i]= `<img src="${data[lang][i]["dest"]["downloadUrl"]}">` + val[i]
+          val[i]= `<img width="32px" height="32px" src="${data[lang][i]["dest"]["downloadUrl"]}">` + val[i]
         }
       } else {
-        val = `<img src="${data[lang]["dest"]["downloadUrl"]}">` + val
+        val = `<img width="32px" height="32px" src="${data[lang]["dest"]["downloadUrl"]}">` + val
       }
 
     } else {
-      val = `<img src="${data["dest"]["downloadUrl"]}">` + val
+      val = `<img width="32px" height="32px" src="${data["dest"]["downloadUrl"]}">` + val
     }
 
     return val;

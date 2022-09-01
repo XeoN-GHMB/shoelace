@@ -1,5 +1,6 @@
 import {formatstring} from "./cellRenderer";
-
+//const apiurl=window.location.origin;
+const apiurl = "http://localhost:8080";
 
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, boneName = "", boneValue: any = null): any {
 
@@ -119,7 +120,7 @@ function getEditor(boneStructure: any): Function {
   }
 }
 
-function rawBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value:any, lang = null, boneName = "") {
+function rawBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = "") {
   const inputElement = document.createElement("sl-input");
   inputElement.dataset.boneName = boneName;
   inputElement.value = value;
@@ -135,6 +136,7 @@ function rawBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel:
     const skelKey = cell._cell.row.data.key;
     keyPress(event, success, cancel, boneName, boneStructure, skelKey, cell, successFunc);
   })
+  inputElement.addEventListener("focusout",(out_event)=>{console.log("focus out");cancel();});
   return inputElement;
 }
 
@@ -223,7 +225,7 @@ function relationBoneEditorRenderer(cell: any, onRendered: any, success: any, ca
   console.log("relationBoneEditorRenderer");
   const searchBox = document.createElement("sl-combobox");
   //searchBox.hoist =true
-  const url = "http://localhost:8080/json/country/list?search={q}";
+  const url = `${apiurl}/json/country/list?search={q}`;
 
 
   //searchBox.style.width = "100%";
@@ -238,7 +240,7 @@ function relationBoneEditorRenderer(cell: any, onRendered: any, success: any, ca
       .then((data) => {
 
           const skellist = data["skellist"]
-          return skellist.map((d:any) => {
+          return skellist.map((d: any) => {
             return {
               text: formatstring({dest: d}, boneStructure),
               value: d.key
@@ -250,14 +252,10 @@ function relationBoneEditorRenderer(cell: any, onRendered: any, success: any, ca
   };
   inputWrapper.appendChild(searchBox);
 
-  searchBox.addEventListener("sl-item-select", (e:CustomEvent) => {
+  searchBox.addEventListener("sl-item-select", (e: CustomEvent) => {
 
     searchBox.dataset.boneValue = e.detail.item.__value;
     updateRelationalBone(searchBox, cell, success)
-  });
-  searchBox.addEventListener("sl-change", (e) => {
-    console.log("e cahnge")
-    console.log(e)
   });
 
   return inputWrapper;
@@ -266,7 +264,63 @@ function relationBoneEditorRenderer(cell: any, onRendered: any, success: any, ca
 }
 
 function fileBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = "") {
-  console.log("filebone?=")
+
+  console.log(cell)
+  console.log(cell._cell.component)
+
+  //cell._cell.component.recursionBlock=true;
+  console.log(cell._cell.component)
+  const fileContainer = document.createElement("div")
+  const shadowFile = document.createElement("input");
+  const statusSpan = document.createElement("span");
+  shadowFile.type = "file";
+  let filter: string;
+
+  if (boneStructure["validMimeTypes"] !== null) {
+    if (boneStructure["validMimeTypes"].indexOf("*") == -1) {
+      filter = boneStructure["validMimeTypes"].join(",")
+    } else {
+      filter = "*";
+    }
+
+  } else {
+    filter = "*";
+  }
+
+  shadowFile.accept = filter;
+  shadowFile.hidden = true;
+  shadowFile.addEventListener("change", (e: any) => {
+    const target = e.target;
+    const file = e.target.files[0];
+    getUploadUrl(file).then(uploadData => {
+
+      const parent = target.parentElement;
+      const inputspan = parent.querySelector("span");
+      inputspan.innerText = "Uploading..."
+      uploadFile(file, uploadData).then(resp => {
+
+        const inputName = parent.dataset["name"];
+        const keyinput = parent.querySelector('[name="' + inputName + '"]');
+
+        addFile(uploadData, keyinput, inputspan, file).then((fileData: any) => {
+          const fileKey: string = fileData["values"]["key"];
+          const skelKey = cell._cell.row.data.key;
+          const formData = new FormData();
+          formData.append(boneName, fileKey);
+          updateData(formData, skelKey).then((newBoneData: any) => {
+
+            cell.setValue(newBoneData["values"][boneName]); // We must set the cell by hand because double focus.
+
+          });
+        })
+
+      });
+    });
+  });
+  shadowFile.click();
+  fileContainer.appendChild(shadowFile);
+  fileContainer.appendChild(statusSpan);
+  return fileContainer;
 }
 
 function selectBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, value: any, lang = null, boneName = "") {
@@ -350,7 +404,7 @@ function successFunc(inElement: HTMLElement, boneStructure: any, boneName: any, 
 
 }
 
-function createPath(obj:any, path:any, value = null) {
+function createPath(obj: any, path: any, value = null) {
   path = typeof path === 'string' ? path.split('.') : path;
   let current = obj;
   while (path.length > 1) {
@@ -412,25 +466,94 @@ function updateRelationalBone(searchBox, cell, success) {
     obj = createPath(obj, key, value)
   }
 
-  updateData(formData, skelKey).then((newBoneData:any) => {
+  updateData(formData, skelKey).then((newBoneData: any) => {
     success(newBoneData["values"][searchBox.dataset.boneName.split(".")[0]])
   });
 }
 
 /////////////////HELPER FUNCTRIONS/////////////////
-
-function updateData(formData, skelKey) {
+function getSkey() {
   return new Promise((resolve, reject) => {
-    fetch("http://localhost:8080/json/skey").then(response => response.json()).then((skey) => {
+    fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
+      resolve(skey)
+    })
+
+  })
+}
+
+function updateData(formData: FormData, skelKey: string) {
+  return new Promise((resolve, reject) => {
+    getSkey().then((skey: string) => {
 
       formData.append("key", skelKey)
       formData.append("skey", skey)
 
 
-      fetch('http://localhost:8080/json/test/edit', {
+      fetch(`${apiurl}/json/test/edit`, {
         method: 'POST',
         body: formData
       }).then(resp => resp.json().then(data => resolve(data)))
+    });
+  });
+}
+
+/////////////////FILEBONE FUNCTRIONS/////////////////
+
+function getUploadUrl(file: File) {
+  return new Promise((resolve, reject) => {
+    getSkey().then(skey => {
+
+      const data: object = {
+        "fileName": file.name,
+        "mimeType": file.type,
+        "size": file.size,
+        "skey": skey,
+      }
+      fetch(`${apiurl}/json/file/getUploadURL`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(data).toString()
+      }).then(response => response.json()).then((data) => resolve(data))
+    })
+  });
+}
+
+function uploadFile(file, uploadData) {
+
+  return new Promise((resolve, reject) => {
+    fetch(uploadData["values"]["uploadUrl"], {
+      method: "POST",
+      body: file,
+      mode: "no-cors",
+
+    }).then(response => {
+      resolve(response)
+    })
+  })
+
+}
+
+function addFile(uploadData, keyinput, inputSpan, file) {
+
+  const currentUpload: any = {}
+  return new Promise((resolve, reject) => {
+    currentUpload["key"] = uploadData["values"]["uploadKey"];
+    currentUpload["node"] = undefined;
+    currentUpload["skelType"] = "leaf";
+    getSkey().then(skey => {
+      currentUpload["skey"] = skey;
+      fetch(`${apiurl}/json/file/add`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        mode: "no-cors",
+        body: new URLSearchParams(currentUpload).toString(),
+      }).then(response => response.json()).then((data) => {
+        resolve(data);
+      });
     });
   });
 }
