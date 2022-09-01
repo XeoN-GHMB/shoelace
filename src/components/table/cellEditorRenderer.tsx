@@ -3,12 +3,41 @@ import {formatstring} from "./cellRenderer";
 const apiurl = "http://localhost:8080";
 
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, boneName = "", boneValue: any = null): any {
-
+  console.log(cell)
   cell.getRow().getElement().style.height = "auto";
   cell.getRow().getElement().style.overflow = "visible";
 
   cell.getElement().style.height = "auto"
   cell.getElement().style.overflow = "visible";
+  if(!cell.getElement().dataset.openBefore) {
+  cell.getElement().dataset.openBefore=true;
+
+    cell.getElement().addEventListener("blur", (out_event) => {
+    console.log("out_event")
+    console.log(out_event)
+
+      if (out_event.relatedTarget === null) {
+        if (cell.getElement().dataset.open==="true") {
+          cancel();
+          cell.getElement().dataset.open = "false";
+
+          return;
+
+        }
+
+      } else {
+        if (!cell.getElement().contains(out_event.relatedTarget)) {
+          //cancel();
+          cell.getElement().dataset.open = "false";
+
+          return
+        }
+
+      }
+      cell.getElement().dataset.open = "true";
+      //cancel();
+    });
+  }
 
   if (boneValue === null) {
     boneValue = cell.getValue();
@@ -63,7 +92,11 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
       const inputWrapper = document.createElement("div");
       inputWrapper.dataset.boneName = boneName;
 
-
+      console.log(boneValue);
+      if (boneValue===null)
+      {
+        boneValue=[]
+      }
       for (const [index, tmpValue] of boneValue.entries()) {
         const newboneName = boneStructure["type"] === "record" ? boneName + "." + index : boneName;
         const inputElement = getEditor(boneStructure)(cell, onRendered, success, cancel, boneStructure, tmpValue, null, newboneName);
@@ -136,7 +169,7 @@ function rawBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel:
     const skelKey = cell._cell.row.data.key;
     keyPress(event, success, cancel, boneName, boneStructure, skelKey, cell, successFunc);
   })
-  inputElement.addEventListener("focusout",(out_event)=>{console.log("focus out");cancel();});
+
   return inputElement;
 }
 
@@ -400,6 +433,8 @@ function successFunc(inElement: HTMLElement, boneStructure: any, boneName: any, 
 
   updateData(formData, skelKey);
   success(obj[inElement.dataset.boneName.split(".")[0]])
+  cell.getRow()._row.clearCellHeight();
+  console.log("clear")
 
 
 }
@@ -496,7 +531,6 @@ function updateData(formData: FormData, skelKey: string) {
     });
   });
 }
-
 /////////////////FILEBONE FUNCTRIONS/////////////////
 
 function getUploadUrl(file: File) {
