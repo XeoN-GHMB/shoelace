@@ -91,17 +91,23 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
       //No Lang , Multiple
       const inputWrapper = document.createElement("div");
       inputWrapper.dataset.boneName = boneName;
-
-      console.log(boneValue);
       if (boneValue===null)
       {
         boneValue=[]
       }
       for (const [index, tmpValue] of boneValue.entries()) {
         const newboneName = boneStructure["type"] === "record" ? boneName + "." + index : boneName;
+        const boneWrapper= document.createElement("div");
+
         const inputElement = getEditor(boneStructure)(cell, onRendered, success, cancel, boneStructure, tmpValue, null, newboneName);
 
-        inputWrapper.appendChild(inputElement);
+
+        const deleteButton= document.createElement("sl-button");
+        deleteButton.innerText="X";
+        deleteButton.addEventListener("click", () => {boneWrapper.outerHTML="";});
+        boneWrapper.appendChild(inputElement);
+        boneWrapper.appendChild(deleteButton);
+        inputWrapper.appendChild(boneWrapper);
       }
       const addButton = document.createElement("sl-button");
 
@@ -397,8 +403,8 @@ function selectBoneEditorRenderer(cell: any, onRendered: any, success: any, canc
     }
     var obj = {}
     for (const key of formData.keys()) {
-      let value = formData.getAll(key).length > 1 ? formData.getAll(key) : formData.get(key)
-      obj = createPath(obj, key, value)
+      let value = formData.getAll(key).length > 1 ? formData.getAll(key) : formData.get(key);
+      obj = createPath(obj, key, value);
     }
 
     updateData(formData, skelKey);
@@ -427,8 +433,16 @@ function successFunc(inElement: HTMLElement, boneStructure: any, boneName: any, 
   }
   var obj = {}
   for (const key of formData.keys()) {
-    let value = formData.getAll(key).length > 1 ? formData.getAll(key) : formData.get(key)
-    obj = createPath(obj, key, value)
+    let value = formData.getAll(key).length > 1 ? formData.getAll(key) : formData.get(key);
+    if(boneStructure["multiple"])
+    {
+      if(!Array.isArray(value))
+      {
+        const tmpvalue=[value];
+        value=tmpvalue;
+      }
+    }
+    obj = createPath(obj, key, value);
   }
 
   updateData(formData, skelKey);
@@ -482,10 +496,6 @@ function keyPress(event: KeyboardEvent, successFunc: any, cancelFunc: any, boneN
   }
 }
 
-function addButtonClick(wrapper: any) {
-
-  console.log(wrapper);
-}
 
 function updateRelationalBone(searchBox, cell, success) {
 
