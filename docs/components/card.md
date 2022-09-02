@@ -127,7 +127,7 @@ const App = () => (
 Headers can be used to display titles and more.
 
 ```html preview
-<sl-card class="card-header">
+<sl-card class="card-header" selectable>
   <div slot="header">
     Header Title
 

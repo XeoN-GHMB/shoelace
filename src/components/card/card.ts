@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { emit } from '../../internal/event';
 import { HasSlotController } from '../../internal/slot';
 import styles from './card.styles';
 import {property} from "lit/decorators.js";
@@ -14,6 +15,8 @@ import type { CSSResultGroup } from 'lit';
  * @slot header - The card's header.
  * @slot footer - The card's footer.
  * @slot image - The card's image.
+ *
+ * @event sl-change - Emitted when the control's checked state changes.
  *
  * @csspart base - The component's internal wrapper.
  * @csspart image - The card's image, if present.
@@ -30,10 +33,23 @@ import type { CSSResultGroup } from 'lit';
 export default class SlCard extends LitElement {
   static styles: CSSResultGroup = styles;
 
+  /** Allows selecting the card via click or programmatically. */
+  @property({ type: Boolean, reflect: true }) selectable = false;
+
+  /** Draws the checkbox in a selected state. */
+  @property({ type: Boolean, reflect: true }) selected = false;
+
   /** vertical card */
   @property({ type: Boolean, reflect: true }) horizontal = false;
 
   private readonly hasSlotController = new HasSlotController(this, 'footer', 'header', 'image');
+
+  handleClick(e: MouseEvent|KeyboardEvent) {
+    if (!this.selectable) return
+    console.log("click")
+    this.selected = true;
+    emit(this, "sl-change")
+  }
 
   render() {
     return html`
@@ -41,11 +57,14 @@ export default class SlCard extends LitElement {
         part="base"
         class=${classMap({
           card: true,
+          'card--checked': this.selectable && this.selected,
           'card-horizontal':this.horizontal,
           'card--has-footer': this.hasSlotController.test('footer'),
           'card--has-image': this.hasSlotController.test('image'),
           'card--has-header': this.hasSlotController.test('header')
         })}
+        @click=${this.handleClick}
+        @keyDown=${this.handleClick}
       >
         <div part="image" class="card__image">
           <slot name="image"></slot>
