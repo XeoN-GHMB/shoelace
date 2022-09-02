@@ -92,6 +92,7 @@
   <!--- [EditTable](/components/tableEdit)-->
   - [Table](/components/table)
   - [Table Wrapper](/components/table-wrapper)
+  - [Bone](/components/bone)
   <!--plop:component-->
   
 - Utilities

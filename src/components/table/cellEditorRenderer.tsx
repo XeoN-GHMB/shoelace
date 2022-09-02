@@ -9,15 +9,14 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
 
   cell.getElement().style.height = "auto"
   cell.getElement().style.overflow = "visible";
-  if(!cell.getElement().dataset.openBefore) {
-  cell.getElement().dataset.openBefore=true;
+  if (!cell.getElement().dataset.openBefore) {
+    cell.getElement().dataset.openBefore = true;
 
     cell.getElement().addEventListener("blur", (out_event) => {
-    console.log("out_event")
-    console.log(out_event)
+
 
       if (out_event.relatedTarget === null) {
-        if (cell.getElement().dataset.open==="true") {
+        if (cell.getElement().dataset.open === "true") {
           cancel();
           cell.getElement().dataset.open = "false";
 
@@ -63,12 +62,30 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
       tab_panel.name = lang;
       if (boneStructure["multiple"]) {
         const inputWrapper = document.createElement("div");
-        for (const [index, tmpValue] of boneValue[lang].entries()) {
-          const newboneName = boneName + "." + lang + "." + index;
+        let index = 0;
+        for (const tmpValue of boneValue[lang]) {
 
+          const newboneName = boneName + "." + lang + "." + index;
+          console.log(tmpValue)
           const inputElement = getEditor(boneStructure)(cell, onRendered, success, cancel, boneStructure, tmpValue, lang, newboneName);
           inputWrapper.appendChild(inputElement);
+          index += 1;
         }
+
+        const addButton = document.createElement("sl-button");
+
+        addButton.addEventListener("click", () => {
+          //const newboneName = boneName //FIXME RECORD BONE
+          const newboneName = boneName + "." + lang + "." + index;
+          const inputElement = getEditor(boneStructure)(cell, onRendered, success, cancel, boneStructure, "", null, newboneName);
+
+          inputWrapper.insertBefore(inputElement, addButton);
+          cell.getRow().getElement().style.height = "auto";
+          cell.getElement().style.height = "auto";
+          index += 1;
+        });
+        addButton.innerText = "Add";
+        inputWrapper.appendChild(addButton);
         console.log(inputWrapper);
         tab_panel.appendChild(inputWrapper);
 
@@ -91,20 +108,23 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
       //No Lang , Multiple
       const inputWrapper = document.createElement("div");
       inputWrapper.dataset.boneName = boneName;
-      if (boneValue===null)
-      {
-        boneValue=[]
+      if (boneValue === null) {
+        boneValue = []
       }
       for (const [index, tmpValue] of boneValue.entries()) {
         const newboneName = boneStructure["type"] === "record" ? boneName + "." + index : boneName;
-        const boneWrapper= document.createElement("div");
+        const boneWrapper = document.createElement("div");
 
         const inputElement = getEditor(boneStructure)(cell, onRendered, success, cancel, boneStructure, tmpValue, null, newboneName);
 
 
-        const deleteButton= document.createElement("sl-button");
-        deleteButton.innerText="X";
-        deleteButton.addEventListener("click", () => {boneWrapper.outerHTML="";});
+        const deleteButton = document.createElement("sl-button");
+        deleteButton.innerText = "X";
+        deleteButton.addEventListener("click", () => {
+          boneWrapper.outerHTML = "";
+          success
+
+        });
         boneWrapper.appendChild(inputElement);
         boneWrapper.appendChild(deleteButton);
         inputWrapper.appendChild(boneWrapper);
@@ -172,8 +192,7 @@ function rawBoneEditorRenderer(cell: any, onRendered: any, success: any, cancel:
       boneName = cell._cell.column.field;
     }
 
-    const skelKey = cell._cell.row.data.key;
-    keyPress(event, success, cancel, boneName, boneStructure, skelKey, cell, successFunc);
+    keyPress(event, success, cancel, boneName, boneStructure, cell, successFunc);
   })
 
   return inputElement;
@@ -225,8 +244,7 @@ function booleanBoneEditorRenderer(cell: any, onRendered: any, success: any, can
       boneName = cell._cell.column.field;
     }
 
-    const skelKey = cell._cell.row.data.key;
-    keyPress(event, success, cancel, boneName, boneStructure, skelKey, cell, successFunc);
+    keyPress(event, success, cancel, boneName, boneStructure, cell, successFunc);
   })
   return inputElement;
 }
@@ -423,32 +441,39 @@ function selectBoneEditorRenderer(cell: any, onRendered: any, success: any, canc
 
 }
 
-function successFunc(inElement: HTMLElement, boneStructure: any, boneName: any, skelKey: any, success: any, cell: any) {
+function successFunc(cell: any, boneStructure: any, boneName: any, success: any, callSuccess = true) {
 
-
+  const skelKey = cell._cell.row.data.key;
   const formData = new FormData();
+
   for (const child of cell.getElement().querySelectorAll("sl-input")) {
-    formData.append(child.dataset.boneName, child.value);
+    if (boneStructure["multiple"] && boneStructure["languages"] !== null) {
+      const tmpBoneName=child.dataset.boneName.split(".");
+      formData.append(tmpBoneName.slice(0,tmpBoneName.length-1).join("."), child.value);
+    } else {
+      formData.append(child.dataset.boneName, child.value);
+    }
+
 
   }
   var obj = {}
   for (const key of formData.keys()) {
     let value = formData.getAll(key).length > 1 ? formData.getAll(key) : formData.get(key);
-    if(boneStructure["multiple"])
-    {
-      if(!Array.isArray(value))
-      {
-        const tmpvalue=[value];
-        value=tmpvalue;
+
+    if (boneStructure["multiple"] && boneStructure["languages"] === null) {
+      if (!Array.isArray(value)) {
+        const tmpvalue = [value];
+        value = tmpvalue;
       }
     }
     obj = createPath(obj, key, value);
   }
 
   updateData(formData, skelKey);
-  success(obj[inElement.dataset.boneName.split(".")[0]])
-  cell.getRow()._row.clearCellHeight();
-  console.log("clear")
+  if (callSuccess) {
+    success(obj[cell.getField()]);
+    cell.getRow()._row.clearCellHeight();
+  }
 
 
 }
@@ -483,11 +508,11 @@ function createPath(obj: any, path: any, value = null) {
   return obj;
 }
 
-function keyPress(event: KeyboardEvent, successFunc: any, cancelFunc: any, boneName, boneStructure, skelKey, cell, successFuncPorxy = successFunc) {
+function keyPress(event: KeyboardEvent, successFunc: any, cancelFunc: any, boneName, boneStructure, cell, successFuncPorxy = successFunc) {
 
   if (event.key === "Enter") {
 
-    successFuncPorxy(event.target, boneStructure, boneName, skelKey, successFunc, cell)
+    successFuncPorxy(cell, boneStructure, boneName, successFunc)
   }
 
   if (event.key === "Esc") {
@@ -541,6 +566,7 @@ function updateData(formData: FormData, skelKey: string) {
     });
   });
 }
+
 /////////////////FILEBONE FUNCTRIONS/////////////////
 
 function getUploadUrl(file: File) {
