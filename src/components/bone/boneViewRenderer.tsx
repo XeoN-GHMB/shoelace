@@ -1,4 +1,5 @@
 import {html} from "lit";
+import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
 export class BoneViewRenderer {
   boneStructure: any;
@@ -32,6 +33,10 @@ export class BoneViewRenderer {
         return this.relationalBoneRenderer();
       case "select":
         return this.selectBoneRenderer();
+      case "text":
+        console.log("==")
+        console.log(this.boneValue);
+        return this.textBoneRenderer();
     }
     return ""
   }
@@ -64,9 +69,13 @@ export class BoneViewRenderer {
 
       }
     }
+    if(this.boneStructure["type"].startsWith("text"))
+    {
+      return html`${unsafeHTML(this.boneValue)}`;
+    }
 
+    return formater(this.boneValue, this.boneStructure)
 
-    return formater(this.boneValue, this.boneStructure);
   }
 
 
@@ -177,6 +186,10 @@ export class BoneViewRenderer {
     return this.rawBoneRenderer();
 
   }
+  textBoneRenderer()
+  {
+    return this.rawBoneRenderer();
+  }
 }
 
 ////////////HELPER FUNCTIONS////////////////
@@ -194,6 +207,7 @@ export function formatstring(data, boneStructure, lang = null) {
   let re = /\$\(([^)]+)\)/g;
   let newboneStructure = {};
   const isRelational = boneStructure["type"].startsWith("relational")
+  const isRecord = boneStructure["type"].startsWith("record")
   if (isRelational) {
     if (Array.isArray(boneStructure["relskel"])) {
 
@@ -266,25 +280,39 @@ export function formatstring(data, boneStructure, lang = null) {
       if (boneStructure["multiple"] && !isRelational) {
 
         if (textArray.length === 0) {
-          for (const i in data) {
-            textArray.push(text);
+          if (Array.isArray(data)) {
+            for (const i in data) {
+              textArray.push(text);
+            }
+          } else {
+            textArray = [text];
           }
 
         }
+        let i = -1;
+        for (const key in data) {
+          let x;
+          console.log(data);
+          if (Array.isArray(data)) {
+            x = formatstring(getPath(data[key], insidematch), newboneStructure[insidematch], lang);
 
-        for (const i in data) {
+          } else {
 
-          const x = formatstring(getPath(data[i], insidematch), newboneStructure[insidematch], lang);
+            x = formatstring(getPath(data, insidematch), newboneStructure[insidematch], lang);
+            i += 1;
+          }
+
 
           if (newboneStructure[insidematch]["type"] == "record") {
             textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"))
           } else {
-            textArray[i] = textArray[i].replaceAll(match[0], x.toString())
+            textArray[0] = textArray[0].replaceAll(match[0], x.toString())
           }
 
 
         }
       } else {
+
         let tmp = formatstring(getPath(data, insidematch), newboneStructure[insidematch], lang);
         if (tmp === undefined) {
           tmp = "";
@@ -302,7 +330,7 @@ export function formatstring(data, boneStructure, lang = null) {
   return text
 }
 
-function getPath(obj, path) {
+export function getPath(obj, path) {
   obj = JSON.parse(JSON.stringify(obj))
   path = typeof path === 'string' ? path.split('.') : path;
   let current = obj;

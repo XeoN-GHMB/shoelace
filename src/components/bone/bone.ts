@@ -26,9 +26,9 @@ import {watchProps} from "../../internal/watchProps";
 @customElement('sl-bone')
 export default class SlBone extends LitElement {
   static styles = styles;
-  bone:any;
-  initBoneValue:any;
-  internboneValue:any;
+  bone: any;
+  initBoneValue: any;
+  internboneValue: any;
   /** set boneStructure. */
   @property({type: Object, attribute: false}) boneStructure: Object;
 
@@ -42,34 +42,40 @@ export default class SlBone extends LitElement {
   @property({type: Object, reflect: true}) renderType: string = "view";
 
 
-
   /** Gets boneValue */
-  get getBoneValue():any {
-    console.log("init = "+this.initBoneValue)
-    return this.boneValue;
+  get getBoneValue(): any {
+    return this._getBoneValue();
   }
+  _getBoneValue()
+  {
+     return this.internboneValue[this.boneName];
+  }
+
+
   @watchProps(['boneStructure', 'boneValue', "renderType"])
   optionUpdate() {
-    this.initBoneValue=this.boneValue;
-    this.internboneValue={[this.boneName]:this.boneValue};
+    this.initBoneValue = this.boneValue;
+    this.internboneValue = {[this.boneName]: this.boneValue};
     if (this.boneStructure === null) {
       return;
     }
     if (this.renderType === "view") {
 
-      const boneViewer=new BoneViewRenderer(this.boneStructure, this.boneValue,this.boneName,this)
+      const boneViewer = new BoneViewRenderer(this.boneStructure, this.boneValue, this.boneName, this)
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
-     const boneEditor=new BoneEditRenderer(this.boneStructure, this.boneValue,this.boneName,this)
+      const boneEditor = new BoneEditRenderer(this.boneStructure, this.boneValue, this.boneName, this)
       this.bone = boneEditor.boneEditor();
     }
 
   }
+
   //Events
-   handleChange() {
-    console.log("handle Change")
-    emit(this, 'sl-change');
+  handleChange(formData) {
+
+
+    emit(this, 'sl-boneChange', {detail: {boneValue: this._getBoneValue(), boneName: this.boneName,formData:formData}});
   }
 
   render() {

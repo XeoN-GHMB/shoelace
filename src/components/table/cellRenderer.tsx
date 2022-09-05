@@ -13,3 +13,4 @@ export function boneFormatter(cell: any, boneStructure: object, onRendered: any)
   bone.boneName=cell.getField();
   return bone;
 }
+

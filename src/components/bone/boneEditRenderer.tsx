@@ -1,4 +1,4 @@
-import {formatstring} from "./boneViewRenderer";
+import {formatstring, getPath} from "./boneViewRenderer";
 //const apiurl=window.location.origin;
 const apiurl = "http://localhost:8080";
 
@@ -18,10 +18,9 @@ export class BoneEditRenderer {
 
 
   boneEditor(boneName = ""): any {
-  if(boneName==="")
-  {
-    boneName=this.boneName;
-  }
+    if (boneName === "") {
+      boneName = this.boneName;
+    }
 
     if (this.boneStructure["languages"] !== null) {
       const tabGroup = document.createElement("sl-tab-group");
@@ -86,9 +85,9 @@ export class BoneEditRenderer {
         if (this.boneValue === null) {
           this.boneValue = []
         }
-        let  index=0;
+        let index = 0;
         for (const tmpValue of this.boneValue) {
-          const newboneName =  boneName + "." + index;
+          const newboneName = boneName + "." + index;
           const boneWrapper = document.createElement("div");
 
           const inputElement = this.getEditor(tmpValue, null, newboneName);
@@ -104,16 +103,16 @@ export class BoneEditRenderer {
           boneWrapper.appendChild(inputElement);
           boneWrapper.appendChild(deleteButton);
           inputWrapper.appendChild(boneWrapper);
-          index+=1;
+          index += 1;
         }
         const addButton = document.createElement("sl-button");
 
         addButton.addEventListener("click", () => {
-          const newboneName =  boneName + "." + index; //FIXME RECORD BONE
+          const newboneName = boneName + "." + index; //FIXME RECORD BONE
           const inputElement = this.getEditor("", null, newboneName);
 
           inputWrapper.insertBefore(inputElement, addButton);
-          index+=1;
+          index += 1;
 
         });
         addButton.innerText = "Add";
@@ -169,10 +168,27 @@ export class BoneEditRenderer {
       inputElement.dataset.lang = lang;
     }
     inputElement.addEventListener("sl-change", (change_event) => {
-    createPath(this.mainInstance.internboneValue,boneName,inputElement.value)
-    this.mainInstance.handleChange();
 
-      console.log(this.mainInstance.internboneValue);
+
+      createPath(this.mainInstance.internboneValue, boneName, inputElement.value);
+
+      const formData = new FormData();
+      const tmpPaths = new Set(objectToPaths(this.mainInstance.internboneValue, this.mainInstance.boneName));
+        tmpPaths.forEach((path: string) => {
+          const tmpValue = getPath(this.mainInstance.internboneValue, path)
+          if (Array.isArray(tmpValue)) {
+            for (const val of tmpValue) {
+              formData.append(path, val);
+            }
+          } else {
+            formData.append(path, tmpValue);
+
+          }
+
+        })
+
+
+      this.mainInstance.handleChange(formData);
     })
 
     return inputElement;
@@ -237,9 +253,8 @@ export class BoneEditRenderer {
       const recordBoneValue = value[bone[0]];
 
       const newBoneName = boneName + "." + recordBoneName;
-      const tmp_renderer = new BoneEditRenderer(recordBoneStructure,  recordBoneValue,newBoneName,this.mainInstance)
+      const tmp_renderer = new BoneEditRenderer(recordBoneStructure, recordBoneValue, newBoneName, this.mainInstance)
       const tmp = tmp_renderer.boneEditor();
-      console.log(tmp);
       tmp.dataset.fromRecord = "true";
 
 
@@ -379,10 +394,11 @@ function getSkey() {
 
   })
 }
+
 function createPath(obj: any, path: any, value = null) {
 
   path = typeof path === 'string' ? path.split('.') : path;
-  const orgiPath=path;
+  const orgiPath = path;
   let current = obj;
   while (path.length > 1) {
     const [head, ...tail] = path;
@@ -404,14 +420,11 @@ function createPath(obj: any, path: any, value = null) {
   if (Number.isNaN(parseInt(path[0]))) {
     current[path[0]] = value;
   } else {
-    if(current===null)
-    {
-     obj = createPath(obj,orgiPath.slice(0,orgiPath.length-1),[])
-     obj = createPath(obj,orgiPath,value)
-    }
-    else
-    {
-     current[parseInt(path[0])] = value;
+    if (current === null) {
+      obj = createPath(obj, orgiPath.slice(0, orgiPath.length - 1), [])
+      obj = createPath(obj, orgiPath, value)
+    } else {
+      current[parseInt(path[0])] = value;
     }
 
 
@@ -421,6 +434,33 @@ function createPath(obj: any, path: any, value = null) {
   return obj;
 }
 
+function objectToPaths(obj, path) {
+
+  let paths = [];
+  const tmpObj = getPath(obj, path);
+  if (Array.isArray(tmpObj)) {
+    for (const tmp in tmpObj) {
+
+      if (typeof tmpObj[tmp] === "object") {
+        paths = paths.concat(objectToPaths(obj, path + "." + tmp));
+      } else {
+        paths = paths.concat(path);
+      }
+    }
+  } else if (typeof (tmpObj) === "object") {
+    for (const tmp in tmpObj) {
+
+      paths = paths.concat(objectToPaths(obj, path + "." + tmp));
+    }
+
+  } else {
+
+    paths.push(path);
+  }
+
+  return paths;
+
+}
 
 /////////////////FILEBONE FUNCTRIONS/////////////////
 
