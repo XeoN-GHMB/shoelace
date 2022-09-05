@@ -1,10 +1,12 @@
-import { LitElement, html } from 'lit';
-import { customElement, property } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
-import { watch } from '../../internal/watch';
+import {LitElement, html} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
+import {emit} from '../../internal/event';
+import {watch} from '../../internal/watch';
 import styles from './bone.styles';
 import {boneFormatter} from "./boneViewRenderer.tsx";
+import {boneEditor} from "./boneEditRenderer.tsx";
 import {watchProps} from "../../internal/watchProps";
+
 /**
  * @since 2.0
  * @status experimental
@@ -24,28 +26,44 @@ import {watchProps} from "../../internal/watchProps";
 @customElement('sl-bone')
 export default class SlBone extends LitElement {
   static styles = styles;
-  viewBone="";
+  bone:any;
+  initBoneValue:any;
   /** set boneStructure. */
   @property({type: Object, attribute: false}) boneStructure: Object;
 
   /** set boneValue. */
   @property({type: Object, attribute: false}) boneValue: any;
 
-  @watchProps(['boneStructure','boneValue'])
-  optionUpdate() {
+  /** set boneValue. */
+  @property({type: Object, attribute: false}) boneName: string;
 
-    if(this.boneStructure===null)
-    {
+  /** set renderType. */
+  @property({type: Object, reflect: true}) renderType: string = "view";
+
+  /** Gets boneValue */
+  get getBoneValue():any {
+    console.log("init = "+this.initBoneValue)
+    return this.boneValue;
+  }
+  @watchProps(['boneStructure', 'boneValue', "renderType"])
+  optionUpdate() {
+    this.initBoneValue=this.boneValue;
+    if (this.boneStructure === null) {
       return;
     }
+    if (this.renderType === "view") {
+      this.bone = boneFormatter(this.boneStructure, this.boneValue)
+    }
+    if (this.renderType === "edit") {
+      console.log("render edit")
+      this.bone = boneEditor(this)
+    }
 
-    this.viewBone=boneFormatter(this.boneStructure,this.boneValue)
-    console.log(this.viewBone)
   }
 
   render() {
-    console.log(this.viewBone)
-    return html`${this.viewBone}`;
+
+    return html`${this.bone}`;
   }
 }
 

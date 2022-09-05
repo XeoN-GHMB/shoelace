@@ -1,6 +1,6 @@
-import {html, nothing} from "lit";
+import {html} from "lit";
 
-export function boneFormatter(boneStructure: object, boneValue: any): any {
+export function boneFormatter(boneStructure: any, boneValue: any): any {
 
   switch (boneStructure["type"].split(".")[0]) {
     case "str":
