@@ -1,164 +1,182 @@
 import {html} from "lit";
 
-export function boneFormatter(boneStructure: any, boneValue: any): any {
+export class BoneViewRenderer {
+  boneStructure: any;
+  boneValue: any;
+  boneName: string;
+  mainInstance: any;
 
-  switch (boneStructure["type"].split(".")[0]) {
-    case "str":
-      return stringBoneRenderer(boneStructure, boneValue);
-    case "numeric":
-      return numericBoneRenderer(boneStructure, boneValue);
-    case "date":
-      return dateBoneRenderer(boneStructure, boneValue);
-    case "record":
-      return recordBoneRenderer(boneStructure, boneValue);
-    case "relational":
-      if (boneStructure["type"].startsWith("relational.tree.leaf.file")) {
-        return fileBoneRenderer(boneStructure, boneValue);
-      }
-
-      return relationalBoneRenderer(boneStructure, boneValue);
-    case "select":
-      return selectBoneRenderer(boneStructure, boneValue);
-  }
-  return ""
-}
-
-function rawBoneRenderer(boneStructure: object, boneValue: any, formater: Function = formatstring) {
-  if (boneValue === null) {
-    return "-";
-  }
-  if (boneStructure["languages"] !== null) {
-
-
-    return html`
-      <sl-tab-group>
-        ${getTabs(boneStructure)}
-        ${getTabPannels(boneValue, boneStructure, formater)}
-      </sl-tab-group>`;
-
-  } else {
-
-    if (boneStructure["multiple"]) {
-      for (const index in boneValue) {
-
-        boneValue[index] = formater(boneValue[index], boneStructure, null);
-      }
-      return html`${boneValue.map((val: any) => [
-        html`${val}<br>`
-      ])}`
-
-
-    }
+  constructor(boneStructure: any, boneValue: any, boneName: any, mainInstance: any) {
+    this.boneStructure = boneStructure;
+    this.boneValue = boneValue;
+    this.boneName = boneName;
+    this.mainInstance = mainInstance;
   }
 
 
-  return formater(boneValue, boneStructure);
-}
+  boneFormatter(): any {
 
-function stringBoneRenderer(boneStructure: object, boneValue: any): any {
-  return rawBoneRenderer(boneStructure, boneValue);
-}
-
-
-function numericBoneRenderer(boneStructure: object, boneValue: any): any {
-  return rawBoneRenderer(boneStructure, boneValue);
-}
-
-function dateBoneRenderer(boneStructure: object, boneValue: any): any {
-  if (boneStructure["multiple"]) {
-    return `${boneValue.map((ele: any) => {
-      return new Date(ele).toLocaleString();
-    }).join("<br>")}`
-
-  }
-  return new Date(boneValue).toLocaleString();
-}
-
-function recordBoneRenderer(boneStructure: any, boneValue: any) {
-  return rawBoneRenderer(boneStructure, boneValue);
-
-}
-
-function relationalBoneRenderer(boneStructure: any, boneValue: any) {
-  return rawBoneRenderer(boneStructure, boneValue);
-
-}
-
-function fileBoneRenderer(boneStructure: any, boneValue: any) {
-  console.log("create file bone")
-  console.trace();
-
-  function appendImage(data, boneStructure, lang = null) {
-    let val = formatstring(data, boneStructure, lang);
-    if (lang !== null) {
-      if (boneStructure["multiple"]) {
-        for (const i in val) {
-          val[i] = `<img width="32px" height="32px" src="${data[lang][i]["dest"]["downloadUrl"]}">` + val[i]
+    switch (this.boneStructure["type"].split(".")[0]) {
+      case "str":
+        return this.stringBoneRenderer();
+      case "numeric":
+        return this.numericBoneRenderer();
+      case "date":
+        return this.dateBoneRenderer();
+      case "record":
+        return this.recordBoneRenderer();
+      case "relational":
+        if (this.boneStructure["type"].startsWith("relational.tree.leaf.file")) {
+          return this.fileBoneRenderer();
         }
-      } else {
-        val = `<img width="32px" height="32px" src="${data[lang]["dest"]["downloadUrl"]}">` + val
-      }
+        return this.relationalBoneRenderer();
+      case "select":
+        return this.selectBoneRenderer();
+    }
+    return ""
+  }
+
+
+  rawBoneRenderer(formater: Function = formatstring) {
+    if (this.boneValue === null) {
+      return "-";
+    }
+    if (this.boneStructure["languages"] !== null) {
+
+
+      return html`
+        <sl-tab-group>
+          ${getTabs(this.boneStructure)}
+          ${getTabPannels(this.boneValue, this.boneStructure, formater)}
+        </sl-tab-group>`;
 
     } else {
-      val = `<img width="32px" height="32px" src="${data["dest"]["downloadUrl"]}">` + val
+
+      if (this.boneStructure["multiple"]) {
+        for (const index in this.boneValue) {
+
+          this.boneValue[index] = formater(this.boneValue[index], this.boneStructure, null);
+        }
+        return html`${this.boneValue.map((val: any) => [
+          html`${val}<br>`
+        ])}`
+
+
+      }
     }
 
-    return val;
+
+    return formater(this.boneValue, this.boneStructure);
   }
 
-  return rawBoneRenderer(boneStructure, boneValue, appendImage);
 
-}
+  stringBoneRenderer(): any {
+    return this.rawBoneRenderer();
+  }
 
 
-function selectBoneRenderer(boneStructure: any, boneValue: any) {
-  console.log(boneValue)
-  //Map bonevalue to item in obj
-  if (boneStructure["languages"] !== null) {
-    if (boneStructure["multiple"]) {
-      for (const lang of boneStructure["languages"]) {
-        for (const i in boneValue[lang]) {
-          boneStructure["values"].forEach((value: any) => {
-            if (boneValue[lang][i] === value[0]) {
-              boneValue[lang][i] = value[1];
+  numericBoneRenderer(): any {
+    return this.rawBoneRenderer();
+  }
+
+
+  dateBoneRenderer(): any {
+    if (this.boneStructure["multiple"]) {
+      return `${this.boneValue.map((ele: any) => {
+        return new Date(ele).toLocaleString();
+      }).join("<br>")}`
+
+    }
+    return new Date(this.boneValue).toLocaleString();
+  }
+
+
+  recordBoneRenderer() {
+    return this.rawBoneRenderer();
+
+  }
+
+
+  relationalBoneRenderer() {
+    return this.rawBoneRenderer();
+
+  }
+
+
+  fileBoneRenderer() {
+
+    function appendImage(data, boneStructure, lang = null) {
+      let val = formatstring(data, boneStructure, lang);
+      if (lang !== null) {
+        if (boneStructure["multiple"]) {
+          for (const i in val) {
+            val[i] = `<img width="32px" height="32px" src="${data[lang][i]["dest"]["downloadUrl"]}">` + val[i]
+          }
+        } else {
+          val = `<img width="32px" height="32px" src="${data[lang]["dest"]["downloadUrl"]}">` + val
+        }
+
+      } else {
+        val = `<img width="32px" height="32px" src="${data["dest"]["downloadUrl"]}">` + val
+      }
+
+      return val;
+    }
+
+    return this.rawBoneRenderer(appendImage);
+
+  }
+
+
+  selectBoneRenderer() {
+
+    //Map this.boneValue to item in obj
+    if (this.boneStructure["languages"] !== null) {
+      if (this.boneStructure["multiple"]) {
+        for (const lang of this.boneStructure["languages"]) {
+          for (const i in this.boneValue[lang]) {
+            this.boneStructure["values"].forEach((value: any) => {
+              if (this.boneValue[lang][i] === value[0]) {
+                this.boneValue[lang][i] = value[1];
+              }
+            })
+          }
+        }
+
+      } else {
+        for (const lang of this.boneStructure["languages"]) {
+          this.boneStructure["values"].forEach((value: any) => {
+            if (this.boneValue[lang] === value[0]) {
+              this.boneValue[lang] = value[1];
             }
           })
         }
       }
-
     } else {
-      for (const lang of boneStructure["languages"]) {
-        boneStructure["values"].forEach((value: any) => {
-          if (boneValue[lang] === value[0]) {
-            boneValue[lang] = value[1];
-          }
-        })
-      }
-    }
-  } else {
-    if (boneStructure["multiple"]) {
-      for (const i in boneValue) {
-        boneStructure["values"].forEach((value: any) => {
-          if (boneValue[i] === value[0]) {
-            boneValue[i] = value[1];
-          }
-        })
-      }
-
-
-    } else {
-      boneStructure["values"].forEach((value: any) => {
-        if (boneValue === value[0]) {
-          boneValue = value[1];
-          return;
+      if (this.boneStructure["multiple"]) {
+        for (const i in this.boneValue) {
+          this.boneStructure["values"].forEach((value: any) => {
+            if (this.boneValue[i] === value[0]) {
+              this.boneValue[i] = value[1];
+            }
+          })
         }
-      })
+
+
+      } else {
+        this.boneStructure["values"].forEach((value: any) => {
+          if (this.boneValue === value[0]) {
+            this.boneValue = value[1];
+            return;
+          }
+        })
+      }
     }
+
+
+    return this.rawBoneRenderer();
+
   }
-
-
-  return rawBoneRenderer(boneStructure, boneValue);
-
 }
 
 ////////////HELPER FUNCTIONS////////////////

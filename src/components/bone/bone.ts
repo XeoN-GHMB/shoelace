@@ -3,8 +3,8 @@ import {customElement, property} from 'lit/decorators.js';
 import {emit} from '../../internal/event';
 import {watch} from '../../internal/watch';
 import styles from './bone.styles';
-import {boneFormatter} from "./boneViewRenderer.tsx";
-import {boneEditor} from "./boneEditRenderer.tsx";
+import {BoneViewRenderer} from "./boneViewRenderer.tsx";
+import {BoneEditRenderer} from "./boneEditRenderer.tsx";
 import {watchProps} from "../../internal/watchProps";
 
 /**
@@ -28,6 +28,7 @@ export default class SlBone extends LitElement {
   static styles = styles;
   bone:any;
   initBoneValue:any;
+  internboneValue:any;
   /** set boneStructure. */
   @property({type: Object, attribute: false}) boneStructure: Object;
 
@@ -40,6 +41,8 @@ export default class SlBone extends LitElement {
   /** set renderType. */
   @property({type: Object, reflect: true}) renderType: string = "view";
 
+
+
   /** Gets boneValue */
   get getBoneValue():any {
     console.log("init = "+this.initBoneValue)
@@ -48,17 +51,25 @@ export default class SlBone extends LitElement {
   @watchProps(['boneStructure', 'boneValue', "renderType"])
   optionUpdate() {
     this.initBoneValue=this.boneValue;
+    this.internboneValue={[this.boneName]:this.boneValue};
     if (this.boneStructure === null) {
       return;
     }
     if (this.renderType === "view") {
-      this.bone = boneFormatter(this.boneStructure, this.boneValue)
+
+      const boneViewer=new BoneViewRenderer(this.boneStructure, this.boneValue,this.boneName,this)
+      this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
-      console.log("render edit")
-      this.bone = boneEditor(this)
+     const boneEditor=new BoneEditRenderer(this.boneStructure, this.boneValue,this.boneName,this)
+      this.bone = boneEditor.boneEditor();
     }
 
+  }
+  //Events
+   handleChange() {
+    console.log("handle Change")
+    emit(this, 'sl-change');
   }
 
   render() {
