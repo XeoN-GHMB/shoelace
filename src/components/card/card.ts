@@ -44,10 +44,9 @@ export default class SlCard extends LitElement {
 
   private readonly hasSlotController = new HasSlotController(this, 'footer', 'header', 'image');
 
-  handleClick(e: MouseEvent|KeyboardEvent) {
+  handleClick() {
     if (!this.selectable) return
-    console.log("click")
-    this.selected = true;
+    this.selected = !this.selected;
     emit(this, "sl-change")
   }
 
@@ -66,7 +65,8 @@ export default class SlCard extends LitElement {
         @click=${this.handleClick}
         @keyDown=${this.handleClick}
       >
-        <div part="image" class="card__image">
+        <div part="image" class=${classMap({'card__image': true, 'card-checked': this.selected})}>
+
           <slot name="image"></slot>
         </div>
         <div part="group" class="card_group">

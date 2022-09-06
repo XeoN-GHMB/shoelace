@@ -319,4 +319,38 @@ Cards can use horizontal parameter to place the image on the left side.
 </style>
 ```
 
+## Selectable Card
+
+Cards accept an `selectable` and `selected` property. The card then can be selected and used to build complex 'visual checkboxes'.
+The `selectable` enables the selection/checked logic and `selected` is the reflective state property. 
+
+```html preview
+<sl-card id="cardItem" class="card-image" selectable selected>
+  <img
+    slot="image"
+    src="https://images.unsplash.com/photo-1547191783-94d5f8f6d8b1?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=80"
+    alt="A kitten walks towards camera on top of pallet."
+  />
+  (de-)select me!!!
+</sl-card>
+
+<p>isCardSelected: <span id="card-status">false</span></p>
+
+<script>
+document.querySelector('#card-status').innerHTML = cardItem.selected
+document.querySelector('#cardItem').addEventListener('sl-change',(ev)=>{
+      let cardItem = ev.target.closest('sl-card')
+      console.log('cardItem state changed', ev, cardItem, cardItem.selected)
+      document.querySelector('#card-status').innerHTML = cardItem.selected
+      ev.stopPropagation();
+    })
+</script>
+
+<style>
+  .card-image {
+    max-width: 300px;
+  }
+</style>
+```
+
 [component-metadata:sl-card]

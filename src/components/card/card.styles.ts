@@ -81,10 +81,16 @@ export default css`
     object-fit: cover;
   }
 
-  /* Checked */
+  /* selected/checked */
   .card--checked {
-    border-color: var(--sl-color-gray-400);
-    background-color: var(--sl-color-gray-400);
+    border-color: var(--sl-color-gray-300);
+    background-color: var(--sl-color-gray-300);
+  }
+  .card--checked .card__image {
+    filter: brightness(75%);
   }
 
+  .card:hover .card__image {
+    filter: brightness(90%);
+  }
 `;
