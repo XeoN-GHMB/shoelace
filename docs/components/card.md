@@ -334,7 +334,7 @@ The `selectable` enables the selection/checked logic and `selected` is the refle
   (de-)select me!!!
 </sl-card>
 
-<p>isCardSelected: <span id="card-status">false</span></p>
+<p>isCardSelected: <span id="card-status"></span></p>
 
 <script>
 document.querySelector('#card-status').innerHTML = cardItem.selected
