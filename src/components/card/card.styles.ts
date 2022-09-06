@@ -83,14 +83,11 @@ export default css`
 
   /* selected/checked */
   .card--checked {
-    border-color: var(--sl-color-gray-300);
-    background-color: var(--sl-color-gray-300);
+    border-color: var(--sl-color-gray-100);
+    background-color: var(--sl-color-gray-100);
+    box-shadow: var(--sl-shadow-medium);
   }
   .card--checked .card__image {
-    filter: brightness(75%);
-  }
-
-  .card:hover .card__image {
     filter: brightness(90%);
   }
 `;
