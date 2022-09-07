@@ -3,9 +3,10 @@ import {customElement, property} from 'lit/decorators.js';
 import {emit} from '../../internal/event';
 import {watch} from '../../internal/watch';
 import styles from './bone.styles';
-import {BoneViewRenderer} from "./boneViewRenderer.tsx";
-import {BoneEditRenderer} from "./boneEditRenderer.tsx";
+import {BoneViewRenderer} from "./boneViewRenderer";
+import {BoneEditRenderer} from "./boneEditRenderer";
 import {watchProps} from "../../internal/watchProps";
+
 
 /**
  * @since 2.0
@@ -29,6 +30,7 @@ export default class SlBone extends LitElement {
   bone: any;
   initBoneValue: any;
   internboneValue: any;
+  internboneStructure: any;
   /** set boneStructure. */
   @property({type: Object, attribute: false}) boneStructure: Object;
 
@@ -46,9 +48,9 @@ export default class SlBone extends LitElement {
   get getBoneValue(): any {
     return this._getBoneValue();
   }
-  _getBoneValue()
-  {
-     return this.internboneValue[this.boneName];
+
+  _getBoneValue() {
+    return this.internboneValue[this.boneName];
   }
 
 
@@ -59,6 +61,7 @@ export default class SlBone extends LitElement {
     if (this.boneStructure === null) {
       return;
     }
+
     if (this.renderType === "view") {
 
       const boneViewer = new BoneViewRenderer(this.boneStructure, this.boneValue, this.boneName, this)
@@ -68,6 +71,48 @@ export default class SlBone extends LitElement {
       const boneEditor = new BoneEditRenderer(this.boneStructure, this.boneValue, this.boneName, this)
       this.bone = boneEditor.boneEditor();
     }
+    this.internboneStructure = {[this.boneName]: this.boneStructure};
+    if (this.boneStructure["using"] !== undefined) {
+      this.createInternBoneStructure(this.boneStructure, false, [this.boneName])
+    }
+
+  }
+
+  createInternBoneStructure(boneStructure: any, isRelational = false, path = []) {
+    const newboneStructure = {};
+    boneStructure = JSON.parse(JSON.stringify(boneStructure))
+    if (isRelational) {
+      if (Array.isArray(boneStructure["relskel"])) {
+
+
+        for (let i = 0; i < boneStructure["relskel"].length; i++) {
+          for (let j = 0; j < boneStructure["relskel"][i].length; j += 2) {
+
+            newboneStructure[boneStructure["relskel"][i][j]] = boneStructure["relskel"][i][j + 1];
+
+          }
+        }
+
+      }
+    } else {
+      if (Array.isArray(boneStructure["using"])) {
+        for (let i = 0; i < boneStructure["using"].length; i++) {
+          for (let j = 0; j < boneStructure["using"][i].length; j += 2) {
+
+            newboneStructure[boneStructure["using"][i][j]] = boneStructure["using"][i][j + 1];
+            this.internboneStructure[path.join(".") + "." + boneStructure["using"][i][j]] = boneStructure["using"][i][j + 1];
+            if (newboneStructure[boneStructure["using"][i][j]]) {
+              this.createInternBoneStructure(newboneStructure[boneStructure["using"][i][j]], false, path.concat( boneStructure["using"][i][j]))
+            }
+
+
+          }
+        }
+
+      }
+
+    }
+
 
   }
 
@@ -75,7 +120,13 @@ export default class SlBone extends LitElement {
   handleChange(formData) {
 
 
-    emit(this, 'sl-boneChange', {detail: {boneValue: this._getBoneValue(), boneName: this.boneName,formData:formData}});
+    emit(this, 'sl-boneChange', {
+      detail: {
+        boneValue: this._getBoneValue(),
+        boneName: this.boneName,
+        formData: formData
+      }
+    });
   }
 
   render() {

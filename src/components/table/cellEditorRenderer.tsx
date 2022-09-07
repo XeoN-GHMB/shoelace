@@ -3,40 +3,13 @@
 const apiurl = "http://localhost:8080";
 
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, boneName = "", boneValue: any = null): any {
-  console.log(cell)
+
   cell.getRow().getElement().style.height = "auto";
   cell.getRow().getElement().style.overflow = "visible";
 
   cell.getElement().style.height = "auto"
   cell.getElement().style.overflow = "visible";
-  if (!cell.getElement().dataset.openBefore) {
-    cell.getElement().dataset.openBefore = true;
 
-    cell.getElement().addEventListener("blur", (out_event) => {
-
-
-      if (out_event.relatedTarget === null) {
-        if (cell.getElement().dataset.open === "true") {
-          cancel();
-          cell.getElement().dataset.open = "false";
-
-          return;
-
-        }
-
-      } else {
-        if (!cell.getElement().contains(out_event.relatedTarget)) {
-          //cancel();
-          cell.getElement().dataset.open = "false";
-
-          return
-        }
-
-      }
-      cell.getElement().dataset.open = "true";
-      //cancel();
-    });
-  }
 
 
   const bone = document.createElement("sl-bone");
@@ -46,12 +19,11 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
   bone.renderType = "edit";
   bone.addEventListener("sl-boneChange", (boneChangeEvent) => {
 
-
     const skelKey = cell._cell.row.data.key;
     updateData(boneChangeEvent.detail.formData, skelKey);
-    console.log(boneChangeEvent);
-    console.log(boneChangeEvent.detail.boneValue);
+
     success(boneChangeEvent.detail.boneValue);
+     cell.getRow()._row.clearCellHeight();
   })
   return bone;
 

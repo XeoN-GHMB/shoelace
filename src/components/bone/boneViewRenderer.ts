@@ -290,9 +290,10 @@ export function formatstring(data, boneStructure, lang = null) {
 
         }
         let i = -1;
+        let index = 0;
         for (const key in data) {
           let x;
-          console.log(data);
+
           if (Array.isArray(data)) {
             x = formatstring(getPath(data[key], insidematch), newboneStructure[insidematch], lang);
 
@@ -302,12 +303,13 @@ export function formatstring(data, boneStructure, lang = null) {
             i += 1;
           }
 
+          if (newboneStructure[insidematch]["type"] === "record" ) {
 
-          if (newboneStructure[insidematch]["type"] == "record") {
-            textArray[i] = textArray[i].replaceAll(match[0], x.join("\n"))
+            textArray[index] = textArray[index].replaceAll(match[0], x.join("\n"))
           } else {
             textArray[0] = textArray[0].replaceAll(match[0], x.toString())
           }
+          index+=1;
 
 
         }
@@ -393,8 +395,7 @@ function getTabPannels(boneValue: any, boneStructure: any, formater: Function = 
         boneValue[lang] = formater(boneValue, boneStructure, lang);
 
 
-        tabpannels.push(html`
-          <sl-tab-panel name="${lang}">${boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
+        tabpannels.push(html`<sl-tab-panel name="${lang}">${boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
       }
     } else {
 
