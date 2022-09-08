@@ -141,7 +141,7 @@ function getSkey() {
   })
 }
 
-function updateData(formData: FormData, skelKey: string) {
+export function updateData(formData: FormData, skelKey: string) {
   return new Promise((resolve, reject) => {
     getSkey().then((skey: string) => {
 
@@ -149,7 +149,7 @@ function updateData(formData: FormData, skelKey: string) {
       formData.append("skey", skey)
 
 
-      fetch(`${apiurl}/json/test/edit`, {
+      fetch(`${apiurl}/json/example/edit`, {
         method: 'POST',
         body: formData
       }).then(resp => resp.json().then(data => resolve(data)))

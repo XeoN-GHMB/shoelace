@@ -5,7 +5,7 @@ import {emit} from '../../internal/event';
 import {watchProps} from '../../internal/watchProps';
 import styles from './table.styles';
 import {boneFormatter} from "./cellRenderer.tsx";
-import {boneEditor} from "./cellEditorRenderer.tsx";
+import {boneEditor, updateData} from "./cellEditorRenderer.tsx";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 
@@ -96,11 +96,41 @@ export default class SlTable extends LitElement {
         return 0
       }
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
+
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
         this.tableInstance.setData(this.skellist)
         this.tableReady = true
       })
+
+      if (this.moveablerows) {
+        this.tableInstance.on("rowMoved", (row) => {
+          console.log(row)
+          var nextRow = row.getNextRow();
+          var prevRow = row.getPrevRow();
+          console.log("nextRow", nextRow);
+          console.log("prevRow", prevRow);
+          let newSortIndex = 0;
+          if (nextRow) {
+            if (prevRow) {
+              newSortIndex = (nextRow.getData()["sortindex"] + prevRow.getData()["sortindex"]) / 2.0
+            } else {
+              newSortIndex = nextRow.getData()["sortindex"] - 1;
+            }
+          } else {
+            if (prevRow) {
+              newSortIndex = prevRow.getData()["sortindex"] + 1;
+            } else {
+              return;
+            }
+
+          }
+
+          const formData = new FormData();
+          formData.set("sortindex",newSortIndex);
+          updateData(formData,  row.getData()["key"])
+        })
+      }
 
     }
     //update Data only if tableReady
@@ -147,6 +177,7 @@ export default class SlTable extends LitElement {
       this.tableConfig = {}
     }
 
+
     let currentstructure = {}
     let columns = []
     for (let itemName in this.structure) {
@@ -154,23 +185,28 @@ export default class SlTable extends LitElement {
       if (Object.keys(item).includes("visible") && !item["visible"]) {
         continue
       }
-      columns.push({title: item["descr"], field: itemName,
+      if (itemName === "sortindex") {
+        this.moveablerows = true;
+        continue
+      }
+
+      columns.push({
+        title: item["descr"], field: itemName,
         formatterParams: item, formatter: boneFormatter,
-        editorParams:item,editor:boneEditor,
-        editable:this.editCheck,
-        variableHeight:true
+        editorParams: item, editor: boneEditor,
+        editable: this.editCheck,
+        variableHeight: true
       })
     }
+
 
     currentstructure["columns"] = columns
     this.tableConfig = {...this.tableConfig, ...currentstructure}
   }
-  editCheck(cell)
-  {
+
+  editCheck(cell) {
     return true
   }
-
-
 
 
   updateConfig() {
@@ -217,7 +253,7 @@ export default class SlTable extends LitElement {
     }
 
     if (this.moveablerows) {
-      this.tableConfig["movableRows"] = true
+      this.tableConfig["movableRows"] = true;
 
       let handleColumn = {
         rowHandle: true,
@@ -234,6 +270,7 @@ export default class SlTable extends LitElement {
       } else {
         this.tableConfig["columns"] = [handleColumn, ...this.tableConfig["columns"]]
       }
+
     }
 
     if (!this.nocolumnsmenu) {

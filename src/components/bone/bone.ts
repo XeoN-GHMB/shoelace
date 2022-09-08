@@ -30,7 +30,6 @@ export default class SlBone extends LitElement {
   bone: any;
   initBoneValue: any;
   internboneValue: any;
-  internboneStructure: any;
   /** set boneStructure. */
   @property({type: Object, attribute: false}) boneStructure: Object;
 
@@ -71,47 +70,7 @@ export default class SlBone extends LitElement {
       const boneEditor = new BoneEditRenderer(this.boneStructure, this.boneValue, this.boneName, this)
       this.bone = boneEditor.boneEditor();
     }
-    this.internboneStructure = {[this.boneName]: this.boneStructure};
-    if (this.boneStructure["using"] !== undefined) {
-      this.createInternBoneStructure(this.boneStructure, false, [this.boneName])
-    }
 
-  }
-
-  createInternBoneStructure(boneStructure: any, isRelational = false, path = []) {
-    const newboneStructure = {};
-    boneStructure = JSON.parse(JSON.stringify(boneStructure))
-    if (isRelational) {
-      if (Array.isArray(boneStructure["relskel"])) {
-
-
-        for (let i = 0; i < boneStructure["relskel"].length; i++) {
-          for (let j = 0; j < boneStructure["relskel"][i].length; j += 2) {
-
-            newboneStructure[boneStructure["relskel"][i][j]] = boneStructure["relskel"][i][j + 1];
-
-          }
-        }
-
-      }
-    } else {
-      if (Array.isArray(boneStructure["using"])) {
-        for (let i = 0; i < boneStructure["using"].length; i++) {
-          for (let j = 0; j < boneStructure["using"][i].length; j += 2) {
-
-            newboneStructure[boneStructure["using"][i][j]] = boneStructure["using"][i][j + 1];
-            this.internboneStructure[path.join(".") + "." + boneStructure["using"][i][j]] = boneStructure["using"][i][j + 1];
-            if (newboneStructure[boneStructure["using"][i][j]]) {
-              this.createInternBoneStructure(newboneStructure[boneStructure["using"][i][j]], false, path.concat( boneStructure["using"][i][j]))
-            }
-
-
-          }
-        }
-
-      }
-
-    }
 
 
   }

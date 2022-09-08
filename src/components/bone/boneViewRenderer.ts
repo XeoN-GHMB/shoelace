@@ -16,7 +16,10 @@ export class BoneViewRenderer {
 
 
   boneFormatter(): any {
-
+    if(!this.boneStructure)
+    {
+      return;
+    }
     switch (this.boneStructure["type"].split(".")[0]) {
       case "str":
         return this.stringBoneRenderer();
@@ -38,7 +41,7 @@ export class BoneViewRenderer {
         console.log(this.boneValue);
         return this.textBoneRenderer();
     }
-    return ""
+    return "";
   }
 
 
