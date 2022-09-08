@@ -1,17 +1,58 @@
 import {formatstring, getPath} from "./boneViewRenderer";
+import SlBone from "./bone";
+import SlCombobox from "../combobox/combobox";
 //const apiurl=window.location.origin;
 const apiurl = "http://localhost:8080";
 
 export class BoneEditRenderer {
+
   blurCounter = 0;
-  boneStructure: any;
-  boneValue: any;
+  declare boneStructure: {
+    descr: string,
+    type: string,
+    required: boolean,
+    params: object,
+    visible: boolean,
+    readonly: boolean,
+    unique: boolean,
+    languages: string[],
+    emptyValue: any,
+    multiple: boolean,
+    //Optional Fields
+
+    //relational
+    module: string,
+    format: string,
+    using: [],
+    relskel: object,
+
+    //select
+    values: [],
+
+    //date
+    date: boolean,
+    time: boolean,
+
+    //numeric
+    precision: number,
+    min: number,
+    max: number,
+
+    //text
+    validHtml: string[]
+
+    //file
+    validMimeTypes: string[]
+
+  }
+
+  declare boneValue: any | any[];
   boneName: string;
-  mainInstance: any;
+  mainInstance: SlBone;
   boneRenderer = {"str": this.stringBoneEditorRenderer};
   depth = 0;
 
-  constructor(boneStructure: any, boneValue: any, boneName: any, mainInstance: any) {
+  constructor(boneStructure: object, boneValue: any, boneName: any, mainInstance: SlBone) {
     this.boneStructure = boneStructure;
     this.boneValue = boneValue;
     this.boneName = boneName;
@@ -19,28 +60,28 @@ export class BoneEditRenderer {
   }
 
 
-  boneEditor(fromRecord = false, depth = null): any {
-    if (depth !== null) {
+  boneEditor(fromRecord: boolean = false, depth: number): HTMLElement {
+    if (depth !== undefined) {
       this.depth = depth;
     }
 
-    let wrapper: any;
+    let wrapper: HTMLElement;
     if (fromRecord) {
       wrapper = document.createElement("div");
 
     } else {
       wrapper = document.createElement("form");
 
-      wrapper.addEventListener("submit", (e) => {
+      wrapper.addEventListener("submit", (e: Event) => {
         e.preventDefault()
       })
     }
 
 
     wrapper.dataset.boneWrapper = "true";
-    wrapper.dataset.multiple = this.boneStructure["multiple"];
+    wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     wrapper.dataset.boneName = this.boneName;
-
+    console.log("??")
     if (this.boneStructure["languages"] !== null) {
       const tabGroup = document.createElement("sl-tab-group");
       for (const lang of this.boneStructure["languages"]) {
@@ -56,18 +97,18 @@ export class BoneEditRenderer {
 
         const tab_panel = document.createElement("sl-tab-panel")
         tab_panel.name = lang;
-        if (this.boneStructure["multiple"]) {
+        if (this.boneStructure.multiple && this.boneStructure["type"] !== "select") {
           const inputWrapper = document.createElement("div");
-          let index = 0;
+
           for (const tmpValue of this.boneValue[lang]) {
-            let newboneName = this.boneName;
+
+            let newboneName = this.boneName + "." + lang;
             if (this.boneStructure["type"] === "record") {
               newboneName = this.boneName + "." + lang + ".$(index)";
             }
 
             const inputElement = this.getEditor(tmpValue, lang, newboneName);
             inputWrapper.appendChild(inputElement);
-            index += 1;
           }
 
           const addButton = document.createElement("sl-button");
@@ -75,12 +116,12 @@ export class BoneEditRenderer {
           addButton.addEventListener("click", () => {
             //const newboneName = boneName //FIXME RECORD BONE
 
-            const newboneName = this.boneName + "." + lang + "." + index;
+            const newboneName = this.boneName + "." + lang + ".$(index)";
             const inputElement = this.getEditor("", null, newboneName);
 
             inputWrapper.insertBefore(inputElement, addButton);
 
-            index += 1;
+
           });
           addButton.innerText = "Add";
           inputWrapper.appendChild(addButton);
@@ -108,7 +149,7 @@ export class BoneEditRenderer {
         if (this.boneValue === null) {
           this.boneValue = []
         }
-        let index = 0;
+
         const addButton = document.createElement("sl-button");
         for (const tmpValue of this.boneValue) {
           let newboneName = this.boneName;
@@ -139,20 +180,20 @@ export class BoneEditRenderer {
           boneWrapper.appendChild(inputElement);
           boneWrapper.appendChild(deleteButton);
           wrapper.appendChild(boneWrapper);
-          index += 1;
+
         }
 
 
         addButton.addEventListener("click", () => {
-          let newboneName = this.boneName; //FIXME RECORD BONE
+          //FIXME RECORD BONE
 
 
-          const inputElement = this.getEditor("", null, newboneName);
+          const inputElement = this.getEditor("", null, this.boneName);
 
           wrapper.insertBefore(inputElement, addButton);
 
           wrapper.focus();
-          index += 1;
+
 
         });
         addButton.innerText = "Add";
@@ -177,12 +218,11 @@ export class BoneEditRenderer {
 
       this.blurCounter -= 1;
 
-      var self = this;
+      const self: BoneEditRenderer = this;
       setTimeout(function () {
 
         if (self.blurCounter === 0) {
           return
-          console.log("send")
 
 
           wrapper.querySelectorAll("sl-input").forEach((inputElement) => {
@@ -280,7 +320,7 @@ export class BoneEditRenderer {
   }
 
 
-  dateBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  dateBoneEditorRenderer(value: string, lang = null, boneName = "") {
 
     const dateBone = this.rawBoneEditorRenderer(value, lang, boneName);
 
@@ -298,11 +338,11 @@ export class BoneEditRenderer {
   }
 
 
-  booleanBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  booleanBoneEditorRenderer(value: boolean, lang = null, boneName = "") {
 
     const inputElement = document.createElement("sl-switch");
     inputElement.dataset.boneName = boneName;
-    inputElement.value = value;
+    inputElement.value = value.toString();
     if (lang !== null) {
       inputElement.dataset.lang = lang;
     }
@@ -316,19 +356,19 @@ export class BoneEditRenderer {
 
     const inputWrapper = document.createElement("form");
     inputWrapper.dataset.boneName = this.boneName;
-    inputWrapper.dataset.multiple = this.boneStructure["multiple"];
-    inputWrapper.dataset.depth = this.depth;
+    inputWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
+    inputWrapper.dataset.depth = this.depth.toString();
     inputWrapper.dataset.lang = lang;
 
 
     for (const bone of this.boneStructure["using"]) {
-      const recordBoneName = bone[0];
-      const recordBoneStructure = bone[1];
-      const recordBoneValue = value[bone[0]];
+      const recordBoneName: string = bone[0];
+      const recordBoneStructure: [] = bone[1];
+      const recordBoneValue: any = value[bone[0]];
 
       const newBoneName = boneName + "." + recordBoneName;
       const tmp_renderer = new BoneEditRenderer(recordBoneStructure, recordBoneValue, newBoneName, this.mainInstance)
-      const tmp = tmp_renderer.boneEditor(true, this.depth + 1);
+      const tmp: HTMLElement = tmp_renderer.boneEditor(true, this.depth + 1);
       tmp.dataset.fromRecord = "true";
 
 
@@ -347,7 +387,7 @@ export class BoneEditRenderer {
 
     const inputWrapper = document.createElement("div");
 
-    const searchBox = document.createElement("sl-combobox");
+    const searchBox: SlCombobox = document.createElement("sl-combobox");
     //searchBox.hoist =true
     const url = `${apiurl}/json/country/list?search={q}`;
 
@@ -357,7 +397,7 @@ export class BoneEditRenderer {
     searchBox.dataset.boneName = boneName;
     searchBox.dataset.boneValue = value["dest"]["key"];
 
-    searchBox.source = (search) => {
+    searchBox.source = (search: string) => {
       return fetch(url.replace('{q}', search))
         .then(res => res.json())
         .then((data) => {
@@ -392,11 +432,12 @@ export class BoneEditRenderer {
 
     const fileContainer = document.createElement("div")
     const shadowFile = document.createElement("input");
+    const shadowKey = document.createElement("input");
     const statusSpan = document.createElement("span");
     shadowFile.type = "file";
     let filter: string;
 
-    if (this.boneStructure["validMimeTypes"] !== null) {
+    if (this.boneStructure["validMimeTypes"] !== null && this.boneStructure["validMimeTypes"] !== undefined) {
       if (this.boneStructure["validMimeTypes"].indexOf("*") == -1) {
         filter = this.boneStructure["validMimeTypes"].join(",")
       } else {
@@ -409,29 +450,25 @@ export class BoneEditRenderer {
 
     shadowFile.accept = filter;
     shadowFile.hidden = true;
-    shadowFile.addEventListener("change", (e: any) => {
-      const target = e.target;
-      const file = e.target.files[0];
+
+    shadowKey.hidden = true;
+    shadowKey.name = boneName;
+
+    shadowFile.addEventListener("change", (e: Event) => {
+
+      const file: File = e.target.files[0];
       getUploadUrl(file).then(uploadData => {
 
-        const parent = target.parentElement;
-        const inputspan = parent.querySelector("span");
-        inputspan.innerText = "Uploading..."
+        statusSpan.innerText = "Uploading..."
         uploadFile(file, uploadData).then(resp => {
 
-          const inputName = parent.dataset["name"];
-          const keyinput = parent.querySelector('[name="' + inputName + '"]');
 
-          addFile(uploadData, keyinput, inputspan, file).then((fileData: any) => {
+          addFile(uploadData, statusSpan).then((fileData: object) => {
             const fileKey: string = fileData["values"]["key"];
-            const skelKey = "cell._cell.row.data.key"//FixMe;
-            const formData = new FormData();
-            formData.append(boneName, fileKey);
-            /*updateData(formData, skelKey).then((newBoneData: any) => {
+            shadowKey.value = fileKey;
+            const formData = this.reWriteBoneValue();
+            this.mainInstance.handleChange(formData);
 
-              //cell.setValue(newBoneData["values"][boneName]); // We must set the cell by hand because double focus.//FixMe;
-
-            });*/
           })
 
         });
@@ -439,6 +476,7 @@ export class BoneEditRenderer {
     });
     shadowFile.click();
     fileContainer.appendChild(shadowFile);
+    fileContainer.appendChild(shadowKey);
     fileContainer.appendChild(statusSpan);
     return fileContainer;
   }
@@ -448,44 +486,61 @@ export class BoneEditRenderer {
 
     const inputSelect = document.createElement("sl-select");
 
-    inputSelect.multiple = this.boneStructure["multiple"]
-    inputSelect.dataset.boneName = boneName
-
+    inputSelect.name = boneName;
     inputSelect.value = value;
+    inputSelect.dataset.boneName = boneName;
 
+    inputSelect.multiple = this.boneStructure["multiple"];
+    for (const option of this.boneStructure["values"]) {
+      const optionElement = document.createElement("sl-menu-item");
+      optionElement.value = option[0];
+      optionElement.innerText = option[1];
+      inputSelect.appendChild(optionElement);
+
+    }
+    inputSelect.addEventListener("sl-change", (event) => {
+
+      const formData = this.reWriteBoneValue();
+      this.mainInstance.handleChange(formData);
+    });
+
+    return inputSelect;
 
   }
 
 
   reWriteBoneValue() {
-    let globFormdata = new FormData();
-    let depthCounter = [];
-    let langs = [];
-    let data = new FormData(this.mainInstance.bone);
-    for (const pair of data.entries()) {
+    console.log("rewritebones")
+    const globFormdata: FormData = new FormData();
+    const depthCounter: number[] = [];
+    const langs: string[] = [];
+    let formData: FormData = new FormData(this.mainInstance.bone);
+    for (const pair of formData.entries()) {
 
       globFormdata.append(pair[0], pair[1])
     }
 
-    let langBefor = "";
+
     this.mainInstance.bone.querySelectorAll("form").forEach((form) => {
 
+      if (form.dataset.depth === undefined) return;
+      if (form.dataset.lang === undefined) return;
 
-      let formData = new FormData(form);
 
-      if (depthCounter[form.dataset.depth] === undefined) {
+      formData = new FormData(form);
+
+      if (depthCounter[Number.parseInt(form.dataset.depth)] === undefined) {
         depthCounter.push(0)
-        langs.push(form.dataset.lang);
+        langs.push(form.dataset.lang.toString());
 
       } else {
 
-        let found:boolean = false;
-        for (const pair of formData.entries()) {
+        let found = false;
+        for (const pair_ of formData.entries()) {
           found = true;
           break;
         }
-        if(found||form.querySelector("form"))
-        {
+        if (found || form.querySelector("form")) {
           depthCounter[Number.parseInt(form.dataset.depth)] += 1;
           depthCounter.splice(Number.parseInt(form.dataset.depth) + 1)
           console.log("depth set up")
@@ -500,14 +555,13 @@ export class BoneEditRenderer {
         depthCounter.splice(Number.parseInt(form.dataset.depth) + 1)
 
 
-
       }
 
-      for (var pair of formData.entries()) {
-        var key = pair[0]
+      for (const pair of formData.entries()) {
+        let key = pair[0]
         let counter = 0;
         while (key.indexOf("$(index)") !== -1) {
-          key = key.replace("$(index)", depthCounter[counter]);
+          key = key.replace("$(index)", depthCounter[counter].toString());
           counter += 1;
         }
         globFormdata.append(key, pair[1]);
@@ -516,12 +570,12 @@ export class BoneEditRenderer {
 
     })
 
-    var obj = {}
-    for (var pair of globFormdata.entries()) {
+    const obj = {}
+    for (const pair of globFormdata.entries()) {
       createPath(obj, pair[0], pair[1]);
     }
     console.log(obj);
-    this.mainInstance.internboneValue=obj;
+    this.mainInstance.internboneValue = obj;
     return globFormdata;
 
 
@@ -533,18 +587,20 @@ export class BoneEditRenderer {
 /////////////////HELPER FUNCTRIONS/////////////////
 function getSkey() {
   return new Promise((resolve, reject) => {
+
     fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
       resolve(skey)
+    }).catch((reason) => {
+      reject(reason)
     })
 
   })
 }
 
-function createPath(obj: any, path: any, value = null) {
-  console.log(path)
-  console.log(JSON.parse(JSON.stringify(obj)))
+function createPath(obj: object, path: string | string[], value: any | null = null) {
+
   path = typeof path === 'string' ? path.split('.') : path;
-  let current: any = obj;
+  let current: object = obj;
 
   if (path.length > 1) {
     while (path.length > 1) {
@@ -585,10 +641,10 @@ function createPath(obj: any, path: any, value = null) {
 
 }
 
-function objectToPaths(obj, path) {
+function objectToPaths(obj: object, path: string) {
 
-  let paths = [];
-  const tmpObj = getPath(obj, path);
+  let paths: string[] = [];
+  const tmpObj: any|any[] = getPath(obj, path);
   if (Array.isArray(tmpObj)) {
     for (const tmp in tmpObj) {
 
@@ -636,7 +692,7 @@ function getUploadUrl(file: File) {
   });
 }
 
-function uploadFile(file, uploadData) {
+function uploadFile(file:File, uploadData:any) {
 
   return new Promise((resolve, reject) => {
     fetch(uploadData["values"]["uploadUrl"], {
@@ -646,15 +702,16 @@ function uploadFile(file, uploadData) {
 
     }).then(response => {
       resolve(response)
-    })
+    }).catch((reason) => reject(reason))
   })
 
 }
 
-function addFile(uploadData, keyinput, inputSpan, file) {
+function addFile(uploadData:any) {
 
-  const currentUpload: any = {}
+
   return new Promise((resolve, reject) => {
+    const currentUpload: object = {};
     currentUpload["key"] = uploadData["values"]["uploadKey"];
     currentUpload["node"] = undefined;
     currentUpload["skelType"] = "leaf";

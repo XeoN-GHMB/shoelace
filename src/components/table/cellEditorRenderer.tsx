@@ -10,6 +10,10 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
   cell.getElement().style.height = "auto"
   cell.getElement().style.overflow = "visible";
 
+  //cell.getRow().getElement().style.overflow = "visible";
+
+  cell._cell.table.element.style.overflow = "visible";
+  cell._cell.table.rowManager.element.style.overflow = "visible";
 
 
   const bone = document.createElement("sl-bone");
@@ -149,7 +153,7 @@ export function updateData(formData: FormData, skelKey: string) {
       formData.append("skey", skey)
 
 
-      fetch(`${apiurl}/json/example/edit`, {
+      fetch(`${apiurl}/json/test/edit`, {
         method: 'POST',
         body: formData
       }).then(resp => resp.json().then(data => resolve(data)))

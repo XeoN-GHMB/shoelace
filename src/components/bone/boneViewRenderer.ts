@@ -2,12 +2,49 @@ import {html} from "lit";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 
 export class BoneViewRenderer {
-  boneStructure: any;
+  declare boneStructure: {
+    descr: string,
+    type: string,
+    required: boolean,
+    params: object,
+    visible: boolean,
+    readonly: boolean,
+    unique: boolean,
+    languages: string[],
+    emptyValue: any,
+    multiple: boolean,
+    //Optional Fields
+
+    //relational
+    module: string,
+    format: string,
+    using: [],
+    relskel: object,
+
+    //select
+    values: [],
+
+    //date
+    date: boolean,
+    time: boolean,
+
+    //numeric
+    precision: number,
+    min: number,
+    max: number,
+
+    //text
+    validHtml: string[]
+
+    //file
+    validMimeTypes: string[]
+
+  }
   boneValue: any;
   boneName: string;
   mainInstance: any;
 
-  constructor(boneStructure: any, boneValue: any, boneName: any, mainInstance: any) {
+  constructor(boneStructure: object, boneValue: any, boneName: any, mainInstance: any) {
     this.boneStructure = boneStructure;
     this.boneValue = boneValue;
     this.boneName = boneName;
@@ -16,8 +53,7 @@ export class BoneViewRenderer {
 
 
   boneFormatter(): any {
-    if(!this.boneStructure)
-    {
+    if (!this.boneStructure) {
       return;
     }
     switch (this.boneStructure["type"].split(".")[0]) {
@@ -37,15 +73,14 @@ export class BoneViewRenderer {
       case "select":
         return this.selectBoneRenderer();
       case "text":
-        console.log("==")
-        console.log(this.boneValue);
+
         return this.textBoneRenderer();
     }
     return "";
   }
 
 
-  rawBoneRenderer(formater: Function = formatstring) {
+  rawBoneRenderer(formater = formatstring) {
     if (this.boneValue === null) {
       return "-";
     }
@@ -54,13 +89,17 @@ export class BoneViewRenderer {
 
       return html`
         <sl-tab-group>
-          ${getTabs(this.boneStructure)}
-          ${getTabPannels(this.boneValue, this.boneStructure, formater)}
+          ${this.getTabs()}
+          ${this.getTabPannels(formater)}
         </sl-tab-group>`;
 
     } else {
 
+
       if (this.boneStructure["multiple"]) {
+        if (!Array.isArray(this.boneValue)) {
+          this.boneValue = [this.boneValue];
+        }
         for (const index in this.boneValue) {
 
           this.boneValue[index] = formater(this.boneValue[index], this.boneStructure, null);
@@ -72,8 +111,7 @@ export class BoneViewRenderer {
 
       }
     }
-    if(this.boneStructure["type"].startsWith("text"))
-    {
+    if (this.boneStructure["type"].startsWith("text")) {
       return html`${unsafeHTML(this.boneValue)}`;
     }
 
@@ -122,14 +160,14 @@ export class BoneViewRenderer {
       if (lang !== null) {
         if (boneStructure["multiple"]) {
           for (const i in val) {
-            val[i] = `<img width="32px" height="32px" src="${data[lang][i]["dest"]["downloadUrl"]}">` + val[i]
+            val[i] = html`<img width="32px" height="32px" src="${data[lang][i]["dest"]["downloadUrl"]}"> ${val[i]}`;
           }
         } else {
-          val = `<img width="32px" height="32px" src="${data[lang]["dest"]["downloadUrl"]}">` + val
+          val = html`<img width="32px" height="32px" src="${data[lang]["dest"]["downloadUrl"]}">${val}`;
         }
 
       } else {
-        val = `<img width="32px" height="32px" src="${data["dest"]["downloadUrl"]}">` + val
+        val = html`<img width="32px" height="32px" src="${data["dest"]["downloadUrl"]}">${val}`;
       }
 
       return val;
@@ -146,6 +184,9 @@ export class BoneViewRenderer {
     if (this.boneStructure["languages"] !== null) {
       if (this.boneStructure["multiple"]) {
         for (const lang of this.boneStructure["languages"]) {
+          if (!Array.isArray(this.boneValue[lang])) {
+            this.boneValue[lang] = [this.boneValue[lang]];
+          }
           for (const i in this.boneValue[lang]) {
             this.boneStructure["values"].forEach((value: any) => {
               if (this.boneValue[lang][i] === value[0]) {
@@ -166,8 +207,12 @@ export class BoneViewRenderer {
       }
     } else {
       if (this.boneStructure["multiple"]) {
+        if (!Array.isArray(this.boneValue)) {
+          this.boneValue = [this.boneValue];
+        }
         for (const i in this.boneValue) {
           this.boneStructure["values"].forEach((value: any) => {
+
             if (this.boneValue[i] === value[0]) {
               this.boneValue[i] = value[1];
             }
@@ -176,10 +221,13 @@ export class BoneViewRenderer {
 
 
       } else {
+
         this.boneStructure["values"].forEach((value: any) => {
+
           if (this.boneValue === value[0]) {
+
             this.boneValue = value[1];
-            return;
+
           }
         })
       }
@@ -189,16 +237,87 @@ export class BoneViewRenderer {
     return this.rawBoneRenderer();
 
   }
-  textBoneRenderer()
-  {
+
+  textBoneRenderer() {
     return this.rawBoneRenderer();
   }
+  ////////////HELPER FUNCTIONS////////////////
+
+
+  getTabs() {
+  let tabs: any = [];
+  for (const lang of this.boneStructure["languages"]) {
+
+    tabs.push(html`
+      <sl-tab slot="nav" panel="${lang}">${lang}</sl-tab>`);
+  }
+  return tabs
+}
+
+
+ getTabPannels( formater: Function = formatstring) {
+  //We are when languages not null
+  let tabpannels: any = [];
+  if (this.boneStructure["format"] === undefined) {
+    if (this.boneStructure["multiple"]) {
+      for (const lang of this.boneStructure["languages"]) {
+        if (!Array.isArray(this.boneValue[lang])) {
+          this.boneValue[lang] = [this.boneValue[lang]];
+        }
+        tabpannels.push(html`
+          <sl-tab-panel name="${lang}"> ${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
+      }
+    } else {
+
+      for (const lang of this.boneStructure["languages"]) {
+        if (this.boneValue[lang] === null) {
+          tabpannels.push(html`
+            <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
+        } else {
+          tabpannels.push(html`
+            <sl-tab-panel name="${lang}">${this.boneValue[lang].toString()}</sl-tab-panel>`);
+        }
+
+      }
+    }
+  } else {
+    if (this.boneStructure["multiple"]) {
+      for (const lang of this.boneStructure["languages"]) {
+
+        console.log("call format", this.boneValue,)
+        this.boneValue[lang] = formater(this.boneValue, this.boneStructure, lang);
+
+
+        tabpannels.push(html`
+          <sl-tab-panel name="${lang}">${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
+      }
+    } else {
+
+      for (const lang of this.boneStructure["languages"]) {
+        if (this.boneValue[lang] === null) {
+          tabpannels += html`
+            <sl-tab-panel name="${lang}">-</sl-tab-panel>`;
+        } else {
+          tabpannels.push(html`
+            <sl-tab-panel name="${lang}">${formater(this.boneValue, this.boneStructure, lang)}</sl-tab-panel>`);
+        }
+
+      }
+    }
+  }
+
+  return tabpannels;
+
+
+}
+
+
 }
 
 ////////////HELPER FUNCTIONS////////////////
 
 
-export function formatstring(data, boneStructure, lang = null) {
+export function formatstring(data, boneStructure:object, lang = null) {
 
   if (!boneStructure) {
 
@@ -306,13 +425,13 @@ export function formatstring(data, boneStructure, lang = null) {
             i += 1;
           }
 
-          if (newboneStructure[insidematch]["type"] === "record" ) {
+          if (newboneStructure[insidematch]["type"] === "record") {
 
             textArray[index] = textArray[index].replaceAll(match[0], x.join("\n"))
           } else {
             textArray[0] = textArray[0].replaceAll(match[0], x.toString())
           }
-          index+=1;
+          index += 1;
 
 
         }
@@ -335,10 +454,11 @@ export function formatstring(data, boneStructure, lang = null) {
   return text
 }
 
-export function getPath(obj, path) {
-  obj = JSON.parse(JSON.stringify(obj))
+export function getPath(obj:object, path:string|string[]):object|undefined {
+
   path = typeof path === 'string' ? path.split('.') : path;
-  let current = obj;
+
+  let current:object = JSON.parse(JSON.stringify(obj))//Depth Copy to lose Reference;
   while (path.length > 0) {
     let [head, ...tail] = path;
     path = tail;
@@ -357,65 +477,4 @@ export function getPath(obj, path) {
 }
 
 
-function getTabs(boneStructure: any) {
-  let tabs: any = [];
-  for (const lang of boneStructure["languages"]) {
 
-    tabs.push(html`
-      <sl-tab slot="nav" panel="${lang}">${lang}</sl-tab>`);
-  }
-  return tabs
-}
-
-
-function getTabPannels(boneValue: any, boneStructure: any, formater: Function = formatstring) {
-  //We are when languages not null
-  let tabpannels: any = [];
-  if (boneStructure["format"] === undefined) {
-    if (boneStructure["multiple"]) {
-      for (const lang of boneStructure["languages"]) {
-        tabpannels.push(html`
-          <sl-tab-panel name="${lang}"> ${boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
-      }
-    } else {
-
-      for (const lang of boneStructure["languages"]) {
-        if (boneValue[lang] === null) {
-          tabpannels.push(html`
-            <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
-        } else {
-          tabpannels.push(html`
-            <sl-tab-panel name="${lang}">${boneValue[lang].toString()}</sl-tab-panel>`);
-        }
-
-      }
-    }
-  } else {
-    if (boneStructure["multiple"]) {
-      for (const lang of boneStructure["languages"]) {
-
-        console.log("call format", boneValue,)
-        boneValue[lang] = formater(boneValue, boneStructure, lang);
-
-
-        tabpannels.push(html`<sl-tab-panel name="${lang}">${boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
-      }
-    } else {
-
-      for (const lang of boneStructure["languages"]) {
-        if (boneValue[lang] === null) {
-          tabpannels += html`
-            <sl-tab-panel name="${lang}">-</sl-tab-panel>`;
-        } else {
-          tabpannels.push(html`
-            <sl-tab-panel name="${lang}">${formater(boneValue, boneStructure, lang)}</sl-tab-panel>`);
-        }
-
-      }
-    }
-  }
-
-  return tabpannels;
-
-
-}

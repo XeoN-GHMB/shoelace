@@ -27,7 +27,7 @@ import {watchProps} from "../../internal/watchProps";
 @customElement('sl-bone')
 export default class SlBone extends LitElement {
   static styles = styles;
-  bone: any;
+  bone: HTMLFormElement;
   initBoneValue: any;
   internboneValue: any;
   /** set boneStructure. */
