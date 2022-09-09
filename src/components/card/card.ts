@@ -7,7 +7,6 @@ import { HasSlotController } from '../../internal/slot';
 import styles from './card.styles';
 import {property} from "lit/decorators.js";
 import type { CSSResultGroup } from 'lit';
-import {state} from "lit/decorators";
 
 /**
  * @since 2.0
