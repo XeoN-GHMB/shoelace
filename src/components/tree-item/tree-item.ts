@@ -1,4 +1,4 @@
-import { LitElement, html } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
@@ -6,13 +6,14 @@ import { when } from 'lit/directives/when.js';
 import { animateTo, shimKeyframesHeightAuto, stopAnimations } from 'src/internal/animate';
 import { getAnimation, setDefaultAnimation } from 'src/utilities/animation-registry';
 import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import { LocalizeController } from '../../utilities/localize';
 import '../checkbox/checkbox';
 import '../icon/icon';
 import '../spinner/spinner';
 import styles from './tree-item.styles';
-import type { PropertyValueMap } from 'lit';
+import type { CSSResultGroup, PropertyValueMap } from 'lit';
 
 export function isTreeItem(element: Element) {
   return element && element.getAttribute('role') === 'treeitem';
@@ -47,8 +48,8 @@ export function isTreeItem(element: Element) {
  * @csspart children - The item's children container.
  */
 @customElement('sl-tree-item')
-export default class SlTreeItem extends LitElement {
-  static styles = styles;
+export default class SlTreeItem extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   private readonly localize = new LocalizeController(this);
 
@@ -184,15 +185,6 @@ export default class SlTreeItem extends LitElement {
     return !!parent && isTreeItem(parent);
   }
 
-  handleToggleExpand(event: Event) {
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
-    if (!this.disabled) {
-      this.expanded = !this.expanded;
-    }
-  }
-
   handleChildrenSlotChange() {
     this.loading = false;
     this.isLeaf = this.getChildrenItems().length === 0;
@@ -237,7 +229,6 @@ export default class SlTreeItem extends LitElement {
               'tree-item__expand-button--visible': showExpandButton
             })}
             aria-hidden="true"
-            @click="${this.handleToggleExpand}"
           >
             ${when(this.loading, () => html` <sl-spinner></sl-spinner> `)}
             ${when(

@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -6,6 +6,7 @@ import { animateTo, stopAnimations } from '../../internal/animate';
 import { emit, waitForEvent } from '../../internal/event';
 import Modal from '../../internal/modal';
 import { lockBodyScrolling, unlockBodyScrolling } from '../../internal/scroll';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { HasSlotController } from '../../internal/slot';
 import { watch } from '../../internal/watch';
 import { getAnimation, setDefaultAnimation } from '../../utilities/animation-registry';
@@ -57,7 +58,7 @@ import type { CSSResultGroup } from 'lit';
  * @animation dialog.overlay.hide - The animation to use when hiding the dialog's overlay.
  */
 @customElement('sl-dialog')
-export default class SlDialog extends LitElement {
+export default class SlDialog extends ShoelaceElement {
   static styles: CSSResultGroup = styles;
 
   @query('.dialog') dialog: HTMLElement;
@@ -205,11 +206,24 @@ export default class SlDialog extends LitElement {
       await Promise.all([stopAnimations(this.dialog), stopAnimations(this.overlay)]);
       const panelAnimation = getAnimation(this, 'dialog.hide', { dir: this.localize.dir() });
       const overlayAnimation = getAnimation(this, 'dialog.overlay.hide', { dir: this.localize.dir() });
+
+      // Animate the overlay and the panel at the same time. Because animation durations might be different, we need to
+      // hide each one individually when the animation finishes, otherwise the first one that finishes will reappear
+      // unexpectedly. We'll unhide them after all animations have completed.
       await Promise.all([
-        animateTo(this.panel, panelAnimation.keyframes, panelAnimation.options),
-        animateTo(this.overlay, overlayAnimation.keyframes, overlayAnimation.options)
+        animateTo(this.overlay, overlayAnimation.keyframes, overlayAnimation.options).then(() => {
+          this.overlay.hidden = true;
+        }),
+        animateTo(this.panel, panelAnimation.keyframes, panelAnimation.options).then(() => {
+          this.panel.hidden = true;
+        })
       ]);
+
       this.dialog.hidden = true;
+
+      // Now that the dialog is hidden, restore the overlay and panel for next time
+      this.overlay.hidden = false;
+      this.panel.hidden = false;
 
       unlockBodyScrolling(this);
 

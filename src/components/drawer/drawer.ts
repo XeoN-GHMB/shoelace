@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -6,6 +6,7 @@ import { animateTo, stopAnimations } from '../../internal/animate';
 import { emit, waitForEvent } from '../../internal/event';
 import Modal from '../../internal/modal';
 import { lockBodyScrolling, unlockBodyScrolling } from '../../internal/scroll';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { HasSlotController } from '../../internal/slot';
 import { uppercaseFirstLetter } from '../../internal/string';
 import { watch } from '../../internal/watch';
@@ -65,7 +66,7 @@ import type { CSSResultGroup } from 'lit';
  * @animation drawer.overlay.hide - The animation to use when hiding the drawer's overlay.
  */
 @customElement('sl-drawer')
-export default class SlDrawer extends LitElement {
+export default class SlDrawer extends ShoelaceElement {
   static styles: CSSResultGroup = styles;
 
   @query('.drawer') drawer: HTMLElement;
@@ -230,12 +231,24 @@ export default class SlDrawer extends LitElement {
         dir: this.localize.dir()
       });
       const overlayAnimation = getAnimation(this, 'drawer.overlay.hide', { dir: this.localize.dir() });
+
+      // Animate the overlay and the panel at the same time. Because animation durations might be different, we need to
+      // hide each one individually when the animation finishes, otherwise the first one that finishes will reappear
+      // unexpectedly. We'll unhide them after all animations have completed.
       await Promise.all([
-        animateTo(this.panel, panelAnimation.keyframes, panelAnimation.options),
-        animateTo(this.overlay, overlayAnimation.keyframes, overlayAnimation.options)
+        animateTo(this.overlay, overlayAnimation.keyframes, overlayAnimation.options).then(() => {
+          this.overlay.hidden = true;
+        }),
+        animateTo(this.panel, panelAnimation.keyframes, panelAnimation.options).then(() => {
+          this.panel.hidden = true;
+        })
       ]);
 
       this.drawer.hidden = true;
+
+      // Now that the dialog is hidden, restore the overlay and panel for next time
+      this.overlay.hidden = false;
+      this.panel.hidden = false;
 
       // Restore focus to the original trigger
       const trigger = this.originalTrigger;
@@ -247,8 +260,8 @@ export default class SlDrawer extends LitElement {
     }
   }
 
+  /* eslint-disable lit-a11y/click-events-have-key-events */
   render() {
-    /* eslint-disable lit-a11y/click-events-have-key-events */
     return html`
       <div
         part="base"

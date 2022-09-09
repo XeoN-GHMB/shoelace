@@ -1,8 +1,9 @@
 import { arrow, autoUpdate, computePosition, flip, offset, shift, size } from '@floating-ui/dom';
-import { LitElement, html } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import styles from './popup.styles';
 import type { CSSResultGroup } from 'lit';
 
@@ -33,7 +34,7 @@ import type { CSSResultGroup } from 'lit';
  *  available when using `auto-size`.
  */
 @customElement('sl-popup')
-export default class SlPopup extends LitElement {
+export default class SlPopup extends ShoelaceElement {
   static styles: CSSResultGroup = styles;
 
   /** A reference to the internal popup container. Useful for animating and styling the popup with JavaScript. */
@@ -93,6 +94,13 @@ export default class SlPopup extends LitElement {
   @property({ type: Boolean }) arrow = false;
 
   /**
+   * The placement of the arrow. The default is `anchor`, which will align the arrow as close to the center of the
+   * anchor as possible, considering available space and `arrow-padding`. A value of `start`, `end`, or `center` will
+   * align the arrow to the start, end, or center of the popover instead.
+   */
+  @property({ attribute: 'arrow-placement' }) arrowPlacement: 'start' | 'end' | 'center' | 'anchor' = 'anchor';
+
+  /**
    * The amount of padding between the arrow and the edges of the popup. If the popup has a border-radius, for example,
    * this will prevent it from overflowing the corners.
    */
@@ -100,7 +108,7 @@ export default class SlPopup extends LitElement {
 
   /**
    * When set, placement of the popup will flip to the opposite site to keep it in view. You can use
-   * `flipFallbackPlacement` to further configure how the fallback placement is determined.
+   * `flipFallbackPlacements` to further configure how the fallback placement is determined.
    */
   @property({ type: Boolean }) flip = false;
 
@@ -110,7 +118,7 @@ export default class SlPopup extends LitElement {
    * fallback strategy will be used instead.
    * */
   @property({
-    attribute: 'flip-fallback-placement',
+    attribute: 'flip-fallback-placements',
     converter: {
       fromAttribute: (value: string) => {
         return value
@@ -123,15 +131,14 @@ export default class SlPopup extends LitElement {
       }
     }
   })
-  flipFallbackPlacement = '';
+  flipFallbackPlacements = '';
 
   /**
    * When neither the preferred placement nor the fallback placements fit, this value will be used to determine whether
    * the popup should be positioned as it was initially preferred or using the best available fit based on available
    * space.
    */
-  @property({ attribute: 'flip-fallback-strategy' }) flipFallbackStrategy: 'bestFit' | 'initialPlacement' =
-    'initialPlacement';
+  @property({ attribute: 'flip-fallback-strategy' }) flipFallbackStrategy: 'best-fit' | 'initial' = 'initial';
 
   /**
    * The flip boundary describes clipping element(s) that overflow will be checked relative to when flipping. By
@@ -157,7 +164,10 @@ export default class SlPopup extends LitElement {
   @property({ attribute: 'shift-padding', type: Number }) shiftPadding = 0;
 
   /** When set, this will cause the popup to automatically resize itself to prevent it from overflowing. */
-  @property({ attribute: 'auto-size', type: Boolean }) autoSize = false;
+  @property({ attribute: 'auto-size' }) autoSize: 'horizontal' | 'vertical' | 'both';
+
+  /** Syncs the popup's width or height to that of the anchor element. */
+  @property() sync: 'width' | 'height' | 'both';
 
   /**
    * The auto-size boundary describes clipping element(s) that overflow will be checked relative to when resizing. By
@@ -276,14 +286,32 @@ export default class SlPopup extends LitElement {
       offset({ mainAxis: this.distance, crossAxis: this.skidding })
     ];
 
-    // First we flip
+    // First we sync width/height
+    if (this.sync) {
+      middleware.push(
+        size({
+          apply: ({ rects }) => {
+            const syncWidth = this.sync === 'width' || this.sync === 'both';
+            const syncHeight = this.sync === 'height' || this.sync === 'both';
+            this.popup.style.width = syncWidth ? `${rects.reference.width}px` : '';
+            this.popup.style.height = syncHeight ? `${rects.reference.height}px` : '';
+          }
+        })
+      );
+    } else {
+      // Cleanup styles if we're not matching width/height
+      this.popup.style.width = '';
+      this.popup.style.height = '';
+    }
+
+    // Then we flip
     if (this.flip) {
       middleware.push(
         flip({
           boundary: this.flipBoundary,
           // @ts-expect-error - We're converting a string attribute to an array here
-          fallbackPlacement: this.flipFallbackPlacement,
-          fallbackStrategy: this.flipFallbackStrategy,
+          fallbackPlacements: this.flipFallbackPlacements,
+          fallbackStrategy: this.flipFallbackStrategy === 'best-fit' ? 'bestFit' : 'initialPlacement',
           padding: this.flipPadding
         })
       );
@@ -306,8 +334,17 @@ export default class SlPopup extends LitElement {
           boundary: this.autoSizeBoundary,
           padding: this.autoSizePadding,
           apply: ({ availableWidth, availableHeight }) => {
-            this.style.setProperty('--auto-size-available-width', `${availableWidth}px`);
-            this.style.setProperty('--auto-size-available-height', `${availableHeight}px`);
+            if (this.autoSize === 'vertical' || this.autoSize === 'both') {
+              this.style.setProperty('--auto-size-available-height', `${availableHeight}px`);
+            } else {
+              this.style.removeProperty('--auto-size-available-height');
+            }
+
+            if (this.autoSize === 'horizontal' || this.autoSize === 'both') {
+              this.style.setProperty('--auto-size-available-width', `${availableWidth}px`);
+            } else {
+              this.style.removeProperty('--auto-size-available-width');
+            }
           }
         })
       );
@@ -342,14 +379,36 @@ export default class SlPopup extends LitElement {
       });
 
       if (this.arrow) {
-        const arrowX = middlewareData.arrow?.x;
-        const arrowY = middlewareData.arrow?.y;
+        const arrowX = middlewareData.arrow!.x;
+        const arrowY = middlewareData.arrow!.y;
+        let top = '';
+        let right = '';
+        let bottom = '';
+        let left = '';
+
+        if (this.arrowPlacement === 'start') {
+          // Start
+          left = typeof arrowX === 'number' ? `${this.arrowPadding}px` : '';
+          top = typeof arrowY === 'number' ? `${this.arrowPadding}px` : '';
+        } else if (this.arrowPlacement === 'end') {
+          // End
+          right = typeof arrowX === 'number' ? `${this.arrowPadding}px` : '';
+          bottom = typeof arrowY === 'number' ? `${this.arrowPadding}px` : '';
+        } else if (this.arrowPlacement === 'center') {
+          // Center
+          left = typeof arrowX === 'number' ? `calc(50% - var(--arrow-size))` : '';
+          top = typeof arrowY === 'number' ? `calc(50% - var(--arrow-size))` : '';
+        } else {
+          // Anchor (default)
+          left = typeof arrowX === 'number' ? `${arrowX}px` : '';
+          top = typeof arrowY === 'number' ? `${arrowY}px` : '';
+        }
 
         Object.assign(this.arrowEl.style, {
-          left: typeof arrowX === 'number' ? `${arrowX}px` : '',
-          top: typeof arrowY === 'number' ? `${arrowY}px` : '',
-          right: '',
-          bottom: '',
+          top,
+          right,
+          bottom,
+          left,
           [staticSide]: 'calc(var(--arrow-size) * -1)'
         });
       }

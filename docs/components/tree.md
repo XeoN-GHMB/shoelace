@@ -73,11 +73,11 @@ const App = () => (
 
 ### Selection Modes
 
-Use the `selection` attribute to change the selection behavior of the tree.
+The `selection` attribute lets you change the selection behavior of the tree.
 
-- Set `single` to allow the selection of a single item (default).
-- Set `multiple` to allow the selection of multiple items.
-- Set `leaf` to allow the selection of a single leaf node. Clicking on a parent node will expand/collapse the node.
+- Use `single` to allow the selection of a single item (default).
+- Use `multiple` to allow the selection of multiple items.
+- Use `leaf` to only allow leaf nodes to be selected.
 
 ```html preview
 <sl-select id="selection-mode" value="single" label="Selection">
@@ -124,7 +124,7 @@ const App = () => {
 
   return (
     <>
-      <SlSelect label="Selection" value={value} onSlChange={event => setSelection(event.target.value)}>
+      <SlSelect label="Selection" value={selection} onSlChange={event => setSelection(event.target.value)}>
         <SlMenuItem value="single">single</SlMenuItem>
         <SlMenuItem value="multiple">multiple</SlMenuItem>
         <SlMenuItem value="leaf">leaf</SlMenuItem>
@@ -132,7 +132,7 @@ const App = () => {
 
       <br />
 
-      <SlTree class="tree-selectable">
+      <SlTree selection={selection}>
         <SlTreeItem>
           Item 1
           <SlTreeItem>
@@ -234,7 +234,7 @@ Use the `lazy` attribute on a tree item to indicate that the content is not yet 
 If you want to disable this behavior after the first load, simply remove the `lazy` attribute and, on the next expand, the existing content will be shown instead.
 
 ```html preview
-<sl-tree selection="leaf">
+<sl-tree>
   <sl-tree-item lazy>Available Trees</sl-tree-item>
 </sl-tree>
 
@@ -277,7 +277,7 @@ const App = () => {
   };
 
   return (
-    <SlTree selection="leaf">
+    <SlTree>
       <SlTreeItem lazy={lazy} onSlLazyLoad={handleLazyLoad}>
         Available Trees
         {childItems.map(item => (
@@ -291,12 +291,12 @@ const App = () => {
 
 ### Custom expanded/collapsed icons
 
-Use the `expanded-icon` or `collapsed-icon` slots to change the expanded and collapsed tree element icons respectively.
+Use the `expand-icon` and `collapse-icon` slots to change the expand and collapse icons, respectively.
 
 ```html preview
-<sl-tree selection="leaf">
-  <sl-icon name="plus-square" slot="collapsed-icon"></sl-icon>
-  <sl-icon name="dash-square" slot="expanded-icon"></sl-icon>
+<sl-tree>
+  <sl-icon name="plus-square" slot="collapse-icon"></sl-icon>
+  <sl-icon name="dash-square" slot="expand-icon"></sl-icon>
 
   <sl-tree-item>
     Deciduous
@@ -332,8 +332,8 @@ import { SlTree, SlTreeItem } from '@shoelace-style/shoelace/dist/react';
 
 const App = () => (
   <SlTree>
-    <SlIcon name="plus-square" slot="collapsed-icon"></SlIcon>
-    <SlIcon name="dash-square" slot="expanded-icon"></SlIcon>
+    <SlIcon name="plus-square" slot="collapse-icon"></SlIcon>
+    <SlIcon name="dash-square" slot="expand-icon"></SlIcon>
 
     <SlTreeItem>
       Deciduous

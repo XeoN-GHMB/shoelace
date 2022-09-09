@@ -681,50 +681,96 @@ const App = () => {
 
 Add an arrow to your popup with the `arrow` attribute. It's usually a good idea to set a `distance` to make room for the arrow. To adjust the arrow's color and size, use the `--arrow-color` and `--arrow-size` custom properties, respectively. You can also target the `arrow` part to add additional styles such as shadows and borders.
 
+By default, the arrow will be aligned as close to the center of the _anchor_ as possible, considering available space and `arrow-padding`. You can use the `arrow-placement` attribute to force the arrow to align to the start, end, or center of the _popup_ instead.
+
 ```html preview
 <div class="popup-arrow">
-  <sl-popup placement="top" arrow distance="8" active>
+  <sl-popup placement="top" arrow arrow-placement="anchor" distance="8" active>
     <span slot="anchor"></span>
     <div class="box"></div>
   </sl-popup>
 
-  <br />
-  <sl-switch checked>Arrow</sl-switch>
+  <div class="popup-arrow-options">
+    <sl-select label="Placement" name="placement" value="top" class="popup-overview-select">
+      <sl-menu-item value="top">top</sl-menu-item>
+      <sl-menu-item value="top-start">top-start</sl-menu-item>
+      <sl-menu-item value="top-end">top-end</sl-menu-item>
+      <sl-menu-item value="bottom">bottom</sl-menu-item>
+      <sl-menu-item value="bottom-start">bottom-start</sl-menu-item>
+      <sl-menu-item value="bottom-end">bottom-end</sl-menu-item>
+      <sl-menu-item value="right">right</sl-menu-item>
+      <sl-menu-item value="right-start">right-start</sl-menu-item>
+      <sl-menu-item value="right-end">right-end</sl-menu-item>
+      <sl-menu-item value="left">left</sl-menu-item>
+      <sl-menu-item value="left-start">left-start</sl-menu-item>
+      <sl-menu-item value="left-end">left-end</sl-menu-item>
+    </sl-select>
+
+    <sl-select label="Arrow Placement" name="arrow-placement" value="anchor">
+      <sl-menu-item value="anchor">anchor</sl-menu-item>
+      <sl-menu-item value="start">start</sl-menu-item>
+      <sl-menu-item value="end">end</sl-menu-item>
+      <sl-menu-item value="center">center</sl-menu-item>
+    </sl-select>
+  </div>
+
+  <div class="popup-arrow-options">
+    <sl-switch name="arrow" checked>Arrow</sl-switch>
+  </div>
+
+  <style>
+    .popup-arrow sl-popup {
+      --arrow-color: var(--sl-color-primary-600);
+    }
+
+    .popup-arrow span[slot='anchor'] {
+      display: inline-block;
+      width: 150px;
+      height: 150px;
+      border: dashed 2px var(--sl-color-neutral-600);
+      margin: 50px;
+    }
+
+    .popup-arrow .box {
+      width: 100px;
+      height: 50px;
+      background: var(--sl-color-primary-600);
+      border-radius: var(--sl-border-radius-medium);
+    }
+
+    .popup-arrow-options {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      gap: 1rem;
+    }
+
+    .popup-arrow-options sl-select {
+      width: 160px;
+    }
+
+    .popup-arrow-options + .popup-arrow-options {
+      margin-top: 1rem;
+    }
+  </style>
+
+  <script>
+    const container = document.querySelector('.popup-arrow');
+    const popup = container.querySelector('sl-popup');
+    const placement = container.querySelector('[name="placement"]');
+    const arrowPlacement = container.querySelector('[name="arrow-placement"]');
+    const arrow = container.querySelector('[name="arrow"]');
+
+    placement.addEventListener('sl-change', () => (popup.placement = placement.value));
+    arrowPlacement.addEventListener('sl-change', () => (popup.arrowPlacement = arrowPlacement.value));
+    arrow.addEventListener('sl-change', () => (popup.arrow = arrow.checked));
+  </script>
 </div>
-
-<style>
-  .popup-arrow sl-popup {
-    --arrow-color: var(--sl-color-primary-600);
-  }
-
-  .popup-arrow span[slot='anchor'] {
-    display: inline-block;
-    width: 150px;
-    height: 150px;
-    border: dashed 2px var(--sl-color-neutral-600);
-    margin: 50px;
-  }
-
-  .popup-arrow .box {
-    width: 100px;
-    height: 50px;
-    background: var(--sl-color-primary-600);
-    border-radius: var(--sl-border-radius-medium);
-  }
-</style>
-
-<script>
-  const container = document.querySelector('.popup-arrow');
-  const popup = container.querySelector('sl-popup');
-  const arrow = container.querySelector('sl-switch');
-
-  arrow.addEventListener('sl-change', () => (popup.arrow = arrow.checked));
-</script>
 ```
 
 ```jsx react
 import { useState } from 'react';
-import { SlPopup, SlSwitch } from '@shoelace-style/shoelace/dist/react';
+import { SlPopup, SlSelect, SlMenuItem, SlSwitch } from '@shoelace-style/shoelace/dist/react';
 
 const css = `
   .popup-arrow sl-popup {
@@ -745,23 +791,180 @@ const css = `
     background: var(--sl-color-primary-600);
     border-radius: var(--sl-border-radius-medium);
   }
+
+  .popup-arrow-options {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 1rem;
+  }
+
+  .popup-arrow-options sl-select {
+    width: 160px;
+  }
+
+  .popup-arrow-options + .popup-arrow-options {
+    margin-top: 1rem;
+  }
 `;
 
 const App = () => {
+  const [placement, setPlacement] = useState('top');
+  const [arrowPlacement, setArrowPlacement] = useState('anchor');
   const [arrow, setArrow] = useState(true);
 
   return (
     <>
       <div className="popup-arrow">
-        <SlPopup placement="top" arrow={arrow} distance="8" active>
+        <SlPopup placement={placement} arrow={arrow || null} arrow-placement={arrowPlacement} distance="8" active>
           <span slot="anchor" />
           <div className="box" />
         </SlPopup>
 
-        <br />
-        <SlSwitch checked={arrow} onSlChange={event => setArrow(event.target.checked)}>
-          Arrow
-        </SlSwitch>
+        <div className="popup-arrow-options">
+          <SlSelect
+            label="Placement"
+            name="placement"
+            value={placement}
+            className="popup-overview-select"
+            onSlChange={event => setPlacement(event.target.value)}
+          >
+            <SlMenuItem value="top">top</SlMenuItem>
+            <SlMenuItem value="top-start">top-start</SlMenuItem>
+            <SlMenuItem value="top-end">top-end</SlMenuItem>
+            <SlMenuItem value="bottom">bottom</SlMenuItem>
+            <SlMenuItem value="bottom-start">bottom-start</SlMenuItem>
+            <SlMenuItem value="bottom-end">bottom-end</SlMenuItem>
+            <SlMenuItem value="right">right</SlMenuItem>
+            <SlMenuItem value="right-start">right-start</SlMenuItem>
+            <SlMenuItem value="right-end">right-end</SlMenuItem>
+            <SlMenuItem value="left">left</SlMenuItem>
+            <SlMenuItem value="left-start">left-start</SlMenuItem>
+            <SlMenuItem value="left-end">left-end</SlMenuItem>
+          </SlSelect>
+
+          <SlSelect
+            label="Arrow Placement"
+            name="arrow-placement"
+            value={arrowPlacement}
+            onSlChange={event => setArrowPlacement(event.target.value)}
+          >
+            <SlMenuItem value="anchor">anchor</SlMenuItem>
+            <SlMenuItem value="start">start</SlMenuItem>
+            <SlMenuItem value="end">end</SlMenuItem>
+            <SlMenuItem value="center">center</SlMenuItem>
+          </SlSelect>
+        </div>
+
+        <div className="popup-arrow-options">
+          <SlSwitch name="arrow" checked={arrow} onSlChange={event => setArrow(event.target.checked)}>
+            Arrow
+          </SlSwitch>
+        </div>
+      </div>
+
+      <style>{css}</style>
+    </>
+  );
+};
+```
+
+### Syncing with the Anchor's Dimensions
+
+Use the `sync` attribute to make the popup the same width or height as the anchor element. This is useful for controls that need the popup to stay the same width or height as the trigger.
+
+```html preview
+<div class="popup-sync">
+  <sl-popup placement="top" sync="width" active>
+    <span slot="anchor"></span>
+    <div class="box"></div>
+  </sl-popup>
+
+  <sl-select value="width" label="Sync">
+    <sl-menu-item value="width">Width</sl-menu-item>
+    <sl-menu-item value="height">Height</sl-menu-item>
+    <sl-menu-item value="both">Both</sl-menu-item>
+    <sl-menu-item value="">None</sl-menu-item>
+  </sl-select>
+</div>
+
+<style>
+  .popup-sync span[slot='anchor'] {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border: dashed 2px var(--sl-color-neutral-600);
+    margin: 50px;
+  }
+
+  .popup-sync .box {
+    width: 100%;
+    height: 100%;
+    min-width: 50px;
+    min-height: 50px;
+    background: var(--sl-color-primary-600);
+    border-radius: var(--sl-border-radius-medium);
+  }
+
+  .popup-sync sl-select {
+    width: 160px;
+  }
+</style>
+
+<script>
+  const container = document.querySelector('.popup-sync');
+  const popup = container.querySelector('sl-popup');
+  const fixed = container.querySelector('sl-switch');
+  const sync = container.querySelector('sl-select');
+
+  sync.addEventListener('sl-change', () => (popup.sync = sync.value));
+</script>
+```
+
+```jsx react
+import { useState } from 'react';
+import { SlPopup, SlSelect, SlMenuItem } from '@shoelace-style/shoelace/dist/react';
+
+const css = `
+  .popup-sync span[slot='anchor'] {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border: dashed 2px var(--sl-color-neutral-600);
+    margin: 50px;
+  }
+
+  .popup-sync .box {
+    width: 100%;
+    height: 100%;
+    min-width: 50px;
+    min-height: 50px;
+    background: var(--sl-color-primary-600);
+    border-radius: var(--sl-border-radius-medium);
+  }
+
+  .popup-sync sl-switch {
+    margin-top: 1rem;
+  }
+`;
+
+const App = () => {
+  const [sync, setSync] = useState('width');
+
+  return (
+    <>
+      <div class="popup-sync">
+        <SlPopup placement="top" sync={sync} active>
+          <span slot="anchor" />
+          <div class="box" />
+        </SlPopup>
+
+        <SlSelect value={sync} label="Sync" onSlChange={event => setSync(event.target.value)}>
+          <SlMenuItem value="width">Width</SlMenuItem>
+          <SlMenuItem value="height">Height</SlMenuItem>
+          <SlMenuItem value="both">Both</SlMenuItem>
+          <SlMenuItem value="">None</SlMenuItem>
+        </SlSelect>
       </div>
 
       <style>{css}</style>
@@ -990,6 +1193,96 @@ const App = () => {
 };
 ```
 
+### Flip Fallbacks
+
+While using the `flip` attribute, you can customize the placement of the popup when the preferred placement doesn't have room. For this, use `flip-fallback-placements` and `flip-fallback-strategy`.
+
+If the preferred placement doesn't have room, the first suitable placement found in `flip-fallback-placement` will be used. The value of this attribute must be a string including any number of placements separated by a space, e.g. `"right bottom"`.
+
+If no fallback placement works, the final placement will be determined by `flip-fallback-strategy`. This value can be either `initial` (default), where the placement reverts to the position in `placement`, or `best-fit`, where the placement is chosen based on available space.
+
+Scroll the container to see how the popup changes it's fallback placement to prevent clipping.
+
+```html preview
+<div class="popup-flip-fallbacks">
+  <div class="overflow">
+    <sl-popup placement="top" flip flip-fallback-placements="right bottom" flip-fallback-strategy="initial" active>
+      <span slot="anchor"></span>
+      <div class="box"></div>
+    </sl-popup>
+  </div>
+</div>
+
+<style>
+  .popup-flip-fallbacks .overflow {
+    position: relative;
+    height: 300px;
+    border: solid 2px var(--sl-color-neutral-200);
+    overflow: auto;
+  }
+
+  .popup-flip-fallbacks span[slot='anchor'] {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border: dashed 2px var(--sl-color-neutral-600);
+    margin: 250px 50px;
+  }
+
+  .popup-flip-fallbacks .box {
+    width: 100px;
+    height: 50px;
+    background: var(--sl-color-primary-600);
+    border-radius: var(--sl-border-radius-medium);
+  }
+</style>
+```
+
+```jsx react
+import { SlPopup } from '@shoelace-style/shoelace/dist/react';
+
+const css = `
+  .popup-flip-fallbacks .overflow {
+    position: relative;
+    height: 300px;
+    border: solid 2px var(--sl-color-neutral-200);
+    overflow: auto;
+  }
+
+  .popup-flip-fallbacks span[slot='anchor'] {
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    border: dashed 2px var(--sl-color-neutral-600);
+    margin: 250px 50px;
+  }
+
+  .popup-flip-fallbacks .box {
+    width: 100px;
+    height: 50px;
+    background: var(--sl-color-primary-600);
+    border-radius: var(--sl-border-radius-medium);
+  }
+`;
+
+const App = () => {
+  return (
+    <>
+      <div className="popup-flip-fallbacks">
+        <div className="overflow">
+          <SlPopup placement="top" flip flip-fallback-placements="right bottom" flip-fallback-strategy="initial" active>
+            <span slot="anchor" />
+            <div className="box" />
+          </SlPopup>
+        </div>
+      </div>
+
+      <style>{css}</style>
+    </>
+  );
+};
+```
+
 ### Shift
 
 When a popup is longer than its anchor, it risks being clipped by an overflowing container. In this case, use the `shift` attribute to shift the popup along its axis and back into view. You can customize the shift behavior using `shiftBoundary` and `shift-padding`.
@@ -1093,16 +1386,16 @@ const App = () => {
 
 ### Auto-size
 
-Use the `auto-size` attribute to tell the popup to resize when necessary to prevent it from getting clipped. You can use `autoSizeBoundary` and `auto-size-padding` to customize the behavior of this option. Auto-size works well with `flip`, but if you're using `auto-size-padding` make sure `flip-padding` is the same value.
+Use the `auto-size` attribute to tell the popup to resize when necessary to prevent it from getting clipped. Possible values are `horizontal`, `vertical`, and `both`. You can use `autoSizeBoundary` and `auto-size-padding` to customize the behavior of this option. Auto-size works well with `flip`, but if you're using `auto-size-padding` make sure `flip-padding` is the same value.
 
-When using auto-size, two read-only custom properties called `--auto-size-available-width` and `--auto-size-available-height` will be applied to the host element. These values determine the available space the popover has before clipping will occur. Since they cascade, you can use them to set a max-width/height on your popup's content and easily control its overflow.
+When using `auto-size`, one or both of `--auto-size-available-width` and `--auto-size-available-height` will be applied to the host element. These values determine the available space the popover has before clipping will occur. Since they cascade, you can use them to set a max-width/height on your popup's content and easily control its overflow.
 
 Scroll the container to see the popup resize as its available space changes.
 
 ```html preview
 <div class="popup-auto-size">
   <div class="overflow">
-    <sl-popup placement="top" auto-size auto-size-padding="10" active>
+    <sl-popup placement="top" auto-size="both" auto-size-padding="10" active>
       <span slot="anchor"></span>
       <div class="box"></div>
     </sl-popup>
@@ -1194,7 +1487,7 @@ const App = () => {
     <>
       <div className="popup-auto-size">
         <div className="overflow">
-          <SlPopup placement="top" auto-size={autoSize || null} auto-size-padding="10" active>
+          <SlPopup placement="top" auto-size={autoSize ? 'both' || null} auto-size-padding="10" active>
             <span slot="anchor" />
             <div className="box" />
           </SlPopup>

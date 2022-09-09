@@ -1,5 +1,5 @@
 import Color from 'color';
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
@@ -10,6 +10,7 @@ import { drag } from '../../internal/drag';
 import { emit } from '../../internal/event';
 import { FormSubmitController } from '../../internal/form';
 import { clamp } from '../../internal/math';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import { LocalizeController } from '../../utilities/localize';
 import '../button-group/button-group';
@@ -82,7 +83,7 @@ declare const EyeDropper: EyeDropperConstructor;
  * @cssproperty --swatch-size - The size of each predefined color swatch.
  */
 @customElement('sl-color-picker')
-export default class SlColorPicker extends LitElement {
+export default class SlColorPicker extends ShoelaceElement {
   static styles: CSSResultGroup = styles;
 
   @query('[part="input"]') input: SlInput;
@@ -96,6 +97,7 @@ export default class SlColorPicker extends LitElement {
   private readonly localize = new LocalizeController(this);
 
   @state() private isDraggingGridHandle = false;
+  @state() private isEmpty = false;
   @state() private inputValue = '';
   @state() private hue = 0;
   @state() private saturation = 100;
@@ -104,7 +106,7 @@ export default class SlColorPicker extends LitElement {
   @state() private alpha = 100;
 
   /** The current color. */
-  @property() value = '#ffffff';
+  @property() value = '';
 
   /** Gets or sets the default value used to reset this element. The initial value corresponds to the one originally specified in the HTML that created this element. */
   @defaultValue()
@@ -179,19 +181,19 @@ export default class SlColorPicker extends LitElement {
     '#fff'
   ];
 
-  /** The locale to render the component in. */
-  @property() lang: string;
-
   connectedCallback() {
     super.connectedCallback();
 
-    if (!this.setColor(this.value)) {
-      this.setColor(`#ffff`);
+    if (this.value) {
+      this.setColor(this.value);
+      this.inputValue = this.value;
+      this.lastValueEmitted = this.value;
+      this.syncValues();
+    } else {
+      this.isEmpty = true;
+      this.inputValue = '';
+      this.lastValueEmitted = '';
     }
-
-    this.inputValue = this.value;
-    this.lastValueEmitted = this.value;
-    this.syncValues();
   }
 
   /** Returns the current value as a string in the specified format. */
@@ -322,7 +324,6 @@ export default class SlColorPicker extends LitElement {
         this.saturation = clamp((x / width) * 100, 0, 100);
         this.brightness = clamp(100 - (y / height) * 100, 0, 100);
         this.lightness = this.getLightness(this.brightness);
-
         this.syncValues();
       },
       onStop: () => (this.isDraggingGridHandle = false),
@@ -407,7 +408,6 @@ export default class SlColorPicker extends LitElement {
       event.preventDefault();
       this.brightness = clamp(this.brightness + increment, 0, 100);
       this.lightness = this.getLightness(this.brightness);
-      console.log(this.lightness, this.brightness);
       this.syncValues();
     }
 
@@ -415,7 +415,6 @@ export default class SlColorPicker extends LitElement {
       event.preventDefault();
       this.brightness = clamp(this.brightness - increment, 0, 100);
       this.lightness = this.getLightness(this.brightness);
-      console.log(this.lightness, this.brightness);
       this.syncValues();
     }
   }
@@ -423,16 +422,25 @@ export default class SlColorPicker extends LitElement {
   handleInputChange(event: CustomEvent) {
     const target = event.target as HTMLInputElement;
 
-    this.setColor(target.value);
-    target.value = this.value;
+    if (this.input.value) {
+      this.setColor(target.value);
+      target.value = this.value;
+    } else {
+      this.value = '';
+    }
+
     event.stopPropagation();
   }
 
   handleInputKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter') {
-      this.setColor(this.input.value);
-      this.input.value = this.value;
-      setTimeout(() => this.input.select());
+      if (this.input.value) {
+        this.setColor(this.input.value);
+        this.input.value = this.value;
+        setTimeout(() => this.input.select());
+      } else {
+        this.hue = 0;
+      }
     }
   }
 
@@ -602,7 +610,7 @@ export default class SlColorPicker extends LitElement {
     }
 
     // Setting this.value will trigger the watcher which parses the new value. We want to bypass that behavior because
-    // we've already parsed the color here and conversion/rounding can lead to values changing slightly. WHen this
+    // we've already parsed the color here and conversion/rounding can lead to values changing slightly. When this
     // happens, dragging the grid handle becomes jumpy. After the next update, the usual behavior is restored.
     this.isSafeValue = true;
     this.value = this.inputValue;
@@ -629,18 +637,27 @@ export default class SlColorPicker extends LitElement {
       });
   }
 
-  @watch('format')
+  @watch('format', { waitUntilFirstUpdate: true })
   handleFormatChange() {
     this.syncValues();
   }
 
-  @watch('opacity')
+  @watch('opacity', { waitUntilFirstUpdate: true })
   handleOpacityChange() {
     this.alpha = 100;
   }
 
   @watch('value')
   handleValueChange(oldValue: string | undefined, newValue: string) {
+    this.isEmpty = !newValue;
+
+    if (!newValue) {
+      this.hue = 0;
+      this.saturation = 100;
+      this.brightness = 100;
+      this.lightness = this.getLightness(this.brightness);
+      this.alpha = 100;
+    }
     if (!this.isSafeValue && oldValue !== undefined) {
       const newColor = this.parseColor(newValue);
 
@@ -685,7 +702,6 @@ export default class SlColorPicker extends LitElement {
               </sl-visually-hidden>
             `
           : null}
-
         <div
           part="grid"
           class="color-picker__grid"
@@ -710,7 +726,6 @@ export default class SlColorPicker extends LitElement {
             @keydown=${this.handleGridKeyDown}
           ></span>
         </div>
-
         <div class="color-picker__controls">
           <div class="color-picker__sliders">
             <div
@@ -735,7 +750,6 @@ export default class SlColorPicker extends LitElement {
                 @keydown=${this.handleHueKeyDown}
               ></span>
             </div>
-
             ${this.opacity
               ? html`
                   <div
@@ -773,7 +787,6 @@ export default class SlColorPicker extends LitElement {
                 `
               : ''}
           </div>
-
           <button
             type="button"
             part="preview"
@@ -785,7 +798,6 @@ export default class SlColorPicker extends LitElement {
             @click=${this.handleCopy}
           ></button>
         </div>
-
         <div class="color-picker__user-input" aria-live="polite">
           <sl-input
             part="input"
@@ -795,13 +807,12 @@ export default class SlColorPicker extends LitElement {
             autocorrect="off"
             autocapitalize="off"
             spellcheck="false"
-            .value=${live(this.inputValue)}
+            .value=${live(this.isEmpty ? '' : this.inputValue)}
             ?disabled=${this.disabled}
             aria-label=${this.localize.term('currentValue')}
             @keydown=${this.handleInputKeyDown}
             @sl-change=${this.handleInputChange}
           ></sl-input>
-
           <sl-button-group>
             ${!this.noFormatToggle
               ? html`
@@ -844,7 +855,6 @@ export default class SlColorPicker extends LitElement {
               : ''}
           </sl-button-group>
         </div>
-
         ${this.swatches.length > 0
           ? html`
               <div part="swatches" class="color-picker__swatches">
@@ -894,6 +904,7 @@ export default class SlColorPicker extends LitElement {
             'color-dropdown__trigger--small': this.size === 'small',
             'color-dropdown__trigger--medium': this.size === 'medium',
             'color-dropdown__trigger--large': this.size === 'large',
+            'color-dropdown__trigger--empty': this.isEmpty,
             'color-picker__transparent-bg': true
           })}
           style=${styleMap({

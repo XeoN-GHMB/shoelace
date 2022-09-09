@@ -8,6 +8,26 @@ New versions of Shoelace are released as-needed and generally occur when a criti
 
 _During the beta period, these restrictions may be relaxed in the event of a mission-critical bug._ 🐛
 
+## 2.0.0-beta.82
+
+- Added the `sync` and `arrow-placement` attributes to `<sl-popup>`
+- Changed the `auto-size` attribute of the experimental `<sl-popup>` component so it accepts `horizontal`, `vertical`, and `both` instead of a boolean value
+- Changed the `flip-fallback-placement` attribute of the experimental `<sl-popup>` component to `flip-fallback-placements`
+- Changed the `flip-fallback-strategy` in the experimental `<sl-popup>` component to accept `best-fit` and `initial` instead of `bestFit` and `initialPlacement`
+- Fixed a bug in `<sl-dropdown>` that caused the panel to resize horizontally when the trigger is clipped by the viewport [#860](https://github.com/shoelace-style/shoelace/issues/860)
+- Fixed a bug in `<sl-tree>` where dynamically changing slotted items wouldn't update the tree properly
+- Fixed a bug in `<sl-split-panel>` that caused the panel to stack when clicking on the divider in mobile versions of Chrome [#862](https://github.com/shoelace-style/shoelace/issues/862)
+- Fixed a bug in `<sl-popup>` that prevented flip fallbacks from working as intended
+- Fixed a bug that caused concurrent animations to work incorrectly when the durations were different [#867](https://github.com/shoelace-style/shoelace/issues/867)
+- Fixed a bug in `<sl-color-picker>` that caused the trigger and color preview to ignore opacity on first render [#869](https://github.com/shoelace-style/shoelace/issues/869)
+- Fixed a bug in `<sl-tree>` that prevented the keyboard from working when the component was nested in a shadow root [#871](https://github.com/shoelace-style/shoelace/issues/871)
+- Fixed a bug in `<sl-tab-group>` that prevented the keyboard from working when the component was nested in a shadow root [#872](https://github.com/shoelace-style/shoelace/issues/872)
+- Fixed a bug in `<sl-tab>` that allowed disabled tabs to erroneously receive focus
+- Improved single selection in `<sl-tree>` so nodes expand and collapse and receive selection when clicking on the label
+- Renamed `expanded-icon` and `collapsed-icon` slots to `expand-icon` and `collapse-icon` in the experimental `<sl-tree>` and `<sl-tree-item>` components
+- Improved RTL support for `<sl-image-comparer>`
+- Refactored components to extend from `ShoelaceElement` to make `dir` and `lang` reactive properties in all components
+
 ## 2.0.0-beta.81
 
 - 🚨 BREAKING: removed the `base` part from `<sl-menu>` and removed an unnecessary `<div>` that made styling more difficult
