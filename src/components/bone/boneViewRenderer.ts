@@ -121,6 +121,7 @@ export class BoneViewRenderer {
 
 
   stringBoneRenderer(): any {
+
     return this.rawBoneRenderer();
   }
 
@@ -241,75 +242,77 @@ export class BoneViewRenderer {
   textBoneRenderer() {
     return this.rawBoneRenderer();
   }
+
   ////////////HELPER FUNCTIONS////////////////
 
 
   getTabs() {
-  let tabs: any = [];
-  for (const lang of this.boneStructure["languages"]) {
+    let tabs: any = [];
+    for (const lang of this.boneStructure["languages"]) {
 
-    tabs.push(html`
-      <sl-tab slot="nav" panel="${lang}">${lang}</sl-tab>`);
-  }
-  return tabs
-}
-
-
- getTabPannels( formater: Function = formatstring) {
-  //We are when languages not null
-  let tabpannels: any = [];
-  if (this.boneStructure["format"] === undefined) {
-    if (this.boneStructure["multiple"]) {
-      for (const lang of this.boneStructure["languages"]) {
-        if (!Array.isArray(this.boneValue[lang])) {
-          this.boneValue[lang] = [this.boneValue[lang]];
-        }
-        tabpannels.push(html`
-          <sl-tab-panel name="${lang}"> ${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
-      }
-    } else {
-
-      for (const lang of this.boneStructure["languages"]) {
-        if (this.boneValue[lang] === null) {
-          tabpannels.push(html`
-            <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
-        } else {
-          tabpannels.push(html`
-            <sl-tab-panel name="${lang}">${this.boneValue[lang].toString()}</sl-tab-panel>`);
-        }
-
-      }
+      tabs.push(html`
+        <sl-tab slot="nav" panel="${lang}">${lang}</sl-tab>`);
     }
-  } else {
-    if (this.boneStructure["multiple"]) {
-      for (const lang of this.boneStructure["languages"]) {
-
-        console.log("call format", this.boneValue,)
-        this.boneValue[lang] = formater(this.boneValue, this.boneStructure, lang);
-
-
-        tabpannels.push(html`
-          <sl-tab-panel name="${lang}">${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
-      }
-    } else {
-
-      for (const lang of this.boneStructure["languages"]) {
-        if (this.boneValue[lang] === null) {
-          tabpannels += html`
-            <sl-tab-panel name="${lang}">-</sl-tab-panel>`;
-        } else {
-          tabpannels.push(html`
-            <sl-tab-panel name="${lang}">${formater(this.boneValue, this.boneStructure, lang)}</sl-tab-panel>`);
-        }
-
-      }
-    }
+    return tabs
   }
 
-  return tabpannels;
+
+  getTabPannels(formater: Function = formatstring) {
+    //We are when languages not null
+    let tabpannels: any = [];
+    if (this.boneStructure["format"] === undefined) {
+      if (this.boneStructure["multiple"]) {
+        for (const lang of this.boneStructure["languages"]) {
+          if (!Array.isArray(this.boneValue[lang])) {
+            this.boneValue[lang] = [this.boneValue[lang]];
+          }
+          tabpannels.push(html`
+            <sl-tab-panel name="${lang}"> ${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}
+            </sl-tab-panel>`);
+        }
+      } else {
+
+        for (const lang of this.boneStructure["languages"]) {
+          if (this.boneValue[lang] === null) {
+            tabpannels.push(html`
+              <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
+          } else {
+            tabpannels.push(html`
+              <sl-tab-panel name="${lang}">${this.boneValue[lang].toString()}</sl-tab-panel>`);
+          }
+
+        }
+      }
+    } else {
+      if (this.boneStructure["multiple"]) {
+        for (const lang of this.boneStructure["languages"]) {
+
+          console.log("call format", this.boneValue,)
+          this.boneValue[lang] = formater(this.boneValue, this.boneStructure, lang);
 
 
-}
+          tabpannels.push(html`
+            <sl-tab-panel name="${lang}">${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
+        }
+      } else {
+
+        for (const lang of this.boneStructure["languages"]) {
+          if (this.boneValue[lang] === null) {
+            tabpannels += html`
+              <sl-tab-panel name="${lang}">-</sl-tab-panel>`;
+          } else {
+            tabpannels.push(html`
+              <sl-tab-panel name="${lang}">${formater(this.boneValue, this.boneStructure, lang)}</sl-tab-panel>`);
+          }
+
+        }
+      }
+    }
+
+    return tabpannels;
+
+
+  }
 
 
 }
@@ -317,13 +320,17 @@ export class BoneViewRenderer {
 ////////////HELPER FUNCTIONS////////////////
 
 
-export function formatstring(data, boneStructure:object, lang = null) {
+export function formatstring(data, boneStructure: object, lang = null) {
 
   if (!boneStructure) {
 
     return data;
   }
   if (boneStructure["format"] === undefined) {
+    if(boneStructure["type"]==="str")
+    {
+      return escapeString(data);
+    }
     return data;
   }
   let re = /\$\(([^)]+)\)/g;
@@ -454,11 +461,11 @@ export function formatstring(data, boneStructure:object, lang = null) {
   return text
 }
 
-export function getPath(obj:object, path:string|string[]):object|undefined {
+export function getPath(obj: object, path: string | string[]): object | undefined {
 
   path = typeof path === 'string' ? path.split('.') : path;
 
-  let current:object = JSON.parse(JSON.stringify(obj))//Depth Copy to lose Reference;
+  let current: object = JSON.parse(JSON.stringify(obj))//Depth Copy to lose Reference;
   while (path.length > 0) {
     let [head, ...tail] = path;
     path = tail;
@@ -474,6 +481,16 @@ export function getPath(obj:object, path:string|string[]):object|undefined {
   }
 
   return current;
+}
+
+function escapeString(value) {
+  return value.replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'")
+    .replaceAll("&#040;", "(")
+    .replaceAll("&#041;", ")")
+    .replaceAll("&#061;", "=")
 }
 
 

@@ -4,6 +4,7 @@ import SlCombobox from "../combobox/combobox";
 import SlIcon from "../icon/icon";
 import SlButton from "../button/button";
 import SlIconButton from "../icon-button/icon-button";
+import SlSelect from "../select/select";
 //const apiurl=window.location.origin;
 const apiurl = "http://localhost:8080";
 
@@ -84,6 +85,8 @@ export class BoneEditRenderer {
         e.preventDefault()
         return false;
       })
+
+
     }
 
 
@@ -181,8 +184,10 @@ export class BoneEditRenderer {
 
 
           inputElement.querySelector("#clearButton").addEventListener("click", () => {
-            this.reWriteBoneValue()
             boneWrapper.remove();
+            const formData = this.reWriteBoneValue();
+            console.log("clear")
+            this.mainInstance.handleChange(formData, "deleteEntry")
             addButton.focus();
 
           });
@@ -302,7 +307,15 @@ export class BoneEditRenderer {
         }
       }, 20)
     });
-
+    if (!fromRecord) {
+      const saveButton = document.createElement("sl-button");
+      saveButton.innerText = "Save";
+      saveButton.addEventListener("click", () => {
+        const formData = this.reWriteBoneValue();
+        this.mainInstance.handleChange(formData);
+      })
+      wrapper.appendChild(saveButton);
+    }
     return wrapper;
 
 
@@ -396,6 +409,16 @@ export class BoneEditRenderer {
   }
 
   stringBoneEditorRenderer(value: any, boneName = "") {
+    //Replace Encoded chars
+    if (value !== null) {
+      value = value.replaceAll("&lt;", "<")
+        .replaceAll("&gt;", ">")
+        .replaceAll("&quot;", '"')
+        .replaceAll("&#39;;", "'")
+        .replaceAll("&#040;", "(")
+        .replaceAll("&#041;", ")")
+        .replaceAll("&#061;", "=")
+    }
 
     return this.rawBoneEditorRenderer(value, boneName);
   }
@@ -483,6 +506,13 @@ export class BoneEditRenderer {
     const shadowInput = document.createElement("input")
     const searchBox: SlCombobox = document.createElement("sl-combobox");
 
+    const clearButton: SlIconButton = document.createElement("sl-icon-button")
+    clearButton.library = "my-icons";
+    clearButton.slot = "suffix";
+    clearButton.name = "x-circle";
+    clearButton.id = "clearButton"
+    searchBox.appendChild(clearButton);
+
     //searchBox.hoist =true
     const url = `${apiurl}/json/country/list?search={q}`;
 
@@ -506,7 +536,7 @@ export class BoneEditRenderer {
             return skellist.map((d: any) => {
               return {
                 text: formatstring({dest: d}, this.boneStructure),
-                value: JSON.stringify(d)//TODO Better Solution
+                value: d.key
               };
 
             })
@@ -518,12 +548,10 @@ export class BoneEditRenderer {
 
     searchBox.addEventListener("sl-item-select", (e: CustomEvent) => {
 
-      shadowInput.value = JSON.parse(e.detail.item.value).key;
-      const formData = this.reWriteBoneValue();
-      console.log(e);
-      console.log(this.mainInstance.internboneValue);
-      this.mainInstance.internboneValue[this.boneName] = {dest: JSON.parse(e.detail.item.value)}
-      this.mainInstance.handleChange(formData);
+      shadowInput.value = e.detail.item.value;
+      //const formData = this.reWriteBoneValue();
+      //this.mainInstance.internboneValue[this.boneName] = {dest: JSON.parse(e.detail.item.value)}
+      //this.mainInstance.handleChange(formData);
 
     });
 
@@ -590,7 +618,7 @@ export class BoneEditRenderer {
 
   selectBoneEditorRenderer(value: any, boneName = "") {
 
-    const inputSelect = document.createElement("sl-select");
+    const inputSelect:SlSelect = document.createElement("sl-select");
 
     inputSelect.name = boneName;
     inputSelect.value = value;
@@ -607,7 +635,7 @@ export class BoneEditRenderer {
     inputSelect.addEventListener("sl-change", (event) => {
 
       const formData = this.reWriteBoneValue();
-      this.mainInstance.handleChange(formData);
+      //this.mainInstance.handleChange(formData);
     });
 
     return inputSelect;

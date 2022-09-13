@@ -77,14 +77,15 @@ export default class SlBone extends LitElement {
 
 
   //Events
-  handleChange(formData) {
+  handleChange(formData:FormData,type:string="edit") {
 
     if (this.initBoneValue !== this._getBoneValue()) {
       emit(this, 'sl-boneChange', {
         detail: {
           boneValue: this._getBoneValue(),
           boneName: this.boneName,
-          formData: formData
+          formData: formData,
+          type:type
         }
       });
     }

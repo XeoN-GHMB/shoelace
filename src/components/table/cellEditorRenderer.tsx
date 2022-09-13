@@ -4,8 +4,8 @@ const apiurl = "http://localhost:8080";
 
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, editParams: any): any {
   console.log()
-  const boneStructure=editParams[0];
-  const tableInstance=editParams[1];
+  const boneStructure = editParams[0];
+  const tableInstance = editParams[1];
   cell.getRow().getElement().style.height = "auto";
   cell.getRow().getElement().style.overflow = "visible";
 
@@ -29,16 +29,22 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
 
     const skelKey = cell._cell.row.data.key;
 
-    const result: object = await updateData(boneChangeEvent.detail.formData, skelKey,tableInstance);
+    const result: object = await updateData(boneChangeEvent.detail.formData, skelKey, tableInstance);
     if (result["action"] === "editSuccess") {
-      success(boneChangeEvent.detail.boneValue);
-      cell.getRow()._row.clearCellHeight();
-    }
-    else
-    {
-      for(const error of result["errors"])
-        if(error["fieldPath"][0]===cell.getField())
-        {
+      if (boneChangeEvent.detail.type === "edit") {
+        if (boneStructure["type"].startsWith("relational")) {
+          success(result["values"][cell.getField()])
+          cell.getRow()._row.clearCellHeight();
+        } else {
+          success(boneChangeEvent.detail.boneValue);
+          cell.getRow()._row.clearCellHeight();
+        }
+
+      }
+
+    } else {
+      for (const error of result["errors"])
+        if (error["fieldPath"][0] === cell.getField()) {
           bone.handleError(error);
         }
 
@@ -149,9 +155,8 @@ function getSkey() {
   })
 }
 
-export function updateData(formData: FormData, skelKey: string,tableInstance:any) {
-  if(tableInstance.module===null)
-  {
+export function updateData(formData: FormData, skelKey: string, tableInstance: any) {
+  if (tableInstance.module === null) {
     throw "No Module provided"
   }
   return new Promise((resolve, reject) => {
