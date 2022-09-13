@@ -79,6 +79,9 @@ export default class SlTable extends LitElement {
     reactiveData: true,
     popupContainer: true
   };
+  /** set a module for requests to the server */
+  @property({type: String, attribute: false}) module: String = null;
+
 
   tableInstance: any;
   tableReady: Boolean = false;
@@ -106,10 +109,8 @@ export default class SlTable extends LitElement {
       if (this.moveablerows) {
         this.tableInstance.on("rowMoved", (row) => {
           console.log(row)
-          var nextRow = row.getNextRow();
-          var prevRow = row.getPrevRow();
-          console.log("nextRow", nextRow);
-          console.log("prevRow", prevRow);
+          const nextRow = row.getNextRow();
+          const prevRow = row.getPrevRow();
           let newSortIndex = 0;
           if (nextRow) {
             if (prevRow) {
@@ -127,8 +128,8 @@ export default class SlTable extends LitElement {
           }
 
           const formData = new FormData();
-          formData.set("sortindex",newSortIndex);
-          updateData(formData,  row.getData()["key"])
+          formData.set("sortindex", newSortIndex);
+          updateData(formData, row.getData()["key"],this)
         })
       }
 
@@ -189,11 +190,14 @@ export default class SlTable extends LitElement {
         this.moveablerows = true;
         continue
       }
-
+      let title = itemName;
+      if (item["descr"].length > 0) {
+        title = item["descr"]
+      }
       columns.push({
-        title: item["descr"], field: itemName,
+        title: title, field: itemName,
         formatterParams: item, formatter: boneFormatter,
-        editorParams: item, editor: boneEditor,
+        editorParams: [item,this], editor: boneEditor,
         editable: this.editCheck,
         variableHeight: true
       })

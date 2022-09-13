@@ -72,22 +72,36 @@ export default class SlBone extends LitElement {
     }
 
 
-
   }
+
+
 
   //Events
   handleChange(formData) {
 
-
-    emit(this, 'sl-boneChange', {
-      detail: {
-        boneValue: this._getBoneValue(),
-        boneName: this.boneName,
-        formData: formData
-      }
-    });
+    if (this.initBoneValue !== this._getBoneValue()) {
+      emit(this, 'sl-boneChange', {
+        detail: {
+          boneValue: this._getBoneValue(),
+          boneName: this.boneName,
+          formData: formData
+        }
+      });
+    }
   }
+  handleError(error)
+  {
+    //Todo Styling?
+    //Todo More than 1 msg
+    console.log("Add err msg to "+error["fieldPath"].join("."))
+    const element=this.bone.querySelector('[data-bone-name-index="'+error["fieldPath"].join(".")+'"]');
+    if(element)
+    {
+         element.helpText=html`<b>${error["errorMessage"]}</b>`;
+    }
 
+
+  }
   render() {
 
     return html`${this.bone}`;

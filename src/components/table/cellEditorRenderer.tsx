@@ -2,8 +2,10 @@
 //const apiurl=window.location.origin;
 const apiurl = "http://localhost:8080";
 
-export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, boneStructure: any, boneName = "", boneValue: any = null): any {
-
+export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, editParams: any): any {
+  console.log()
+  const boneStructure=editParams[0];
+  const tableInstance=editParams[1];
   cell.getRow().getElement().style.height = "auto";
   cell.getRow().getElement().style.overflow = "visible";
 
@@ -11,9 +13,11 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
   cell.getElement().style.overflow = "visible";
 
   //cell.getRow().getElement().style.overflow = "visible";
+  if (boneStructure["type"] === "select" || boneStructure["type"].startsWith("relational")) {
+    cell._cell.table.element.style.overflow = "visible";
+    cell._cell.table.rowManager.element.style.overflow = "visible";
 
-  cell._cell.table.element.style.overflow = "visible";
-  cell._cell.table.rowManager.element.style.overflow = "visible";
+  }
 
 
   const bone = document.createElement("sl-bone");
@@ -21,13 +25,26 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
   bone.boneValue = cell.getValue();
   bone.boneName = cell.getField();
   bone.renderType = "edit";
-  bone.addEventListener("sl-boneChange", (boneChangeEvent) => {
+  bone.addEventListener("sl-boneChange", async (boneChangeEvent) => {
 
     const skelKey = cell._cell.row.data.key;
-    updateData(boneChangeEvent.detail.formData, skelKey);
 
-    success(boneChangeEvent.detail.boneValue);
-     cell.getRow()._row.clearCellHeight();
+    const result: object = await updateData(boneChangeEvent.detail.formData, skelKey,tableInstance);
+    if (result["action"] === "editSuccess") {
+      success(boneChangeEvent.detail.boneValue);
+      cell.getRow()._row.clearCellHeight();
+    }
+    else
+    {
+      for(const error of result["errors"])
+        if(error["fieldPath"][0]===cell.getField())
+        {
+          bone.handleError(error);
+        }
+
+    }
+
+
   })
   return bone;
 
@@ -102,19 +119,6 @@ function createPath(obj: any, path: any, value = null) {
   return obj;
 }
 
-function keyPress(event: KeyboardEvent, successFunc: any, cancelFunc: any, boneName, boneStructure, cell, successFuncPorxy = successFunc) {
-
-  if (event.key === "Enter") {
-
-    successFuncPorxy(cell, boneStructure, boneName, successFunc)
-  }
-
-  if (event.key === "Esc") {
-    console.log("esc")
-    cancelFunc()
-  }
-}
-
 
 function updateRelationalBone(searchBox, cell, success) {
 
@@ -145,7 +149,11 @@ function getSkey() {
   })
 }
 
-export function updateData(formData: FormData, skelKey: string) {
+export function updateData(formData: FormData, skelKey: string,tableInstance:any) {
+  if(tableInstance.module===null)
+  {
+    throw "No Module provided"
+  }
   return new Promise((resolve, reject) => {
     getSkey().then((skey: string) => {
 
@@ -153,7 +161,7 @@ export function updateData(formData: FormData, skelKey: string) {
       formData.append("skey", skey)
 
 
-      fetch(`${apiurl}/json/test/edit`, {
+      fetch(`${apiurl}/json/${tableInstance.module}/edit`, {
         method: 'POST',
         body: formData
       }).then(resp => resp.json().then(data => resolve(data)))

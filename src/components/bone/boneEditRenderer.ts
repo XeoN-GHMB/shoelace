@@ -1,6 +1,9 @@
 import {formatstring, getPath} from "./boneViewRenderer";
 import SlBone from "./bone";
 import SlCombobox from "../combobox/combobox";
+import SlIcon from "../icon/icon";
+import SlButton from "../button/button";
+import SlIconButton from "../icon-button/icon-button";
 //const apiurl=window.location.origin;
 const apiurl = "http://localhost:8080";
 
@@ -51,6 +54,10 @@ export class BoneEditRenderer {
   mainInstance: SlBone;
   boneRenderer = {"str": this.stringBoneEditorRenderer};
   depth = 0;
+  move = false;
+  moveElement;
+  startHeight = 0;
+  fakeElement;
 
   constructor(boneStructure: object, boneValue: any, boneName: any, mainInstance: SlBone) {
     this.boneStructure = boneStructure;
@@ -73,7 +80,9 @@ export class BoneEditRenderer {
       wrapper = document.createElement("form");
 
       wrapper.addEventListener("submit", (e: Event) => {
+
         e.preventDefault()
+        return false;
       })
     }
 
@@ -81,7 +90,6 @@ export class BoneEditRenderer {
     wrapper.dataset.boneWrapper = "true";
     wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     wrapper.dataset.boneName = this.boneName;
-    console.log("??")
     if (this.boneStructure["languages"] !== null) {
       const tabGroup = document.createElement("sl-tab-group");
       for (const lang of this.boneStructure["languages"]) {
@@ -107,7 +115,9 @@ export class BoneEditRenderer {
               newboneName = this.boneName + "." + lang + ".$(index)";
             }
 
-            const inputElement = this.getEditor(tmpValue, lang, newboneName);
+            const inputElement = this.getEditor(tmpValue, newboneName);
+            inputElement.dataset.lang = lang;
+            inputElement.dataset.multiple = this.boneStructure["multiple"];
             inputWrapper.appendChild(inputElement);
           }
 
@@ -116,9 +126,13 @@ export class BoneEditRenderer {
           addButton.addEventListener("click", () => {
             //const newboneName = boneName //FIXME RECORD BONE
 
-            const newboneName = this.boneName + "." + lang + ".$(index)";
-            const inputElement = this.getEditor("", null, newboneName);
-
+            let newboneName = this.boneName + "." + lang;
+            if (this.boneStructure["type"] === "record") {
+              newboneName += ".$(index)";
+            }
+            const inputElement = this.getEditor(null, newboneName);
+            inputElement.dataset.lang = lang;
+            inputElement.dataset.multiple = this.boneStructure["multiple"];
             inputWrapper.insertBefore(inputElement, addButton);
 
 
@@ -130,8 +144,9 @@ export class BoneEditRenderer {
         } else {
           //Lang , no multipler
           const newboneName = this.boneName + "." + lang;
-          const inputElement = this.getEditor(this.boneValue[lang], lang, newboneName);
-
+          const inputElement = this.getEditor(this.boneValue[lang], newboneName);
+          inputElement.dataset.lang = lang;
+          inputElement.dataset.multiple = this.boneStructure["multiple"];
           tab_panel.appendChild(inputElement);
         }
         tabGroup.appendChild(tab_panel);
@@ -160,25 +175,65 @@ export class BoneEditRenderer {
 
           const boneWrapper = document.createElement("div");
 
-          const inputElement: any = this.getEditor(tmpValue, null, newboneName);
+          const inputElement: HTMLElement = this.getEditor(tmpValue, newboneName);
+          inputElement.dataset.lang = "null";
+          inputElement.dataset.multiple = this.boneStructure["multiple"];
 
 
-          const deleteButton = document.createElement("sl-button");
-
-          deleteButton.innerText = "X";
-          deleteButton.addEventListener("click", () => {
-            //this.blurCounter+=1;
+          inputElement.querySelector("#clearButton").addEventListener("click", () => {
             this.reWriteBoneValue()
             boneWrapper.remove();
             addButton.focus();
-            /*wrapper.querySelectorAll("sl-input").forEach((inElement)=>{
-              console.log(inElement);
-            })*/
-
 
           });
+
+
           boneWrapper.appendChild(inputElement);
-          boneWrapper.appendChild(deleteButton);
+          //TODo for later
+          /*
+          inputElement.querySelector("#dragger").addEventListener("mousedown", (e) => {
+            if(!this.move)
+            {
+              this.move = true;
+            }
+
+            e.preventDefault();
+            this.moveElement = boneWrapper.cloneNode(true);
+
+            this.moveElement.style.borderStyle="solid";
+            this.moveElement.style.position="absolute";
+            this.moveElement.style.zIndex="2";
+
+            this.fakeElement= document.createElement("div");
+            this.fakeElement.style.height=boneWrapper.clientHeight+"px";
+            this.fakeElement.style.width=boneWrapper.clientWidth+"px";
+            this.fakeElement.style.backgroundColor="#d9fcff";
+
+            this.startHeight=boneWrapper.clientHeight;
+            wrapper.insertBefore(this.moveElement,boneWrapper);
+            wrapper.insertBefore(this.fakeElement,boneWrapper);
+
+            boneWrapper.remove();
+
+          })
+
+          document.addEventListener("mouseup", (e) => {
+            this.move = false;
+            e.preventDefault();
+
+          })
+          document.addEventListener("mousemove", (e: MouseEvent) => {
+            if (this.move) {
+
+              //const yPos = e.pageY - this.moveElement.getBoundingClientRect().top-(this.startHeight/2);
+              this.moveElement.style.top =(e.pageY- this.startHeight/2)+ "px";
+
+
+            }
+
+
+          })
+*/
           wrapper.appendChild(boneWrapper);
 
         }
@@ -187,10 +242,25 @@ export class BoneEditRenderer {
         addButton.addEventListener("click", () => {
           //FIXME RECORD BONE
 
+          const boneWrapper = document.createElement("div");
+          let newboneName = this.boneName;
+          if (this.boneStructure["type"] === "record") {
+            newboneName = this.boneName + ".$(index)";
+          }
+          const inputElement = this.getEditor(null, newboneName);
+          inputElement.dataset.lang = "null";
+          inputElement.dataset.multiple = this.boneStructure["multiple"];
+          inputElement.querySelector("#clearButton").addEventListener("click", () => {
+            this.reWriteBoneValue()
+            boneWrapper.remove();
+            addButton.focus();
 
-          const inputElement = this.getEditor("", null, this.boneName);
+          });
 
-          wrapper.insertBefore(inputElement, addButton);
+
+          boneWrapper.appendChild(inputElement);
+
+          wrapper.insertBefore(boneWrapper, addButton);
 
           wrapper.focus();
 
@@ -202,8 +272,10 @@ export class BoneEditRenderer {
 
       } else {
         //No Lang, No Multiple
-
-        wrapper.appendChild(this.getEditor(this.boneValue, null, this.boneName));
+        const inputElement = this.getEditor(this.boneValue, this.boneName)
+        inputElement.dataset.lang = "null";
+        inputElement.dataset.multiple = this.boneStructure["multiple"];
+        wrapper.appendChild(inputElement);
 
 
       }
@@ -217,36 +289,16 @@ export class BoneEditRenderer {
     wrapper.addEventListener("sl-blur", (blur_event) => {
 
       this.blurCounter -= 1;
-
+      console.log("lost focus")
+      return
       const self: BoneEditRenderer = this;
       setTimeout(function () {
 
         if (self.blurCounter === 0) {
-          return
-
-
-          wrapper.querySelectorAll("sl-input").forEach((inputElement) => {
-
-            createPath(self.mainInstance.internboneValue, inputElement.dataset.boneName, inputElement.value);
-          });
-
-          const formData = new FormData();
-          const tmpPaths = new Set(objectToPaths(self.mainInstance.internboneValue, self.mainInstance.boneName));
-          tmpPaths.forEach((path: string) => {
-            const tmpValue = getPath(self.mainInstance.internboneValue, path)
-            if (Array.isArray(tmpValue)) {
-              for (const val of tmpValue) {
-                formData.append(path, val);
-              }
-            } else {
-              formData.append(path, tmpValue);
-
-            }
-
-          })
-
-
+          const formData = self.reWriteBoneValue();
           self.mainInstance.handleChange(formData);
+
+
         }
       }, 20)
     });
@@ -257,62 +309,101 @@ export class BoneEditRenderer {
   }
 
 
-  getEditor(value: any, lang = null, boneName = "") {
+  getEditor(value: any, boneName = "") {
     switch (this.boneStructure["type"].split(".")[0]) {
       case "str":
-        return this.stringBoneEditorRenderer(value, lang, boneName);
+        return this.stringBoneEditorRenderer(value, boneName);
       case "numeric":
-        return this.numericBoneEditorRenderer(value, lang, boneName);
+        return this.numericBoneEditorRenderer(value, boneName);
       case "date":
-        return this.dateBoneEditorRenderer(value, lang, boneName);
+        return this.dateBoneEditorRenderer(value, boneName);
       case "bool":
-        return this.booleanBoneEditorRenderer(value, lang, boneName);
+        return this.booleanBoneEditorRenderer(value, boneName);
       case "record":
-        return this.recordBoneEditorRenderer(value, lang, boneName);
+        return this.recordBoneEditorRenderer(value, boneName);
       case "relational":
         if (this.boneStructure["type"].startsWith("relational.tree.leaf.file")) {
-          return this.fileBoneEditorRenderer(value, lang, boneName);
+          return this.fileBoneEditorRenderer(value, boneName);
         }
-        return this.relationBoneEditorRenderer(value, lang, boneName);
+        return this.relationBoneEditorRenderer(value, boneName);
       case "select":
-        return this.selectBoneEditorRenderer(value, lang, boneName);
+        return this.selectBoneEditorRenderer(value, boneName);
       default:
-        return this.rawBoneEditorRenderer(value, lang, boneName);
+        return this.rawBoneEditorRenderer(value, boneName);
     }
 
   }
 
 
-  rawBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  rawBoneEditorRenderer(value: any, boneName = "") {
     const inputElement = document.createElement("sl-input");
+    const clearButton: SlIconButton = document.createElement("sl-icon-button")
+    clearButton.library = "my-icons";
+    clearButton.slot = "suffix";
+    clearButton.name = "x-circle";
+    clearButton.id = "clearButton"
+    inputElement.appendChild(clearButton);
+    //ToDo
+    /*
+    const draggable = document.createElement("sl-icon")
+    draggable.library = "my-icons";
+    draggable.slot = "prefix";
+    draggable.name = "draggable";
+    draggable.id = "dragger";
+    inputElement.appendChild(draggable);
+     */
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
-    inputElement.value = value;
-    if (lang !== null) {
-      inputElement.dataset.lang = lang;
+
+    if (value === null) {
+      inputElement.value = "";
+    } else {
+      inputElement.value = value;
     }
 
     inputElement.addEventListener("keypress", (keypress_event) => {
 
       if (keypress_event.key !== "Enter") return;
+      let isValid: boolean = false;
+      if (this.boneStructure["required"]) {
 
-      const formData = this.reWriteBoneValue();
+        this.mainInstance.bone.querySelectorAll("sl-input").forEach((tmpInput) => {
+          if (tmpInput.value !== null) {
+            if (tmpInput.value.length > 0) {
+              isValid = true;
+            }
+          }
 
-      this.mainInstance.handleChange(formData);
+        })
+      } else {
+        isValid = true;
+      }
+      if (isValid) {
+        const formData = this.reWriteBoneValue();
+        this.mainInstance.handleChange(formData);
+
+      } else {
+        //this.mainInstance.bone.querySelector("sl-input").setCustomValidity("Please Fill");
+
+        inputElement.setCustomValidity("Please Fill");
+
+
+      }
+
     })
 
     return inputElement;
   }
 
-  stringBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  stringBoneEditorRenderer(value: any, boneName = "") {
 
-    return this.rawBoneEditorRenderer(value, lang, boneName);
+    return this.rawBoneEditorRenderer(value, boneName);
   }
 
 
-  numericBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  numericBoneEditorRenderer(value: any, boneName = "") {
 
-    const numericBone = this.rawBoneEditorRenderer(value, lang, boneName);
+    const numericBone = this.rawBoneEditorRenderer(value, boneName);
     numericBone.type = "number";
     numericBone.min = this.boneStructure["min"];
     numericBone.max = this.boneStructure["max"];
@@ -320,9 +411,9 @@ export class BoneEditRenderer {
   }
 
 
-  dateBoneEditorRenderer(value: string, lang = null, boneName = "") {
+  dateBoneEditorRenderer(value: string, boneName = "") {
 
-    const dateBone = this.rawBoneEditorRenderer(value, lang, boneName);
+    const dateBone = this.rawBoneEditorRenderer(value, boneName);
 
     if (this.boneStructure["time"]) {
 
@@ -338,33 +429,35 @@ export class BoneEditRenderer {
   }
 
 
-  booleanBoneEditorRenderer(value: boolean, lang = null, boneName = "") {
+  booleanBoneEditorRenderer(value: boolean, boneName = "") {
 
     const inputElement = document.createElement("sl-switch");
     inputElement.dataset.boneName = boneName;
     inputElement.value = value.toString();
-    if (lang !== null) {
-      inputElement.dataset.lang = lang;
-    }
+
 
     return inputElement;
   }
 
 
-  recordBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  recordBoneEditorRenderer(value: any, boneName = "") {
 
 
     const inputWrapper = document.createElement("form");
     inputWrapper.dataset.boneName = this.boneName;
     inputWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     inputWrapper.dataset.depth = this.depth.toString();
-    inputWrapper.dataset.lang = lang;
 
 
     for (const bone of this.boneStructure["using"]) {
       const recordBoneName: string = bone[0];
       const recordBoneStructure: [] = bone[1];
-      const recordBoneValue: any = value[bone[0]];
+      let recordBoneValue: any = null;
+      if (value !== null) {
+        recordBoneValue = value[bone[0]];
+
+      }
+
 
       const newBoneName = boneName + "." + recordBoneName;
       const tmp_renderer = new BoneEditRenderer(recordBoneStructure, recordBoneValue, newBoneName, this.mainInstance)
@@ -375,6 +468,7 @@ export class BoneEditRenderer {
       inputWrapper.appendChild(tmp);
     }
     inputWrapper.addEventListener("submit", (e) => {
+
       e.preventDefault()
     })
     return inputWrapper;
@@ -383,11 +477,12 @@ export class BoneEditRenderer {
   }
 
 
-  relationBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  relationBoneEditorRenderer(value: any, boneName = "") {
 
     const inputWrapper = document.createElement("div");
-
+    const shadowInput = document.createElement("input")
     const searchBox: SlCombobox = document.createElement("sl-combobox");
+
     //searchBox.hoist =true
     const url = `${apiurl}/json/country/list?search={q}`;
 
@@ -395,7 +490,12 @@ export class BoneEditRenderer {
     //searchBox.style.width = "100%";
     //searchBox.style.boxSizing = "border-box";
     searchBox.dataset.boneName = boneName;
-    searchBox.dataset.boneValue = value["dest"]["key"];
+    searchBox.name = boneName;
+
+    //Shadow input
+    shadowInput.hidden = true;
+    shadowInput.name = boneName;
+
 
     searchBox.source = (search: string) => {
       return fetch(url.replace('{q}', search))
@@ -406,19 +506,25 @@ export class BoneEditRenderer {
             return skellist.map((d: any) => {
               return {
                 text: formatstring({dest: d}, this.boneStructure),
-                value: d.key
+                value: JSON.stringify(d)//TODO Better Solution
               };
 
             })
           }
         );
     };
+    inputWrapper.appendChild(shadowInput);
     inputWrapper.appendChild(searchBox);
 
     searchBox.addEventListener("sl-item-select", (e: CustomEvent) => {
 
-      searchBox.dataset.boneValue = e.detail.item.__value;
-      //updateRelationalBone(searchBox, cell, success)
+      shadowInput.value = JSON.parse(e.detail.item.value).key;
+      const formData = this.reWriteBoneValue();
+      console.log(e);
+      console.log(this.mainInstance.internboneValue);
+      this.mainInstance.internboneValue[this.boneName] = {dest: JSON.parse(e.detail.item.value)}
+      this.mainInstance.handleChange(formData);
+
     });
 
     return inputWrapper;
@@ -427,7 +533,7 @@ export class BoneEditRenderer {
   }
 
 
-  fileBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  fileBoneEditorRenderer(value: any, boneName = "") {
 
 
     const fileContainer = document.createElement("div")
@@ -482,7 +588,7 @@ export class BoneEditRenderer {
   }
 
 
-  selectBoneEditorRenderer(value: any, lang = null, boneName = "") {
+  selectBoneEditorRenderer(value: any, boneName = "") {
 
     const inputSelect = document.createElement("sl-select");
 
@@ -510,18 +616,46 @@ export class BoneEditRenderer {
 
 
   reWriteBoneValue() {
-    console.log("rewritebones")
+
     const globFormdata: FormData = new FormData();
     const depthCounter: number[] = [];
     const langs: string[] = [];
     let formData: FormData = new FormData(this.mainInstance.bone);
-    for (const pair of formData.entries()) {
 
-      globFormdata.append(pair[0], pair[1])
+    const names = [];
+    for (const pair of formData.entries()) {
+      if (pair[1] !== null) {
+        if (pair[1] !== "") {
+          globFormdata.append(pair[0], pair[1]);
+          if (names.indexOf(pair[0]) === -1) {
+            names.push(pair[0])
+          }
+
+        }
+
+      }
+
+    }
+
+
+    for (const name of names) {
+      let counter = 0;
+      this.mainInstance.bone.querySelectorAll('[data-bone-name="' + name + '"]').forEach((element) => {
+        if (this.boneStructure["multiple"]) {
+          element.dataset.boneNameIndex = name + "." + counter;
+        } else {
+          element.dataset.boneNameIndex = name;
+        }
+        counter += 1;
+      });
+
+
     }
 
 
     this.mainInstance.bone.querySelectorAll("form").forEach((form) => {
+      console.log("search")
+
 
       if (form.dataset.depth === undefined) return;
       if (form.dataset.lang === undefined) return;
@@ -543,11 +677,23 @@ export class BoneEditRenderer {
         if (found || form.querySelector("form")) {
           depthCounter[Number.parseInt(form.dataset.depth)] += 1;
           depthCounter.splice(Number.parseInt(form.dataset.depth) + 1)
-          console.log("depth set up")
-          console.log(depthCounter)
+
         }
 
       }
+      /**
+       * Set Index on boneName for esaier error handling
+       */
+      form.querySelectorAll(":scope > div > sl-input").forEach((element) => {
+
+        let key = element.dataset.boneName;
+        let counter = 0;
+        while (key.indexOf("$(index)") !== -1) {
+          key = key.replace("$(index)", depthCounter[counter].toString());
+          counter += 1;
+        }
+        element.dataset.boneNameIndex = key;
+      })
       if (langs[Number.parseInt(form.dataset.depth)] !== form.dataset.lang) {
 
         langs[Number.parseInt(form.dataset.depth)] = form.dataset.lang
@@ -574,8 +720,11 @@ export class BoneEditRenderer {
     for (const pair of globFormdata.entries()) {
       createPath(obj, pair[0], pair[1]);
     }
-    console.log(obj);
-    this.mainInstance.internboneValue = obj;
+
+    if (obj !== {}) {
+      this.mainInstance.internboneValue = obj;
+    }
+
     return globFormdata;
 
 
@@ -644,7 +793,7 @@ function createPath(obj: object, path: string | string[], value: any | null = nu
 function objectToPaths(obj: object, path: string) {
 
   let paths: string[] = [];
-  const tmpObj: any|any[] = getPath(obj, path);
+  const tmpObj: any | any[] = getPath(obj, path);
   if (Array.isArray(tmpObj)) {
     for (const tmp in tmpObj) {
 
@@ -692,7 +841,7 @@ function getUploadUrl(file: File) {
   });
 }
 
-function uploadFile(file:File, uploadData:any) {
+function uploadFile(file: File, uploadData: any) {
 
   return new Promise((resolve, reject) => {
     fetch(uploadData["values"]["uploadUrl"], {
@@ -707,7 +856,7 @@ function uploadFile(file:File, uploadData:any) {
 
 }
 
-function addFile(uploadData:any) {
+function addFile(uploadData: any) {
 
 
   return new Promise((resolve, reject) => {
