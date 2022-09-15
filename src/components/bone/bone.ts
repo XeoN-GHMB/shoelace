@@ -72,7 +72,6 @@ export default class SlBone extends LitElement {
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
-      console.trace()
       const boneEditor = new BoneEditRenderer(this.boneStructure, this.boneValue, this.boneName, this)
       this.bone = boneEditor.boneEditor();
     }

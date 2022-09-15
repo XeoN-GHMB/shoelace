@@ -253,6 +253,7 @@ export class BoneViewRenderer {
 
     return this.rawBoneRenderer();
   }
+
   ////////////HELPER FUNCTIONS////////////////
 
 
@@ -337,8 +338,7 @@ export function formatstring(data, boneStructure: object, lang = null) {
     return data;
   }
   if (boneStructure["format"] === undefined) {
-    if(boneStructure["type"]==="str")
-    {
+    if (boneStructure["type"] === "str") {
       return escapeString(data);
     }
     return data.toString();
@@ -359,10 +359,8 @@ export function formatstring(data, boneStructure: object, lang = null) {
         }
       }
 
-    }
-    else
-    {
-      newboneStructure=boneStructure["relskel"]
+    } else {
+      newboneStructure = boneStructure["relskel"]
     }
   } else {
     if (Array.isArray(boneStructure["using"])) {
@@ -376,9 +374,8 @@ export function formatstring(data, boneStructure: object, lang = null) {
         }
       }
 
-    }
-    else {
-      newboneStructure=boneStructure["using"]
+    } else {
+      newboneStructure = boneStructure["using"]
     }
   }
 
@@ -500,25 +497,24 @@ export function getPath(obj: object, path: string | string[]): object | undefine
   return current;
 }
 
-function escapeString(value) {
-  if(Array.isArray(value))
-  {
-    for(const i in value)
-    {
-      value[i]=escapeString(value[i]);
-    }
-    return value
+export function escapeString(value: string | string[]): string | string[] {
+  if (value === null) {
+    return "";
   }
-  else
-  {
-    return value.replaceAll("&lt;", "<")
-    .replaceAll("&gt;", ">")
-    .replaceAll("&quot;", '"')
-    .replaceAll("&#39;", "'")
-    .replaceAll("&#040;", "(")
-    .replaceAll("&#041;", ")")
-    .replaceAll("&#061;", "=")
+  if (Array.isArray(value)) {
+    value.map(v => escapeString(v));
+
+
+  } else {
+    value = value.replaceAll("&lt;", "<")
+      .replaceAll("&gt;", ">")
+      .replaceAll("&quot;", '"')
+      .replaceAll("&#39;", "'")
+      .replaceAll("&#040;", "(")
+      .replaceAll("&#041;", ")")
+      .replaceAll("&#061;", "=")
   }
+  return value
 
 }
 

@@ -1,4 +1,4 @@
-import {formatstring, getPath} from "./boneViewRenderer";
+import {escapeString, formatstring, getPath} from "./boneViewRenderer";
 import SlBone from "./bone";
 import SlCombobox from "../combobox/combobox";
 import SlIcon from "../icon/icon";
@@ -114,57 +114,45 @@ export class BoneEditRenderer {
         languageWrapper.classList.add("language-wrapper");
 
         if (this.boneStructure.multiple && this.boneStructure["type"] !== "select") {
+          // Lang and Mul
           const multipleWrapper = document.createElement("div");
           multipleWrapper.classList.add("multiple-wrapper");
 
-
           for (const tmpValue of this.boneValue[lang]) {
 
-            let newboneName = this.boneName + "." + lang;
-            if (this.boneStructure["type"] === "record") {
-              newboneName = this.boneName + "." + lang + ".$(index)";
-            }
-            if (this.boneStructure["type"] === "spatial") {
-              newboneName = this.boneName + "." + lang + ".$(index-spatial)";
 
-            }
-
-            const inputElement = this.getEditor(tmpValue, newboneName);
-            inputElement.dataset.lang = lang;
-            inputElement.dataset.multiple = this.boneStructure["multiple"];
-            multipleWrapper.appendChild(inputElement);
+            multipleWrapper.appendChild(this.addInput(tmpValue, lang));
           }
 
           const addButton = document.createElement("sl-button");
 
           addButton.addEventListener("click", () => {
-            //const newboneName = boneName //FIXME RECORD BONE
+            console.log("add mul lang")
 
-            let newboneName = this.boneName + "." + lang;
-            if (this.boneStructure["type"] === "record") {
-              newboneName += ".$(index)";
-            }
-            const inputElement = this.getEditor(null, newboneName);
-            inputElement.dataset.lang = lang;
-            inputElement.dataset.multiple = this.boneStructure["multiple"];
-            multipleWrapper.insertBefore(inputElement, addButton);
-
+            multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang));
 
           });
-          addButton.innerText = "Add";
           languageWrapper.appendChild(multipleWrapper);
-          tab_panel.appendChild(languageWrapper);
-          tab_panel.appendChild(addButton);
+          addButton.innerText = "Add";
+          addButton.variant = "success";
 
+          const clearButton = document.createElement("sl-button");
+          clearButton.addEventListener("click", () => {
+            multipleWrapper.innerHTML = "";//Clear Wrapper;
+          });
+          clearButton.innerText = "Clear";
+          //TODO icon prefix for add and clear
+          clearButton.variant = "danger";
+
+
+          tab_panel.appendChild(addButton);
+          tab_panel.appendChild(clearButton);
+          tab_panel.appendChild(languageWrapper);
         } else {
           //Lang , no multipler
           const languageWrapper = document.createElement("div");
           languageWrapper.classList.add("language-wrapper");
-          const newboneName = this.boneName + "." + lang;
-          const inputElement = this.getEditor(this.boneValue[lang], newboneName);
-          inputElement.dataset.lang = lang;
-          inputElement.dataset.multiple = this.boneStructure["multiple"];
-          languageWrapper.appendChild(inputElement);
+          languageWrapper.appendChild(this.addInput(this.boneValue[lang], lang));
           tab_panel.appendChild(languageWrapper);
         }
         tabGroup.appendChild(tab_panel);
@@ -185,32 +173,10 @@ export class BoneEditRenderer {
         const multipleWrapper = document.createElement("div");
         multipleWrapper.classList.add("multiple-wrapper");
         const addButton = document.createElement("sl-button");
+        addButton.innerText = "Add";
+        addButton.variant = "success"
         for (const tmpValue of this.boneValue) {
-
-          let newboneName = this.boneName;
-          if (this.boneStructure["type"] === "record") {
-            newboneName = this.boneName + ".$(index)";
-          }
-          if (this.boneStructure["type"] === "spatial") {
-            newboneName = this.boneName + ".$(index-spatial)";
-          }
-
-
-          const inputElement: HTMLElement = this.getEditor(tmpValue, newboneName);
-          inputElement.dataset.lang = "null";
-          inputElement.dataset.multiple = this.boneStructure["multiple"];
-
-
-          inputElement.querySelector(":scope>#clearButton").addEventListener("click", () => {
-            //boneWrapper.remove();
-            const formData = this.reWriteBoneValue();
-            this.mainInstance.handleChange(formData, "deleteEntry")
-            addButton.focus();
-
-          });
-
-
-          multipleWrapper.appendChild(inputElement);
+          multipleWrapper.appendChild(this.addInput(tmpValue, null));
           //TODo for later item moving
           /*
           inputElement.querySelector("#dragger").addEventListener("mousedown", (e) => {
@@ -259,38 +225,21 @@ export class BoneEditRenderer {
 
 
         }
-        wrapper.appendChild(multipleWrapper);
+
 
         addButton.addEventListener("click", () => {
-          //FIXME RECORD BONE
-
-          const boneWrapper = document.createElement("div");
-          let newboneName = this.boneName;
-          if (this.boneStructure["type"] === "record") {
-            newboneName = this.boneName + ".$(index)";
-          }
-          const inputElement = this.getEditor(null, newboneName);
-          inputElement.dataset.lang = "null";
-          inputElement.dataset.multiple = this.boneStructure["multiple"];
-          inputElement.querySelector("#clearButton").addEventListener("click", () => {
-            this.reWriteBoneValue()
-            boneWrapper.remove();
-            addButton.focus();
-
-          });
-
-
-          boneWrapper.appendChild(inputElement);
-
-          wrapper.insertBefore(boneWrapper, addButton);
-
-          wrapper.focus();
-
-
+          multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], "null"));
         });
 
-        addButton.innerText = "Add";
         wrapper.appendChild(addButton);
+        const clearButton = document.createElement("sl-button");
+        clearButton.addEventListener("click", () => {
+          multipleWrapper.innerHTML = "";//Clear Wrapper;
+        });
+        clearButton.innerText = "Clear";
+        clearButton.variant = "danger";
+        wrapper.appendChild(clearButton);
+        wrapper.appendChild(multipleWrapper);
 
 
       } else {
@@ -343,6 +292,34 @@ export class BoneEditRenderer {
     return wrapper;
 
 
+  }
+
+  addInput(value: any, lang: string) {
+
+    let newboneName = this.boneName;
+    if (lang !== null) {
+      newboneName += "." + lang
+    }
+    if (this.boneStructure["type"] === "record") {
+      newboneName = this.boneName + ".$(index)";
+    }
+    if (this.boneStructure["type"] === "spatial") {
+      newboneName = this.boneName + ".$(index-spatial)";
+    }
+    const inputElement: HTMLElement = this.getEditor(value, newboneName);
+    inputElement.dataset.lang = lang;
+    inputElement.dataset.multiple = this.boneStructure["multiple"];
+
+    if (this.boneStructure["multiple"]) {
+      inputElement.querySelector(":scope>#clearButton").addEventListener("click", () => {
+        //boneWrapper.remove();
+        const formData = this.reWriteBoneValue();
+        this.mainInstance.handleChange(formData, "deleteEntry")
+        //addButton.focus();
+
+      });
+    }
+    return inputElement;
   }
 
 
@@ -447,17 +424,8 @@ export class BoneEditRenderer {
 
   stringBoneEditorRenderer(value: any, boneName = "") {
     //Replace Encoded chars
-    if (value !== null) {
-      value = value.replaceAll("&lt;", "<")
-        .replaceAll("&gt;", ">")
-        .replaceAll("&quot;", '"')
-        .replaceAll("&#39;;", "'")
-        .replaceAll("&#040;", "(")
-        .replaceAll("&#041;", ")")
-        .replaceAll("&#061;", "=")
-    }
 
-    return this.rawBoneEditorRenderer(value, boneName);
+    return this.rawBoneEditorRenderer(escapeString(value), boneName);
   }
 
 
@@ -508,10 +476,15 @@ export class BoneEditRenderer {
 
     const recordboneWrapper = document.createElement("form");
     recordboneWrapper.classList.add("record-wrapper");
-    recordboneWrapper.style.paddingTop = "10px";
-    recordboneWrapper.style.paddingLeft = "10px";
-    recordboneWrapper.style.borderStyle = "solid";
+    recordboneWrapper.style.paddingTop = "5px";
+    recordboneWrapper.style.paddingLeft = "5px";
 
+    recordboneWrapper.style.marginTop = "2px";
+    recordboneWrapper.style.marginLeft = "2px";
+
+    recordboneWrapper.style.borderStyle = "solid";
+    recordboneWrapper.style.borderWidth = "1px";
+    //TODo outsource styles
 
     recordboneWrapper.dataset.boneName = this.boneName;
     recordboneWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
@@ -536,11 +509,13 @@ export class BoneEditRenderer {
     }
     if (this.boneStructure["multiple"]) {
       const clearButton: SlIconButton = document.createElement("sl-button")
-      clearButton.library = "my-icons";
+      clearButton.library = "default";
       clearButton.slot = "suffix";
-      clearButton.name = "x-circle";
+      clearButton.name = "x";
       clearButton.id = "clearButton"
       clearButton.innerText = "x-rec"
+      //clearButton.variant = "danger";
+
       //clearButton.style.float="right";
       recordboneWrapper.appendChild(clearButton);
     }
