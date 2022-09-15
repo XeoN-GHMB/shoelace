@@ -90,6 +90,7 @@ export class BoneEditRenderer {
     }
 
 
+    wrapper.classList.add("bone-wrapper")
     wrapper.dataset.boneWrapper = "true";
     wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     wrapper.dataset.boneName = this.boneName;
@@ -108,8 +109,14 @@ export class BoneEditRenderer {
 
         const tab_panel = document.createElement("sl-tab-panel")
         tab_panel.name = lang;
+
+        const languageWrapper = document.createElement("div");
+        languageWrapper.classList.add("language-wrapper");
+
         if (this.boneStructure.multiple && this.boneStructure["type"] !== "select") {
-          const inputWrapper = document.createElement("div");
+          const multipleWrapper = document.createElement("div");
+          multipleWrapper.classList.add("multiple-wrapper");
+
 
           for (const tmpValue of this.boneValue[lang]) {
 
@@ -117,11 +124,15 @@ export class BoneEditRenderer {
             if (this.boneStructure["type"] === "record") {
               newboneName = this.boneName + "." + lang + ".$(index)";
             }
+            if (this.boneStructure["type"] === "spatial") {
+              newboneName = this.boneName + "." + lang + ".$(index-spatial)";
+
+            }
 
             const inputElement = this.getEditor(tmpValue, newboneName);
             inputElement.dataset.lang = lang;
             inputElement.dataset.multiple = this.boneStructure["multiple"];
-            inputWrapper.appendChild(inputElement);
+            multipleWrapper.appendChild(inputElement);
           }
 
           const addButton = document.createElement("sl-button");
@@ -136,21 +147,25 @@ export class BoneEditRenderer {
             const inputElement = this.getEditor(null, newboneName);
             inputElement.dataset.lang = lang;
             inputElement.dataset.multiple = this.boneStructure["multiple"];
-            inputWrapper.insertBefore(inputElement, addButton);
+            multipleWrapper.insertBefore(inputElement, addButton);
 
 
           });
           addButton.innerText = "Add";
-          inputWrapper.appendChild(addButton);
-          tab_panel.appendChild(inputWrapper);
+          languageWrapper.appendChild(multipleWrapper);
+          tab_panel.appendChild(languageWrapper);
+          tab_panel.appendChild(addButton);
 
         } else {
           //Lang , no multipler
+          const languageWrapper = document.createElement("div");
+          languageWrapper.classList.add("language-wrapper");
           const newboneName = this.boneName + "." + lang;
           const inputElement = this.getEditor(this.boneValue[lang], newboneName);
           inputElement.dataset.lang = lang;
           inputElement.dataset.multiple = this.boneStructure["multiple"];
-          tab_panel.appendChild(inputElement);
+          languageWrapper.appendChild(inputElement);
+          tab_panel.appendChild(languageWrapper);
         }
         tabGroup.appendChild(tab_panel);
 
@@ -167,34 +182,36 @@ export class BoneEditRenderer {
         if (this.boneValue === null) {
           this.boneValue = []
         }
-
+        const multipleWrapper = document.createElement("div");
+        multipleWrapper.classList.add("multiple-wrapper");
         const addButton = document.createElement("sl-button");
         for (const tmpValue of this.boneValue) {
+
           let newboneName = this.boneName;
           if (this.boneStructure["type"] === "record") {
             newboneName = this.boneName + ".$(index)";
           }
+          if (this.boneStructure["type"] === "spatial") {
+            newboneName = this.boneName + ".$(index-spatial)";
+          }
 
-
-          const boneWrapper = document.createElement("div");
 
           const inputElement: HTMLElement = this.getEditor(tmpValue, newboneName);
           inputElement.dataset.lang = "null";
           inputElement.dataset.multiple = this.boneStructure["multiple"];
 
 
-          inputElement.querySelector("#clearButton").addEventListener("click", () => {
-            boneWrapper.remove();
+          inputElement.querySelector(":scope>#clearButton").addEventListener("click", () => {
+            //boneWrapper.remove();
             const formData = this.reWriteBoneValue();
-            console.log("clear")
             this.mainInstance.handleChange(formData, "deleteEntry")
             addButton.focus();
 
           });
 
 
-          boneWrapper.appendChild(inputElement);
-          //TODo for later
+          multipleWrapper.appendChild(inputElement);
+          //TODo for later item moving
           /*
           inputElement.querySelector("#dragger").addEventListener("mousedown", (e) => {
             if(!this.move)
@@ -239,10 +256,10 @@ export class BoneEditRenderer {
 
           })
 */
-          wrapper.appendChild(boneWrapper);
+
 
         }
-
+        wrapper.appendChild(multipleWrapper);
 
         addButton.addEventListener("click", () => {
           //FIXME RECORD BONE
@@ -271,12 +288,14 @@ export class BoneEditRenderer {
 
 
         });
+
         addButton.innerText = "Add";
         wrapper.appendChild(addButton);
 
 
       } else {
         //No Lang, No Multiple
+
         const inputElement = this.getEditor(this.boneValue, this.boneName)
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
@@ -294,7 +313,6 @@ export class BoneEditRenderer {
     wrapper.addEventListener("sl-blur", (blur_event) => {
 
       this.blurCounter -= 1;
-      console.log("lost focus")
       return
       const self: BoneEditRenderer = this;
       setTimeout(function () {
@@ -308,14 +326,20 @@ export class BoneEditRenderer {
       }, 20)
     });
     if (!fromRecord) {
-      const saveButton = document.createElement("sl-button");
-      saveButton.innerText = "Save";
-      saveButton.addEventListener("click", () => {
-        const formData = this.reWriteBoneValue();
-        this.mainInstance.handleChange(formData);
-      })
-      wrapper.appendChild(saveButton);
+      if (this.mainInstance.rendersaveButton) {
+        const saveButton = document.createElement("sl-button");
+        saveButton.innerText = "Save";
+        saveButton.addEventListener("click", () => {
+          console.log("Save")
+          const formData = this.reWriteBoneValue();
+          this.mainInstance.handleChange(formData);
+        })
+        wrapper.appendChild(saveButton);
+      }
+
+
     }
+
     return wrapper;
 
 
@@ -341,6 +365,9 @@ export class BoneEditRenderer {
         return this.relationBoneEditorRenderer(value, boneName);
       case "select":
         return this.selectBoneEditorRenderer(value, boneName);
+
+      case "spatial":
+        return this.spatialBoneEditorRenderer(value, boneName);
       default:
         return this.rawBoneEditorRenderer(value, boneName);
     }
@@ -350,12 +377,19 @@ export class BoneEditRenderer {
 
   rawBoneEditorRenderer(value: any, boneName = "") {
     const inputElement = document.createElement("sl-input");
-    const clearButton: SlIconButton = document.createElement("sl-icon-button")
-    clearButton.library = "my-icons";
-    clearButton.slot = "suffix";
-    clearButton.name = "x-circle";
-    clearButton.id = "clearButton"
-    inputElement.appendChild(clearButton);
+    //const clearButton: SlIconButton = document.createElement("sl-icon-button")
+    if (this.boneStructure["multiple"]) {
+      const clearButton: SlIconButton = document.createElement("sl-button")
+      clearButton.library = "my-icons";
+      clearButton.slot = "suffix";
+      clearButton.name = "x-circle";
+      clearButton.id = "clearButton"
+      clearButton.innerText = "x"
+      inputElement.appendChild(clearButton);
+    } else {
+      inputElement.label = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
+    }
+
     //ToDo
     /*
     const draggable = document.createElement("sl-icon")
@@ -392,8 +426,11 @@ export class BoneEditRenderer {
         isValid = true;
       }
       if (isValid) {
-        const formData = this.reWriteBoneValue();
-        this.mainInstance.handleChange(formData);
+        if (inputElement.reportValidity()) {
+          const formData = this.reWriteBoneValue();
+          this.mainInstance.handleChange(formData);
+        }
+
 
       } else {
         //this.mainInstance.bone.querySelector("sl-input").setCustomValidity("Please Fill");
@@ -430,6 +467,10 @@ export class BoneEditRenderer {
     numericBone.type = "number";
     numericBone.min = this.boneStructure["min"];
     numericBone.max = this.boneStructure["max"];
+    if (this.boneStructure["precision"] > 1) {
+      numericBone.step = "0." + "0".repeat(this.boneStructure["precision"] - 1) + "1";
+    }
+
     return numericBone;
   }
 
@@ -465,36 +506,49 @@ export class BoneEditRenderer {
 
   recordBoneEditorRenderer(value: any, boneName = "") {
 
+    const recordboneWrapper = document.createElement("form");
+    recordboneWrapper.classList.add("record-wrapper");
+    recordboneWrapper.style.paddingTop = "10px";
+    recordboneWrapper.style.paddingLeft = "10px";
+    recordboneWrapper.style.borderStyle = "solid";
 
-    const inputWrapper = document.createElement("form");
-    inputWrapper.dataset.boneName = this.boneName;
-    inputWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
-    inputWrapper.dataset.depth = this.depth.toString();
+
+    recordboneWrapper.dataset.boneName = this.boneName;
+    recordboneWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
+    recordboneWrapper.dataset.depth = this.depth.toString();
 
 
-    for (const bone of this.boneStructure["using"]) {
-      const recordBoneName: string = bone[0];
-      const recordBoneStructure: [] = bone[1];
+    for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
+
       let recordBoneValue: any = null;
       if (value !== null) {
-        recordBoneValue = value[bone[0]];
+        recordBoneValue = value[_boneName];
 
       }
 
 
-      const newBoneName = boneName + "." + recordBoneName;
-      const tmp_renderer = new BoneEditRenderer(recordBoneStructure, recordBoneValue, newBoneName, this.mainInstance)
+      const newBoneName = boneName + "." + _boneName;
+      const tmp_renderer = new BoneEditRenderer(_boneStructure, recordBoneValue, newBoneName, this.mainInstance)
       const tmp: HTMLElement = tmp_renderer.boneEditor(true, this.depth + 1);
       tmp.dataset.fromRecord = "true";
 
-
-      inputWrapper.appendChild(tmp);
+      recordboneWrapper.appendChild(tmp);
     }
-    inputWrapper.addEventListener("submit", (e) => {
+    if (this.boneStructure["multiple"]) {
+      const clearButton: SlIconButton = document.createElement("sl-button")
+      clearButton.library = "my-icons";
+      clearButton.slot = "suffix";
+      clearButton.name = "x-circle";
+      clearButton.id = "clearButton"
+      clearButton.innerText = "x-rec"
+      //clearButton.style.float="right";
+      recordboneWrapper.appendChild(clearButton);
+    }
+    recordboneWrapper.addEventListener("submit", (e) => {
 
       e.preventDefault()
     })
-    return inputWrapper;
+    return recordboneWrapper;
 
 
   }
@@ -568,6 +622,16 @@ export class BoneEditRenderer {
     const shadowFile = document.createElement("input");
     const shadowKey = document.createElement("input");
     const statusSpan = document.createElement("span");
+    const uploadButton = document.createElement("sl-button");
+    const clearButton = document.createElement("sl-button");
+
+    uploadButton.innerText = "Select";
+    uploadButton.addEventListener("click", () => {
+      shadowFile.click();
+    })
+
+    clearButton.innerText = "Clear";
+    clearButton.id = "clearButton";
     shadowFile.type = "file";
     let filter: string;
 
@@ -600,25 +664,28 @@ export class BoneEditRenderer {
           addFile(uploadData, statusSpan).then((fileData: object) => {
             const fileKey: string = fileData["values"]["key"];
             shadowKey.value = fileKey;
-            const formData = this.reWriteBoneValue();
-            this.mainInstance.handleChange(formData);
+            statusSpan.innerText = fileKey;
+            //const formData = this.reWriteBoneValue();
+            //this.mainInstance.handleChange(formData);
 
           })
 
         });
       });
     });
-    shadowFile.click();
+
     fileContainer.appendChild(shadowFile);
     fileContainer.appendChild(shadowKey);
     fileContainer.appendChild(statusSpan);
+    fileContainer.appendChild(uploadButton);
+    fileContainer.appendChild(clearButton);
     return fileContainer;
   }
 
 
   selectBoneEditorRenderer(value: any, boneName = "") {
 
-    const inputSelect:SlSelect = document.createElement("sl-select");
+    const inputSelect: SlSelect = document.createElement("sl-select");
 
     inputSelect.name = boneName;
     inputSelect.value = value;
@@ -642,19 +709,61 @@ export class BoneEditRenderer {
 
   }
 
+  spatialBoneEditorRenderer(value: any, boneName = "") {
+    const spatialWrapper = document.createElement("div");
+    const lat = value[0];
+    const lng = value[1];
+
+    const latInput = this.rawBoneEditorRenderer(lat, boneName + ".lat");
+    latInput.type = "number";
+
+    latInput.min = this.boneStructure["boundsLat"][0];
+    latInput.max = this.boneStructure["boundsLat"][1];
+    latInput.step = "any";
+    spatialWrapper.appendChild(latInput);
+
+    const lngInput = this.rawBoneEditorRenderer(lng, boneName + ".lng");
+    lngInput.type = "number";
+    lngInput.min = this.boneStructure["boundsLng"][0];
+    lngInput.max = this.boneStructure["boundsLng"][1];
+    lngInput.step = "any";
+    spatialWrapper.appendChild(lngInput);
+    return spatialWrapper;
+  }
+
 
   reWriteBoneValue() {
 
+
     const globFormdata: FormData = new FormData();
-    const depthCounter: number[] = [];
+
     const langs: string[] = [];
     let formData: FormData = new FormData(this.mainInstance.bone);
 
     const names = [];
+    let counterspatial = 0;
+    let indexspatial = 0;
+    let oldname = "";
     for (const pair of formData.entries()) {
       if (pair[1] !== null) {
         if (pair[1] !== "") {
-          globFormdata.append(pair[0], pair[1]);
+
+          let key = pair[0];
+          if (key.indexOf("$(index-spatial)") !== -1) {
+            const keyParts = key.split(".")
+            if (oldname !== keyParts.slice(0, keyParts.length - 1).join(".")) { // Lang change
+              counterspatial = 0;
+              indexspatial = 0;
+              oldname = keyParts.slice(0, keyParts.length - 1).join(".");
+            }
+
+            key = key.replace("$(index-spatial)", indexspatial.toString());
+            counterspatial += 1;
+            if (counterspatial % 2 === 0) {
+              indexspatial += 1;
+            }
+          }
+          globFormdata.append(key, pair[1]);
           if (names.indexOf(pair[0]) === -1) {
             names.push(pair[0])
           }
@@ -680,71 +789,88 @@ export class BoneEditRenderer {
 
     }
 
-
+    const depthCounter = [];
     this.mainInstance.bone.querySelectorAll("form").forEach((form) => {
-      console.log("search")
 
 
-      if (form.dataset.depth === undefined) return;
-      if (form.dataset.lang === undefined) return;
+        if (form.dataset.depth === undefined) return;
+        if (form.dataset.lang === undefined) return;
 
 
-      formData = new FormData(form);
+        formData = new FormData(form);
 
-      if (depthCounter[Number.parseInt(form.dataset.depth)] === undefined) {
-        depthCounter.push(0)
-        langs.push(form.dataset.lang.toString());
+        if (depthCounter[Number.parseInt(form.dataset.depth)] === undefined) {
+          depthCounter.push(0)
+          langs.push(form.dataset.lang.toString());
 
-      } else {
+        } else {
 
-        let found = false;
-        for (const pair_ of formData.entries()) {
-          found = true;
-          break;
+          let found = false;
+          for (const pair_ of formData.entries()) {
+            found = true;
+            break;
+          }
+          if (found || form.querySelector("form")) {
+            depthCounter[Number.parseInt(form.dataset.depth)] += 1;
+            depthCounter.splice(Number.parseInt(form.dataset.depth) + 1)
+
+          }
+
         }
-        if (found || form.querySelector("form")) {
-          depthCounter[Number.parseInt(form.dataset.depth)] += 1;
+        /**
+         * Set Index on boneName for esaier error handling
+         */
+        console.log("error handling")
+        form.querySelectorAll(":scope > div > sl-input").forEach((element) => {
+
+          let key = element.dataset.boneName;
+          let counter = 0;
+          while (key.indexOf("$(index)") !== -1) {
+            key = key.replace("$(index)", depthCounter[counter].toString());
+            counter += 1;
+          }
+          element.dataset.boneNameIndex = key;
+        })
+        if (langs[Number.parseInt(form.dataset.depth)] !== form.dataset.lang) {
+
+          langs[Number.parseInt(form.dataset.depth)] = form.dataset.lang
+          depthCounter[Number.parseInt(form.dataset.depth)] = 0;
           depthCounter.splice(Number.parseInt(form.dataset.depth) + 1)
 
+
+        }
+        let counterspatial = 0;
+        let indexspatial = 0;
+        let oldname = "";
+
+        for (const pair of formData.entries()) {
+          let key = pair[0]
+          let counter = 0;
+          while (key.indexOf("$(index)") !== -1) {
+            key = key.replace("$(index)", depthCounter[counter].toString());
+            counter += 1;
+          }
+          if (key.indexOf("$(index-spatial)") !== -1) {
+            const keyParts = key.split(".");
+            if (oldname !== keyParts.slice(0, keyParts.length - 1).join(".")) { // Lang change
+              counterspatial = 0;
+              indexspatial = 0;
+              oldname = keyParts.slice(0, keyParts.length - 1).join(".");
+            }
+            key = key.replace("$(index-spatial)", indexspatial.toString());
+            counterspatial += 1;
+            if (counterspatial % 2 === 0) {
+              indexspatial += 1;
+            }
+          }
+          globFormdata.append(key, pair[1]);
         }
 
-      }
-      /**
-       * Set Index on boneName for esaier error handling
-       */
-      form.querySelectorAll(":scope > div > sl-input").forEach((element) => {
-
-        let key = element.dataset.boneName;
-        let counter = 0;
-        while (key.indexOf("$(index)") !== -1) {
-          key = key.replace("$(index)", depthCounter[counter].toString());
-          counter += 1;
-        }
-        element.dataset.boneNameIndex = key;
-      })
-      if (langs[Number.parseInt(form.dataset.depth)] !== form.dataset.lang) {
-
-        langs[Number.parseInt(form.dataset.depth)] = form.dataset.lang
-        depthCounter[Number.parseInt(form.dataset.depth)] = 0;
-        depthCounter.splice(Number.parseInt(form.dataset.depth) + 1)
-
 
       }
+    )
 
-      for (const pair of formData.entries()) {
-        let key = pair[0]
-        let counter = 0;
-        while (key.indexOf("$(index)") !== -1) {
-          key = key.replace("$(index)", depthCounter[counter].toString());
-          counter += 1;
-        }
-        globFormdata.append(key, pair[1]);
-      }
-
-
-    })
-
-    const obj = {}
+    const obj = {};
     for (const pair of globFormdata.entries()) {
       createPath(obj, pair[0], pair[1]);
     }
@@ -762,7 +888,9 @@ export class BoneEditRenderer {
 }
 
 /////////////////HELPER FUNCTRIONS/////////////////
-function getSkey() {
+function
+
+getSkey() {
   return new Promise((resolve, reject) => {
 
     fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
@@ -774,7 +902,9 @@ function getSkey() {
   })
 }
 
-function createPath(obj: object, path: string | string[], value: any | null = null) {
+function
+
+createPath(obj: object, path: string | string[], value: any | null = null) {
 
   path = typeof path === 'string' ? path.split('.') : path;
   let current: object = obj;
@@ -818,7 +948,9 @@ function createPath(obj: object, path: string | string[], value: any | null = nu
 
 }
 
-function objectToPaths(obj: object, path: string) {
+function
+
+objectToPaths(obj: object, path: string) {
 
   let paths: string[] = [];
   const tmpObj: any | any[] = getPath(obj, path);
@@ -848,7 +980,9 @@ function objectToPaths(obj: object, path: string) {
 
 /////////////////FILEBONE FUNCTRIONS/////////////////
 
-function getUploadUrl(file: File) {
+function
+
+getUploadUrl(file: File) {
   return new Promise((resolve, reject) => {
     getSkey().then(skey => {
 
@@ -869,7 +1003,9 @@ function getUploadUrl(file: File) {
   });
 }
 
-function uploadFile(file: File, uploadData: any) {
+function
+
+uploadFile(file: File, uploadData: any) {
 
   return new Promise((resolve, reject) => {
     fetch(uploadData["values"]["uploadUrl"], {
@@ -884,7 +1020,9 @@ function uploadFile(file: File, uploadData: any) {
 
 }
 
-function addFile(uploadData: any) {
+function
+
+addFile(uploadData: any) {
 
 
   return new Promise((resolve, reject) => {

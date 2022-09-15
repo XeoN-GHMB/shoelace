@@ -34,10 +34,12 @@ export class BoneViewRenderer {
     max: number,
 
     //text
-    validHtml: string[]
+    validHtml: string[],
 
     //file
-    validMimeTypes: string[]
+    validMimeTypes: string[],
+
+    //spatial
 
   }
   boneValue: any;
@@ -56,6 +58,7 @@ export class BoneViewRenderer {
     if (!this.boneStructure) {
       return;
     }
+
     switch (this.boneStructure["type"].split(".")[0]) {
       case "str":
         return this.stringBoneRenderer();
@@ -73,10 +76,12 @@ export class BoneViewRenderer {
       case "select":
         return this.selectBoneRenderer();
       case "text":
-
         return this.textBoneRenderer();
+      case "spatial":
+        return this.spatialBoneRenderer();
+
     }
-    return "";
+    return this.rawBoneRenderer();
   }
 
 
@@ -114,7 +119,7 @@ export class BoneViewRenderer {
     if (this.boneStructure["type"].startsWith("text")) {
       return html`${unsafeHTML(this.boneValue)}`;
     }
-
+    console.log("here?")
     return formater(this.boneValue, this.boneStructure)
 
   }
@@ -243,6 +248,11 @@ export class BoneViewRenderer {
     return this.rawBoneRenderer();
   }
 
+  spatialBoneRenderer(): any {
+    console.log(this.boneValue)
+
+    return this.rawBoneRenderer();
+  }
   ////////////HELPER FUNCTIONS////////////////
 
 
@@ -331,7 +341,7 @@ export function formatstring(data, boneStructure: object, lang = null) {
     {
       return escapeString(data);
     }
-    return data;
+    return data.toString();
   }
   let re = /\$\(([^)]+)\)/g;
   let newboneStructure = {};
@@ -350,6 +360,10 @@ export function formatstring(data, boneStructure: object, lang = null) {
       }
 
     }
+    else
+    {
+      newboneStructure=boneStructure["relskel"]
+    }
   } else {
     if (Array.isArray(boneStructure["using"])) {
 
@@ -362,6 +376,9 @@ export function formatstring(data, boneStructure: object, lang = null) {
         }
       }
 
+    }
+    else {
+      newboneStructure=boneStructure["using"]
     }
   }
 
@@ -484,13 +501,25 @@ export function getPath(obj: object, path: string | string[]): object | undefine
 }
 
 function escapeString(value) {
-  return value.replaceAll("&lt;", "<")
+  if(Array.isArray(value))
+  {
+    for(const i in value)
+    {
+      value[i]=escapeString(value[i]);
+    }
+    return value
+  }
+  else
+  {
+    return value.replaceAll("&lt;", "<")
     .replaceAll("&gt;", ">")
     .replaceAll("&quot;", '"')
     .replaceAll("&#39;", "'")
     .replaceAll("&#040;", "(")
     .replaceAll("&#041;", ")")
     .replaceAll("&#061;", "=")
+  }
+
 }
 
 

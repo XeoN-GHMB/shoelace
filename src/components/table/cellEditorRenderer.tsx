@@ -3,7 +3,6 @@
 const apiurl = "http://localhost:8080";
 
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, editParams: any): any {
-  console.log()
   const boneStructure = editParams[0];
   const tableInstance = editParams[1];
   cell.getRow().getElement().style.height = "auto";
@@ -28,17 +27,17 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
   bone.addEventListener("sl-boneChange", async (boneChangeEvent) => {
 
     const skelKey = cell._cell.row.data.key;
-
+    if (boneChangeEvent.detail.type === "noChange") {
+      console.log("no change")
+      success(boneChangeEvent.detail.boneValue);
+      cell.getRow()._row.clearCellHeight();
+      return;
+    }
     const result: object = await updateData(boneChangeEvent.detail.formData, skelKey, tableInstance);
     if (result["action"] === "editSuccess") {
       if (boneChangeEvent.detail.type === "edit") {
-        if (boneStructure["type"].startsWith("relational")) {
-          success(result["values"][cell.getField()])
-          cell.getRow()._row.clearCellHeight();
-        } else {
-          success(boneChangeEvent.detail.boneValue);
-          cell.getRow()._row.clearCellHeight();
-        }
+        success(result["values"][cell.getField()])
+        cell.getRow()._row.clearCellHeight();
 
       }
 
