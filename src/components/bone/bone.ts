@@ -60,6 +60,7 @@ export default class SlBone extends LitElement {
 
   @watchProps(['boneStructure', 'boneValue', "renderType"])
   optionUpdate() {
+    console.log("update")
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};
     if (this.boneStructure === null) {

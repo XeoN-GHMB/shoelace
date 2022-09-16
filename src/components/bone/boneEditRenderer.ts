@@ -53,7 +53,6 @@ export class BoneEditRenderer {
   declare boneValue: any | any[];
   boneName: string;
   mainInstance: SlBone;
-  boneRenderer = {"str": this.stringBoneEditorRenderer};
   depth = 0;
   move = false;
   moveElement;
@@ -118,10 +117,10 @@ export class BoneEditRenderer {
           const multipleWrapper = document.createElement("div");
           multipleWrapper.classList.add("multiple-wrapper");
 
-          for (const tmpValue of this.boneValue[lang]) {
+          for (const [i,tmpValue] of this.boneValue[lang].entries()) {
 
 
-            multipleWrapper.appendChild(this.addInput(tmpValue, lang));
+            multipleWrapper.appendChild(this.addInput(tmpValue, lang,i));
           }
 
           const addButton = document.createElement("sl-button");
@@ -141,6 +140,13 @@ export class BoneEditRenderer {
             multipleWrapper.innerHTML = "";//Clear Wrapper;
           });
           clearButton.innerText = "Clear";
+          clearButton.id = "clearButton"
+          clearButton.variant = "danger";
+          clearButton.innerText = "Clear";
+          const xicon :SlIcon = document.createElement("sl-icon");
+          xicon.name = "x";
+          xicon.slot = "suffix";
+          clearButton.appendChild(xicon);
           //TODO icon prefix for add and clear
           clearButton.variant = "danger";
 
@@ -175,8 +181,8 @@ export class BoneEditRenderer {
         const addButton = document.createElement("sl-button");
         addButton.innerText = "Add";
         addButton.variant = "success"
-        for (const tmpValue of this.boneValue) {
-          multipleWrapper.appendChild(this.addInput(tmpValue, null));
+        for (const [i,tmpValue] of this.boneValue.entries()) {
+          multipleWrapper.appendChild(this.addInput(tmpValue, null,i));
           //TODo for later item moving
           /*
           inputElement.querySelector("#dragger").addEventListener("mousedown", (e) => {
@@ -294,18 +300,16 @@ export class BoneEditRenderer {
 
   }
 
-  addInput(value: any, lang: string) {
+  addInput(value: any, lang: string ,index=null) {
 
     let newboneName = this.boneName;
     if (lang !== null) {
       newboneName += "." + lang
     }
-    if (this.boneStructure["type"] === "record") {
-      newboneName = this.boneName + ".$(index)";
+    if (index!==null) {
+      newboneName = this.boneName + "."+index;
     }
-    if (this.boneStructure["type"] === "spatial") {
-      newboneName = this.boneName + ".$(index-spatial)";
-    }
+
     const inputElement: HTMLElement = this.getEditor(value, newboneName);
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
@@ -357,7 +361,6 @@ export class BoneEditRenderer {
     //const clearButton: SlIconButton = document.createElement("sl-icon-button")
     if (this.boneStructure["multiple"]) {
       const clearButton: SlIconButton = document.createElement("sl-button")
-      clearButton.library = "my-icons";
       clearButton.slot = "suffix";
       clearButton.name = "x-circle";
       clearButton.id = "clearButton"
@@ -404,8 +407,10 @@ export class BoneEditRenderer {
       }
       if (isValid) {
         if (inputElement.reportValidity()) {
+          console.log("here")
           const formData = this.reWriteBoneValue();
-          this.mainInstance.handleChange(formData);
+
+          //this.mainInstance.handleChange(formData);
         }
 
 
@@ -508,13 +513,15 @@ export class BoneEditRenderer {
       recordboneWrapper.appendChild(tmp);
     }
     if (this.boneStructure["multiple"]) {
-      const clearButton: SlIconButton = document.createElement("sl-button")
-      clearButton.library = "default";
-      clearButton.slot = "suffix";
-      clearButton.name = "x";
+      const clearButton: SlButton = document.createElement("sl-button")
+
       clearButton.id = "clearButton"
-      clearButton.innerText = "x-rec"
-      //clearButton.variant = "danger";
+      clearButton.variant = "danger";
+      clearButton.innerText = "Clear";
+      const xicon :SlIcon = document.createElement("sl-icon");
+      xicon.name = "x";
+      xicon.slot = "suffix";
+      clearButton.appendChild(xicon);
 
       //clearButton.style.float="right";
       recordboneWrapper.appendChild(clearButton);
@@ -705,10 +712,54 @@ export class BoneEditRenderer {
     spatialWrapper.appendChild(lngInput);
     return spatialWrapper;
   }
-
+    toFormValue(bonevalue,bonename) {
+            function rewriteData(val, key = null) {
+                let ret = []
+                if (Array.isArray(val)) {
+                    if (Object.values(val).filter(c => c === Object(c)).length > 0) {
+                        for (const [i, v] of val.entries()) {
+                            ret.push(rewriteData(v, key + "." + i))
+                        }
+                    } else {
+                        for (const [i, v] of val.entries()) {
+                            ret.push(rewriteData(v, key))
+                        }
+                    }
+                } else if (val === Object(val)) {
+                    for (const [k, v] of Object.entries(val)) {
+                        if (key) {
+                            ret.push(rewriteData(v, key + "." + k))
+                        }else{
+                            ret.push(rewriteData(v, k))
+                        }
+                    }
+                }else{
+                    if(val === null){
+                        val = ""
+                    }
+                    if (key !== null){
+                        ret.push({[key]:val})
+                    }
+                }
+                return ret
+            }
+            let value = rewriteData(bonevalue,bonename)
+            value = value.flat(10)
+            return value
+        }
 
   reWriteBoneValue() {
+    const obj={};
+    this.mainInstance.bone.querySelectorAll("sl-input").forEach((inputElement)=>{
 
+      createPath(obj, inputElement.name,inputElement.value);
+
+    });
+    console.log(obj);
+    console.log(this.mainInstance.boneName);
+    const form = this.toFormValue(obj[[this.mainInstance.boneName]],this.mainInstance.boneName);
+     console.log(form);
+    return
 
     const globFormdata: FormData = new FormData();
 
@@ -845,7 +896,7 @@ export class BoneEditRenderer {
       }
     )
 
-    const obj = {};
+    //const obj = {};
     for (const pair of globFormdata.entries()) {
       createPath(obj, pair[0], pair[1]);
     }
