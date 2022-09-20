@@ -82,6 +82,9 @@ export default class SlTable extends LitElement {
   /** set a module for requests to the server */
   @property({type: String, attribute: false}) module: String = null;
 
+  /** disable editable Table*/
+  @property({type: Boolean, reflect: true}) editableTable: Boolean = false;
+
 
   tableInstance: any;
   tableReady: Boolean = false;
@@ -182,6 +185,7 @@ export default class SlTable extends LitElement {
     let currentstructure = {}
     let columns = []
     for (let itemName in this.structure) {
+
       let item = this.structure[itemName]
       if (Object.keys(item).includes("visible") && !item["visible"]) {
         continue
@@ -209,6 +213,8 @@ export default class SlTable extends LitElement {
   }
 
   editCheck(cell) {
+    if(!this.editableTable)return false;
+
     return true
   }
 

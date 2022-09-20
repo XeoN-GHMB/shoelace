@@ -5,6 +5,8 @@ import SlIcon from "../icon/icon";
 import SlButton from "../button/button";
 import SlIconButton from "../icon-button/icon-button";
 import SlSelect from "../select/select";
+import {emit} from "../../internal/event";
+import SlDetails from "../details/details";
 //const apiurl=window.location.origin;
 const apiurl = "http://localhost:8080";
 
@@ -93,7 +95,16 @@ export class BoneEditRenderer {
     wrapper.dataset.boneWrapper = "true";
     wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     wrapper.dataset.boneName = this.boneName;
+    if (this.mainInstance.renderLabel) {
+      const boneNameLabel = document.createElement("div");
+      boneNameLabel.innerText = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
+      wrapper.appendChild(boneNameLabel);
+    }
+
+
     if (this.boneStructure["languages"] !== null) {
+
+
       const tabGroup = document.createElement("sl-tab-group");
       for (const lang of this.boneStructure["languages"]) {
         //Create Tabs for Langs
@@ -116,19 +127,27 @@ export class BoneEditRenderer {
           // Lang and Mul
           const multipleWrapper = document.createElement("div");
           multipleWrapper.classList.add("multiple-wrapper");
+          let idx: number = 0;
+          if (this.boneValue !== null) {
 
-          for (const [i,tmpValue] of this.boneValue[lang].entries()) {
+            for (const [i, tmpValue] of this.boneValue[lang].entries()) {
+
+              console.log("add land", lang)
+              multipleWrapper.appendChild(this.addInput(tmpValue, lang, i));
+              multipleWrapper.appendChild(this.addErrorContainer(lang, i));
 
 
-            multipleWrapper.appendChild(this.addInput(tmpValue, lang,i));
+              idx += 1;
+            }
           }
-
           const addButton = document.createElement("sl-button");
 
           addButton.addEventListener("click", () => {
-            console.log("add mul lang")
 
-            multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang));
+            const obj = this.reWriteBoneValue();
+            createPath(obj, this.generateboneName(lang, idx), this.boneStructure["emptyValue"]);
+            console.log("obj", obj)
+            this.mainInstance.boneValue = obj[this.mainInstance.boneName];
 
           });
           languageWrapper.appendChild(multipleWrapper);
@@ -143,7 +162,7 @@ export class BoneEditRenderer {
           clearButton.id = "clearButton"
           clearButton.variant = "danger";
           clearButton.innerText = "Clear";
-          const xicon :SlIcon = document.createElement("sl-icon");
+          const xicon: SlIcon = document.createElement("sl-icon");
           xicon.name = "x";
           xicon.slot = "suffix";
           clearButton.appendChild(xicon);
@@ -159,6 +178,9 @@ export class BoneEditRenderer {
           const languageWrapper = document.createElement("div");
           languageWrapper.classList.add("language-wrapper");
           languageWrapper.appendChild(this.addInput(this.boneValue[lang], lang));
+          languageWrapper.appendChild(this.addErrorContainer(lang));
+
+
           tab_panel.appendChild(languageWrapper);
         }
         tabGroup.appendChild(tab_panel);
@@ -171,7 +193,6 @@ export class BoneEditRenderer {
 
       if (this.boneStructure["multiple"] && this.boneStructure["type"] !== "select") {
         //No Lang , Multiple
-
         wrapper.dataset.boneName = this.boneName;
         if (this.boneValue === null) {
           this.boneValue = []
@@ -181,8 +202,12 @@ export class BoneEditRenderer {
         const addButton = document.createElement("sl-button");
         addButton.innerText = "Add";
         addButton.variant = "success"
-        for (const [i,tmpValue] of this.boneValue.entries()) {
-          multipleWrapper.appendChild(this.addInput(tmpValue, null,i));
+        let idx: number = 0;
+        for (const [i, tmpValue] of this.boneValue.entries()) {
+          multipleWrapper.appendChild(this.addInput(tmpValue, null, i));
+          multipleWrapper.appendChild(this.addErrorContainer(null,i));
+
+          idx += 1;
           //TODo for later item moving
           /*
           inputElement.querySelector("#dragger").addEventListener("mousedown", (e) => {
@@ -234,7 +259,11 @@ export class BoneEditRenderer {
 
 
         addButton.addEventListener("click", () => {
-          multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], "null"));
+          const obj = this.reWriteBoneValue();
+          createPath(obj, this.generateboneName(null, idx), this.boneStructure["emptyValue"]);
+          this.mainInstance.boneValue = obj[this.mainInstance.boneName];
+
+
         });
 
         wrapper.appendChild(addButton);
@@ -245,6 +274,7 @@ export class BoneEditRenderer {
         clearButton.innerText = "Clear";
         clearButton.variant = "danger";
         wrapper.appendChild(clearButton);
+
         wrapper.appendChild(multipleWrapper);
 
 
@@ -254,7 +284,9 @@ export class BoneEditRenderer {
         const inputElement = this.getEditor(this.boneValue, this.boneName)
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
+
         wrapper.appendChild(inputElement);
+        wrapper.appendChild(this.addErrorContainer());
 
 
       }
@@ -300,15 +332,21 @@ export class BoneEditRenderer {
 
   }
 
-  addInput(value: any, lang: string ,index=null) {
-
+  generateboneName(lang = null, index = null) {
     let newboneName = this.boneName;
     if (lang !== null) {
-      newboneName += "." + lang
+
+      newboneName += "." + lang.toString();
     }
-    if (index!==null) {
-      newboneName = this.boneName + "."+index;
+    if (index !== null) {
+      newboneName += "." + index.toString();
     }
+    return newboneName;
+  }
+
+  addInput(value: any, lang: string, index = null) {
+
+    const newboneName = this.generateboneName(lang, index);
 
     const inputElement: HTMLElement = this.getEditor(value, newboneName);
     inputElement.dataset.lang = lang;
@@ -316,14 +354,27 @@ export class BoneEditRenderer {
 
     if (this.boneStructure["multiple"]) {
       inputElement.querySelector(":scope>#clearButton").addEventListener("click", () => {
-        //boneWrapper.remove();
-        const formData = this.reWriteBoneValue();
-        this.mainInstance.handleChange(formData, "deleteEntry")
+        const obj = this.reWriteBoneValue();
+        createPath(obj, newboneName, null, true);
+        this.mainInstance.boneValue = obj[this.mainInstance.boneName];
+
+
+        //this.mainInstance.handleChange(formData, "deleteEntry")
         //addButton.focus();
 
       });
     }
     return inputElement;
+  }
+  addErrorContainer( lang: string, index = null):SlDetails
+  {
+    const errorContainer:SlDetails = document.createElement("sl-details");
+    errorContainer.dataset.name=this.generateboneName(lang, index)+"_errorcontainer";
+    errorContainer.style.display="none";
+    errorContainer.summary="Errors";
+    errorContainer.classList.add("error-container");
+    return errorContainer;
+
   }
 
 
@@ -360,14 +411,17 @@ export class BoneEditRenderer {
     const inputElement = document.createElement("sl-input");
     //const clearButton: SlIconButton = document.createElement("sl-icon-button")
     if (this.boneStructure["multiple"]) {
-      const clearButton: SlIconButton = document.createElement("sl-button")
-      clearButton.slot = "suffix";
-      clearButton.name = "x-circle";
+
+      const clearButton: SlButton = document.createElement("sl-button")
       clearButton.id = "clearButton"
-      clearButton.innerText = "x"
+      clearButton.variant = "danger";
+      clearButton.innerText = "Delete";
+      clearButton.slot = "suffix";
+      const xicon: SlIcon = document.createElement("sl-icon");
+      xicon.name = "x";
+      xicon.slot = "prefix";
+      clearButton.appendChild(xicon);
       inputElement.appendChild(clearButton);
-    } else {
-      inputElement.label = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
     }
 
     //ToDo
@@ -387,6 +441,10 @@ export class BoneEditRenderer {
     } else {
       inputElement.value = value;
     }
+    inputElement.addEventListener("sl-change", (change_event) => {
+      this.mainInstance.internboneValue = this.reWriteBoneValue();
+      this.mainInstance.handleChange();
+    });
 
     inputElement.addEventListener("keypress", (keypress_event) => {
 
@@ -407,10 +465,8 @@ export class BoneEditRenderer {
       }
       if (isValid) {
         if (inputElement.reportValidity()) {
-          console.log("here")
-          const formData = this.reWriteBoneValue();
-
-          //this.mainInstance.handleChange(formData);
+          this.mainInstance.internboneValue = this.reWriteBoneValue();
+          this.mainInstance.handleChange();
         }
 
 
@@ -517,10 +573,10 @@ export class BoneEditRenderer {
 
       clearButton.id = "clearButton"
       clearButton.variant = "danger";
-      clearButton.innerText = "Clear";
-      const xicon :SlIcon = document.createElement("sl-icon");
+      clearButton.innerText = "Delete";
+      const xicon: SlIcon = document.createElement("sl-icon");
       xicon.name = "x";
-      xicon.slot = "suffix";
+      xicon.slot = "prefix";
       clearButton.appendChild(xicon);
 
       //clearButton.style.float="right";
@@ -712,211 +768,22 @@ export class BoneEditRenderer {
     spatialWrapper.appendChild(lngInput);
     return spatialWrapper;
   }
-    toFormValue(bonevalue,bonename) {
-            function rewriteData(val, key = null) {
-                let ret = []
-                if (Array.isArray(val)) {
-                    if (Object.values(val).filter(c => c === Object(c)).length > 0) {
-                        for (const [i, v] of val.entries()) {
-                            ret.push(rewriteData(v, key + "." + i))
-                        }
-                    } else {
-                        for (const [i, v] of val.entries()) {
-                            ret.push(rewriteData(v, key))
-                        }
-                    }
-                } else if (val === Object(val)) {
-                    for (const [k, v] of Object.entries(val)) {
-                        if (key) {
-                            ret.push(rewriteData(v, key + "." + k))
-                        }else{
-                            ret.push(rewriteData(v, k))
-                        }
-                    }
-                }else{
-                    if(val === null){
-                        val = ""
-                    }
-                    if (key !== null){
-                        ret.push({[key]:val})
-                    }
-                }
-                return ret
-            }
-            let value = rewriteData(bonevalue,bonename)
-            value = value.flat(10)
-            return value
-        }
 
   reWriteBoneValue() {
-    const obj={};
-    this.mainInstance.bone.querySelectorAll("sl-input").forEach((inputElement)=>{
+    const obj = {};
+    this.mainInstance.bone.querySelectorAll("sl-input").forEach((inputElement) => {
 
-      createPath(obj, inputElement.name,inputElement.value);
+      createPath(obj, inputElement.name, inputElement.value);
 
     });
-    console.log(obj);
-    console.log(this.mainInstance.boneName);
-    const form = this.toFormValue(obj[[this.mainInstance.boneName]],this.mainInstance.boneName);
-     console.log(form);
-    return
-
-    const globFormdata: FormData = new FormData();
-
-    const langs: string[] = [];
-    let formData: FormData = new FormData(this.mainInstance.bone);
-
-    const names = [];
-    let counterspatial = 0;
-    let indexspatial = 0;
-    let oldname = "";
-    for (const pair of formData.entries()) {
-      if (pair[1] !== null) {
-        if (pair[1] !== "") {
-
-          let key = pair[0];
-          if (key.indexOf("$(index-spatial)") !== -1) {
-            const keyParts = key.split(".")
-            if (oldname !== keyParts.slice(0, keyParts.length - 1).join(".")) { // Lang change
-              counterspatial = 0;
-              indexspatial = 0;
-              oldname = keyParts.slice(0, keyParts.length - 1).join(".");
-            }
-
-            key = key.replace("$(index-spatial)", indexspatial.toString());
-            counterspatial += 1;
-            if (counterspatial % 2 === 0) {
-              indexspatial += 1;
-            }
-          }
-          globFormdata.append(key, pair[1]);
-          if (names.indexOf(pair[0]) === -1) {
-            names.push(pair[0])
-          }
-
-        }
-
-      }
-
-    }
-
-
-    for (const name of names) {
-      let counter = 0;
-      this.mainInstance.bone.querySelectorAll('[data-bone-name="' + name + '"]').forEach((element) => {
-        if (this.boneStructure["multiple"]) {
-          element.dataset.boneNameIndex = name + "." + counter;
-        } else {
-          element.dataset.boneNameIndex = name;
-        }
-        counter += 1;
-      });
-
-
-    }
-
-    const depthCounter = [];
-    this.mainInstance.bone.querySelectorAll("form").forEach((form) => {
-
-
-        if (form.dataset.depth === undefined) return;
-        if (form.dataset.lang === undefined) return;
-
-
-        formData = new FormData(form);
-
-        if (depthCounter[Number.parseInt(form.dataset.depth)] === undefined) {
-          depthCounter.push(0)
-          langs.push(form.dataset.lang.toString());
-
-        } else {
-
-          let found = false;
-          for (const pair_ of formData.entries()) {
-            found = true;
-            break;
-          }
-          if (found || form.querySelector("form")) {
-            depthCounter[Number.parseInt(form.dataset.depth)] += 1;
-            depthCounter.splice(Number.parseInt(form.dataset.depth) + 1)
-
-          }
-
-        }
-        /**
-         * Set Index on boneName for esaier error handling
-         */
-        console.log("error handling")
-        form.querySelectorAll(":scope > div > sl-input").forEach((element) => {
-
-          let key = element.dataset.boneName;
-          let counter = 0;
-          while (key.indexOf("$(index)") !== -1) {
-            key = key.replace("$(index)", depthCounter[counter].toString());
-            counter += 1;
-          }
-          element.dataset.boneNameIndex = key;
-        })
-        if (langs[Number.parseInt(form.dataset.depth)] !== form.dataset.lang) {
-
-          langs[Number.parseInt(form.dataset.depth)] = form.dataset.lang
-          depthCounter[Number.parseInt(form.dataset.depth)] = 0;
-          depthCounter.splice(Number.parseInt(form.dataset.depth) + 1)
-
-
-        }
-        let counterspatial = 0;
-        let indexspatial = 0;
-        let oldname = "";
-
-        for (const pair of formData.entries()) {
-          let key = pair[0]
-          let counter = 0;
-          while (key.indexOf("$(index)") !== -1) {
-            key = key.replace("$(index)", depthCounter[counter].toString());
-            counter += 1;
-          }
-          if (key.indexOf("$(index-spatial)") !== -1) {
-            const keyParts = key.split(".");
-            if (oldname !== keyParts.slice(0, keyParts.length - 1).join(".")) { // Lang change
-              counterspatial = 0;
-              indexspatial = 0;
-              oldname = keyParts.slice(0, keyParts.length - 1).join(".");
-            }
-            key = key.replace("$(index-spatial)", indexspatial.toString());
-            counterspatial += 1;
-            if (counterspatial % 2 === 0) {
-              indexspatial += 1;
-            }
-          }
-          globFormdata.append(key, pair[1]);
-        }
-
-
-      }
-    )
-
-    //const obj = {};
-    for (const pair of globFormdata.entries()) {
-      createPath(obj, pair[0], pair[1]);
-    }
-
-    if (obj !== {}) {
-      this.mainInstance.internboneValue = obj;
-    }
-
-    return globFormdata;
-
-
+    return obj;
   }
 
 
 }
 
 /////////////////HELPER FUNCTRIONS/////////////////
-function
-
-getSkey() {
+function getSkey() {
   return new Promise((resolve, reject) => {
 
     fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
@@ -928,87 +795,41 @@ getSkey() {
   })
 }
 
-function
-
-createPath(obj: object, path: string | string[], value: any | null = null) {
+function createPath(obj: object, path: string | string[], value: any | null = null, mustdelete = false) {
 
   path = typeof path === 'string' ? path.split('.') : path;
   let current: object = obj;
 
-  if (path.length > 1) {
-    while (path.length > 1) {
 
-      const [head, ...tail] = path;
-      path = tail;
+  while (path.length > 1) {
 
-
-      if (current[head] === undefined) {
-        if (Number.isNaN(parseInt(tail[0]))) {
-          current[head] = {}
-        } else {
-          current[head] = []
-        }
-      }
-      current = current[head];
-    }
+    const [head, ...tail] = path;
+    path = tail;
 
 
-  }
-
-
-  if (current[path[0]] === undefined) {
-    current[path[0]] = value;
-
-  } else if (Array.isArray(current[path[0]])) {
-    current[path[0]].push(value);
-  } else {
-    const tmp = JSON.parse(JSON.stringify(current[path[0]]));
-    current[path[0]] = []
-    current[path[0]] = [tmp, value]
-
-  }
-
-
-  return obj
-
-
-}
-
-function
-
-objectToPaths(obj: object, path: string) {
-
-  let paths: string[] = [];
-  const tmpObj: any | any[] = getPath(obj, path);
-  if (Array.isArray(tmpObj)) {
-    for (const tmp in tmpObj) {
-
-      if (typeof tmpObj[tmp] === "object") {
-        paths = paths.concat(objectToPaths(obj, path + "." + tmp));
+    if (current[head] === undefined) {
+      if (Number.isNaN(parseInt(tail[0]))) {
+        current[head] = {}
       } else {
-        paths = paths.concat(path);
+        current[head] = []
       }
     }
-  } else if (typeof (tmpObj) === "object") {
-    for (const tmp in tmpObj) {
-
-      paths = paths.concat(objectToPaths(obj, path + "." + tmp));
-    }
-
+    current = current[head];
+  }
+  if (mustdelete) {
+    current.splice(path[0], 1);
   } else {
-
-    paths.push(path);
+    current[path[0]] = value;
   }
 
-  return paths;
+  return obj;
+
 
 }
 
 /////////////////FILEBONE FUNCTRIONS/////////////////
 
-function
-
-getUploadUrl(file: File) {
+function getUploadUrl(file: File) {
   return new Promise((resolve, reject) => {
     getSkey().then(skey => {
 
@@ -1029,9 +850,7 @@ getUploadUrl(file: File) {
   });
 }
 
-function
-
-uploadFile(file: File, uploadData: any) {
+function uploadFile(file: File, uploadData: any) {
 
   return new Promise((resolve, reject) => {
     fetch(uploadData["values"]["uploadUrl"], {

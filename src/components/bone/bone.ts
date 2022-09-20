@@ -6,6 +6,7 @@ import {watchProps} from "../../internal/watchProps";
 import styles from './bone.styles';
 import {BoneEditRenderer} from "./boneEditRenderer";
 import {BoneViewRenderer} from "./boneViewRenderer";
+import SlDetails from "../details/details";
 
 
 /**
@@ -26,12 +27,21 @@ import {BoneViewRenderer} from "./boneViewRenderer";
  */
 @customElement('sl-bone')
 export default class SlBone extends LitElement {
+  //Declare errors ?? //todo  outsource
+  declare boneError: {
+    severity: number,
+    fieldPath: string[],
+    errorMessage: string,
+    invalidFields: string[],
+  }
+
+
   static styles = styles;
   bone: HTMLFormElement;
   initBoneValue: any;
   internboneValue: any;
   /** set boneStructure */
-  @property({type: Object, attribute: false}) boneStructure:any;
+  @property({type: Object, attribute: false}) boneStructure: any;
 
   /** set boneValue */
   @property({type: Object, attribute: false}) boneValue: any;
@@ -47,6 +57,8 @@ export default class SlBone extends LitElement {
 
   /** set rendersaveButton */
   @property({type: Boolean, reflect: true}) rendersaveButton = false;
+  /** set boneValue */
+  @property({type: Array, attribute: false}) errors: boneError[];
 
   /** Gets boneValue */
   get getBoneValue(): any {
@@ -57,16 +69,65 @@ export default class SlBone extends LitElement {
     return this.internboneValue[this.boneName];
   }
 
+  toFormValue() {
+    function rewriteData(val, key = null) {
+      let ret = []
+      if (Array.isArray(val)) {
+        if (Object.values(val).filter(c => c === Object(c)).length > 0) {
+          for (const [i, v] of val.entries()) {
+            ret.push(rewriteData(v, key + "." + i))
+          }
+        } else {
+          for (const [i, v] of val.entries()) {
+            ret.push(rewriteData(v, key))
+          }
+        }
+      } else if (val === Object(val)) {
+        for (const [k, v] of Object.entries(val)) {
+          if (key) {
+            ret.push(rewriteData(v, key + "." + k))
+          } else {
+            ret.push(rewriteData(v, k))
+          }
+        }
+      } else {
+        if (val === null) {
+          val = ""
+        }
+        if (key !== null) {
+          ret.push({[key]: val})
+        }
+      }
+      return ret
+    }
 
-  @watchProps(['boneStructure', 'boneValue', "renderType"])
+    let value = rewriteData(this.internboneValue[this.boneName], this.boneName)
+    value = value.flat(10)
+    return value;
+
+    const formData: FormData = new FormData();
+    for (const data of value) {
+      for (const [k, v] of Object.entries(data)) {
+        formData.append(k, v);
+      }
+    }
+
+    return formData
+  }
+
+
+  @watchProps(['boneStructure', 'boneValue', "renderTyp"])
   optionUpdate() {
-    console.log("update")
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};
-    if (this.boneStructure === null) {
+    if (this.boneStructure === null || this.boneStructure === undefined) {
       return;
     }
     this.convertboneStructure(this.boneStructure)
+    if (!this.boneStructure["visible"]) {
+      return;
+    }
+
     if (this.renderType === "view") {
 
       const boneViewer = new BoneViewRenderer(this.boneStructure, this.boneValue, this.boneName, this)
@@ -135,12 +196,11 @@ export default class SlBone extends LitElement {
 
 
   //Events
-  handleChange(formData: FormData, type = "edit") {
-    console.trace()
+  handleChange(type = "edit") {
     const options = {
       boneValue: this._getBoneValue(),
       boneName: this.boneName,
-      formData: formData,
+      formData: this.toFormValue(),
       type: type
     }
 
@@ -153,20 +213,40 @@ export default class SlBone extends LitElement {
     });
   }
 
-  handleError(error) {
+  @watchProps(["errors"])
+  handleError() {
     //Todo Styling?
-    //Todo More than 1 msg
-    console.log(`Add err msg to ${  error["fieldPath"].join(".")}`)
-    const element = this.bone.querySelector(`[data-bone-name-index="${  error["fieldPath"].join(".")  }"]`);
-    if (element) {
-      element.helpText = html`<b>${error["errorMessage"]}</b>`;
+    if(this.bone===undefined || this.bone===null)
+    {
+      return;
+    }
+    if(this.errors.length===0)
+    {
+      this.bone.querySelectorAll(".error-container").forEach((element)=>{
+           element.style.display="none";
+      })
+    }
+    for (const error of this.errors) {
+      if (this.boneName === error["fieldPath"][0])
+        if (error["severity"] > 1) {
+          const element:SlDetails = this.bone.querySelector('[data-name="' + error["fieldPath"].join(".") + "_errorcontainer" + '"]');
+
+          if (element !== null) {
+            element.style.display="";
+            element.open=true;
+            element.innerText += error["errorMessage"];
+          }
+
+        }
+
     }
 
 
   }
 
   render() {
-
+    console.log(this.boneValue)
+    console.log(this.boneStructure)
     return html`${this.bone}`;
   }
 }
