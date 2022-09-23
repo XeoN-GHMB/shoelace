@@ -1,5 +1,6 @@
-import { LitElement, html } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
+import ShoelaceElement from '../../internal/shoelace-element';
 import styles from './slider.styles';
 // @ts-ignore
 import Glider from './glider.js';
@@ -21,7 +22,7 @@ import Glider from './glider.js';
  * @cssproperty --slider-arrow-color-hover - The arrow hover color.
  */
 @customElement('sl-slider')
-export default class SlSlider extends LitElement {
+export default class SlSlider extends ShoelaceElement {
   static styles = styles;
   @query('.glider') gliderWrapper: HTMLElement;
 

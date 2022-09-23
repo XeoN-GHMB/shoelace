@@ -1,6 +1,7 @@
-import { html, LitElement, PropertyValues } from 'lit';
+import { html, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
+
 import { watch } from '../../internal/watch';
 import { getCssValue } from '../../utilities/common';
 import { dragHandler } from '../../utilities/dragHelper';
@@ -25,7 +26,7 @@ import styles from './splitter.styles';
  * @cssproperty --sl-split-hover-color- spit div hover color.
  */
 @customElement('sl-splitter')
-export default class SlSplitter extends LitElement {
+export default class SlSplitter extends ShoelaceElement {
   static styles = styles;
 
   /** Split cutting position. */
@@ -104,7 +105,7 @@ export default class SlSplitter extends LitElement {
         value = this.maxSize;
       }
       exta.style.flexBasis = value + 'px';
-      emit(this, 'sl-splitter-change', {
+      this.emit('sl-splitter-change', {
         detail: {
           size: value
         }

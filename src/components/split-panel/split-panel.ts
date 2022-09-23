@@ -2,7 +2,6 @@ import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { drag } from '../../internal/drag';
-import { emit } from '../../internal/event';
 import { clamp } from '../../internal/math';
 import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
@@ -12,7 +11,7 @@ import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
- * @status experimental
+ * @status stable
  *
  * @event sl-reposition - Emitted when the divider's position changes.
  *
@@ -190,7 +189,7 @@ export default class SlSplitPanel extends ShoelaceElement {
   handlePositionChange() {
     this.cachedPositionInPixels = this.percentageToPixels(this.position);
     this.positionInPixels = this.percentageToPixels(this.position);
-    emit(this, 'sl-reposition');
+    this.emit('sl-reposition');
   }
 
   @watch('positionInPixels')

@@ -30,9 +30,22 @@ export default css`
     background: transparent;
     line-height: var(--sl-input-height-medium);
     vertical-align: middle;
+    margin: 0;
 
     background-image: linear-gradient(
       to right,
+      var(--track-color-inactive) 0%,
+      var(--track-color-inactive) min(var(--percent), var(--track-active-offset)),
+      var(--track-color-active) min(var(--percent), var(--track-active-offset)),
+      var(--track-color-active) max(var(--percent), var(--track-active-offset)),
+      var(--track-color-inactive) max(var(--percent), var(--track-active-offset)),
+      var(--track-color-inactive) 100%
+    );
+  }
+
+  .range--rtl .range__control {
+    background-image: linear-gradient(
+      to left,
       var(--track-color-inactive) 0%,
       var(--track-color-inactive) min(var(--percent), var(--track-active-offset)),
       var(--track-color-active) min(var(--percent), var(--track-active-offset)),
@@ -148,7 +161,7 @@ export default css`
   .range__tooltip {
     position: absolute;
     z-index: var(--sl-z-index-tooltip);
-    left: 1px;
+    left: 0;
     border-radius: var(--sl-tooltip-border-radius);
     background-color: var(--sl-tooltip-background-color);
     font-family: var(--sl-tooltip-font-family);

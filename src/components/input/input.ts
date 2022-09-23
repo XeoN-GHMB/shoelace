@@ -4,7 +4,6 @@ import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
 import { defaultValue } from '../../internal/default-value';
-import { emit } from '../../internal/event';
 import { FormSubmitController } from '../../internal/form';
 import ShoelaceElement from '../../internal/shoelace-element';
 import { HasSlotController } from '../../internal/slot';
@@ -67,7 +66,6 @@ export default class SlInput extends ShoelaceElement {
   private readonly localize = new LocalizeController(this);
 
   @state() private hasFocus = false;
-  @state() private isPasswordVisible = false;
 
   /** The input's type. */
   @property({ reflect: true }) type:
@@ -111,7 +109,10 @@ export default class SlInput extends ShoelaceElement {
   @property({ type: Boolean }) clearable = false;
 
   /** Adds a password toggle button to password inputs. */
-  @property({ attribute: 'toggle-password', type: Boolean }) togglePassword = false;
+  @property({ attribute: 'password-toggle', type: Boolean }) passwordToggle = false;
+
+  /** Determines whether or not the password is currently visible. Only applies to password inputs. */
+  @property({ attribute: 'password-visible', type: Boolean }) passwordVisible = false;
 
   /** Hides the browser's built-in increment/decrement spin buttons for number inputs. */
   @property({ attribute: 'no-spin-buttons', type: Boolean }) noSpinButtons = false;
@@ -238,8 +239,8 @@ export default class SlInput extends ShoelaceElement {
 
     if (this.value !== this.input.value) {
       this.value = this.input.value;
-      emit(this, 'sl-input');
-      emit(this, 'sl-change');
+      this.emit('sl-input');
+      this.emit('sl-change');
     }
   }
 
@@ -256,19 +257,19 @@ export default class SlInput extends ShoelaceElement {
 
   handleBlur() {
     this.hasFocus = false;
-    emit(this, 'sl-blur');
+    this.emit('sl-blur');
   }
 
   handleChange() {
     this.value = this.input.value;
-    emit(this, 'sl-change');
+    this.emit('sl-change');
   }
 
   handleClearClick(event: MouseEvent) {
     this.value = '';
-    emit(this, 'sl-clear');
-    emit(this, 'sl-input');
-    emit(this, 'sl-change');
+    this.emit('sl-clear');
+    this.emit('sl-input');
+    this.emit('sl-change');
     this.input.focus();
 
     event.stopPropagation();
@@ -291,12 +292,12 @@ export default class SlInput extends ShoelaceElement {
 
   handleFocus() {
     this.hasFocus = true;
-    emit(this, 'sl-focus');
+    this.emit('sl-focus');
   }
 
   handleInput() {
     this.value = this.input.value;
-    emit(this, 'sl-input');
+    this.emit('sl-input');
   }
 
   handleInvalid() {
@@ -318,7 +319,7 @@ export default class SlInput extends ShoelaceElement {
   }
 
   handlePasswordToggle() {
-    this.isPasswordVisible = !this.isPasswordVisible;
+    this.passwordVisible = !this.passwordVisible;
   }
 
   @watch('value', { waitUntilFirstUpdate: true })
@@ -385,7 +386,7 @@ export default class SlInput extends ShoelaceElement {
               part="input"
               id="input"
               class="input__control"
-              type=${this.type === 'password' && this.isPasswordVisible ? 'text' : this.type}
+              type=${this.type === 'password' && this.passwordVisible ? 'text' : this.type}
               name=${ifDefined(this.name)}
               ?disabled=${this.disabled}
               ?readonly=${this.readonly}
@@ -431,17 +432,17 @@ export default class SlInput extends ShoelaceElement {
                   </button>
                 `
               : ''}
-            ${this.togglePassword && !this.disabled
+            ${this.passwordToggle && !this.disabled
               ? html`
                   <button
                     part="password-toggle-button"
                     class="input__password-toggle"
                     type="button"
-                    aria-label=${this.localize.term(this.isPasswordVisible ? 'hidePassword' : 'showPassword')}
+                    aria-label=${this.localize.term(this.passwordVisible ? 'hidePassword' : 'showPassword')}
                     @click=${this.handlePasswordToggle}
                     tabindex="-1"
                   >
-                    ${this.isPasswordVisible
+                    ${this.passwordVisible
                       ? html`
                           <slot name="show-password-icon">
                             <sl-icon name="eye-slash" library="system"></sl-icon>

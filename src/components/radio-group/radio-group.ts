@@ -1,10 +1,9 @@
 import { html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { emit } from 'src/internal/event';
-import { FormSubmitController } from 'src/internal/form';
-import { watch } from 'src/internal/watch';
+import { FormSubmitController } from '../../internal/form';
 import ShoelaceElement from '../../internal/shoelace-element';
+import { watch } from '../../internal/watch';
 import '../button-group/button-group';
 import styles from './radio-group.styles';
 import type SlRadioButton from '../radio-button/radio-button';
@@ -70,7 +69,7 @@ export default class SlRadioGroup extends ShoelaceElement {
   @watch('value')
   handleValueChange() {
     if (this.hasUpdated) {
-      emit(this, 'sl-change');
+      this.emit('sl-change');
       this.updateCheckedRadio();
     }
   }
@@ -246,7 +245,11 @@ export default class SlRadioGroup extends ShoelaceElement {
           </label>
         </div>
         ${this.hasButtonGroup
-          ? html`<sl-button-group part="button-group">${defaultSlot}</sl-button-group>`
+          ? html`
+              <sl-button-group part="button-group" exportparts="base:button-group__base">
+                ${defaultSlot}
+              </sl-button-group>
+            `
           : defaultSlot}
       </fieldset>
     `;

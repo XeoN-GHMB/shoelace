@@ -8,6 +8,31 @@ New versions of Shoelace are released as-needed and generally occur when a criti
 
 _During the beta period, these restrictions may be relaxed in the event of a mission-critical bug._ 🐛
 
+## 2.0.0-beta.83
+
+This release removes the `<sl-responsive-media>` component. When this component was introduced, support for [`aspect-radio`](https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio)) wasn't great. These days, [the property is supported](https://caniuse.com/mdn-css_properties_aspect-ratio) by all of Shoelace's target browsers, making a dedicated component redundant.
+
+- 🚨 BREAKING: Removed `<sl-responsive-media>` (use the well-supported `aspect-ratio` CSS property instead)
+- 🚨 BREAKING: Changed the `toggle-password` attribute of `<sl-input>` to `password-toggle` for consistency
+- Added an expand/collapse animation to `<sl-tree-item>`
+- Added `sl-lazy-change` event to `<sl-tree-item>`
+- Added `expand-button` part to `<sl-tree-item>` [#893](https://github.com/shoelace-style/shoelace/pull/893)
+- Added `password-visible` attribute to `<sl-input>` [#913](https://github.com/shoelace-style/shoelace/issues/913)
+- Fixed a bug in `<sl-popup>` that didn't account for the arrow's diagonal size
+- Fixed a bug in `<sl-popup>` that caused arrow placement to be incorrect with RTL
+- Fixed a bug in `<sl-progress-ring>` that caused the indeterminate animation to stop working in Safari [#891](https://github.com/shoelace-style/shoelace/issues/891)
+- Fixed a bug in `<sl-range>` that caused it to overflow a container at 100% width [#905](https://github.com/shoelace-style/shoelace/issues/905)
+- Fixed a bug in `<sl-tree-item>` that prevented custom expand/collapse icons from rendering
+- Fixed a bug in `<sl-tree-item>` where the `expand-icon` and `collapse-icon` slots were reversed
+- Fixed a bug in `<sl-tree-item>` that prevented the keyboard from working after lazy loading [#882](https://github.com/shoelace-style/shoelace/issues/882)
+- Fixed a bug in `<sl-textarea>` that prevented the textarea from resizing automatically when setting the value programmatically [#912](https://github.com/shoelace-style/shoelace/discussions/912)
+- Fixed a handful of paths to prevent TypeScript from getting upset [#886](https://github.com/shoelace-style/shoelace/issues/886)
+- Fixed a bug in `<sl-radio-group>` where the `button-group__base` part was documented but not exposed [#909](https://github.com/shoelace-style/shoelace/discussions/909)
+- Fixed a bug in `<sl-range>` that caused the active track color to render on the wrong side in RTL [#916](https://github.com/shoelace-style/shoelace/issues/916)
+- Refactored the internal event emitter to be part of `ShoelaceElement` to reduce imports and improve DX
+- Downgraded Floating UI from 1.0.1 to 1.0.0 due to new logic that makes positioning much slower for certain components [#915](https://github.com/shoelace-style/shoelace/issues/915)
+- Upgraded the status of `<sl-animated-image>`, `<sl-popup>`, and `<sl-split-panel>` from experimental to stable
+
 ## 2.0.0-beta.82
 
 - Added the `sync` and `arrow-placement` attributes to `<sl-popup>`
@@ -23,7 +48,8 @@ _During the beta period, these restrictions may be relaxed in the event of a mis
 - Fixed a bug in `<sl-tree>` that prevented the keyboard from working when the component was nested in a shadow root [#871](https://github.com/shoelace-style/shoelace/issues/871)
 - Fixed a bug in `<sl-tab-group>` that prevented the keyboard from working when the component was nested in a shadow root [#872](https://github.com/shoelace-style/shoelace/issues/872)
 - Fixed a bug in `<sl-tab>` that allowed disabled tabs to erroneously receive focus
-- Improved single selection in `<sl-tree>` so nodes expand and collapse and receive selection when clicking on the label
+- Improved single selection in `<sl-tree>` so nodes expand and collapse and rece
+  ive selection when clicking on the label
 - Renamed `expanded-icon` and `collapsed-icon` slots to `expand-icon` and `collapse-icon` in the experimental `<sl-tree>` and `<sl-tree-item>` components
 - Improved RTL support for `<sl-image-comparer>`
 - Refactored components to extend from `ShoelaceElement` to make `dir` and `lang` reactive properties in all components

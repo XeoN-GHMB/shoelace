@@ -1,7 +1,7 @@
-import { LitElement, html, PropertyValues, TemplateResult } from 'lit';
+import { html, PropertyValues, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { customElement, property, queryAll } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
 import styles from './org-node.styles';
 export type OrgNodeDataType = {
   /**
@@ -37,7 +37,7 @@ export const defaultRoleRender = (data: OrgNodeDataType) => {
  *  @cssproperty --example - An example CSS custom property.
  */
 @customElement('sl-org-node')
-export default class SlOrgNode extends LitElement {
+export default class SlOrgNode extends ShoelaceElement {
   static styles = styles;
   /**
    * 节点数据
@@ -99,7 +99,7 @@ export default class SlOrgNode extends LitElement {
   }
 
   protected _emitEvent(eventName: string, options?: CustomEventInit) {
-    return emit(this, eventName, { detail: { nodeData: this.nodeData, ...options } });
+    return this.emit(eventName, { detail: { nodeData: this.nodeData, ...options } });
   }
   private onToogleNode(event: Event) {
     event.stopPropagation();

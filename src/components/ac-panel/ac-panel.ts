@@ -1,7 +1,8 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { customElement, property } from 'lit/decorators.js';
-import { animateTo, animate_hide, animate_show, shimKeyframesHeightAuto } from '../../internal/animate';
 import { emit } from '../../internal/event';
+import { animateTo, animate_hide, animate_show, shimKeyframesHeightAuto } from '../../internal/animate';
 import { getCssValue } from '../../utilities/common';
 import SlCollapse from '../collapse/collapse';
 import '../icon/icon';
@@ -28,7 +29,7 @@ import styles from './ac-panel.styles';
  * @cssproperty --ac-content-padding - the component content  container padding.
  */
 @customElement('sl-ac-panel')
-export default class SlAcPanel extends LitElement {
+export default class SlAcPanel extends ShoelaceElement {
   static styles = styles;
   static ANIMATE_duration = 500;
 

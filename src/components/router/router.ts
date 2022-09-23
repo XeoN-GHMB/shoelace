@@ -1,6 +1,7 @@
-import { html, LitElement, PropertyValues } from 'lit';
+import { html,  PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 //import { isFunction } from '../../utilities/common';
 import { defaultResove, getPathNames, isPathURLMatchPattern, PathNameResult, ResovlePathInterface, stripExtraTrailingSlash } from './pathResovle';
@@ -51,7 +52,7 @@ export const getRouterByName = (name: string = 'default') => {
  *
  */
 @customElement('sl-router')
-export default class SlRouter extends LitElement {
+export default class SlRouter extends ShoelaceElement {
   static styles = styles;
 
   /**设置路由名称 */
@@ -219,19 +220,19 @@ export default class SlRouter extends LitElement {
     this.appendChild(frag);
     requestAnimationFrame(() => {
       elList.forEach(async (el, index) => {
-        emit(el, 'sl-router-actived');
+        emit(el,'sl-router-actived');
         let item = matchItems[index];
         if (item.afterCreate) {
           await item.afterCreate(el, currentData, item);
         }
       });
       this.afterRouter ? this.afterRouter({ item: item, data: this.routerData }, this.lastRouterItem ? { item: this.lastRouterItem, data: this.lastRouterData } : undefined) : undefined;
-      emit(this, SlRouter.HASH_EVENT_AFTER);
+      this.emit(SlRouter.HASH_EVENT_AFTER);
     });
   }
 
   protected routerChangeHanlder = () => {
-    const event = emit(this, SlRouter.HASH_EVENT_BEFORE, {
+    const event = this.emit(SlRouter.HASH_EVENT_BEFORE, {
       cancelable: true,
       detail: {
         lastItem: this.lastRouterItem,
@@ -239,7 +240,7 @@ export default class SlRouter extends LitElement {
       }
     });
     if (event.defaultPrevented) {
-      emit(this, 'hash-prevented');
+      this.emit('hash-prevented');
       return;
     }
     const matchResult = this.findMathRouterItems();
@@ -258,7 +259,7 @@ export default class SlRouter extends LitElement {
           })
         : this.excuteRouterComponenent(matchItems, pattern);
     } else {
-      emit(this, 'not-found');
+      this.emit('not-found');
     }
   };
   /**取消导航 */

@@ -2,14 +2,13 @@ import { arrow, autoUpdate, computePosition, flip, offset, shift, size } from '@
 import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { emit } from '../../internal/event';
 import ShoelaceElement from '../../internal/shoelace-element';
 import styles from './popup.styles';
 import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
- * @status experimental
+ * @status stable
  *
  * @event sl-reposition - Emitted when the popup is repositioned. This event can fire a lot, so avoid putting expensive
  *  operations in your listener or consider debouncing it.
@@ -23,7 +22,7 @@ import type { CSSResultGroup } from 'lit';
  *  maybe a border or box shadow.
  * @csspart popup - The popup's container. Useful for setting a background color, box shadow, etc.
  *
- * @cssproperty [--arrow-size=4px] - The size of the arrow. Note that an arrow won't be shown unless the `arrow`
+ * @cssproperty [--arrow-size=6px] - The size of the arrow. Note that an arrow won't be shown unless the `arrow`
  *  attribute is used.
  * @cssproperty [--arrow-color=var(--sl-color-neutral-0)] - The color of the arrow.
  * @cssproperty [--auto-size-available-width] - A read-only custom property that determines the amount of width the
@@ -369,6 +368,13 @@ export default class SlPopup extends ShoelaceElement {
       middleware,
       strategy: this.strategy
     }).then(({ x, y, middlewareData, placement }) => {
+      //
+      // Even though we have our own localization utility, it uses different heuristics to determine RTL. Because of
+      // that, we'll use the same approach that Floating UI uses.
+      //
+      // Source: https://github.com/floating-ui/floating-ui/blob/cb3b6ab07f95275730d3e6e46c702f8d4908b55c/packages/dom/src/utils/getDocumentRect.ts#L31
+      //
+      const isRtl = getComputedStyle(this).direction === 'rtl';
       const staticSide = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' }[placement.split('-')[0]]!;
 
       this.setAttribute('data-current-placement', placement);
@@ -388,16 +394,20 @@ export default class SlPopup extends ShoelaceElement {
 
         if (this.arrowPlacement === 'start') {
           // Start
-          left = typeof arrowX === 'number' ? `${this.arrowPadding}px` : '';
-          top = typeof arrowY === 'number' ? `${this.arrowPadding}px` : '';
+          const value = typeof arrowX === 'number' ? `calc(${this.arrowPadding}px - var(--arrow-padding-offset))` : '';
+          top = typeof arrowY === 'number' ? `calc(${this.arrowPadding}px - var(--arrow-padding-offset))` : '';
+          right = isRtl ? value : '';
+          left = isRtl ? '' : value;
         } else if (this.arrowPlacement === 'end') {
           // End
-          right = typeof arrowX === 'number' ? `${this.arrowPadding}px` : '';
-          bottom = typeof arrowY === 'number' ? `${this.arrowPadding}px` : '';
+          const value = typeof arrowX === 'number' ? `calc(${this.arrowPadding}px - var(--arrow-padding-offset))` : '';
+          right = isRtl ? '' : value;
+          left = isRtl ? value : '';
+          bottom = typeof arrowY === 'number' ? `calc(${this.arrowPadding}px - var(--arrow-padding-offset))` : '';
         } else if (this.arrowPlacement === 'center') {
           // Center
-          left = typeof arrowX === 'number' ? `calc(50% - var(--arrow-size))` : '';
-          top = typeof arrowY === 'number' ? `calc(50% - var(--arrow-size))` : '';
+          left = typeof arrowX === 'number' ? `calc(50% - var(--arrow-size-diagonal))` : '';
+          top = typeof arrowY === 'number' ? `calc(50% - var(--arrow-size-diagonal))` : '';
         } else {
           // Anchor (default)
           left = typeof arrowX === 'number' ? `${arrowX}px` : '';
@@ -409,12 +419,12 @@ export default class SlPopup extends ShoelaceElement {
           right,
           bottom,
           left,
-          [staticSide]: 'calc(var(--arrow-size) * -1)'
+          [staticSide]: 'calc(var(--arrow-size-diagonal) * -1)'
         });
       }
     });
 
-    emit(this, 'sl-reposition');
+    this.emit('sl-reposition');
   }
 
   render() {

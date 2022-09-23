@@ -1,5 +1,6 @@
-import { LitElement, html } from 'lit';
+import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import ShoelaceElement from '../../internal/shoelace-element';
 import styles from './table-wrapper.styles';
 // @ts-ignore
 import naturalCompare from 'string-natural-compare';
@@ -15,7 +16,7 @@ import {watchProps} from "../../internal/watchProps";
  * @csspart search - The search Field.
  */
 @customElement('sl-table-wrapper')
-export default class SlTableWrapper extends LitElement {
+export default class SlTableWrapper extends ShoelaceElement {
   static styles = styles;
   tableElement:any;
   sortOrder = ["asc","desc","none"]

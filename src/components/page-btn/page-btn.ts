@@ -1,7 +1,7 @@
-import { html, LitElement, nothing, PropertyValues, TemplateResult } from 'lit';
+import { html, nothing, PropertyValues, TemplateResult } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { repeat } from 'lit/directives/repeat.js';
-import { emit } from '../../internal/event';
 import resourceLocal from '../../internal/resourceLocal';
 import { watchProps } from '../../internal/watchProps';
 import { onEvent } from '../../utilities/common';
@@ -31,7 +31,7 @@ import styles from './page-btn.styles';
  */
 @resourceLocal()
 @customElement('sl-page-btn')
-export default class SlPageBtn extends LitElement {
+export default class SlPageBtn extends ShoelaceElement {
   static styles = styles;
   /** Current page */
   @property({ type: Number, reflect: true, attribute: 'value' }) value = 1;
@@ -133,7 +133,7 @@ export default class SlPageBtn extends LitElement {
       }
       this._eventDispose2 = onEvent(baseDiv, 'sl-input,sl-select[part=show-size-change]', 'sl-change', (event: Event) => {
         let el = (event as any).delegateTarget as HTMLElement;
-        const beforeEvent = emit(this, 'sl-page-before-change');
+        const beforeEvent = this.emit('sl-page-before-change');
         if (!beforeEvent.defaultPrevented) {
           if (el.matches('sl-select[part=show-size-change]')) {
             this.pageSize = Number((el as any).value);
@@ -150,7 +150,7 @@ export default class SlPageBtn extends LitElement {
             (el as any).value = value;
             this.value = value;
           }
-          emit(this, 'sl-page-change', {
+          this.emit('sl-page-change', {
             detail: { value: this.value }
           });
         }
@@ -184,7 +184,7 @@ export default class SlPageBtn extends LitElement {
     this.goToPage(result);
   }
   goToPage(pageNo: number) {
-    const event = emit(this, 'sl-page-before-change');
+    const event = this.emit('sl-page-before-change');
     if (!event.defaultPrevented) {
       if (!isNaN(pageNo)) {
         let tempValue = pageNo;
@@ -194,7 +194,7 @@ export default class SlPageBtn extends LitElement {
           tempValue = this.pageCount;
         }
         this.value = tempValue;
-        emit(this, 'sl-page-change', {
+        this.emit('sl-page-change', {
           detail: { value: this.value }
         });
       }

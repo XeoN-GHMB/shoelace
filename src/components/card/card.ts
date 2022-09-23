@@ -2,7 +2,6 @@ import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import ShoelaceElement from '../../internal/shoelace-element';
-import { emit } from '../../internal/event';
 import { HasSlotController } from '../../internal/slot';
 import styles from './card.styles';
 import {property} from "lit/decorators.js";
@@ -48,7 +47,7 @@ export default class SlCard extends ShoelaceElement {
   handleClick() {
     if (!this.selectable) return
     this.selected = !this.selected;
-    emit(this, "sl-change")
+    this.emit("sl-change")
   }
 
   render() {

@@ -1,7 +1,7 @@
-import { html, LitElement, PropertyValues } from 'lit';
+import { html, PropertyValues } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { castDate, isValidDate, parseDate } from '../../internal/date.util';
-import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watchProps } from '../../internal/watchProps';
 import SlDatePanel from '../date-panel/date-panel';
 import SlDropdown from '../dropdown/dropdown';
@@ -24,7 +24,7 @@ import styles from './date.styles';
  *
  */
 @customElement('sl-date')
-export default class SlDate extends LitElement {
+export default class SlDate extends ShoelaceElement {
   static styles = styles;
 
   /**
@@ -82,7 +82,7 @@ export default class SlDate extends LitElement {
     this.emitDateSelect();
   }
   protected emitDateSelect() {
-    emit(this, 'sl-date-change', {
+    this.emit('sl-date-change', {
       detail: { value: this.valueDateString, date: this.valueDate }
     });
   }

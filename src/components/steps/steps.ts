@@ -1,7 +1,7 @@
-import { html, LitElement, PropertyValues } from 'lit';
+import { html, PropertyValues } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { customStyle } from '../../internal/customStyle';
-import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import '../icon/icon';
 import SlStep from '../step/step';
 import styles from './steps.styles';
@@ -22,7 +22,7 @@ import styles from './steps.styles';
  */
 @customElement('sl-steps')
 @customStyle()
-export default class SlSteps extends LitElement {
+export default class SlSteps extends ShoelaceElement {
   static styles = styles;
 
   /**
@@ -87,7 +87,7 @@ export default class SlSteps extends LitElement {
       if (_changedProperties.has('vertical') || _changedProperties.has('current')) {
         this._setChildStepCss();
         if (_changedProperties.has('current')) {
-          emit(this, 'sl-change', { detail: this.current });
+          this.emit('sl-change', { detail: this.current });
         }
       }
     }

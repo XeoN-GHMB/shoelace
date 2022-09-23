@@ -1,6 +1,6 @@
-import { LitElement, html, TemplateResult, svg, PropertyValues, nothing } from 'lit';
+import { html, TemplateResult, svg, PropertyValues, nothing } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import { addEvent, exitFullscreen, fullscreen, getCssValue, isFullscreen } from '../../utilities/common';
 import { addResizeHander, DisposeObject } from '../../utilities/resize.util';
@@ -40,7 +40,7 @@ const svgFullscreen = svg`<svg class="image-gallery-svg" xmlns="http://www.w3.or
  * @cssproperty --sl-image-transition-time: --transition time  default 450ms - .
  */
 @customElement('sl-gallery')
-export default class SlGallery extends LitElement {
+export default class SlGallery extends ShoelaceElement {
   static styles = styles;
 
   /** Image path. */
@@ -130,7 +130,7 @@ export default class SlGallery extends LitElement {
     } else if (index < 0) {
       index = this.images.length - 1;
     }
-    const eventResult = emit(this, 'sl-gallery-before-change', {
+    const eventResult = this.emit('sl-gallery-before-change', {
       detail: {
         value: this.currentIndex,
         toValue: index
@@ -138,7 +138,7 @@ export default class SlGallery extends LitElement {
     });
     if (!eventResult.defaultPrevented) {
       this.currentIndex = index;
-      emit(this, 'sl-gallery-change', {
+      this.emit('sl-gallery-change', {
         detail: {
           value: this.currentIndex
         }
@@ -191,12 +191,12 @@ export default class SlGallery extends LitElement {
           ? html`<img
               @load=${(event: Event) => {
                 this._loadedOneImage = true;
-                emit(this, 'sl-gallery-image-load', {
+                this.emit('sl-gallery-image-load', {
                   detail: { image: event.target as HTMLImageElement }
                 });
               }}
               @click=${(event: Event) => {
-                emit(this, 'sl-gallery-image-click', {
+                this.emit('sl-gallery-image-click', {
                   detail: { image: event.target as HTMLImageElement }
                 });
               }}

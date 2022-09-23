@@ -3,11 +3,10 @@ import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { live } from 'lit/directives/live.js';
 import { when } from 'lit/directives/when.js';
-import { animateTo, shimKeyframesHeightAuto, stopAnimations } from 'src/internal/animate';
-import { getAnimation, setDefaultAnimation } from 'src/utilities/animation-registry';
-import { emit } from '../../internal/event';
+import { animateTo, shimKeyframesHeightAuto, stopAnimations } from '../../internal/animate';
 import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
+import { getAnimation, setDefaultAnimation } from '../../utilities/animation-registry';
 import { LocalizeController } from '../../utilities/localize';
 import '../checkbox/checkbox';
 import '../icon/icon';
@@ -16,7 +15,7 @@ import styles from './tree-item.styles';
 import type { CSSResultGroup, PropertyValueMap } from 'lit';
 
 export function isTreeItem(element: Element) {
-  return element && element.getAttribute('role') === 'treeitem';
+  return element && element?.getAttribute('role') === 'treeitem';
 }
 
 /**
@@ -31,19 +30,23 @@ export function isTreeItem(element: Element) {
  * @event sl-after-expand - Emitted after the item expands and all animations are complete.
  * @event sl-collapse - Emitted when the item collapses.
  * @event sl-after-collapse - Emitted after the item collapses and all animations are complete.
- * @event sl-lazy-load - Emitted when a lazy item is selected. Use this event to asynchronously load data and append items to the tree before expanding.
+ * @event sl-lazy-change - Emitted when the item's lazy state changes.
+ * @event sl-lazy-load - Emitted when a lazy item is selected. Use this event to asynchronously load data and append
+ *  items to the tree before expanding. After appending new items, remove the `lazy` attribute to remove the loading
+ *  state and update the tree.
  *
  * @slot - The default slot.
- * @slot expanded-icon - The icon to show when the item is expanded.
- * @slot collapsed-icon - The icon to show when the item is collapsed.
+ * @slot expand-icon - The icon to show when the item is expanded.
+ * @slot collapse-icon - The icon to show when the item is collapsed.
  *
  * @csspart base - The component's internal wrapper.
- * @csspart item - The item main container.
+ * @csspart item - The item's main container.
  * @csspart item--disabled - Applied when the item is disabled.
  * @csspart item--expanded - Applied when the item is expanded.
  * @csspart item--indeterminate - Applied when the selection is indeterminate.
  * @csspart item--selected - Applied when the item is selected.
  * @csspart indentation - The item's indentation container.
+ * @csspart expand-button - The item's expand button.
  * @csspart label - The item's label.
  * @csspart children - The item's children container.
  */
@@ -74,6 +77,7 @@ export default class SlTreeItem extends ShoelaceElement {
   @query('slot[name=children]') childrenSlot: HTMLSlotElement;
   @query('.tree-item__item') itemElement: HTMLDivElement;
   @query('.tree-item__children') childrenContainer: HTMLDivElement;
+  @query('.tree-item__expand-button slot') expandButtonSlot: HTMLSlotElement;
 
   connectedCallback(): void {
     super.connectedCallback();
@@ -124,11 +128,15 @@ export default class SlTreeItem extends ShoelaceElement {
 
   @watch('expanded', { waitUntilFirstUpdate: true })
   handleExpandAnimation() {
+    if (this.expandButtonSlot) {
+      this.expandButtonSlot.name = this.expanded ? 'collapse-icon' : 'expand-icon';
+    }
+
     if (this.expanded) {
       if (this.lazy) {
         this.loading = true;
 
-        emit(this, 'sl-lazy-load');
+        this.emit('sl-lazy-load');
       } else {
         this.animateExpand();
       }
@@ -137,8 +145,13 @@ export default class SlTreeItem extends ShoelaceElement {
     }
   }
 
+  @watch('lazy', { waitUntilFirstUpdate: true })
+  handleLazyChange() {
+    this.emit('sl-lazy-change');
+  }
+
   private async animateExpand() {
-    emit(this, 'sl-expand');
+    this.emit('sl-expand');
 
     await stopAnimations(this.childrenContainer);
     this.childrenContainer.hidden = false;
@@ -151,11 +164,11 @@ export default class SlTreeItem extends ShoelaceElement {
     );
     this.childrenContainer.style.height = 'auto';
 
-    emit(this, 'sl-after-expand');
+    this.emit('sl-after-expand');
   }
 
   private async animateCollapse() {
-    emit(this, 'sl-collapse');
+    this.emit('sl-collapse');
 
     await stopAnimations(this.childrenContainer);
 
@@ -167,7 +180,7 @@ export default class SlTreeItem extends ShoelaceElement {
     );
     this.childrenContainer.hidden = true;
 
-    emit(this, 'sl-after-collapse');
+    this.emit('sl-after-collapse');
   }
 
   // Gets all the nested tree items
@@ -205,6 +218,7 @@ export default class SlTreeItem extends ShoelaceElement {
         part="base"
         class="${classMap({
           'tree-item': true,
+          'tree-item--expanded': this.expanded,
           'tree-item--selected': this.selected,
           'tree-item--disabled': this.disabled,
           'tree-item--leaf': this.isLeaf,
@@ -224,6 +238,7 @@ export default class SlTreeItem extends ShoelaceElement {
           <div class="tree-item__indentation" part="indentation"></div>
 
           <div
+            part="expand-button"
             class=${classMap({
               'tree-item__expand-button': true,
               'tree-item__expand-button--visible': showExpandButton
@@ -233,11 +248,14 @@ export default class SlTreeItem extends ShoelaceElement {
             ${when(this.loading, () => html` <sl-spinner></sl-spinner> `)}
             ${when(
               showExpandButton,
+              // This slot's name changes from `expand-icon` to `collapse-icon` when the tree item is expanded, but we
+              // do that in the watch handler instead of here in the template because the transition breaks in Firefox.
               () => html`
-                <slot name="${this.expanded ? 'expanded-icon' : 'collapsed-icon'}">
+                <slot class="tree-item__expand-icon-slot" name="expand-icon">
                   <sl-icon
+                    class="tree-item__default-toggle-button"
                     library="system"
-                    name="${this.expanded ? 'chevron-down' : isRtl ? 'chevron-left' : 'chevron-right'}"
+                    name=${isRtl ? 'chevron-left' : 'chevron-right'}
                   ></sl-icon>
                 </slot>
               `

@@ -1,9 +1,8 @@
 import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
-import { emit } from 'src/internal/event';
-import { clamp } from 'src/internal/math';
-import { watch } from 'src/internal/watch';
+import { clamp } from '../../internal/math';
 import ShoelaceElement from '../../internal/shoelace-element';
+import { watch } from '../../internal/watch';
 import { LocalizeController } from '../../utilities/localize';
 import { isTreeItem } from '../tree-item/tree-item';
 import styles from './tree.styles';
@@ -82,6 +81,7 @@ export default class SlTree extends ShoelaceElement {
 
     this.addEventListener('focusin', this.handleFocusIn);
     this.addEventListener('focusout', this.handleFocusOut);
+    this.addEventListener('sl-lazy-change', this.updateItems);
 
     await this.updateComplete;
     this.mutationObserver = new MutationObserver(this.handleTreeChanged);
@@ -94,6 +94,7 @@ export default class SlTree extends ShoelaceElement {
     this.mutationObserver.disconnect();
     this.removeEventListener('focusin', this.handleFocusIn);
     this.removeEventListener('focusout', this.handleFocusOut);
+    this.removeEventListener('sl-lazy-change', this.updateItems);
   }
 
   // Generates a clone of the expand icon element to use for each tree item
@@ -186,7 +187,7 @@ export default class SlTree extends ShoelaceElement {
       selectedItem.expanded = !selectedItem.expanded;
     }
 
-    emit(this, 'sl-selection-change', { detail: { selection: this.selectedItems } });
+    this.emit('sl-selection-change', { detail: { selection: this.selectedItems } });
   }
 
   // Returns the list of tree items that are selected in the tree.
@@ -300,11 +301,6 @@ export default class SlTree extends ShoelaceElement {
     }
   }
 
-  handleDefaultSlotChange() {
-    this.treeItems = [...this.querySelectorAll('sl-tree-item')];
-    [...this.treeItems].forEach(this.initTreeItem);
-  }
-
   handleFocusOut = (event: FocusEvent) => {
     const relatedTarget = event.relatedTarget as HTMLElement;
 
@@ -334,10 +330,15 @@ export default class SlTree extends ShoelaceElement {
     }
   };
 
+  updateItems() {
+    this.treeItems = [...this.querySelectorAll('sl-tree-item')];
+    [...this.treeItems].forEach(this.initTreeItem);
+  }
+
   render() {
     return html`
-      <div part="base" class="tree" @click="${this.handleClick}" @keydown="${this.handleKeyDown}">
-        <slot @slotchange=${this.handleDefaultSlotChange}></slot>
+      <div part="base" class="tree" @click=${this.handleClick} @keydown=${this.handleKeyDown}>
+        <slot @slotchange=${this.updateItems}></slot>
         <slot name="expand-icon" hidden aria-hidden="true"> </slot>
         <slot name="collapse-icon" hidden aria-hidden="true"> </slot>
       </div>

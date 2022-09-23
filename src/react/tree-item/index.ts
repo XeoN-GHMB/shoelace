@@ -7,5 +7,6 @@ export default createComponent(React, 'sl-tree-item', Component, {
   onSlAfterExpand: 'sl-after-expand',
   onSlCollapse: 'sl-collapse',
   onSlAfterCollapse: 'sl-after-collapse',
+  onSlLazyChange: 'sl-lazy-change',
   onSlLazyLoad: 'sl-lazy-load'
 });

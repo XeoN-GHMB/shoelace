@@ -1,6 +1,6 @@
-import { LitElement, html, PropertyValues } from 'lit';
+import { html, PropertyValues } from 'lit';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { customElement, eventOptions, property, query } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
 import { throttle } from '../../internal/throttle';
 import { getCssValue } from '../../utilities/common';
 import styles from './scroll.styles';
@@ -36,7 +36,7 @@ type overflowType = '' | 'hidden';
  * @cssproperty --scroll-bar-outer-width - scroll bar-outer width.
  */
 @customElement('sl-scroll')
-export default class SlScroll extends LitElement {
+export default class SlScroll extends ShoelaceElement {
   static styles = styles;
   /**
    * hidden, then the horizontal scrollbar is always hidden, otherwise it is automatically hidden according to the content
@@ -381,7 +381,7 @@ export default class SlScroll extends LitElement {
     return this._yDispatchMethod;
   }
   private _emitEvent(eventName: string, obj?: {}) {
-    emit(this, `sl-${eventName}`, {
+    this.emit(`sl-${eventName}`, {
       detail: {
         ...obj,
         scrollTop: this.contentDIV.scrollTop,
