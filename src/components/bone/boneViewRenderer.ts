@@ -119,7 +119,6 @@ export class BoneViewRenderer {
     if (this.boneStructure["type"].startsWith("text")) {
       return html`${unsafeHTML(this.boneValue)}`;
     }
-    console.log("here?")
     return formater(this.boneValue, this.boneStructure)
 
   }
@@ -479,7 +478,7 @@ export function getPath(obj: object, path: string | string[]): object | undefine
 
   path = typeof path === 'string' ? path.split('.') : path;
 
-  let current: object = JSON.parse(JSON.stringify(obj))//Depth Copy to lose Reference;
+  let current: object = JSON.parse(JSON.stringify(obj));//Depth Copy to lose Reference;
   while (path.length > 0) {
     let [head, ...tail] = path;
     path = tail;

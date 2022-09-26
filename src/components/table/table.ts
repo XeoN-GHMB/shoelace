@@ -83,16 +83,18 @@ export default class SlTable extends LitElement {
   @property({type: String, attribute: false}) module: String = null;
 
   /** disable editable Table*/
-  @property({type: Boolean, reflect: true}) editableTable: Boolean = false;
+  @property({type: Boolean, attribute: false}) editabletable: Boolean = false;
 
 
   tableInstance: any;
   tableReady: Boolean = false;
   previousStructure: any = null;
+  _editabletable: boolean = this.editabletable;
 
-  @watchProps(['structure', 'skellist'])
+  @watchProps(['structure', 'skellist', "editabletable"])
   optionUpdate() {
     //only rebuild table if structure changed
+    this._editabletable=this.editabletable;
     if (this.previousStructure !== this.structure) {
       this.previousStructure = this.structure
 
@@ -111,7 +113,6 @@ export default class SlTable extends LitElement {
 
       if (this.moveablerows) {
         this.tableInstance.on("rowMoved", (row) => {
-          console.log(row)
           const nextRow = row.getNextRow();
           const prevRow = row.getPrevRow();
           let newSortIndex = 0;
@@ -132,7 +133,7 @@ export default class SlTable extends LitElement {
 
           const formData = new FormData();
           formData.set("sortindex", newSortIndex);
-          updateData(formData, row.getData()["key"],this)
+          updateData(formData, row.getData()["key"], this)
         })
       }
 
@@ -198,24 +199,29 @@ export default class SlTable extends LitElement {
       if (item["descr"].length > 0) {
         title = item["descr"]
       }
+      //Fixme inefficient
       columns.push({
         title: title, field: itemName,
         formatterParams: item, formatter: boneFormatter,
-        editorParams: [item,this], editor: boneEditor,
+        variableHeight: true,
+        editorParams: [item, this], editor: boneEditor,
         editable: this.editCheck,
-        variableHeight: true
+
       })
+
+
     }
 
 
     currentstructure["columns"] = columns
     this.tableConfig = {...this.tableConfig, ...currentstructure}
+    this.tableConfig["editabletable"] = this.editabletable
   }
 
   editCheck(cell) {
-    if(!this.editableTable)return false;
+    let isEditable=this.params[1]._editabletable;
 
-    return true
+    return isEditable;
   }
 
 
@@ -259,6 +265,7 @@ export default class SlTable extends LitElement {
       } else {
         this.tableConfig["columns"] = [selectColumn, ...this.tableConfig["columns"]]
       }
+      this.tableConfig["selectable"]=true;
 
     }
 

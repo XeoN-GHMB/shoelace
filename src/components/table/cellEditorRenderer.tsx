@@ -5,12 +5,13 @@ const apiurl = "http://localhost:8080";
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, editParams: any): any {
   const boneStructure = editParams[0];
   const tableInstance = editParams[1];
+
   cell.getRow().getElement().style.height = "auto";
   cell.getRow().getElement().style.overflow = "visible";
 
   cell.getElement().style.height = "auto"
   cell.getElement().style.overflow = "visible";
-
+  /*
   //cell.getRow().getElement().style.overflow = "visible";
   if (boneStructure["type"] === "select" || boneStructure["type"].startsWith("relational")) {
     cell._cell.table.element.style.overflow = "visible";
@@ -18,12 +19,13 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
 
   }
 
-
+  */
   const bone = document.createElement("sl-bone");
   bone.boneStructure = boneStructure;
   bone.boneValue = cell.getValue();
   bone.boneName = cell.getField();
   bone.renderType = "edit";
+  bone.rendersaveButton = "true";
   bone.addEventListener("sl-boneChange", async (boneChangeEvent) => {
 
     const skelKey = cell._cell.row.data.key;
@@ -158,6 +160,7 @@ export function updateData(formData: FormData, skelKey: string, tableInstance: a
   if (tableInstance.module === null) {
     throw "No Module provided"
   }
+
   return new Promise((resolve, reject) => {
     getSkey().then((skey: string) => {
 

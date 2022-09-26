@@ -56,10 +56,17 @@ export class BoneEditRenderer {
   boneName: string;
   mainInstance: SlBone;
   depth = 0;
+  //Move vars
   move = false;
   moveElement;
   startHeight = 0;
+  startTop = 0;
   fakeElement;
+  inputsAbsolutePostions = [];
+  absolutePostionSet = false;
+  swapElements = [null, null];
+  moveElementSrc: HTMLElement;
+
 
   constructor(boneStructure: object, boneValue: any, boneName: any, mainInstance: SlBone) {
     this.boneStructure = boneStructure;
@@ -173,6 +180,9 @@ export class BoneEditRenderer {
           tab_panel.appendChild(addButton);
           tab_panel.appendChild(clearButton);
           tab_panel.appendChild(languageWrapper);
+          this.addScroll();
+          this.addMouseMove();
+          this.addMouseUp();
         } else {
           //Lang , no multipler
           const languageWrapper = document.createElement("div");
@@ -205,55 +215,9 @@ export class BoneEditRenderer {
         let idx: number = 0;
         for (const [i, tmpValue] of this.boneValue.entries()) {
           multipleWrapper.appendChild(this.addInput(tmpValue, null, i));
-          multipleWrapper.appendChild(this.addErrorContainer(null,i));
+          multipleWrapper.appendChild(this.addErrorContainer(null, i));
 
           idx += 1;
-          //TODo for later item moving
-          /*
-          inputElement.querySelector("#dragger").addEventListener("mousedown", (e) => {
-            if(!this.move)
-            {
-              this.move = true;
-            }
-
-            e.preventDefault();
-            this.moveElement = boneWrapper.cloneNode(true);
-
-            this.moveElement.style.borderStyle="solid";
-            this.moveElement.style.position="absolute";
-            this.moveElement.style.zIndex="2";
-
-            this.fakeElement= document.createElement("div");
-            this.fakeElement.style.height=boneWrapper.clientHeight+"px";
-            this.fakeElement.style.width=boneWrapper.clientWidth+"px";
-            this.fakeElement.style.backgroundColor="#d9fcff";
-
-            this.startHeight=boneWrapper.clientHeight;
-            wrapper.insertBefore(this.moveElement,boneWrapper);
-            wrapper.insertBefore(this.fakeElement,boneWrapper);
-
-            boneWrapper.remove();
-
-          })
-
-          document.addEventListener("mouseup", (e) => {
-            this.move = false;
-            e.preventDefault();
-
-          })
-          document.addEventListener("mousemove", (e: MouseEvent) => {
-            if (this.move) {
-
-              //const yPos = e.pageY - this.moveElement.getBoundingClientRect().top-(this.startHeight/2);
-              this.moveElement.style.top =(e.pageY- this.startHeight/2)+ "px";
-
-
-            }
-
-
-          })
-*/
-
 
         }
 
@@ -276,7 +240,9 @@ export class BoneEditRenderer {
         wrapper.appendChild(clearButton);
 
         wrapper.appendChild(multipleWrapper);
-
+        this.addScroll();
+        this.addMouseMove();
+        this.addMouseUp();
 
       } else {
         //No Lang, No Multiple
@@ -364,14 +330,61 @@ export class BoneEditRenderer {
 
       });
     }
+    //TODo for later item moving
+
+    inputElement.querySelector("#dragger").addEventListener("mousedown", (e) => {
+
+      if (!this.absolutePostionSet) {
+        this.absolutePostionSet = true;
+
+        for (const _input of this.inputsAbsolutePostions) {
+
+          const elemRect = _input[0].getBoundingClientRect();
+          const offsetTop = elemRect.top;
+          const offsetBottom = elemRect.bottom;
+          if (_input.length === 2) {
+            _input[1] = [offsetTop, offsetBottom];
+
+          } else {
+            _input.push([offsetTop, offsetBottom]);
+          }
+
+        }
+        console.log(this.inputsAbsolutePostions)
+      }
+      if (!this.move) {
+        this.move = true;
+      }
+      e.preventDefault();
+      this.moveElement = inputElement.cloneNode(true);
+      this.moveElement.style.borderStyle = "solid";
+      this.moveElement.style.position = "absolute";
+      this.moveElement.style.zIndex = "2";
+      this.fakeElement = document.createElement("div");
+      this.fakeElement.style.height = inputElement.clientHeight + "px";
+      this.fakeElement.style.width = inputElement.clientWidth + "px";
+      this.fakeElement.style.backgroundColor = "#fa003e";
+      this.startHeight = inputElement.clientHeight;
+      this.startTop = inputElement.getBoundingClientRect().top
+      inputElement.parentElement.insertBefore(this.moveElement, inputElement);
+      inputElement.parentElement.insertBefore(this.fakeElement, inputElement);
+      inputElement.remove();
+      this.swapElements[0] = inputElement.dataset.boneName;
+      this.moveElementSrc = inputElement;
+
+
+    })
+
+
+    this.inputsAbsolutePostions.push([inputElement])
     return inputElement;
   }
-  addErrorContainer( lang: string, index = null):SlDetails
-  {
-    const errorContainer:SlDetails = document.createElement("sl-details");
-    errorContainer.dataset.name=this.generateboneName(lang, index)+"_errorcontainer";
-    errorContainer.style.display="none";
-    errorContainer.summary="Errors";
+
+  addErrorContainer(lang: string, index = null): SlDetails {
+    const errorContainer: SlDetails = document.createElement("sl-details");
+    errorContainer.dataset.name = this.generateboneName(lang, index) + "_errorcontainer";
+    errorContainer.style.display = "none";
+    errorContainer.summary = "Errors";
     errorContainer.classList.add("error-container");
     return errorContainer;
 
@@ -424,15 +437,13 @@ export class BoneEditRenderer {
       inputElement.appendChild(clearButton);
     }
 
-    //ToDo
-    /*
+
     const draggable = document.createElement("sl-icon")
-    draggable.library = "my-icons";
     draggable.slot = "prefix";
-    draggable.name = "draggable";
+    draggable.name = "chevron-bar-expand";
     draggable.id = "dragger";
     inputElement.appendChild(draggable);
-     */
+
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
 
@@ -595,7 +606,7 @@ export class BoneEditRenderer {
   relationBoneEditorRenderer(value: any, boneName = "") {
 
     const inputWrapper = document.createElement("div");
-    const shadowInput = document.createElement("input")
+    const shadowInput = document.createElement("sl-input")
     const searchBox: SlCombobox = document.createElement("sl-combobox");
 
     const clearButton: SlIconButton = document.createElement("sl-icon-button")
@@ -605,7 +616,7 @@ export class BoneEditRenderer {
     clearButton.id = "clearButton"
     searchBox.appendChild(clearButton);
 
-    //searchBox.hoist =true
+    searchBox.hoist = true
     const url = `${apiurl}/json/country/list?search={q}`;
 
 
@@ -639,9 +650,9 @@ export class BoneEditRenderer {
     inputWrapper.appendChild(searchBox);
 
     searchBox.addEventListener("sl-item-select", (e: CustomEvent) => {
-
       shadowInput.value = e.detail.item.value;
-      //const formData = this.reWriteBoneValue();
+      this.mainInstance.internboneValue = this.reWriteBoneValue();
+      this.mainInstance.handleChange();
       //this.mainInstance.internboneValue[this.boneName] = {dest: JSON.parse(e.detail.item.value)}
       //this.mainInstance.handleChange(formData);
 
@@ -771,19 +782,116 @@ export class BoneEditRenderer {
 
   reWriteBoneValue() {
     const obj = {};
-    this.mainInstance.bone.querySelectorAll("sl-input").forEach((inputElement) => {
-
+    this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement) => {
       createPath(obj, inputElement.name, inputElement.value);
 
     });
     return obj;
   }
 
+  ///Move Element functions
+  addScroll() {
+    document.addEventListener("scroll", () => {
+      for (const _input of this.inputsAbsolutePostions) {
+
+        const elemRect = _input[0].getBoundingClientRect();
+        const offsetTop = elemRect.top;
+        const offsetBottom = elemRect.bottom;
+        if (_input.length === 2) {
+          _input[1] = [offsetTop, offsetBottom];
+
+        } else {
+          _input.push([offsetTop, offsetBottom]);
+        }
+
+
+      }
+    })
+  }
+
+  addMouseUp() {
+    document.addEventListener("mouseup", (e) => {
+      if (this.move) {
+        e.preventDefault();
+        this.move = false;
+        if (this.swapElements[0] !== null && this.swapElements[1] !== null) {
+          console.log(this.swapElements);
+          this.fakeElement.remove();
+          this.moveElement.remove();
+          const obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
+          const _value = getPath(obj, this.swapElements[0]);
+          createPath(obj, this.swapElements[0], null, true,);
+          createPath(obj, this.swapElements[1], _value, false, true);
+          this.mainInstance.boneValue = obj[this.mainInstance.boneName];
+        }
+
+
+      }
+
+
+    })
+  }
+
+  addMouseMove() {
+    let elemetBefor = null;
+    let elemetAfter = null;
+    document.addEventListener("mousemove", (e: MouseEvent) => {
+        if (this.move) {
+
+          const yPos = e.clientY - this.startTop;
+
+
+          //this.moveElement.style.top = e.clientY + "px";
+          this.moveElement.style.top = (e.pageY - (this.startHeight / 2)).toString() + "px";
+          //this.moveElement.style.top = yPos  + "px";
+          const y = e.pageY;
+
+          for (const tmpPos of this.inputsAbsolutePostions) {
+
+            if (y > tmpPos[1][0])//top
+            {
+              if (y < tmpPos[1][1])//bottom
+              {
+                if (this.moveElementSrc === tmpPos[0]) {
+                  break;
+                }
+                if (y - tmpPos[1][0] < (tmpPos[1][1] - tmpPos[1][0]) / 2) {
+                  if (elemetBefor !== tmpPos[0]) {
+                    elemetBefor = tmpPos[0];
+                    const parent = tmpPos[0].parentElement;
+                    if (parent) {
+                      this.fakeElement.remove();
+                      parent.insertBefore(this.fakeElement, tmpPos[0]);
+                      this.swapElements[1] = tmpPos[0].dataset.boneName;
+                      console.log("before")
+                    }
+                  }
+                } else {
+                  if (elemetAfter !== tmpPos[0]) {
+                    elemetAfter = tmpPos[0];
+                    this.fakeElement.remove();
+                    tmpPos[0].after(this.fakeElement);
+                    console.log("after")
+                    this.swapElements[1] = tmpPos[0].dataset.boneName;
+                  }
+
+
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+    )
+  }
 
 }
 
 /////////////////HELPER FUNCTRIONS/////////////////
-function getSkey() {
+function
+
+getSkey() {
   return new Promise((resolve, reject) => {
 
     fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
@@ -795,7 +903,9 @@ function getSkey() {
   })
 }
 
-function createPath(obj: object, path: string | string[], value: any | null = null, mustdelete = false) {
+function
+
+createPath(obj: object, path: string | string[], value: any | null = null, mustdelete = false, mustsplice = false) {
 
   path = typeof path === 'string' ? path.split('.') : path;
   let current: object = obj;
@@ -819,7 +929,12 @@ function createPath(obj: object, path: string | string[], value: any | null = nu
   if (mustdelete) {
     current.splice(path[0], 1);
   } else {
-    current[path[0]] = value;
+    if (mustsplice) {
+      current.splice(path[0], 0, value);
+    } else {
+      current[path[0]] = value;
+    }
+
   }
 
   return obj;
@@ -829,7 +944,9 @@ function createPath(obj: object, path: string | string[], value: any | null = nu
 
 /////////////////FILEBONE FUNCTRIONS/////////////////
 
-function getUploadUrl(file: File) {
+function
+
+getUploadUrl(file: File) {
   return new Promise((resolve, reject) => {
     getSkey().then(skey => {
 
@@ -850,7 +967,9 @@ function getUploadUrl(file: File) {
   });
 }
 
-function uploadFile(file: File, uploadData: any) {
+function
+
+uploadFile(file: File, uploadData: any) {
 
   return new Promise((resolve, reject) => {
     fetch(uploadData["values"]["uploadUrl"], {

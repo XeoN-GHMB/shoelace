@@ -105,6 +105,11 @@ export default class SlBone extends LitElement {
     value = value.flat(10)
     return value;
 
+
+  }
+  toFormData()
+  {
+    const value= this.toFormValue();
     const formData: FormData = new FormData();
     for (const data of value) {
       for (const [k, v] of Object.entries(data)) {
@@ -167,6 +172,7 @@ export default class SlBone extends LitElement {
         }
       }
     }
+
     if (isRelational) {
       const newboneStructure = {}
       if (Array.isArray(boneStructure["relskel"])) {
@@ -182,7 +188,7 @@ export default class SlBone extends LitElement {
         boneStructure["relskel"] = newboneStructure;
 
       } else {
-        for (const [key, value] of Object.entries(boneStructure["using"])) {
+        for (const [key, value] of Object.entries(boneStructure["relskel"])) {
           const isRelational = value["type"].startsWith("relational")
           const isRecord = value["type"].startsWith("record")
           if (isRelational || isRecord) {
@@ -200,7 +206,8 @@ export default class SlBone extends LitElement {
     const options = {
       boneValue: this._getBoneValue(),
       boneName: this.boneName,
-      formData: this.toFormValue(),
+      formValue: this.toFormValue(),
+      formData: this.toFormData(),
       type: type
     }
 
@@ -245,8 +252,6 @@ export default class SlBone extends LitElement {
   }
 
   render() {
-    console.log(this.boneValue)
-    console.log(this.boneStructure)
     return html`${this.bone}`;
   }
 }
