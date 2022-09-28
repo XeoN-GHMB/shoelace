@@ -73,6 +73,47 @@ export class BoneEditRenderer {
     this.boneValue = boneValue;
     this.boneName = boneName;
     this.mainInstance = mainInstance;
+    /*
+    if (this.boneStructure["type"].startsWith("relational")) {
+      console.log(this.boneValue)
+      if (this.boneValue !== null && typeof (this.boneValue) !== "string") {
+        if (this.boneStructure["languages"] !== null) {
+          if (this.boneStructure["multiple"]) {
+
+            for (const lang of this.boneStructure["languages"]) {
+              for (const [i, tmpValue] of this.boneValue[lang].entries()) {
+                const key = this.boneValue[lang][i]["dest"]["key"];
+                this.mainInstance.relationalCache[key] = tmpValue;
+                this.boneValue[lang][i] = key;
+              }
+            }
+          } else {
+            for (const lang of this.boneStructure["languages"]) {
+              const key = this.boneValue[lang]["dest"]["key"];
+              this.mainInstance.relationalCache[key] = this.boneValue[lang];
+              this.boneValue[lang] = key;
+            }
+          }
+        } else {
+          if (this.boneStructure["multiple"]) {
+            for (const [i, tmpValue] of this.boneValue.entries()) {
+              const key = tmpValue["dest"]["key"];
+              this.mainInstance.relationalCache[key] = tmpValue;
+              this.boneValue[i] = key;
+
+            }
+          } else {
+            const key = this.boneValue["dest"]["key"];
+            this.mainInstance.relationalCache[key] = this.boneValue;
+            this.boneValue = key;
+          }
+        }
+      }
+
+    }
+    console.log("cache", this.mainInstance.relationalCache);
+    console.log("bone", this.boneValue);
+    */
   }
 
 
@@ -153,7 +194,6 @@ export class BoneEditRenderer {
 
             const obj = this.reWriteBoneValue();
             createPath(obj, this.generateboneName(lang, idx), this.boneStructure["emptyValue"]);
-            console.log("obj", obj)
             this.mainInstance.boneValue = obj[this.mainInstance.boneName];
 
           });
@@ -173,7 +213,6 @@ export class BoneEditRenderer {
           xicon.name = "x";
           xicon.slot = "suffix";
           clearButton.appendChild(xicon);
-          //TODO icon prefix for add and clear
           clearButton.variant = "danger";
 
 
@@ -214,6 +253,7 @@ export class BoneEditRenderer {
         addButton.variant = "success"
         let idx: number = 0;
         for (const [i, tmpValue] of this.boneValue.entries()) {
+          console.log("tmp", tmpValue)
           multipleWrapper.appendChild(this.addInput(tmpValue, null, i));
           multipleWrapper.appendChild(this.addErrorContainer(null, i));
 
@@ -224,6 +264,8 @@ export class BoneEditRenderer {
 
         addButton.addEventListener("click", () => {
           const obj = this.reWriteBoneValue();
+          console.log("add", obj);
+          console.log("add name", this.generateboneName(null, idx));
           createPath(obj, this.generateboneName(null, idx), this.boneStructure["emptyValue"]);
           this.mainInstance.boneValue = obj[this.mainInstance.boneName];
 
@@ -283,9 +325,7 @@ export class BoneEditRenderer {
         const saveButton = document.createElement("sl-button");
         saveButton.innerText = "Save";
         saveButton.addEventListener("click", () => {
-          console.log("Save")
-          const formData = this.reWriteBoneValue();
-          this.mainInstance.handleChange(formData);
+          this.mainInstance.handleChange("fromSave");
         })
         wrapper.appendChild(saveButton);
       }
@@ -311,73 +351,99 @@ export class BoneEditRenderer {
   }
 
   addInput(value: any, lang: string, index = null) {
-
+    const inputWrapper = document.createElement("div");
     const newboneName = this.generateboneName(lang, index);
+    //TODO outsoucre style
+    inputWrapper.style.display = "flex";
+    inputWrapper.style.flexDirection = "row";
+    inputWrapper.dataset.boneName = newboneName;
 
+
+    let clearButton;
+    let draggable
     const inputElement: HTMLElement = this.getEditor(value, newboneName);
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
+    inputElement.style.flexGrow = "1";//TODO outsource style
 
     if (this.boneStructure["multiple"]) {
-      inputElement.querySelector(":scope>#clearButton").addEventListener("click", () => {
-        const obj = this.reWriteBoneValue();
+
+      clearButton = document.createElement("sl-button");
+      clearButton.id = "clearButton"
+      clearButton.variant = "danger";
+      clearButton.innerText = "Delete";
+      clearButton.slot = "suffix";
+      const xicon: SlIcon = document.createElement("sl-icon");
+      xicon.name = "x";
+      xicon.slot = "prefix";
+      clearButton.appendChild(xicon);
+      clearButton.addEventListener("click", () => {
+        const obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
         createPath(obj, newboneName, null, true);
+
+        this.mainInstance.internboneValue = obj;
+        this.mainInstance.handleChange("deleteEntry");
         this.mainInstance.boneValue = obj[this.mainInstance.boneName];
 
-
-        //this.mainInstance.handleChange(formData, "deleteEntry")
-        //addButton.focus();
-
       });
-    }
-    //TODo for later item moving
 
-    inputElement.querySelector("#dragger").addEventListener("mousedown", (e) => {
+      draggable = document.createElement("sl-icon")
+      draggable.name = "draggable";
+      draggable.addEventListener("mousedown", (e) => {
 
-      if (!this.absolutePostionSet) {
-        this.absolutePostionSet = true;
+        if (!this.absolutePostionSet) {
+          this.absolutePostionSet = true;
 
-        for (const _input of this.inputsAbsolutePostions) {
+          for (const _input of this.inputsAbsolutePostions) {
 
-          const elemRect = _input[0].getBoundingClientRect();
-          const offsetTop = elemRect.top;
-          const offsetBottom = elemRect.bottom;
-          if (_input.length === 2) {
-            _input[1] = [offsetTop, offsetBottom];
+            const elemRect = _input[0].getBoundingClientRect();
+            const offsetTop = elemRect.top;
+            const offsetBottom = elemRect.bottom;
+            if (_input.length === 2) {
+              _input[1] = [offsetTop, offsetBottom];
 
-          } else {
-            _input.push([offsetTop, offsetBottom]);
+            } else {
+              _input.push([offsetTop, offsetBottom]);
+            }
+
           }
 
         }
-        console.log(this.inputsAbsolutePostions)
-      }
-      if (!this.move) {
-        this.move = true;
-      }
-      e.preventDefault();
-      this.moveElement = inputElement.cloneNode(true);
-      this.moveElement.style.borderStyle = "solid";
-      this.moveElement.style.position = "absolute";
-      this.moveElement.style.zIndex = "2";
-      this.fakeElement = document.createElement("div");
-      this.fakeElement.style.height = inputElement.clientHeight + "px";
-      this.fakeElement.style.width = inputElement.clientWidth + "px";
-      this.fakeElement.style.backgroundColor = "#fa003e";
-      this.startHeight = inputElement.clientHeight;
-      this.startTop = inputElement.getBoundingClientRect().top
-      inputElement.parentElement.insertBefore(this.moveElement, inputElement);
-      inputElement.parentElement.insertBefore(this.fakeElement, inputElement);
-      inputElement.remove();
-      this.swapElements[0] = inputElement.dataset.boneName;
-      this.moveElementSrc = inputElement;
+        if (!this.move) {
+          this.move = true;
+        }
+        e.preventDefault();
+        this.moveElement = inputWrapper.cloneNode(true);
+        this.moveElement.style.borderStyle = "solid";
+        this.moveElement.style.position = "absolute";
+        this.moveElement.style.zIndex = "2";
+        this.fakeElement = document.createElement("div");
+        this.fakeElement.style.height = inputWrapper.clientHeight + "px";
+        this.fakeElement.style.width = inputWrapper.clientWidth + "px";
+        this.fakeElement.style.backgroundColor = "#fa003e";
+        this.startHeight = inputElement.clientHeight;
+        this.startTop = inputElement.getBoundingClientRect().top
+        inputWrapper.parentElement.insertBefore(this.moveElement, inputWrapper);
+        inputWrapper.parentElement.insertBefore(this.fakeElement, inputWrapper);
+        inputWrapper.remove();
+        this.swapElements[0] = inputElement.dataset.boneName;
+        this.moveElementSrc = inputWrapper;
 
 
-    })
+      })
 
 
-    this.inputsAbsolutePostions.push([inputElement])
-    return inputElement;
+      this.inputsAbsolutePostions.push([inputWrapper])
+    }
+    if (this.boneStructure["multiple"]) {
+      inputWrapper.appendChild(draggable);
+    }
+    inputWrapper.appendChild(inputElement);
+    if (this.boneStructure["multiple"]) {
+      inputWrapper.appendChild(clearButton);
+    }
+
+    return inputWrapper;
   }
 
   addErrorContainer(lang: string, index = null): SlDetails {
@@ -422,33 +488,12 @@ export class BoneEditRenderer {
 
   rawBoneEditorRenderer(value: any, boneName = "") {
     const inputElement = document.createElement("sl-input");
-    //const clearButton: SlIconButton = document.createElement("sl-icon-button")
-    if (this.boneStructure["multiple"]) {
-
-      const clearButton: SlButton = document.createElement("sl-button")
-      clearButton.id = "clearButton"
-      clearButton.variant = "danger";
-      clearButton.innerText = "Delete";
-      clearButton.slot = "suffix";
-      const xicon: SlIcon = document.createElement("sl-icon");
-      xicon.name = "x";
-      xicon.slot = "prefix";
-      clearButton.appendChild(xicon);
-      inputElement.appendChild(clearButton);
-    }
-
-
-    const draggable = document.createElement("sl-icon")
-    draggable.slot = "prefix";
-    draggable.name = "chevron-bar-expand";
-    draggable.id = "dragger";
-    inputElement.appendChild(draggable);
 
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
 
     if (value === null) {
-      inputElement.value = "";
+      inputElement.value = this.boneStructure["emptyValue"];
     } else {
       inputElement.value = value;
     }
@@ -537,6 +582,7 @@ export class BoneEditRenderer {
 
     const inputElement = document.createElement("sl-switch");
     inputElement.dataset.boneName = boneName;
+    inputElement.name = boneName;
     inputElement.value = value.toString();
 
 
@@ -546,7 +592,7 @@ export class BoneEditRenderer {
 
   recordBoneEditorRenderer(value: any, boneName = "") {
 
-    const recordboneWrapper = document.createElement("form");
+    const recordboneWrapper = document.createElement("div");
     recordboneWrapper.classList.add("record-wrapper");
     recordboneWrapper.style.paddingTop = "5px";
     recordboneWrapper.style.paddingLeft = "5px";
@@ -556,12 +602,18 @@ export class BoneEditRenderer {
 
     recordboneWrapper.style.borderStyle = "solid";
     recordboneWrapper.style.borderWidth = "1px";
-    //TODo outsource styles
+    //TODO outsource style
 
-    recordboneWrapper.dataset.boneName = this.boneName;
+    recordboneWrapper.dataset.boneName = boneName;
     recordboneWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     recordboneWrapper.dataset.depth = this.depth.toString();
 
+    if (this.boneStructure["multiple"]) {
+      const draggable = document.createElement("sl-icon")
+      draggable.name = "chevron-bar-expand";
+      draggable.id = "dragger";
+      recordboneWrapper.appendChild(draggable);
+    }
 
     for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
 
@@ -580,6 +632,7 @@ export class BoneEditRenderer {
       recordboneWrapper.appendChild(tmp);
     }
     if (this.boneStructure["multiple"]) {
+
       const clearButton: SlButton = document.createElement("sl-button")
 
       clearButton.id = "clearButton"
@@ -592,6 +645,8 @@ export class BoneEditRenderer {
 
       //clearButton.style.float="right";
       recordboneWrapper.appendChild(clearButton);
+
+
     }
     recordboneWrapper.addEventListener("submit", (e) => {
 
@@ -604,6 +659,21 @@ export class BoneEditRenderer {
 
 
   relationBoneEditorRenderer(value: any, boneName = "") {
+    /**
+     * value can be :
+     * null if a empty bone is renderd (multiple add)
+     * key if we are in a add an we extend a multiple value
+     * {dest:{name:"bla",key:"blablakey"}}
+     *
+     *
+     */
+    if (typeof (value) === "object" && value !== null) {
+      if ("dest" in value) {
+        const key = value["dest"]["key"]
+        this.mainInstance.relationalCache[key] = value;
+        value = key;
+      }
+    }
 
     const inputWrapper = document.createElement("div");
     const shadowInput = document.createElement("sl-input")
@@ -616,8 +686,12 @@ export class BoneEditRenderer {
     clearButton.id = "clearButton"
     searchBox.appendChild(clearButton);
 
-    searchBox.hoist = true
-    const url = `${apiurl}/json/country/list?search={q}`;
+    searchBox.hoist = true;
+    if (value !== null && value !== "") {
+      searchBox.placeholder = formatstring(this.mainInstance.relationalCache[value], this.boneStructure);
+    }
+
+    const url = `${apiurl}/json/${this.boneStructure["module"]}/list?search={q}`;
 
 
     //searchBox.style.width = "100%";
@@ -628,6 +702,7 @@ export class BoneEditRenderer {
     //Shadow input
     shadowInput.hidden = true;
     shadowInput.name = boneName;
+    shadowInput.value = value;
 
 
     searchBox.source = (search: string) => {
@@ -649,8 +724,14 @@ export class BoneEditRenderer {
     inputWrapper.appendChild(shadowInput);
     inputWrapper.appendChild(searchBox);
 
-    searchBox.addEventListener("sl-item-select", (e: CustomEvent) => {
+    searchBox.addEventListener("sl-item-select", async (e: CustomEvent) => {
       shadowInput.value = e.detail.item.value;
+      await fetch(`${apiurl}/json/${this.boneStructure["module"]}/view/${e.detail.item.value}`)
+        .then(response => response.json())
+        .then((data) => {
+          this.mainInstance.relationalCache[e.detail.item.value] = {dest: data["values"]}
+        });
+
       this.mainInstance.internboneValue = this.reWriteBoneValue();
       this.mainInstance.handleChange();
       //this.mainInstance.internboneValue[this.boneName] = {dest: JSON.parse(e.detail.item.value)}
@@ -665,12 +746,30 @@ export class BoneEditRenderer {
 
 
   fileBoneEditorRenderer(value: any, boneName = "") {
+    /**
+     * value can be :
+     * null if a empty bone is renderd (multiple add)
+     * key if we are in a add an we extend a multiple value
+     * {dest:{name:"bla",key:"blablakey"}}
+     *
+     *
+     */
+    console.log("init filebone with", value, boneName);
+    if (typeof (value) === "object" && value !== null) {
+      if ("dest" in value) {
+        const key = value["dest"]["key"]
+        this.mainInstance.relationalCache[key] = value;
+        value = key;
+      }
+    }
+    const fileContainer = document.createElement("div");
+    //TODO outsoucre style
+    fileContainer.style.display = "flex";
+    fileContainer.style.flexDirection = "row";
 
-
-    const fileContainer = document.createElement("div")
     const shadowFile = document.createElement("input");
-    const shadowKey = document.createElement("input");
-    const statusSpan = document.createElement("span");
+    const shadowKey = document.createElement("sl-input");
+    const fileNameInput = document.createElement("sl-input");
     const uploadButton = document.createElement("sl-button");
     const clearButton = document.createElement("sl-button");
 
@@ -706,26 +805,44 @@ export class BoneEditRenderer {
       const file: File = e.target.files[0];
       getUploadUrl(file).then(uploadData => {
 
-        statusSpan.innerText = "Uploading..."
+        fileNameInput.value = "Uploading...";
         uploadFile(file, uploadData).then(resp => {
 
 
-          addFile(uploadData, statusSpan).then((fileData: object) => {
-            const fileKey: string = fileData["values"]["key"];
-            shadowKey.value = fileKey;
-            statusSpan.innerText = fileKey;
-            //const formData = this.reWriteBoneValue();
-            //this.mainInstance.handleChange(formData);
+          addFile(uploadData).then((fileData: object) => {
+            this.mainInstance.relationalCache[fileData["values"]["key"]] = fileData["values"]
+
+            shadowKey.value = fileData["values"]["key"];
+
+            fileNameInput.value = fileData["values"]["name"];
+
+            const obj = this.reWriteBoneValue();
+
+            this.mainInstance.internboneValue = obj;
+            this.mainInstance.handleChange();
 
           })
 
         });
       });
     });
+    //fileNameInput
+    fileNameInput.disabled = true;
+    fileNameInput.style.flexGrow = "1";
+    if (value !== null && value !== "") { //Fixme why ==""
+      try {
+        fileNameInput.value = value["dest"]["name"];
+      } catch (e) {
+        console.log("erorr in file value", value);
+      }
+
+    }
+
 
     fileContainer.appendChild(shadowFile);
     fileContainer.appendChild(shadowKey);
-    fileContainer.appendChild(statusSpan);
+    fileContainer.appendChild(fileNameInput);
+
     fileContainer.appendChild(uploadButton);
     fileContainer.appendChild(clearButton);
     return fileContainer;
@@ -739,6 +856,7 @@ export class BoneEditRenderer {
     inputSelect.name = boneName;
     inputSelect.value = value;
     inputSelect.dataset.boneName = boneName;
+    //inputSelect.hoist = true; //Todo styling
 
     inputSelect.multiple = this.boneStructure["multiple"];
     for (const option of this.boneStructure["values"]) {
@@ -750,8 +868,11 @@ export class BoneEditRenderer {
     }
     inputSelect.addEventListener("sl-change", (event) => {
 
-      const formData = this.reWriteBoneValue();
-      //this.mainInstance.handleChange(formData);
+      const obj = this.reWriteBoneValue();
+      this.mainInstance.internboneValue = obj;
+      this.mainInstance.handleChange();
+      this.mainInstance.boneValue = obj[this.mainInstance.boneName];
+
     });
 
     return inputSelect;
@@ -782,14 +903,26 @@ export class BoneEditRenderer {
 
   reWriteBoneValue() {
     const obj = {};
-    this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement) => {
-      createPath(obj, inputElement.name, inputElement.value);
+    this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: HTMLElement) => {
+
+      if (inputElement.name !== undefined) {
+        if (inputElement.dataset.relational === "true") {
+          createPath(obj, inputElement.name, inputElement.value);//createPath(obj, inputElement.name, this.mainInstance.relationalCache[inputElement.value]);
+        } else {
+          createPath(obj, inputElement.name, inputElement.value);
+        }
+
+      }
+
 
     });
     return obj;
   }
 
-  ///Move Element functions
+  /**
+   * Move Element functions
+   * Set ne values for the absolute positon for the inputs
+   */
   addScroll() {
     document.addEventListener("scroll", () => {
       for (const _input of this.inputsAbsolutePostions) {
@@ -814,14 +947,20 @@ export class BoneEditRenderer {
       if (this.move) {
         e.preventDefault();
         this.move = false;
+        this.fakeElement.remove();
+        this.moveElement.remove();
         if (this.swapElements[0] !== null && this.swapElements[1] !== null) {
-          console.log(this.swapElements);
-          this.fakeElement.remove();
-          this.moveElement.remove();
           const obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
           const _value = getPath(obj, this.swapElements[0]);
           createPath(obj, this.swapElements[0], null, true,);
           createPath(obj, this.swapElements[1], _value, false, true);
+
+          this.mainInstance.internboneValue = obj;
+          this.mainInstance.handleChange();
+          this.mainInstance.boneValue = obj[this.mainInstance.boneName];
+
+        } else {//override with same value because that trigger rerender and we must not insert the old bone
+          const obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
           this.mainInstance.boneValue = obj[this.mainInstance.boneName];
         }
 
@@ -837,14 +976,14 @@ export class BoneEditRenderer {
     let elemetAfter = null;
     document.addEventListener("mousemove", (e: MouseEvent) => {
         if (this.move) {
+          if (this.mainInstance.inTable) {
+            this.moveElement.style.top = (e.pageY - (this.startHeight / 2) - this.mainInstance.getBoundingClientRect().top).toString() + "px";//in of table
+          } else {
+            this.moveElement.style.top = (e.pageY - (this.startHeight / 2)).toString() + "px";//out of table
+          }
 
-          const yPos = e.clientY - this.startTop;
-
-
-          //this.moveElement.style.top = e.clientY + "px";
-          this.moveElement.style.top = (e.pageY - (this.startHeight / 2)).toString() + "px";
           //this.moveElement.style.top = yPos  + "px";
-          const y = e.pageY;
+          const y = e.clientY;
 
           for (const tmpPos of this.inputsAbsolutePostions) {
 
@@ -863,7 +1002,6 @@ export class BoneEditRenderer {
                       this.fakeElement.remove();
                       parent.insertBefore(this.fakeElement, tmpPos[0]);
                       this.swapElements[1] = tmpPos[0].dataset.boneName;
-                      console.log("before")
                     }
                   }
                 } else {
@@ -871,7 +1009,6 @@ export class BoneEditRenderer {
                     elemetAfter = tmpPos[0];
                     this.fakeElement.remove();
                     tmpPos[0].after(this.fakeElement);
-                    console.log("after")
                     this.swapElements[1] = tmpPos[0].dataset.boneName;
                   }
 
@@ -889,9 +1026,7 @@ export class BoneEditRenderer {
 }
 
 /////////////////HELPER FUNCTRIONS/////////////////
-function
-
-getSkey() {
+function getSkey() {
   return new Promise((resolve, reject) => {
 
     fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
@@ -903,9 +1038,7 @@ getSkey() {
   })
 }
 
-function
-
-createPath(obj: object, path: string | string[], value: any | null = null, mustdelete = false, mustsplice = false) {
+function createPath(obj: object, path: string | string[], value: any | null = null, mustdelete = false, mustsplice = false) {
 
   path = typeof path === 'string' ? path.split('.') : path;
   let current: object = obj;
@@ -944,9 +1077,7 @@ createPath(obj: object, path: string | string[], value: any | null = null, mustd
 
 /////////////////FILEBONE FUNCTRIONS/////////////////
 
-function
-
-getUploadUrl(file: File) {
+function getUploadUrl(file: File) {
   return new Promise((resolve, reject) => {
     getSkey().then(skey => {
 
@@ -967,9 +1098,7 @@ getUploadUrl(file: File) {
   });
 }
 
-function
-
-uploadFile(file: File, uploadData: any) {
+function uploadFile(file: File, uploadData: any) {
 
   return new Promise((resolve, reject) => {
     fetch(uploadData["values"]["uploadUrl"], {
@@ -984,9 +1113,7 @@ uploadFile(file: File, uploadData: any) {
 
 }
 
-function
-
-addFile(uploadData: any) {
+function addFile(uploadData: any) {
 
 
   return new Promise((resolve, reject) => {

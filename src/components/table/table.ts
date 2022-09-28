@@ -93,6 +93,7 @@ export default class SlTable extends LitElement {
 
   @watchProps(['structure', 'skellist', "editabletable"])
   optionUpdate() {
+    console.log("update");
     //only rebuild table if structure changed
     this._editabletable=this.editabletable;
     if (this.previousStructure !== this.structure) {

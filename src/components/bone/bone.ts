@@ -40,6 +40,7 @@ export default class SlBone extends LitElement {
   bone: HTMLFormElement;
   initBoneValue: any;
   internboneValue: any;
+  relationalCache={};
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
 
@@ -58,7 +59,9 @@ export default class SlBone extends LitElement {
   /** set rendersaveButton */
   @property({type: Boolean, reflect: true}) rendersaveButton = false;
   /** set boneValue */
-  @property({type: Array, attribute: false}) errors: boneError[];
+  @property({type: Array, attribute: false}) errors: [];
+  /** set boneValue */
+  @property({type: Boolean, attribute: false}) inTable=false;
 
   /** Gets boneValue */
   get getBoneValue(): any {
@@ -128,18 +131,18 @@ export default class SlBone extends LitElement {
     if (this.boneStructure === null || this.boneStructure === undefined) {
       return;
     }
-    this.convertboneStructure(this.boneStructure)
+    this.convertboneStructure(this.boneStructure);
     if (!this.boneStructure["visible"]) {
       return;
     }
 
     if (this.renderType === "view") {
 
-      const boneViewer = new BoneViewRenderer(this.boneStructure, this.boneValue, this.boneName, this)
+      const boneViewer = new BoneViewRenderer(this.boneStructure, this.internboneValue[this.boneName], this.boneName, this)
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
-      const boneEditor = new BoneEditRenderer(this.boneStructure, this.boneValue, this.boneName, this)
+      const boneEditor = new BoneEditRenderer(this.boneStructure, this.internboneValue[this.boneName], this.boneName, this)
       this.bone = boneEditor.boneEditor();
     }
 
@@ -210,11 +213,7 @@ export default class SlBone extends LitElement {
       formData: this.toFormData(),
       type: type
     }
-
-    if (this.initBoneValue == this._getBoneValue()) {
-      options["type"] = "noChange";
-    }
-
+    console.log("emit",options)
     emit(this, 'sl-boneChange', {
       detail: options
     });
@@ -224,6 +223,10 @@ export default class SlBone extends LitElement {
   handleError() {
     //Todo Styling?
     if(this.bone===undefined || this.bone===null)
+    {
+      return;
+    }
+    if(this.errors===undefined || this.errors===null)
     {
       return;
     }

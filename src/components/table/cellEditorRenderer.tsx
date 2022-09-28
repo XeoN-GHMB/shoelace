@@ -26,6 +26,7 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
   bone.boneName = cell.getField();
   bone.renderType = "edit";
   bone.rendersaveButton = "true";
+  bone.inTable = true;
   bone.addEventListener("sl-boneChange", async (boneChangeEvent) => {
 
     const skelKey = cell._cell.row.data.key;
@@ -35,20 +36,24 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
       cell.getRow()._row.clearCellHeight();
       return;
     }
-    const result: object = await updateData(boneChangeEvent.detail.formData, skelKey, tableInstance);
-    if (result["action"] === "editSuccess") {
-      if (boneChangeEvent.detail.type === "edit") {
-        success(result["values"][cell.getField()])
-        cell.getRow()._row.clearCellHeight();
+    if (boneChangeEvent.detail.type === "fromSave") {
 
-      }
 
-    } else {
-      for (const error of result["errors"])
-        if (error["fieldPath"][0] === cell.getField()) {
-          bone.handleError(error);
+      const result: object = await updateData(boneChangeEvent.detail.formData, skelKey, tableInstance);
+      if (result["action"] === "editSuccess") {
+        if (boneChangeEvent.detail.type === "fromSave") {
+          success(result["values"][cell.getField()])
+          cell.getRow()._row.clearCellHeight();
+
         }
 
+      } else {
+        for (const error of result["errors"])
+          if (error["fieldPath"][0] === cell.getField()) {
+            bone.handleError(error);
+          }
+
+      }
     }
 
 
