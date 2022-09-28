@@ -425,7 +425,7 @@ export class BoneEditRenderer {
         this.startTop = inputElement.getBoundingClientRect().top
         inputWrapper.parentElement.insertBefore(this.moveElement, inputWrapper);
         inputWrapper.parentElement.insertBefore(this.fakeElement, inputWrapper);
-        inputWrapper.remove();
+        inputWrapper.style.display="none";
         this.swapElements[0] = inputElement.dataset.boneName;
         this.moveElementSrc = inputWrapper;
 
@@ -766,6 +766,7 @@ export class BoneEditRenderer {
     //TODO outsoucre style
     fileContainer.style.display = "flex";
     fileContainer.style.flexDirection = "row";
+    fileContainer.dataset.boneName = boneName;
 
     const shadowFile = document.createElement("input");
     const shadowKey = document.createElement("sl-input");
@@ -799,6 +800,11 @@ export class BoneEditRenderer {
 
     shadowKey.hidden = true;
     shadowKey.name = boneName;
+    if(value!==null)
+    {
+      shadowKey.value = value;
+    }
+
 
     shadowFile.addEventListener("change", (e: Event) => {
 
@@ -810,7 +816,7 @@ export class BoneEditRenderer {
 
 
           addFile(uploadData).then((fileData: object) => {
-            this.mainInstance.relationalCache[fileData["values"]["key"]] = fileData["values"]
+            this.mainInstance.relationalCache[fileData["values"]["key"]] = {dest:fileData["values"]}
 
             shadowKey.value = fileData["values"]["key"];
 
@@ -831,7 +837,7 @@ export class BoneEditRenderer {
     fileNameInput.style.flexGrow = "1";
     if (value !== null && value !== "") { //Fixme why ==""
       try {
-        fileNameInput.value = value["dest"]["name"];
+        fileNameInput.value = this.mainInstance.relationalCache[value]["dest"]["name"];
       } catch (e) {
         console.log("erorr in file value", value);
       }
@@ -943,15 +949,19 @@ export class BoneEditRenderer {
   }
 
   addMouseUp() {
+
     document.addEventListener("mouseup", (e) => {
       if (this.move) {
         e.preventDefault();
         this.move = false;
         this.fakeElement.remove();
         this.moveElement.remove();
+        console.log("switch",this.swapElements)
         if (this.swapElements[0] !== null && this.swapElements[1] !== null) {
-          const obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
+          const obj = this.reWriteBoneValue();
           const _value = getPath(obj, this.swapElements[0]);
+          console.log("obj",obj);
+          console.log("value",_value);
           createPath(obj, this.swapElements[0], null, true,);
           createPath(obj, this.swapElements[1], _value, false, true);
 
