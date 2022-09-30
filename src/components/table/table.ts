@@ -441,6 +441,9 @@ export default class SlTable extends LitElement {
     this.tableInstance.on("rowSelectionChanged", (data: any, rows: any) => {
       emit(this, 'sl-selectionChanged', {detail: {data: data, row: rows}})
     })
+    this.tableInstance.on("cellDblClick", (date:any,cell: any) => {
+      emit(this, 'sl-dblclick', {detail: {cell: cell}})
+    })
     this.shadowtable.style.display = "block";
   }
 

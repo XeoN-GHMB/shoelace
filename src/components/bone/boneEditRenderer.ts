@@ -491,6 +491,7 @@ export class BoneEditRenderer {
 
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
+    inputElement.disabled=this.boneStructure["readonly"];
 
     if (value === null) {
       inputElement.value = this.boneStructure["emptyValue"];
