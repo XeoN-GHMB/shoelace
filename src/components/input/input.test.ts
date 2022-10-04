@@ -1,4 +1,4 @@
-import { expect, fixture, html, waitUntil } from '@open-wc/testing';
+import { expect, fixture, html, oneEvent, waitUntil } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
 import { serialize } from '../../utilities/form';
@@ -124,6 +124,36 @@ describe('<sl-input>', () => {
     });
   });
 
+  describe('when resetting a form', () => {
+    it('should reset the element to its initial value', async () => {
+      const form = await fixture<HTMLFormElement>(html`
+        <form>
+          <sl-input name="a" value="test"></sl-input>
+          <sl-button type="reset">Reset</sl-button>
+        </form>
+      `);
+      const button = form.querySelector('sl-button')!;
+      const input = form.querySelector('sl-input')!;
+      input.value = '1234';
+
+      await input.updateComplete;
+
+      setTimeout(() => button.click());
+      await oneEvent(form, 'reset');
+      await input.updateComplete;
+
+      expect(input.value).to.equal('test');
+
+      input.defaultValue = '';
+
+      setTimeout(() => button.click());
+      await oneEvent(form, 'reset');
+      await input.updateComplete;
+
+      expect(input.value).to.equal('');
+    });
+  });
+
   describe('when calling HTMLFormElement.reportValidity()', () => {
     it('should be invalid when the input is empty and form.reportValidity() is called', async () => {
       const form = await fixture<HTMLFormElement>(html`
@@ -156,6 +186,27 @@ describe('<sl-input>', () => {
       `);
 
       expect(form.reportValidity()).to.be.false;
+    });
+  });
+
+  describe('when type="number"', () => {
+    it('should be valid when the value is within the boundary of a step', async () => {
+      const el = await fixture<SlInput>(html` <sl-input type="number" step=".5" value="1.5"></sl-input> `);
+      expect(el.invalid).to.be.false;
+    });
+
+    it('should be invalid when the value is not within the boundary of a step', async () => {
+      const el = await fixture<SlInput>(html` <sl-input type="number" step=".5" value="1.25"></sl-input> `);
+      expect(el.invalid).to.be.true;
+    });
+
+    it('should update validity when step changes', async () => {
+      const el = await fixture<SlInput>(html` <sl-input type="number" step=".5" value="1.5"></sl-input> `);
+      expect(el.invalid).to.be.false;
+
+      el.step = 1;
+      await el.updateComplete;
+      expect(el.invalid).to.be.true;
     });
   });
 });

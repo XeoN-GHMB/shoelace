@@ -1,7 +1,7 @@
-import { html, LitElement, nothing, PropertyValues } from 'lit';
+import { html, nothing, PropertyValues } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { castDate, getDaysPanel, isEqualsDate, parseDate } from '../../internal/date.util';
-import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import resourceLocal from '../../internal/resourceLocal';
 import { watchProps } from '../../internal/watchProps';
 import { addEvent, animateCss, onEvent } from '../../utilities/common';
@@ -34,7 +34,7 @@ import styles from './date-panel.styles';
 
 @resourceLocal()
 @customElement('sl-date-panel')
-export default class SlDatePanel extends LitElement {
+export default class SlDatePanel extends ShoelaceElement {
   static styles = styles;
 
   /** Check the date , format: 2018，2018-02, 2018/01， 2018/02/02 ,2018-01-02 */
@@ -145,7 +145,7 @@ export default class SlDatePanel extends LitElement {
   /** Triggers the date-select event */
   private emitValueSelectEvent(detail = {}) {
     this.watchSelectModeChange();
-    emit(this, 'sl-date-select', {
+    this.emit('sl-date-select', {
       detail: {
         value: this.valueDateString,
         date: this.valueDate,

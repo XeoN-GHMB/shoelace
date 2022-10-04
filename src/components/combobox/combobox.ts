@@ -1,4 +1,4 @@
-import {LitElement, html} from 'lit';
+import { html} from 'lit';
 import {customElement, property, query, state} from 'lit/decorators.js';
 import type SlMenuItem from '../menu-item/menu-item';
 import type SlDropdown from '../dropdown/dropdown';
@@ -6,7 +6,7 @@ import type SlMenu from '../menu/menu';
 import styles from './combobox.styles';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {scrollIntoView} from "../../internal/scroll";
-import {emit} from "../../internal/event";
+import ShoelaceElement from '../../internal/shoelace-element';
 
 export interface Suggestion {
   text: string;
@@ -35,7 +35,7 @@ export interface SuggestionSource {
  * @csspart menu - The sl-menu component.
  */
 @customElement('sl-combobox')
-export default class SlCombobox extends LitElement {
+export default class SlCombobox extends ShoelaceElement {
   static styles = styles;
 
   private comboboxId = comboboxIds++;
@@ -169,7 +169,7 @@ export default class SlCombobox extends LitElement {
   };
 
   onItemSelected(item: SlMenuItem) {
-    const event = emit(this, 'sl-item-select', {
+    const event = this.emit('sl-item-select', {
       detail: {item},
       cancelable: true,
     });
@@ -181,7 +181,7 @@ export default class SlCombobox extends LitElement {
 
   handleSlInput(event: CustomEvent) {
     event.stopPropagation();
-    emit(this, 'sl-input');
+    this.emit('sl-input');
 
     if (this.activeItemIndex !== -1) {
       this.menu.getAllItems()[this.activeItemIndex].active = false;
@@ -209,7 +209,8 @@ export default class SlCombobox extends LitElement {
 
   handleSlChange(event: CustomEvent) {
     event.stopPropagation();
-    emit(this, 'sl-change');
+    console.log(this)
+    this.emit('sl-change');
   }
 
   async prepareSuggestions(text: string) {
@@ -265,7 +266,7 @@ export default class SlCombobox extends LitElement {
           slot="trigger"
           type="text"
           role="combobox"
-          aria-expanded=${this.dropdown?.open}
+          aria-expanded=${this.dropdown? 'true' : 'false'}
           size=${this.size}
           label=${this.label}
           placeholder=${this.placeholder}

@@ -1,12 +1,13 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
-import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import styles from './icon.styles';
 import { getIconLibrary, unwatchIcon, watchIcon } from './library';
 import { requestIcon } from './request';
+import type { CSSResultGroup } from 'lit';
 
 let parser: DOMParser;
 
@@ -21,8 +22,8 @@ let parser: DOMParser;
  * @csspart base - The component's internal wrapper.
  */
 @customElement('sl-icon')
-export default class SlIcon extends LitElement {
-  static styles = styles;
+export default class SlIcon extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   @state() private svg = '';
 
@@ -45,13 +46,16 @@ export default class SlIcon extends LitElement {
   /** Enforce v-once for vueJs */
   @property({reflect: true, type: Boolean, attribute: 'v-once'}) vueonce = true;
 
+  /** allows to use a sprite map instead of copying the svg as inline code */
+  @property({reflect: true, type: Boolean}) sprite = false;
+
   connectedCallback() {
     super.connectedCallback();
     watchIcon(this);
   }
 
   firstUpdated() {
-    this.setIcon();
+    if (!this.sprite) this.setIcon();
   }
 
   disconnectedCallback() {
@@ -67,9 +71,14 @@ export default class SlIcon extends LitElement {
     return this.src;
   }
 
+  private getDir(){
+    const url = this.getUrl();
+    return url?.substring(0, url?.lastIndexOf("/"))
+  }
+
   /** @internal Fetches the icon and redraws it. Used to handle library registrations. */
   redraw() {
-    this.setIcon();
+    if (!this.sprite) this.setIcon();
   }
 
   @watch('name')
@@ -98,17 +107,17 @@ export default class SlIcon extends LitElement {
           if (svgEl !== null) {
             library?.mutator?.(svgEl);
             this.svg = svgEl.outerHTML;
-            emit(this, 'sl-load');
+            this.emit('sl-load');
           } else {
             this.svg = '';
-            emit(this, 'sl-error');
+            this.emit('sl-error');
           }
         } else {
           this.svg = '';
-          emit(this, 'sl-error');
+          this.emit('sl-error');
         }
       } catch {
-        emit(this, 'sl-error');
+        this.emit('sl-error');
       }
     } else if (this.svg.length > 0) {
       // If we can't resolve a URL and an icon was previously set, remove it
@@ -117,7 +126,8 @@ export default class SlIcon extends LitElement {
   }
 
   handleChange() {
-    this.setIcon();
+    if (!this.sprite) this.setIcon();
+
   }
 
   render() {
@@ -130,7 +140,13 @@ export default class SlIcon extends LitElement {
       aria-label=${ifDefined(hasLabel ? this.label : undefined)}
       aria-hidden=${ifDefined(hasLabel ? undefined : 'true')}
     >
-      ${unsafeSVG(this.svg)}
+
+    ${this.sprite?
+      html`<svg width="1em" height="1em">
+            <use href="${this.getDir()}/_sprite.svg#${this.name}"></use>
+          </svg>`
+      :html`${unsafeSVG(this.svg)}`}
+
     </div>`;
   }
 }

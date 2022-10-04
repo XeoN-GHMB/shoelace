@@ -1,8 +1,10 @@
 // @ts-nocheck
-import {LitElement, html} from 'lit';
-import {customElement, property, query} from 'lit/decorators.js';
-import {emit} from '../../internal/event';
-import {watchProps} from '../../internal/watchProps';
+
+import { html } from 'lit';
+import { customElement, property, query } from 'lit/decorators.js';
+import ShoelaceElement from '../../internal/shoelace-element';
+import { watchProps } from '../../internal/watchProps';
+
 import styles from './table.styles';
 import {boneFormatter} from "./cellRenderer.tsx";
 import {boneEditor, updateData} from "./cellEditorRenderer.tsx";
@@ -28,7 +30,7 @@ import {TabulatorFull, RowComponent} from './tabulator_esm.js';
  * @cssproperty --table-row-color-hover - row hover color
  */
 @customElement('sl-table')
-export default class SlTable extends LitElement {
+export default class SlTable extends ShoelaceElement {
   static styles = styles;
 
   @query('#shadowtable') shadowtable: HTMLInputElement;
@@ -439,7 +441,7 @@ export default class SlTable extends LitElement {
 
   postBuildTable() {
     this.tableInstance.on("rowSelectionChanged", (data: any, rows: any) => {
-      emit(this, 'sl-selectionChanged', {detail: {data: data, row: rows}})
+      this.emit('sl-selectionChanged', {detail: {data: data, row: rows}})
     })
     this.tableInstance.on("cellDblClick", (date:any,cell: any) => {
       emit(this, 'sl-dblclick', {detail: {cell: cell}})

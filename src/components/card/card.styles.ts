@@ -81,6 +81,13 @@ export default css`
     object-fit: cover;
   }
 
-
-
+  /* selected/checked */
+  .card--checked {
+    border-color: var(--sl-color-gray-100);
+    background-color: var(--sl-color-gray-100);
+    box-shadow: var(--sl-shadow-medium);
+  }
+  .card--checked .card__image {
+    filter: brightness(90%);
+  }
 `;

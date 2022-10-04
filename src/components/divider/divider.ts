@@ -1,7 +1,8 @@
-import { LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import styles from './divider.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -12,13 +13,14 @@ import styles from './divider.styles';
  * @cssproperty --spacing - The spacing of the divider.
  */
 @customElement('sl-divider')
-export default class SlDivider extends LitElement {
-  static styles = styles;
+export default class SlDivider extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   /** Draws the divider in a vertical orientation. */
   @property({ type: Boolean, reflect: true }) vertical = false;
 
-  firstUpdated() {
+  connectedCallback() {
+    super.connectedCallback();
     this.setAttribute('role', 'separator');
   }
 

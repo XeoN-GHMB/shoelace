@@ -94,6 +94,7 @@ Use the `placement` attribute to set the preferred placement of the tooltip.
 <style>
   .tooltip-placement-example {
     width: 250px;
+    margin: 1rem;
   }
 
   .tooltip-placement-example-row:after {
@@ -282,20 +283,14 @@ const App = () => {
 };
 ```
 
-### Remove Arrows
+### Removing Arrows
 
-You can control the size of tooltip arrows by overriding the `--sl-tooltip-arrow-size` design token.
+You can control the size of tooltip arrows by overriding the `--sl-tooltip-arrow-size` design token. To remove them, set the value to `0` as shown below.
 
 ```html preview
-<div style="--sl-tooltip-arrow-size: 0;">
-  <sl-tooltip content="This is a tooltip">
-    <sl-button>Above</sl-button>
-  </sl-tooltip>
-
-  <sl-tooltip content="This is a tooltip" placement="bottom">
-    <sl-button>Below</sl-button>
-  </sl-tooltip>
-</div>
+<sl-tooltip content="This is a tooltip" style="--sl-tooltip-arrow-size: 0;">
+  <sl-button>No Arrow</sl-button>
+</sl-tooltip>
 ```
 
 ```jsx react
@@ -338,11 +333,31 @@ Use the `content` slot to create tooltips with HTML content. Tooltips are design
 import { SlButton, SlTooltip } from '@shoelace-style/shoelace/dist/react';
 
 const App = () => (
-  <SlTooltip content="This is a tooltip">
+  <SlTooltip>
     <div slot="content">
       I'm not <strong>just</strong> a tooltip, I'm a <em>tooltip</em> with HTML!
     </div>
 
+    <SlButton>Hover Me</SlButton>
+  </SlTooltip>
+);
+```
+
+### Setting a Maximum Width
+
+Use the `--max-width` custom property to change the width the tooltip can grow to before wrapping occurs.
+
+```html preview
+<sl-tooltip style="--max-width: 80px;" content="This tooltip will wrap after only 80 pixels.">
+  <sl-button>Hover me</sl-button>
+</sl-tooltip>
+```
+
+```jsx react
+import { SlButton, SlTooltip } from '@shoelace-style/shoelace/dist/react';
+
+const App = () => (
+  <SlTooltip style={{ '--max-width': '80px' }} content="This tooltip will wrap after only 80 pixels.">
     <SlButton>Hover Me</SlButton>
   </SlTooltip>
 );
@@ -365,10 +380,10 @@ Tooltips will be clipped if they're inside a container that has `overflow: auto|
 
 <style>
   .tooltip-hoist {
+    position: relative;
     border: solid 2px var(--sl-panel-border-color);
     overflow: hidden;
     padding: var(--sl-spacing-medium);
-    position: relative;
   }
 </style>
 ```

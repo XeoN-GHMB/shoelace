@@ -1,6 +1,6 @@
-import { html, LitElement } from 'lit';
+import { html} from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { PathNameResult } from './pathResovle';
 import { getRouterByName } from './router';
 /**
@@ -10,7 +10,7 @@ import { getRouterByName } from './router';
  * @event sl-router-link-before  emit before router
  */
 @customElement('sl-router-link')
-export default class SlRouterLink extends LitElement {
+export default class SlRouterLink extends ShoelaceElement {
   /** 设置导航urlpattern */
   @property()
   src: string;
@@ -32,7 +32,7 @@ export default class SlRouterLink extends LitElement {
     return getRouterByName(this.routerName);
   }
   private goToLink(event: Event) {
-    let linkEvent = emit(this, 'sl-router-link-before', {
+    let linkEvent = this.emit('sl-router-link-before', {
       cancelable: true
     });
     if (!linkEvent.defaultPrevented && !this.external) {

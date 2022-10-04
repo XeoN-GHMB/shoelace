@@ -1,9 +1,11 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import '../../components/icon/icon';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
+import '../icon/icon';
 import styles from './avatar.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -21,8 +23,8 @@ import styles from './avatar.styles';
  * @cssproperty --size - The size of the avatar.
  */
 @customElement('sl-avatar')
-export default class SlAvatar extends LitElement {
-  static styles = styles;
+export default class SlAvatar extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   @state() private hasError = false;
 

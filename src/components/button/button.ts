@@ -1,14 +1,14 @@
-import { LitElement } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { html, literal } from 'lit/static-html.js';
-import '../../components/spinner/spinner';
-import { emit } from '../../internal/event';
 import { FormSubmitController } from '../../internal/form';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { HasSlotController } from '../../internal/slot';
 import { LocalizeController } from '../../utilities/localize';
+import '../spinner/spinner';
 import styles from './button.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -31,8 +31,8 @@ import styles from './button.styles';
  * @csspart caret - The button's caret.
  */
 @customElement('sl-button')
-export default class SlButton extends LitElement {
-  static styles = styles;
+export default class SlButton extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   @query('.button') button: HTMLButtonElement | HTMLLinkElement;
 
@@ -84,7 +84,7 @@ export default class SlButton extends LitElement {
    * The type of button. When the type is `submit`, the button will submit the surrounding form. Note that the default
    * value is `button` instead of `submit`, which is opposite of how native `<button>` elements behave.
    */
-  @property() type: 'button' | 'submit' = 'button';
+  @property() type: 'button' | 'submit' | 'reset' = 'button';
 
   /** An optional name for the button. Ignored when `href` is set. */
   @property() name?: string;
@@ -136,12 +136,12 @@ export default class SlButton extends LitElement {
 
   handleBlur() {
     this.hasFocus = false;
-    emit(this, 'sl-blur');
+    this.emit('sl-blur');
   }
 
   handleFocus() {
     this.hasFocus = true;
-    emit(this, 'sl-focus');
+    this.emit('sl-focus');
   }
 
   handleClick(event: MouseEvent) {
@@ -153,6 +153,10 @@ export default class SlButton extends LitElement {
 
     if (this.type === 'submit') {
       this.formSubmitController.submit(this);
+    }
+
+    if (this.type === 'reset') {
+      this.formSubmitController.reset(this);
     }
   }
 

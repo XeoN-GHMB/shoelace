@@ -1,4 +1,5 @@
-import { LitElement, html } from 'lit';
+import { html } from 'lit';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { customElement, property } from 'lit/decorators.js';
 import { getChildrenElement } from '../../utilities/common';
 import SlAcPanel from '../ac-panel/ac-panel';
@@ -15,7 +16,7 @@ import styles from './collapse.styles';
  * @cssproperty --sl-collapse-border-color - collapse border color.
  */
 @customElement('sl-collapse')
-export default class SlCollapse extends LitElement {
+export default class SlCollapse extends ShoelaceElement {
   static styles = styles;
   /**Whether to allow opening multiple  */
   @property({ type: Boolean, reflect: true }) multi = false;

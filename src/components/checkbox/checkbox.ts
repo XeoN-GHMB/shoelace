@@ -1,12 +1,14 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
-import { emit } from '../../internal/event';
+import { defaultValue } from '../../internal/default-value';
 import { FormSubmitController } from '../../internal/form';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import styles from './checkbox.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -26,25 +28,27 @@ import styles from './checkbox.styles';
  * @csspart label - The checkbox label.
  */
 @customElement('sl-checkbox')
-export default class SlCheckbox extends LitElement {
-  static styles = styles;
+export default class SlCheckbox extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   @query('input[type="checkbox"]') input: HTMLInputElement;
 
   // @ts-expect-error -- Controller is currently unused
   private readonly formSubmitController = new FormSubmitController(this, {
-    value: (control: SlCheckbox) => (control.checked ? control.value || 'on' : undefined)
+    value: (control: SlCheckbox) => (control.checked ? control.value || 'on' : undefined),
+    defaultValue: (control: SlCheckbox) => control.defaultChecked,
+    setValue: (control: SlCheckbox, checked: boolean) => (control.checked = checked)
   });
 
   @state() private hasFocus = false;
 
-  /** The checkbox's name attribute. */
+  /** Name of the HTML form control. Submitted with the form as part of a name/value pair. */
   @property() name: string;
 
-  /** The checkbox's value attribute. */
+  /** Value of the HTML form control. Primarily used to differentiate a list of related checkboxes that have the same name. */
   @property() value: string;
 
-  /** Disables the checkbox. */
+  /** Disables the checkbox (so the user can't check / uncheck it). */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   /** Makes the checkbox a required field. */
@@ -53,11 +57,15 @@ export default class SlCheckbox extends LitElement {
   /** Draws the checkbox in a checked state. */
   @property({ type: Boolean, reflect: true }) checked = false;
 
-  /** Draws the checkbox in an indeterminate state. */
+  /** Draws the checkbox in an indeterminate state. Usually applies to a checkbox that represents "select all" or "select none" when the items to which it applies are a mix of selected and unselected. */
   @property({ type: Boolean, reflect: true }) indeterminate = false;
 
   /** This will be true when the control is in an invalid state. Validity is determined by the `required` prop. */
   @property({ type: Boolean, reflect: true }) invalid = false;
+
+  /** Gets or sets the default value used to reset this element. The initial value corresponds to the one originally specified in the HTML that created this element. */
+  @defaultValue('checked')
+  defaultChecked = false;
 
   firstUpdated() {
     this.invalid = !this.input.checkValidity();
@@ -92,12 +100,12 @@ export default class SlCheckbox extends LitElement {
   handleClick() {
     this.checked = !this.checked;
     this.indeterminate = false;
-    emit(this, 'sl-change');
+    this.emit('sl-change');
   }
 
   handleBlur() {
     this.hasFocus = false;
-    emit(this, 'sl-blur');
+    this.emit('sl-blur');
   }
 
   @watch('disabled', { waitUntilFirstUpdate: true })
@@ -109,7 +117,7 @@ export default class SlCheckbox extends LitElement {
 
   handleFocus() {
     this.hasFocus = true;
-    emit(this, 'sl-focus');
+    this.emit('sl-focus');
   }
 
   @watch('checked', { waitUntilFirstUpdate: true })
@@ -161,17 +169,15 @@ export default class SlCheckbox extends LitElement {
             : ''}
           ${!this.checked && this.indeterminate
             ? html`
-                <span part="indeterminate-icon" class="checkbox__icon">
-                  <svg viewBox="0 0 16 16">
-                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
-                      <g stroke="currentColor" stroke-width="2">
-                        <g transform="translate(2.285714, 6.857143)">
-                          <path d="M10.2857143,1.14285714 L1.14285714,1.14285714"></path>
-                        </g>
+                <svg part="indeterminate-icon" class="checkbox__icon" viewBox="0 0 16 16">
+                  <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round">
+                    <g stroke="currentColor" stroke-width="2">
+                      <g transform="translate(2.285714, 6.857143)">
+                        <path d="M10.2857143,1.14285714 L1.14285714,1.14285714"></path>
                       </g>
                     </g>
-                  </svg>
-                </span>
+                  </g>
+                </svg>
               `
             : ''}
         </span>

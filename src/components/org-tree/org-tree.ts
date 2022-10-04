@@ -1,7 +1,7 @@
-import { LitElement, html, TemplateResult } from 'lit';
+import { html, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { customStyle } from '../../internal/customStyle';
-import { emit } from '../../internal/event';
 import SlOrgNode, { defaultRoleRender, OrgNodeDataType } from '../org-node/org-node';
 import styles from './org-tree.styles';
 
@@ -23,7 +23,7 @@ import styles from './org-tree.styles';
  */
 @customStyle()
 @customElement('sl-org-tree')
-export default class SlOrgTree extends LitElement {
+export default class SlOrgTree extends ShoelaceElement {
   static styles = styles;
   /**
    * Organizational structure node data
@@ -76,7 +76,7 @@ export default class SlOrgTree extends LitElement {
       const node = event.target as SlOrgNode;
       const eventType = `sl-org-tree-${event.type.replace('sl-', '')}`;
       console.log(eventType);
-      emit(this, eventType, {
+      this.emit(eventType, {
         detail: {
           node: node,
           nodeData: node.nodeData

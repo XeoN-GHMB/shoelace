@@ -135,7 +135,7 @@ export default css`
   height: 0;
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid #bbb;
+  border-bottom: 6px solid var(--table-head-color);
 }
 
 .tabulator .tabulator-header .tabulator-col.tabulator-col-group .tabulator-col-group-cols {
@@ -183,7 +183,7 @@ export default css`
 
 .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="none"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
   border-top: none;
-  border-bottom: 6px solid #bbb;
+  border-bottom: 6px solid var(--table-head-color);
 }
 
 .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-col-sorter {
@@ -192,7 +192,7 @@ export default css`
 
 .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="asc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
   border-top: none;
-  border-bottom: 6px solid var(--sl-color-neutral-500);
+  border-bottom: 6px solid var(--table-head-color-hover);
 }
 
 .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-col-sorter {
@@ -201,7 +201,7 @@ export default css`
 
 .tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort="desc"] .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
   border-bottom: none;
-  border-top: 6px solid var(--sl-color-neutral-500);
+  border-top: 6px solid var(--table-head-color-hover);
   color: var(--sl-color-neutral-500);
 }
 

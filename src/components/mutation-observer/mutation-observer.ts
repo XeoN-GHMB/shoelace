@@ -1,8 +1,9 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import styles from './mutation-observer.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -13,8 +14,8 @@ import styles from './mutation-observer.styles';
  * @slot - The content to watch for mutations.
  */
 @customElement('sl-mutation-observer')
-export default class SlMutationObserver extends LitElement {
-  static styles = styles;
+export default class SlMutationObserver extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   private mutationObserver: MutationObserver;
 
@@ -74,7 +75,7 @@ export default class SlMutationObserver extends LitElement {
   }
 
   handleMutation(mutationList: MutationRecord[]) {
-    emit(this, 'sl-mutation', {
+    this.emit('sl-mutation', {
       detail: { mutationList }
     });
   }

@@ -50,6 +50,8 @@ strong {
 }
 
 .sidebar-buttons {
+  display: flex;
+  justify-content: space-between;
   text-align: center;
   margin-top: 0;
 }
@@ -488,6 +490,20 @@ kbd,
 .markdown-section p.tip code,
 .markdown-section p.warn code {
   background-color: var(--sl-color-neutral-100);
+}
+
+/* Sponsorship callouts */
+.sponsor-callout {
+  background: var(--sl-color-warning-100);
+  border-left: solid 3px var(--sl-color-warning-300);
+  border-radius: var(--sl-border-radius-medium);
+  padding: 0.5rem 1.5rem;
+}
+
+@media screen and (max-width: 950px) {
+  .sponsor-callout__secondary-label {
+    display: none;
+  }
 }
 
 /* Component headers */

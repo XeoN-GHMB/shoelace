@@ -1,5 +1,4 @@
 import { css } from 'lit';
-import { focusVisibleSelector } from '../../internal/focus-visible';
 import componentStyles from '../../styles/component.styles';
 
 //language=CSS
@@ -33,8 +32,11 @@ export default css`
     outline: none;
   }
 
-  .tab${focusVisibleSelector}:not(.tab--disabled) {
+  .tab:focus-visible:not(.tab--disabled) {
     color: var(--sl-color-primary-600);
+  }
+
+  .tab:focus-visible {
     outline: var(--sl-focus-ring);
     outline-offset: calc(-1 * var(--sl-focus-ring-width) - var(--sl-focus-ring-offset));
   }

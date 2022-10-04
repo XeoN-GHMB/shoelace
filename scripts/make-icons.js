@@ -4,7 +4,7 @@
 import chalk from 'chalk';
 import commandLineArgs from 'command-line-args';
 import copy from 'recursive-copy';
-import del from 'del';
+import { deleteAsync } from 'del';
 import download from 'download';
 import fm from 'front-matter';
 import { readFileSync, mkdirSync } from 'fs';
@@ -13,6 +13,7 @@ import { globby } from 'globby';
 import path from 'path';
 import jsdom from 'jsdom';
 const { JSDOM } = jsdom;
+import {optimize} from 'svgo'
 
 const { outdir } = commandLineArgs({ name: 'outdir', type: String });
 const iconDir = path.join(outdir, '/assets/bootstrap-icons');
@@ -37,13 +38,24 @@ let numIcons = 0;
 
     // Copy icons
     console.log(`Copying icons and license`);
-    await del([iconDir]);
+    await deleteAsync([iconDir]);
     mkdirSync(iconDir, { recursive: true });
     await Promise.all([
       copy(`${srcPath}/icons`, iconDir),
       copy(`${srcPath}/LICENSE.md`, path.join(iconDir, 'LICENSE.md')),
       copy(`${srcPath}/bootstrap-icons.svg`, './docs/assets/bootstrap-icons/sprite.svg', { overwrite: true })
     ]);
+
+    const spritedata = fm(await readFile(`${srcPath}/bootstrap-icons.svg`, 'utf8'));
+    let spritemap = spritedata['body'].replace((/<symbol/g), `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor"`)
+    spritemap = spritemap.replace((/<\/symbol/g), `</svg`)
+
+    await writeFile(
+      path.join(iconDir, '_sprite.svg'),
+      spritemap,
+      'utf8'
+    );
+
 
     // Generate metadata
     console.log(`Generating icon metadata`);
@@ -63,6 +75,7 @@ let numIcons = 0;
         };
       })
     );
+
 
     await writeFile(path.join(iconDir, 'icons.json'), JSON.stringify(metadata, null, 2), 'utf8');
 
@@ -93,7 +106,7 @@ const iconDir2 = path.join(outdir, '/assets/icons');
 
     // Copy icons
     console.log(`Copying icons and license`);
-    await del([iconDir2]);
+    await deleteAsync([iconDir2]);
     mkdirSync(iconDir2, { recursive: true });
     await Promise.all([
       copy(`${srcPath}`, iconDir2)
@@ -124,27 +137,33 @@ const iconDir2 = path.join(outdir, '/assets/icons');
       files.map(async file => {
         const name = path.basename(file, path.extname(file));
         const data = fm(await readFile(file, 'utf8'));
-        let svg = dom.window.document.createRange().createContextualFragment(data['body']).firstElementChild;
-        let svgcode = svg.innerHTML;
 
+        let opti_svg = optimize(data['body'],{multipass:true})
+        await writeFile(path.join(iconDir2, path.basename(file)), opti_svg.data, 'utf8');
+
+        let svgcode = opti_svg.data
         svgcode = svgcode.toString().replace(/<title>.*?<\/title>/g, '');
         svgcode = svgcode.toString().replace(/<style>.*?<\/style>/g, '');
         svgcode = svgcode.toString().replace(/#fff/g, 'currentcolor');
         svgcode = svgcode.toString().replace(/#FFFFFF/g, 'currentcolor');
+        svgcode = svgcode.replace((/<svg/g), `<svg id="${name}"`)
 
-        return `
-          <symbol viewBox="0 0 60 60" id="${name}">
-              ${svgcode}
-          </symbol>
-        `;
+        return svgcode
+
       })
     );
 
     await writeFile(
       './docs/assets/icons/sprite.svg',
-      `<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${sprite.join()}</svg>`,
+      `<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${sprite.join("")}</svg>`,
       'utf8'
     );
+    await writeFile(
+      path.join(iconDir2, '_sprite.svg'),
+      `<?xml version="1.0" encoding="utf-8"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">${sprite.join("")}</svg>`,
+      'utf8'
+    );
+
     await writeFile(path.join(iconDir2, 'icons.json'), JSON.stringify(metadata, null, 2), 'utf8');
 
     console.log(chalk.cyan(`Successfully processed ${numIcons2} icons ✨\n`));

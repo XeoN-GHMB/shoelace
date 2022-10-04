@@ -1,5 +1,4 @@
 import { css } from 'lit';
-import { focusVisibleSelector } from '../../internal/focus-visible';
 import componentStyles from '../../styles/component.styles';
 
 export default css`
@@ -28,7 +27,7 @@ export default css`
 
   .menu-item.menu-item--disabled {
     outline: none;
-    color: var(--sl-color-neutral-400);
+    opacity: 0.5;
     cursor: not-allowed;
   }
   .menu-item.menu-item--highlight:not(.menu-item--disabled) {
@@ -65,8 +64,7 @@ export default css`
   }
 
   :host(:hover:not([aria-disabled='true'])) .menu-item,
-  :host(${focusVisibleSelector}:not(.sl-focus-invisible):not([aria-disabled='true'])) .menu-item,
-  .menu-item--active {
+  :host(:focus-visible:not(.sl-focus-invisible):not([aria-disabled='true'])) .menu-item {
     outline: none;
     background-color: var(--sl-color-primary-600);
     color: var(--sl-color-neutral-0);
@@ -74,6 +72,7 @@ export default css`
 
   .menu-item .menu-item__check,
   .menu-item .menu-item__chevron {
+    flex: 0 0 auto;
     display: flex;
     align-items: center;
     justify-content: center;

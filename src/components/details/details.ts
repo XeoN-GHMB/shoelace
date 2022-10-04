@@ -1,13 +1,15 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import '../../components/icon/icon';
 import { animateTo, shimKeyframesHeightAuto, stopAnimations } from '../../internal/animate';
-import { emit, waitForEvent } from '../../internal/event';
+import { waitForEvent } from '../../internal/event';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import { getAnimation, setDefaultAnimation } from '../../utilities/animation-registry';
 import { LocalizeController } from '../../utilities/localize';
+import '../icon/icon';
 import styles from './details.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -17,7 +19,7 @@ import styles from './details.styles';
  *
  * @slot - The details' content.
  * @slot prefix - Used to prepend an icon or similar element to the details' header summary.
- * @slot summary - The details' summary. Alternatively, you can use the summary prop.
+ * @slot summary - The details' summary. Alternatively, you can use the `summary` attribute.
  * @slot suffix - Used to append an icon or similar element to the details' header summary.
  * @slot summary-icon - The expand/collapse icon.
  *
@@ -38,8 +40,8 @@ import styles from './details.styles';
  * @animation details.hide - The animation to use when hiding details. You can use `height: auto` with this animation.
  */
 @customElement('sl-details')
-export default class SlDetails extends LitElement {
-  static styles = styles;
+export default class SlDetails extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   @query('.details') details: HTMLElement;
   @query('.details__header') header: HTMLElement;
@@ -132,7 +134,7 @@ export default class SlDetails extends LitElement {
   async handleOpenChange() {
     if (this.open) {
       // Show
-      emit(this, 'sl-show');
+      this.emit('sl-show');
 
       await stopAnimations(this.body);
       this.body.hidden = false;
@@ -141,10 +143,10 @@ export default class SlDetails extends LitElement {
       await animateTo(this.body, shimKeyframesHeightAuto(keyframes, this.body.scrollHeight), options);
       this.body.style.height = 'auto';
 
-      emit(this, 'sl-after-show');
+      this.emit('sl-after-show');
     } else {
       // Hide
-      emit(this, 'sl-hide');
+      this.emit('sl-hide');
 
       await stopAnimations(this.body);
 
@@ -153,7 +155,7 @@ export default class SlDetails extends LitElement {
       this.body.hidden = true;
       this.body.style.height = 'auto';
 
-      emit(this, 'sl-after-hide');
+      this.emit('sl-after-hide');
     }
   }
 

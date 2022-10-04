@@ -1,21 +1,23 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { live } from 'lit/directives/live.js';
-import { emit } from '../../internal/event';
+import { defaultValue } from '../../internal/default-value';
 import { FormSubmitController } from '../../internal/form';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { HasSlotController } from '../../internal/slot';
 import { watch } from '../../internal/watch';
 import { LocalizeController } from '../../utilities/localize';
 import styles from './range.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
  * @status stable
  *
- * @slot label - The input's label. Alternatively, you can use the label prop.
- * @slot help-text - Help text that describes how to use the input. Alternatively, you can use the help-text prop.
+ * @slot label - The input's label. Alternatively, you can use the `label` attribute.
+ * @slot help-text - Help text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
  *
  * @event sl-change - Emitted when the control's value changes.
  * @event sl-blur - Emitted when the control loses focus.
@@ -34,10 +36,11 @@ import styles from './range.styles';
  * @cssproperty --track-color-active - The color of the portion of the track that represents the current value.
  * @cssproperty --track-color-inactive - The of the portion of the track that represents the remaining value.
  * @cssproperty --track-height - The height of the track.
+ * @cssproperty --track-active-offset - The point of origin of the active track.
  */
 @customElement('sl-range')
-export default class SlRange extends LitElement {
-  static styles = styles;
+export default class SlRange extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   @query('.range__control') input: HTMLInputElement;
   @query('.range__tooltip') output: HTMLOutputElement | null;
@@ -57,16 +60,16 @@ export default class SlRange extends LitElement {
   /** The input's value attribute. */
   @property({ type: Number }) value = 0;
 
-  /** The range's label. Alternatively, you can use the label slot. */
+  /** The range's label. If you need to display HTML, you can use the `label` slot instead. */
   @property() label = '';
 
   /** The input's label position */
   @property() labelposition: 'top' | 'left' = 'top';
 
-  /** The range's help text. Alternatively, you can use the help-text slot. */
+  /** The range's help text. If you need to display HTML, you can use the help-text slot instead. */
   @property({ attribute: 'help-text' }) helpText = '';
 
-  /** Disables the input. */
+  /** Disables the range. */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
   /**
@@ -90,13 +93,14 @@ export default class SlRange extends LitElement {
   /** A function used to format the tooltip's value. */
   @property({ attribute: false }) tooltipFormatter: (value: number) => string = (value: number) => value.toString();
 
+  /** Gets or sets the default value used to reset this element. The initial value corresponds to the one originally specified in the HTML that created this element. */
+  @defaultValue()
+  defaultValue = 0;
+
   connectedCallback() {
     super.connectedCallback();
     this.resizeObserver = new ResizeObserver(() => this.syncRange());
 
-    if (!this.value) {
-      this.value = this.min;
-    }
     if (this.value < this.min) {
       this.value = this.min;
     }
@@ -133,7 +137,7 @@ export default class SlRange extends LitElement {
 
   handleInput() {
     this.value = parseFloat(this.input.value);
-    emit(this, 'sl-change');
+    this.emit('sl-change');
 
     this.syncRange();
   }
@@ -141,7 +145,7 @@ export default class SlRange extends LitElement {
   handleBlur() {
     this.hasFocus = false;
     this.hasTooltip = false;
-    emit(this, 'sl-blur');
+    this.emit('sl-blur');
   }
 
   @watch('value', { waitUntilFirstUpdate: true })
@@ -166,7 +170,7 @@ export default class SlRange extends LitElement {
   handleFocus() {
     this.hasFocus = true;
     this.hasTooltip = true;
-    emit(this, 'sl-focus');
+    this.emit('sl-focus');
   }
 
   handleThumbDragStart() {
@@ -177,6 +181,7 @@ export default class SlRange extends LitElement {
     this.hasTooltip = false;
   }
 
+  @watch('hasTooltip', { waitUntilFirstUpdate: true })
   syncRange() {
     const percent = Math.max(0, (this.value - this.min) / (this.max - this.min));
 
@@ -188,9 +193,7 @@ export default class SlRange extends LitElement {
   }
 
   syncProgress(percent: number) {
-    this.input.style.background = `linear-gradient(to right, var(--track-color-active) 0%, var(--track-color-active) ${
-      percent * 100
-    }%, var(--track-color-inactive) ${percent * 100}%, var(--track-color-inactive) 100%)`;
+    this.input.style.setProperty('--percent', `${percent * 100}%`);
   }
 
   syncTooltip(percent: number) {
@@ -247,6 +250,7 @@ export default class SlRange extends LitElement {
               range: true,
               'range--disabled': this.disabled,
               'range--focused': this.hasFocus,
+              'range--rtl': this.localize.dir() === 'rtl',
               'range--tooltip-visible': this.hasTooltip,
               'range--tooltip-top': this.tooltip === 'top',
               'range--tooltip-bottom': this.tooltip === 'bottom'

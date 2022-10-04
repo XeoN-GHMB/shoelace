@@ -1,10 +1,12 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { LocalizeController } from '../../utilities/localize';
 import styles from './progress-bar.styles';
+import type { CSSResultGroup } from 'lit';
 
 /**
  * @since 2.0
@@ -22,8 +24,8 @@ import styles from './progress-bar.styles';
  * @cssproperty --label-color - The label color.
  */
 @customElement('sl-progress-bar')
-export default class SlProgressBar extends LitElement {
-  static styles = styles;
+export default class SlProgressBar extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
   private readonly localize = new LocalizeController(this);
 
   /** The current progress, 0 to 100. */
@@ -35,16 +37,14 @@ export default class SlProgressBar extends LitElement {
   /** A custom label for the progress bar's aria label. */
   @property() label = '';
 
-  /** The locale to render the component in. */
-  @property() lang: string;
-
   render() {
     return html`
       <div
         part="base"
         class=${classMap({
           'progress-bar': true,
-          'progress-bar--indeterminate': this.indeterminate
+          'progress-bar--indeterminate': this.indeterminate,
+          'progress-bar--rtl': this.localize.dir() === 'rtl'
         })}
         role="progressbar"
         title=${ifDefined(this.title)}

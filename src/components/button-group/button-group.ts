@@ -1,8 +1,10 @@
-import { LitElement, html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import { html } from 'lit';
+import { customElement, property, query, state } from 'lit/decorators.js';
+import ShoelaceElement from '../../internal/shoelace-element';
 import styles from './button-group.styles';
+import type { CSSResultGroup } from 'lit';
 
-const BUTTON_CHILDREN = ['sl-button', 'sl-radio-button', 'sl-input', 'sl-select'];
+const BUTTON_CHILDREN = ['sl-button', 'sl-radio-button', 'sl-input', 'sl-select', 'sl-combobox'];
 
 /**
  * @since 2.0
@@ -13,10 +15,12 @@ const BUTTON_CHILDREN = ['sl-button', 'sl-radio-button', 'sl-input', 'sl-select'
  * @csspart base - The component's internal wrapper.
  */
 @customElement('sl-button-group')
-export default class SlButtonGroup extends LitElement {
-  static styles = styles;
+export default class SlButtonGroup extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
   @query('slot') defaultSlot: HTMLSlotElement;
+
+  @state() disableRole = false;
 
   /** A label to use for the button group's `aria-label` attribute. */
   @property() label = '';
@@ -53,6 +57,7 @@ export default class SlButtonGroup extends LitElement {
         button.classList.toggle('sl-button-group__button--first', index === 0);
         button.classList.toggle('sl-button-group__button--inner', index > 0 && index < slottedElements.length - 1);
         button.classList.toggle('sl-button-group__button--last', index === slottedElements.length - 1);
+        button.classList.toggle('sl-button-group__button--radio', button.tagName.toLowerCase() === 'sl-radio-button');
       }
     });
   }
@@ -63,14 +68,14 @@ export default class SlButtonGroup extends LitElement {
       <div
         part="base"
         class="button-group"
-        role="group"
+        role="${this.disableRole ? 'presentation' : 'group'}"
         aria-label=${this.label}
         @focusout=${this.handleBlur}
         @focusin=${this.handleFocus}
         @mouseover=${this.handleMouseOver}
         @mouseout=${this.handleMouseOut}
       >
-        <slot @slotchange=${this.handleSlotChange}></slot>
+        <slot @slotchange=${this.handleSlotChange} role="none"></slot>
       </div>
     `;
   }
@@ -78,7 +83,6 @@ export default class SlButtonGroup extends LitElement {
 
 function findButton(el: HTMLElement) {
   return BUTTON_CHILDREN.includes(el.tagName.toLowerCase()) ? el : el.querySelector(BUTTON_CHILDREN.join(','));
-
 }
 
 declare global {

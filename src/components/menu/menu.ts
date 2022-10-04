@@ -1,10 +1,10 @@
-import { html, LitElement } from 'lit';
+import { html } from 'lit';
 import { customElement, query, property } from 'lit/decorators.js';
-import { emit } from '../../internal/event';
-import { hasFocusVisible } from '../../internal/focus-visible';
+import ShoelaceElement from '../../internal/shoelace-element';
 import { getTextContent } from '../../internal/slot';
 import styles from './menu.styles';
-import type SlMenuItem from '../../components/menu-item/menu-item';
+import type SlMenuItem from '../menu-item/menu-item';
+import type { CSSResultGroup } from 'lit';
 export interface MenuSelectEventDetail {
   item: SlMenuItem;
 }
@@ -16,14 +16,11 @@ export interface MenuSelectEventDetail {
  * @slot - The menu's content, including menu items, menu labels, and dividers.
  *
  * @event {{ item: SlMenuItem }} sl-select - Emitted when a menu item is selected.
- *
- * @csspart base - The component's internal wrapper.
  */
 @customElement('sl-menu')
-export default class SlMenu extends LitElement {
-  static styles = styles;
+export default class SlMenu extends ShoelaceElement {
+  static styles: CSSResultGroup = styles;
 
-  @query('.menu') menu: HTMLElement;
   @query('slot') defaultSlot: HTMLSlotElement;
 
   /** Deactivate setting tabindex on active menu item. For menus where focus should remain on the trigger. */
@@ -32,7 +29,8 @@ export default class SlMenu extends LitElement {
   private typeToSelectString = '';
   private typeToSelectTimeout: number;
 
-  firstUpdated() {
+  connectedCallback() {
+    super.connectedCallback();
     this.setAttribute('role', 'menu');
   }
 
@@ -66,7 +64,7 @@ export default class SlMenu extends LitElement {
     const items = this.getAllItems({ includeDisabled: false });
     const activeItem = item.disabled ? items[0] : item;
 
-    emit(this, 'sl-item-active', { detail: item });
+    this.emit('sl-item-active', { detail: item });
 
     // Update tab indexes
     items.forEach(i => {
@@ -81,6 +79,7 @@ export default class SlMenu extends LitElement {
    * type-to-select behavior when the menu doesn't have focus.
    */
   typeToSelect(event: KeyboardEvent) {
+
     const items = this.getAllItems({ includeDisabled: false });
 
     clearTimeout(this.typeToSelectTimeout);
@@ -94,11 +93,6 @@ export default class SlMenu extends LitElement {
       }
     } else {
       this.typeToSelectString += event.key.toLowerCase();
-    }
-
-    // Restore focus in browsers that don't support :focus-visible when using the keyboard
-    if (!hasFocusVisible) {
-      items.forEach(item => item.classList.remove('sl-focus-invisible'));
     }
 
     for (const item of items) {
@@ -119,17 +113,7 @@ export default class SlMenu extends LitElement {
     const item = target.closest('sl-menu-item');
 
     if (item?.disabled === false) {
-      emit(this, 'sl-select', { detail: { item } });
-    }
-  }
-
-  handleKeyUp() {
-    // Restore focus in browsers that don't support :focus-visible when using the keyboard
-    if (!hasFocusVisible) {
-      const items = this.getAllItems();
-      items.forEach(item => {
-        item.classList.remove('sl-focus-invisible');
-      });
+      this.emit('sl-select', { detail: { item } });
     }
   }
 
@@ -189,11 +173,6 @@ export default class SlMenu extends LitElement {
 
     if (target.getAttribute('role') === 'menuitem') {
       this.setCurrentItem(target as SlMenuItem);
-
-      // Hide focus in browsers that don't support :focus-visible when using the mouse
-      if (!hasFocusVisible) {
-        target.classList.add('sl-focus-invisible');
-      }
     }
   }
 
@@ -208,16 +187,12 @@ export default class SlMenu extends LitElement {
 
   render() {
     return html`
-      <div
-        part="base"
-        class="menu"
+      <slot
+        @slotchange=${this.handleSlotChange}
         @click=${this.handleClick}
         @keydown=${this.handleKeyDown}
-        @keyup=${this.handleKeyUp}
         @mousedown=${this.handleMouseDown}
-      >
-        <slot @slotchange=${this.handleSlotChange}></slot>
-      </div>
+      ></slot>
     `;
   }
 }
