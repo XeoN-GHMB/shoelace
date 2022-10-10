@@ -1,15 +1,16 @@
 // @ts-nocheck
 
-import { html } from 'lit';
-import { customElement, property, query } from 'lit/decorators.js';
+import {html} from 'lit';
+import {customElement, property, query} from 'lit/decorators.js';
 import ShoelaceElement from '../../internal/shoelace-element';
-import { watchProps } from '../../internal/watchProps';
+import {watchProps} from '../../internal/watchProps';
 
 import styles from './table.styles';
 import {boneFormatter} from "./cellRenderer.tsx";
 import {boneEditor, updateData} from "./cellEditorRenderer.tsx";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
+import {emit} from "../../internal/event";
 
 /**
  * @since 2.0
@@ -97,7 +98,7 @@ export default class SlTable extends ShoelaceElement {
   optionUpdate() {
     console.log("update");
     //only rebuild table if structure changed
-    this._editabletable=this.editabletable;
+    this._editabletable = this.editabletable;
     if (this.previousStructure !== this.structure) {
       this.previousStructure = this.structure
 
@@ -222,7 +223,7 @@ export default class SlTable extends ShoelaceElement {
   }
 
   editCheck(cell) {
-    let isEditable=this.params[1]._editabletable;
+    let isEditable = this.params[1]._editabletable;
 
     return isEditable;
   }
@@ -232,6 +233,7 @@ export default class SlTable extends ShoelaceElement {
     this.tableConfig["height"] = this.height
     this.tableConfig["minHeight"] = this.minheight
     this.tableConfig["placeholder"] = this.placeholder
+
     if (this.sort) {
       this.tableConfig["initialSort"] = [{column: this.sort, dir: "asc"}]
     }
@@ -268,7 +270,7 @@ export default class SlTable extends ShoelaceElement {
       } else {
         this.tableConfig["columns"] = [selectColumn, ...this.tableConfig["columns"]]
       }
-      this.tableConfig["selectable"]=true;
+      this.tableConfig["selectable"] = true;
 
     }
 
@@ -443,9 +445,14 @@ export default class SlTable extends ShoelaceElement {
     this.tableInstance.on("rowSelectionChanged", (data: any, rows: any) => {
       this.emit('sl-selectionChanged', {detail: {data: data, row: rows}})
     })
-    this.tableInstance.on("cellDblClick", (date:any,cell: any) => {
-      emit(this, 'sl-dblclick', {detail: {cell: cell}})
-    })
+    this.tableInstance.on("cellDblClick", (date: any, cell: any) => {
+      console.log("dbl")
+      this.emit('sl-dblclick', {detail: {cell: cell}})
+    });
+
+    this.tableInstance.on("scrollVertical", function (top) {
+     //console.log("top", top)
+    });
     this.shadowtable.style.display = "block";
   }
 

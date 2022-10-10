@@ -353,7 +353,7 @@ export class BoneEditRenderer {
   addInput(value: any, lang: string, index = null) {
     const inputWrapper = document.createElement("div");
     const newboneName = this.generateboneName(lang, index);
-    //TODO outsoucre style
+    //TODO outsource style
     inputWrapper.style.display = "flex";
     inputWrapper.style.flexDirection = "row";
     inputWrapper.dataset.boneName = newboneName;
@@ -542,8 +542,8 @@ export class BoneEditRenderer {
 
   stringBoneEditorRenderer(value: any, boneName = "") {
     //Replace Encoded chars
-
-    return this.rawBoneEditorRenderer(escapeString(value), boneName);
+    //RawBone(escapeString(value), boneName)
+    return this.rawBoneEditorRenderer();
   }
 
 
