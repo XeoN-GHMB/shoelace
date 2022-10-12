@@ -6,7 +6,7 @@ export class BooleanBone extends RawBone {
     super(boneValue, boneName, boneStructure, mainInstance);
   }
 
-  getEditor(value, boneName,lang): HTMLElement {
+  getEditor(value, boneName:string): HTMLElement {
     const inputElement:SlSwitch = document.createElement("sl-switch");
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;

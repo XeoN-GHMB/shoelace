@@ -5,12 +5,49 @@ import SlIcon from "../../icon/icon";
 import SlDetails from "../../details/details";
 import {getPath} from "../utils";
 import SlSwitch from "../../switch/switch";
+interface BoneStructure {
+    descr: string,
+    type: string,
+    required: boolean,
+    params: object,
+    visible: boolean,
+    readonly: boolean,
+    unique: boolean,
+    languages: string[],
+    emptyValue: any,
+    multiple: boolean,
+    //Optional Fields
 
+    //relational
+    module: string,
+    format: string,
+    using: [],
+    relskel: object,
+
+    //select
+    values: [],
+
+    //date
+    date: boolean,
+    time: boolean,
+
+    //numeric
+    precision: number,
+    min: number,
+    max: number,
+
+    //text
+    validHtml: string[]
+
+    //file
+    validMimeTypes: string[]
+
+  }
 
 export class RawBone {
   boneValue;
   boneName;
-  boneStructure;
+  boneStructure:BoneStructure;
   mainInstance;
   depth = 0;
   //Move Element
@@ -195,25 +232,14 @@ export class RawBone {
           if (this.boneValue === null) continue;
           if (this.boneValue[lang] === undefined) continue;
           if (this.boneValue[lang] === null) continue;
-          const multipleWrapper = this.createMultipleWrapper(this.boneValue[lang],lang)
+          let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue[lang], lang)
           multipleWrapper.classList.add("multiple-wrapper");
-          let idx: number = 0;
 
-
-
-          for (const [i, tmpValue] of this.boneValue[lang].entries()) {
-
-            multipleWrapper.appendChild(this.addInput(tmpValue, lang, i));
-            multipleWrapper.appendChild(this.addErrorContainer(lang, i));
-
-
-            idx += 1;
-          }
 
           const addButton = document.createElement("sl-button");
 
           addButton.addEventListener("click", () => {
-
+            console.log("add")
             multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, idx));
             multipleWrapper.appendChild(this.addErrorContainer(lang, idx));
             idx += 1;
@@ -272,14 +298,16 @@ export class RawBone {
         if (this.boneValue === null) {
           this.boneValue = []
         }
-        let idx = this.boneValue.length - 1;
+
         const addButton = document.createElement("sl-button");
         addButton.innerText = "Add";
         addButton.variant = "success"
-
+        let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue)
         addButton.addEventListener("click", () => {
-          multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, idx));
-          multipleWrapper.appendChild(this.addErrorContainer(null, idx));
+          console.log("add")
+          const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + this.boneName + '"]');
+          mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, idx));
+          mulWrapper.appendChild(this.addErrorContainer(null, idx));
           idx += 1;
           return
           /*const obj = this.reWriteBoneValue();
@@ -291,7 +319,6 @@ export class RawBone {
         });
 
 
-        const multipleWrapper = this.createMultipleWrapper(this.boneValue)
         wrapper.appendChild(multipleWrapper)
         wrapper.appendChild(addButton);
         const clearButton = document.createElement("sl-button");
@@ -307,7 +334,7 @@ export class RawBone {
       } else {
         //No Lang, No Multiple
 
-        const inputElement = this.getEditor(this.boneValue, this.boneName, null)
+        const inputElement = this.getEditor(this.boneValue, this.boneName)
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
 
@@ -354,11 +381,12 @@ export class RawBone {
     return wrapper;
   }
 
-  createMultipleWrapper(value,lang=null): HTMLElement {
+  createMultipleWrapper(value, lang = null): HTMLElement {
 
     const multipleWrapper = document.createElement("div");
     multipleWrapper.classList.add("multiple-wrapper");
-    multipleWrapper.dataset.multiplebone = this.boneName;
+    const path = lang === null ? this.boneName : this.boneName + "." + lang
+    multipleWrapper.dataset.multiplebone = path;
 
     let idx: number = 0;
     for (const [i, tmpValue] of value.entries()) {
@@ -372,12 +400,12 @@ export class RawBone {
     this.addScroll();
     this.addMouseMove();
     this.addMouseUp();
-    return multipleWrapper;
+    return [multipleWrapper, idx];
 
 
   }
 
-  getEditor(value, boneName, lang) {
+  getEditor(value:any, boneName:string) {
 
     const inputElement = document.createElement("sl-input");
 
@@ -435,6 +463,8 @@ export class RawBone {
   addInput(value: any, lang: string, index = null) {
     const inputWrapper = document.createElement("div");
     const newboneName = this.generateboneName(lang, index);
+    const path = lang === null ? this.boneName : this.boneName + "." + lang
+
     //TODO outsource style
     inputWrapper.style.display = "flex";
     inputWrapper.style.flexDirection = "row";
@@ -443,7 +473,7 @@ export class RawBone {
 
     let clearButton;
     let draggable
-    const inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
+    const inputElement: HTMLElement = this.getEditor(value, newboneName);
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
     inputElement.style.flexGrow = "1";//TODO outsource style
@@ -460,17 +490,23 @@ export class RawBone {
       xicon.slot = "prefix";
       clearButton.appendChild(xicon);
       clearButton.addEventListener("click", () => {
-        const obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
+        let obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
         createPath(obj, newboneName, null, true);
         this.mainInstance.internboneValue = obj;
+        obj = this.reWriteBoneValue();
+        createPath(obj, newboneName, null, true);
         this.mainInstance.handleChange("deleteEntry");
+        console.log("delete", newboneName)
 
-
-        const mulWrapper =this.mainInstance.bone.querySelector('[data-multiplebone="' + this.boneName + '"]');
-        if(mulWrapper!==null)
-        {
-
-          mulWrapper.replaceWith(this.createMultipleWrapper(getPath(obj, this.boneName)))
+        const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+        if (mulWrapper !== null) {
+          if (lang === null) {
+            let [element, index] = this.createMultipleWrapper(getPath(obj, path))
+            mulWrapper.replaceWith(element);
+          } else {
+            let [element, index] = this.createMultipleWrapper(getPath(obj, path), lang)
+            mulWrapper.replaceWith(element);
+          }
         }
         //this.mainInstance.boneValue = obj[this.mainInstance.boneName];
 

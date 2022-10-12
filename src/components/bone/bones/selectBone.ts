@@ -60,7 +60,7 @@ export class SelectBone extends RawBone {
     }
     return super.view();
   }
-  getEditor(value, boneName,lang): HTMLElement {
+  getEditor(value:any, boneName:string): HTMLElement {
     const inputSelect: SlSelect = document.createElement("sl-select");
 
     inputSelect.name = boneName;

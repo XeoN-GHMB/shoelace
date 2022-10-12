@@ -5,8 +5,8 @@ export class NumericBone extends RawBone {
     super(boneValue, boneName, boneStructure, mainInstance);
   }
 
-  getEditor(value, boneName,lang): HTMLElement {
-    const numericBone= super.getEditor(value, boneName,lang);
+  getEditor(value, boneName:string): HTMLElement {
+    const numericBone= super.getEditor(value, boneName);
     numericBone.type = "number";
     numericBone.min = this.boneStructure["min"];
     numericBone.max = this.boneStructure["max"];

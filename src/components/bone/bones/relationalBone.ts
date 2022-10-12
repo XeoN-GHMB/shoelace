@@ -8,7 +8,7 @@ export class RelationalBone extends RawBone {
     super(boneValue, boneName, boneStructure, mainInstance);
   }
 
-  getEditor(value, boneName, lang): HTMLElement {
+  getEditor(value:any, boneName:string): HTMLElement {
     /**
      * value can be :
      * null if a empty bone is renderd (multiple add)

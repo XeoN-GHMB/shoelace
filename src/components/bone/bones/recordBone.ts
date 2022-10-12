@@ -7,7 +7,7 @@ export class RecordBone extends RawBone{
    constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
     super(boneValue,boneName,boneStructure,mainInstance);
   }
-  getEditor(value, boneName, lang): HTMLElement {
+  getEditor(value:any, boneName:string): HTMLElement {
     const recordboneWrapper = document.createElement("div");
     recordboneWrapper.classList.add("record-wrapper");
     recordboneWrapper.style.paddingTop = "5px";
@@ -24,12 +24,6 @@ export class RecordBone extends RawBone{
     recordboneWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     recordboneWrapper.dataset.depth = this.depth.toString();
 
-    if (this.boneStructure["multiple"]) {
-      const draggable = document.createElement("sl-icon")
-      draggable.name = "chevron-bar-expand";
-      draggable.id = "dragger";
-      recordboneWrapper.appendChild(draggable);
-    }
 
     for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
 
@@ -45,23 +39,7 @@ export class RecordBone extends RawBone{
 
       recordboneWrapper.appendChild(tmp);
     }
-    if (this.boneStructure["multiple"]) {
 
-      const clearButton: SlButton = document.createElement("sl-button")
-
-      clearButton.id = "clearButton"
-      clearButton.variant = "danger";
-      clearButton.innerText = "Delete";
-      const xicon: SlIcon = document.createElement("sl-icon");
-      xicon.name = "x";
-      xicon.slot = "prefix";
-      clearButton.appendChild(xicon);
-
-      //clearButton.style.float="right";
-      recordboneWrapper.appendChild(clearButton);
-
-
-    }
     recordboneWrapper.addEventListener("submit", (e) => {
 
       e.preventDefault()

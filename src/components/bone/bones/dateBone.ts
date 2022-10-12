@@ -5,8 +5,8 @@ export class DateBone extends RawBone {
     super(boneValue, boneName, boneStructure, mainInstance);
   }
 
-  getEditor(value, boneName,lang): HTMLElement {
-    const dateBone = super.getEditor(value, boneName,lang);
+  getEditor(value, boneName:string): HTMLElement {
+    const dateBone = super.getEditor(value, boneName);
 
     if (this.boneStructure["time"]) {
 

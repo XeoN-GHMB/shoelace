@@ -1,5 +1,5 @@
 import {escapeString, formatstring, getPath} from "./boneViewRenderer";
-import { formatstring } from "./utils";
+import {formatstring} from "./utils";
 import SlBone from "./bone";
 import SlCombobox from "../combobox/combobox";
 import SlIcon from "../icon/icon";
@@ -15,6 +15,9 @@ import {BooleanBone} from "./bones/booleanBone";
 import {SelectBone} from "./bones/selectBone";
 import {RelationalBone} from "./bones/relationalBone";
 import {RecordBone} from "./bones/recordBone";
+import {RawBone} from "./bones/rawBone";
+import {FileBone} from "./bones/fileBone";
+import {SpatialBone} from "./bones/spatialBone";
 
 
 export class BoneEditRenderer {
@@ -130,35 +133,42 @@ export class BoneEditRenderer {
   }
 
   getEditor(value: any, boneName = "") {
+    let cls:any;
     switch (this.boneStructure["type"].split(".")[0]) {
       case "str":
-        return new StringBone(this.boneValue, this.boneName, this.boneStructure,this.mainInstance).edit()
+        cls = StringBone;
+        break;
       case "numeric":
-         return new NumericBone(this.boneValue, this.boneName, this.boneStructure,this.mainInstance).edit()
+        cls = NumericBone;
+        break;
       case "date":
-          return new DateBone(this.boneValue, this.boneName, this.boneStructure,this.mainInstance).edit()
+        cls = DateBone;
+        break;
       case "bool":
-         return new BooleanBone(this.boneValue, this.boneName, this.boneStructure,this.mainInstance).edit()
+        cls = BooleanBone;
+        break;
       case "record":
-         return new RecordBone(this.boneValue, this.boneName, this.boneStructure,this.mainInstance).edit()
+        cls = RecordBone;
+        break;
       case "relational":
-
+        cls = RelationalBone;
         if (this.boneStructure["type"].startsWith("relational.tree.leaf.file")) {
-          return this.fileBoneEditorRenderer(value, boneName);
+          cls = FileBone;
         }
-       return new RelationalBone(this.boneValue, this.boneName, this.boneStructure,this.mainInstance).edit()
+        break;
       case "select":
-        return new SelectBone(this.boneValue, this.boneName, this.boneStructure,this.mainInstance).edit()
-
-
+        cls = SelectBone;
+        break;
       case "spatial":
-        return this.spatialBoneEditorRenderer(value, boneName);
+        cls = SpatialBone;
+        break;
       default:
-        return this.rawBoneEditorRenderer(value, boneName);
+        return RawBone
     }
+    return new cls(this.boneValue, this.boneName, this.boneStructure, this.mainInstance).edit()
+
 
   }
-
 
 
   fileBoneEditorRenderer(value: any, boneName = "") {
@@ -216,8 +226,7 @@ export class BoneEditRenderer {
 
     shadowKey.hidden = true;
     shadowKey.name = boneName;
-    if(value!==null)
-    {
+    if (value !== null) {
       shadowKey.value = value;
     }
 
@@ -232,7 +241,7 @@ export class BoneEditRenderer {
 
 
           addFile(uploadData).then((fileData: object) => {
-            this.mainInstance.relationalCache[fileData["values"]["key"]] = {dest:fileData["values"]}
+            this.mainInstance.relationalCache[fileData["values"]["key"]] = {dest: fileData["values"]}
 
             shadowKey.value = fileData["values"]["key"];
 
@@ -271,29 +280,9 @@ export class BoneEditRenderer {
   }
 
 
-
   spatialBoneEditorRenderer(value: any, boneName = "") {
-    const spatialWrapper = document.createElement("div");
-    const lat = value[0];
-    const lng = value[1];
 
-    const latInput = this.rawBoneEditorRenderer(lat, boneName + ".lat");
-    latInput.type = "number";
-
-    latInput.min = this.boneStructure["boundsLat"][0];
-    latInput.max = this.boneStructure["boundsLat"][1];
-    latInput.step = "any";
-    spatialWrapper.appendChild(latInput);
-
-    const lngInput = this.rawBoneEditorRenderer(lng, boneName + ".lng");
-    lngInput.type = "number";
-    lngInput.min = this.boneStructure["boundsLng"][0];
-    lngInput.max = this.boneStructure["boundsLng"][1];
-    lngInput.step = "any";
-    spatialWrapper.appendChild(lngInput);
-    return spatialWrapper;
   }
-
 
 
 }
