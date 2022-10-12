@@ -1,8 +1,9 @@
 import {RawBone} from "./rawBone";
+import SlSelect from "../../select/select";
 
 export class SelectBone extends RawBone {
-  constructor(boneValue: any, boneName = "", boneStructure = {}) {
-    super(boneValue, boneName, boneStructure);
+  constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
+    super(boneValue, boneName, boneStructure, mainInstance);
   }
 
   view() {
@@ -57,7 +58,34 @@ export class SelectBone extends RawBone {
         })
       }
     }
-    return super.view()
+    return super.view();
+  }
+  getEditor(value, boneName,lang): HTMLElement {
+    const inputSelect: SlSelect = document.createElement("sl-select");
+
+    inputSelect.name = boneName;
+    inputSelect.value = value;
+    inputSelect.dataset.boneName = boneName;
+    //inputSelect.hoist = true; //Todo styling
+
+    inputSelect.multiple = this.boneStructure["multiple"];
+    for (const option of this.boneStructure["values"]) {
+      const optionElement = document.createElement("sl-menu-item");
+      optionElement.value = option[0];
+      optionElement.innerText = option[1];
+      inputSelect.appendChild(optionElement);
+
+    }
+    inputSelect.addEventListener("sl-change", (event) => {
+
+      const obj = this.reWriteBoneValue();
+      this.mainInstance.internboneValue = obj;
+      this.mainInstance.handleChange();
+      //this.mainInstance.boneValue = obj[this.mainInstance.boneName];
+
+    });
+
+    return inputSelect;
   }
 
 

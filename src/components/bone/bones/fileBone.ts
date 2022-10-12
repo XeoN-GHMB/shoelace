@@ -3,8 +3,8 @@ import {html, TemplateResult} from "lit";
 import {formatstring} from "../utils";
 
 export class FileBone extends RawBone {
-  constructor(boneValue: any, boneName = "", boneStructure = {}) {
-    super(boneValue, boneName, boneStructure);
+   constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
+    super(boneValue,boneName,boneStructure,mainInstance);
   }
 
   view(): string | TemplateResult<1> {

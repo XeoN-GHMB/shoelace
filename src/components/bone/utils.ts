@@ -1,7 +1,7 @@
 import {escapeString, getPath} from "./boneViewRenderer";
 
-export function formatstring(data, boneStructure: object, lang = null) {
 
+export function formatstring(data, boneStructure: object, lang = null,ignoreLang=false) {
   if (!boneStructure) {
 
     return data;
@@ -55,7 +55,7 @@ export function formatstring(data, boneStructure: object, lang = null) {
 
     let insidematch = match[1];
 
-    if (boneStructure["languages"]) {
+    if (boneStructure["languages"] && ! ignoreLang) {
       if (boneStructure["multiple"]) {
         if (textArray.length === 0) {
           for (const i in data[lang]) {
@@ -137,9 +137,89 @@ export function formatstring(data, boneStructure: object, lang = null) {
     }
 
   }
-  if (boneStructure["multiple"] && (!isRelational || boneStructure["languages"])) {
+  if (boneStructure["multiple"] && (!isRelational || boneStructure["languages"]) && !ignoreLang) {
     return textArray;
   }
 
   return text
 }
+export function createPath(obj: object, path: string | string[], value: any | null = null, mustdelete = false, mustsplice = false) {
+
+  path = typeof path === 'string' ? path.split('.') : path;
+  let current: object = obj;
+
+
+  while (path.length > 1) {
+
+    const [head, ...tail] = path;
+    path = tail;
+
+
+    if (current[head] === undefined) {
+      if (Number.isNaN(parseInt(tail[0]))) {
+        current[head] = {}
+      } else {
+        current[head] = []
+      }
+    }
+    current = current[head];
+  }
+  if (mustdelete) {
+    current.splice(path[0], 1);
+  } else {
+    if (mustsplice) {
+      current.splice(path[0], 0, value);
+    } else {
+      current[path[0]] = value;
+    }
+
+  }
+
+  return obj;
+
+
+}
+
+export function getPath(obj: object, path: string | string[]): object | undefined {
+  path = typeof path === 'string' ? path.split('.') : path;
+
+  let current: object = JSON.parse(JSON.stringify(obj));//Depth Copy to lose Reference;
+  while (path.length > 0) {
+    let [head, ...tail] = path;
+    path = tail;
+    if (!Number.isNaN(parseInt(head))) {
+      head = parseInt(head)
+    }
+    if (current[head] === undefined) {
+      return undefined;
+    }
+    current = current[head];
+
+
+  }
+
+  return current;
+}
+
+export function escapeString(value: string | string[]): string | string[] {
+  if (value === null) {
+    return "";
+  }
+  if (Array.isArray(value)) {
+    value.map(v => escapeString(v));
+
+
+  } else {
+    value = value.replaceAll("&lt;", "<")
+      .replaceAll("&gt;", ">")
+      .replaceAll("&quot;", '"')
+      .replaceAll("&#39;", "'")
+      .replaceAll("&#040;", "(")
+      .replaceAll("&#041;", ")")
+      .replaceAll("&#061;", "=")
+  }
+  return value
+
+}
+//const apiurl=window.location.origin;
+export const apiurl = "http://localhost:8080";

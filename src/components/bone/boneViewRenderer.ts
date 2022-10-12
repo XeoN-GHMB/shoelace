@@ -106,48 +106,6 @@ export class BoneViewRenderer {
 
 ////////////HELPER FUNCTIONS////////////////
 
-export function getPath(obj: object, path: string | string[]): object | undefined {
-
-  path = typeof path === 'string' ? path.split('.') : path;
-
-  let current: object = JSON.parse(JSON.stringify(obj));//Depth Copy to lose Reference;
-  while (path.length > 0) {
-    let [head, ...tail] = path;
-    path = tail;
-    if (!Number.isNaN(parseInt(head))) {
-      head = parseInt(head)
-    }
-    if (current[head] === undefined) {
-      return undefined;
-    }
-    current = current[head];
-
-
-  }
-
-  return current;
-}
-
-export function escapeString(value: string | string[]): string | string[] {
-  if (value === null) {
-    return "";
-  }
-  if (Array.isArray(value)) {
-    value.map(v => escapeString(v));
-
-
-  } else {
-    value = value.replaceAll("&lt;", "<")
-      .replaceAll("&gt;", ">")
-      .replaceAll("&quot;", '"')
-      .replaceAll("&#39;", "'")
-      .replaceAll("&#040;", "(")
-      .replaceAll("&#041;", ")")
-      .replaceAll("&#061;", "=")
-  }
-  return value
-
-}
 
 
 

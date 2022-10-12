@@ -37,10 +37,10 @@ export default class SlBone extends LitElement {
 
 
   static styles = styles;
-  bone: HTMLFormElement;
+  bone: HTMLFormElement = null;
   initBoneValue: any;
   internboneValue: any;
-  relationalCache={};
+  relationalCache = {};
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
 
@@ -61,7 +61,7 @@ export default class SlBone extends LitElement {
   /** set boneValue */
   @property({type: Array, attribute: false}) errors: [];
   /** set boneValue */
-  @property({type: Boolean, attribute: false}) inTable=false;
+  @property({type: Boolean, attribute: false}) inTable = false;
 
   /** Gets boneValue */
   get getBoneValue(): any {
@@ -110,9 +110,9 @@ export default class SlBone extends LitElement {
 
 
   }
-  toFormData()
-  {
-    const value= this.toFormValue();
+
+  toFormData() {
+    const value = this.toFormValue();
     const formData: FormData = new FormData();
     for (const data of value) {
       for (const [k, v] of Object.entries(data)) {
@@ -142,8 +142,11 @@ export default class SlBone extends LitElement {
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
-      const boneEditor = new BoneEditRenderer(this.boneStructure, this.internboneValue[this.boneName], this.boneName, this)
+
+      const boneEditor = new BoneEditRenderer(this.boneStructure, this.internboneValue[this.boneName], this.boneName, this);
       this.bone = boneEditor.boneEditor();
+
+
     }
 
 
@@ -213,7 +216,7 @@ export default class SlBone extends LitElement {
       formData: this.toFormData(),
       type: type
     }
-    console.log("emit",options)
+    console.log("emit", options)
     emit(this, 'sl-boneChange', {
       detail: options
     });
@@ -222,28 +225,25 @@ export default class SlBone extends LitElement {
   @watchProps(["errors"])
   handleError() {
     //Todo Styling?
-    if(this.bone===undefined || this.bone===null)
-    {
+    if (this.bone === undefined || this.bone === null) {
       return;
     }
-    if(this.errors===undefined || this.errors===null)
-    {
+    if (this.errors === undefined || this.errors === null) {
       return;
     }
-    if(this.errors.length===0)
-    {
-      this.bone.querySelectorAll(".error-container").forEach((element)=>{
-           element.style.display="none";
+    if (this.errors.length === 0) {
+      this.bone.querySelectorAll(".error-container").forEach((element) => {
+        element.style.display = "none";
       })
     }
     for (const error of this.errors) {
       if (this.boneName === error["fieldPath"][0])
         if (error["severity"] > 1) {
-          const element:SlDetails = this.bone.querySelector('[data-name="' + error["fieldPath"].join(".") + "_errorcontainer" + '"]');
+          const element: SlDetails = this.bone.querySelector('[data-name="' + error["fieldPath"].join(".") + "_errorcontainer" + '"]');
 
           if (element !== null) {
-            element.style.display="";
-            element.open=true;
+            element.style.display = "";
+            element.open = true;
             element.innerText += error["errorMessage"];
           }
 
