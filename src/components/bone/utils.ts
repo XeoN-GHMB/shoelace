@@ -223,3 +223,15 @@ export function escapeString(value: string | string[]): string | string[] {
 }
 //const apiurl=window.location.origin;
 export const apiurl = "http://localhost:8080";
+
+export  function getSkey() {
+  return new Promise((resolve, reject) => {
+
+    fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
+      resolve(skey)
+    }).catch((reason) => {
+      reject(reason)
+    })
+
+  })
+}

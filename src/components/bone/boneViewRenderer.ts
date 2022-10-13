@@ -11,6 +11,8 @@ import {RelationalBone} from "./bones/relationalBone";
 import {FileBone} from "./bones/fileBone";
 import {TextBone} from "./bones/textBone";
 import {SpatialBone} from "./bones/spatialBone";
+import {BooleanBone} from "./bones/booleanBone";
+
 export class BoneViewRenderer {
   declare boneStructure: {
     descr: string,
@@ -68,43 +70,46 @@ export class BoneViewRenderer {
     if (!this.boneStructure) {
       return;
     }
-
+    let cls: any;
     switch (this.boneStructure["type"].split(".")[0]) {
       case "str":
-        return new StringBone(this.boneValue, this.boneName, this.boneStructure).view();
-      //return this.stringBoneRenderer();
+        cls = StringBone;
+        break;
       case "numeric":
-        return new NumericBone(this.boneValue, this.boneName, this.boneStructure).view();
-      //return this.numericBoneRenderer();
+        cls = NumericBone;
+        break;
       case "date":
-        return new DateBone(this.boneValue, this.boneName, this.boneStructure).view();
+        cls = DateBone;
+        break;
+      case "bool":
+        cls = BooleanBone;
+        break;
       case "record":
-        return new RecordBone(this.boneValue, this.boneName, this.boneStructure).view();
+        cls = RecordBone;
+        break;
       case "relational":
-
+        cls = RelationalBone;
         if (this.boneStructure["type"].startsWith("relational.tree.leaf.file")) {
-          return new FileBone(this.boneValue, this.boneName, this.boneStructure).view();
+          cls = FileBone;
         }
-        return new RelationalBone(this.boneValue, this.boneName, this.boneStructure).view();
+        break;
       case "select":
-        return new SelectBone(this.boneValue, this.boneName, this.boneStructure).view();
-      //return this.selectBoneRenderer();
-      case "text":
-        return new TextBone(this.boneValue, this.boneName, this.boneStructure).view();
+        cls = SelectBone;
+        break;
       case "spatial":
-        return new SpatialBone(this.boneValue, this.boneName, this.boneStructure).view();
-
+        cls = SpatialBone;
+        break;
+      default:
+        cls = RawBone
     }
-    return new RawBone(this.boneValue, this.boneName, this.boneStructure).view();
+    return new cls(this.boneValue, this.boneName, this.boneStructure).view()
+
   }
-
-  ////////////HELPER FUNCTIONS////////////////
-
 
 
 }
 
-////////////HELPER FUNCTIONS////////////////
+
 
 
 

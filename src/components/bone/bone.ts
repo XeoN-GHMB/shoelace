@@ -145,7 +145,7 @@ export default class SlBone extends ShoelaceElement {
     if (this.renderType === "edit") {
 
       const boneEditor = new BoneEditRenderer(this.boneStructure, this.internboneValue[this.boneName], this.boneName, this);
-      this.bone = boneEditor.boneEditor();
+      this.bone = boneEditor.getEditor();
 
 
     }
@@ -234,7 +234,9 @@ export default class SlBone extends ShoelaceElement {
     }
     if (this.errors.length === 0) {
       this.bone.querySelectorAll(".error-container").forEach((element) => {
+        console.log(element)
         element.style.display = "none";
+        element.innerText = "";
       })
     }
     for (const error of this.errors) {

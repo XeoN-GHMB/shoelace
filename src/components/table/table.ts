@@ -233,6 +233,7 @@ export default class SlTable extends ShoelaceElement {
     this.tableConfig["height"] = this.height
     this.tableConfig["minHeight"] = this.minheight
     this.tableConfig["placeholder"] = this.placeholder
+    this.tableConfig["autoResize"] = false; // todo make editable  ??  this is true the tabel will be redrawed everytime if we go in edit mode
 
     if (this.sort) {
       this.tableConfig["initialSort"] = [{column: this.sort, dir: "asc"}]
@@ -451,7 +452,7 @@ export default class SlTable extends ShoelaceElement {
     });
 
     this.tableInstance.on("scrollVertical", function (top) {
-     //console.log("top", top)
+      //console.log("top", top)
     });
     this.shadowtable.style.display = "block";
   }

@@ -5,49 +5,50 @@ import SlIcon from "../../icon/icon";
 import SlDetails from "../../details/details";
 import {getPath} from "../utils";
 import SlSwitch from "../../switch/switch";
+
 interface BoneStructure {
-    descr: string,
-    type: string,
-    required: boolean,
-    params: object,
-    visible: boolean,
-    readonly: boolean,
-    unique: boolean,
-    languages: string[],
-    emptyValue: any,
-    multiple: boolean,
-    //Optional Fields
+  descr: string,
+  type: string,
+  required: boolean,
+  params: object,
+  visible: boolean,
+  readonly: boolean,
+  unique: boolean,
+  languages: string[],
+  emptyValue: any,
+  multiple: boolean,
+  //Optional Fields
 
-    //relational
-    module: string,
-    format: string,
-    using: [],
-    relskel: object,
+  //relational
+  module: string,
+  format: string,
+  using: [],
+  relskel: object,
 
-    //select
-    values: [],
+  //select
+  values: [],
 
-    //date
-    date: boolean,
-    time: boolean,
+  //date
+  date: boolean,
+  time: boolean,
 
-    //numeric
-    precision: number,
-    min: number,
-    max: number,
+  //numeric
+  precision: number,
+  min: number,
+  max: number,
 
-    //text
-    validHtml: string[]
+  //text
+  validHtml: string[]
 
-    //file
-    validMimeTypes: string[]
+  //file
+  validMimeTypes: string[]
 
-  }
+}
 
 export class RawBone {
   boneValue;
   boneName;
-  boneStructure:BoneStructure;
+  boneStructure: BoneStructure;
   mainInstance;
   depth = 0;
   //Move Element
@@ -260,16 +261,24 @@ export class RawBone {
           clearButton.innerText = "Clear";
           clearButton.id = "clearButton"
           clearButton.variant = "danger";
-          clearButton.innerText = "Clear";
           const xicon: SlIcon = document.createElement("sl-icon");
           xicon.name = "x";
           xicon.slot = "suffix";
           clearButton.appendChild(xicon);
           clearButton.variant = "danger";
 
+          //Undo Button
+          const undoButton = document.createElement("sl-button");
+          undoButton.addEventListener("click", () => {
+            console.log("undo")
+          });
+          undoButton.innerText = "Undo";
+          undoButton.variant = "neutral";
+
 
           tab_panel.appendChild(addButton);
           tab_panel.appendChild(clearButton);
+          tab_panel.appendChild(undoButton);
           tab_panel.appendChild(languageWrapper);
           this.addScroll();
           this.addMouseMove();
@@ -327,7 +336,17 @@ export class RawBone {
         });
         clearButton.innerText = "Clear";
         clearButton.variant = "danger";
+
+        //Undo Button
+        const undoButton = document.createElement("sl-button");
+        undoButton.addEventListener("click", () => {
+          console.log("undo")
+        });
+        undoButton.innerText = "Undo";
+        undoButton.variant = "neutral";
+
         wrapper.appendChild(clearButton);
+        wrapper.appendChild(undoButton);
         wrapper.appendChild(multipleWrapper);
 
 
@@ -381,7 +400,7 @@ export class RawBone {
     return wrapper;
   }
 
-  createMultipleWrapper(value, lang = null): HTMLElement {
+  createMultipleWrapper(value: any, lang: any = null): [HTMLElement, number] {
 
     const multipleWrapper = document.createElement("div");
     multipleWrapper.classList.add("multiple-wrapper");
@@ -405,7 +424,7 @@ export class RawBone {
 
   }
 
-  getEditor(value:any, boneName:string) {
+  getEditor(value: any, boneName: string) {
 
     const inputElement = document.createElement("sl-input");
 
@@ -471,7 +490,7 @@ export class RawBone {
     inputWrapper.dataset.boneName = newboneName;
 
 
-    let clearButton;
+    let deleteButton;
     let draggable
     const inputElement: HTMLElement = this.getEditor(value, newboneName);
     inputElement.dataset.lang = lang;
@@ -480,16 +499,16 @@ export class RawBone {
 
     if (this.boneStructure["multiple"]) {
 
-      clearButton = document.createElement("sl-button");
-      clearButton.id = "clearButton"
-      clearButton.variant = "danger";
-      clearButton.innerText = "Delete";
-      clearButton.slot = "suffix";
+      deleteButton = document.createElement("sl-button");
+      deleteButton.id = "clearButton"
+      deleteButton.variant = "danger";
+      deleteButton.innerText = "Delete";
+      deleteButton.slot = "suffix";
       const xicon: SlIcon = document.createElement("sl-icon");
       xicon.name = "x";
       xicon.slot = "prefix";
-      clearButton.appendChild(xicon);
-      clearButton.addEventListener("click", () => {
+      deleteButton.appendChild(xicon);
+      deleteButton.addEventListener("click", () => {
         let obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
         createPath(obj, newboneName, null, true);
         this.mainInstance.internboneValue = obj;
@@ -560,13 +579,14 @@ export class RawBone {
 
 
       this.inputsAbsolutePostions.push([inputWrapper])
+
     }
     if (this.boneStructure["multiple"]) {
       inputWrapper.appendChild(draggable);
     }
     inputWrapper.appendChild(inputElement);
     if (this.boneStructure["multiple"]) {
-      inputWrapper.appendChild(clearButton);
+      inputWrapper.appendChild(deleteButton);
     }
 
     return inputWrapper;
@@ -596,7 +616,7 @@ export class RawBone {
 
   /**
    * Move Element functions
-   * Set ne values for the absolute positon for the inputs
+   * Set new values for the absolute positon for the inputs
    */
 
   addScroll() {
