@@ -69,6 +69,7 @@
   - [Tree Item](/components/tree-item)
 
 - Extension
+
   - [Combobox](/components/combobox)
   - [Slider](/components/slider)
   - [Details Group](/components/details-group)
@@ -91,9 +92,7 @@
   <!--- [EditTable](/components/tableEdit)-->
   - [Table](/components/table)
   - [Table Wrapper](/components/table-wrapper)
-
   - [Bone](/components/bone)
-
   <!--plop:component-->
   
 - Utilities
