@@ -7,6 +7,7 @@ import styles from './bone.styles';
 import {BoneEditRenderer} from "./boneEditRenderer";
 import {BoneViewRenderer} from "./boneViewRenderer";
 import SlDetails from "../details/details";
+import ShoelaceElement from "../../internal/shoelace-element";
 
 
 /**
@@ -26,7 +27,7 @@ import SlDetails from "../details/details";
  * @cssproperty --example - An example CSS custom property.
  */
 @customElement('sl-bone')
-export default class SlBone extends LitElement {
+export default class SlBone extends ShoelaceElement {
   //Declare errors ?? //todo  outsource
   declare boneError: {
     severity: number,
