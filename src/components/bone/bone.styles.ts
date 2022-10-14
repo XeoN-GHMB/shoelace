@@ -35,11 +35,15 @@ export default css`
     border-bottom-left-radius: var(--sl-input-border-radius-medium);
   }
 
+  sl-input::part(base),
+  sl-select::part(control){
+    box-shadow: none !important;
+  }
+
   .bone-name + sl-input::part(base),
   .bone-name + sl-select::part(control) {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    box-shadow: none !important;
   }
 
   .file-container{
@@ -144,6 +148,39 @@ export default css`
     border: dashed 2px var(--sl-color-primary-500);
   }
 
+  .language-tab-group{
+    flex: 1;
+    border: none;
+  }
+
+  .language-tab-group::part(base){
+    border: none;
+  }
+
+  .language-tab-group::part(body){
+    overflow-x: hidden;
+  }
+
+  .language-tab-group sl-tab-panel::part(base){
+    padding: 0;
+    border: none;
+  }
+
+  .language-tab-group sl-tab::part(base){
+    padding: .7em;
+  }
+
+  .language-wrapper .multi-input{
+      margin-bottom: 0;
+  }
+
+  .language-wrapper .multi-input sl-input:first-child::part(base),
+   .language-wrapper .multi-input sl-select:first-child::part(control){
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
   @media (max-width: 900px) {
     .bone-wrapper{
       flex-direction: column;
@@ -172,6 +209,14 @@ export default css`
       border-top-left-radius: 0;
       border-top-right-radius: 0;
       border-bottom-left-radius: var(--sl-input-border-radius-medium);
+    }
+
+    .language-wrapper .multi-input sl-input:first-child::part(base),
+   .language-wrapper .multi-input sl-select:first-child::part(control){
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
     }
 
   }

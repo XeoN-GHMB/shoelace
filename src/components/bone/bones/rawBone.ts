@@ -214,6 +214,8 @@ export class RawBone {
 
 
       const tabGroup = document.createElement("sl-tab-group");
+      tabGroup.setAttribute("placement", "bottom");
+      tabGroup.classList.add("language-tab-group");
       for (const lang of this.boneStructure["languages"]) {
         //Create Tabs for Langs
         const tab = document.createElement("sl-tab");

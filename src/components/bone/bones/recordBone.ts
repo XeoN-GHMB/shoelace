@@ -10,15 +10,6 @@ export class RecordBone extends RawBone{
   getEditor(value:any, boneName:string): HTMLElement {
     const recordboneWrapper = document.createElement("div");
     recordboneWrapper.classList.add("record-wrapper");
-    recordboneWrapper.style.paddingTop = "5px";
-    recordboneWrapper.style.paddingLeft = "5px";
-
-    recordboneWrapper.style.marginTop = "2px";
-    recordboneWrapper.style.marginLeft = "2px";
-
-    recordboneWrapper.style.borderStyle = "solid";
-    recordboneWrapper.style.borderWidth = "1px";
-    //TODO outsource style
 
     recordboneWrapper.dataset.boneName = boneName;
     recordboneWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
