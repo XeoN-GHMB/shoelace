@@ -203,6 +203,7 @@ export class RawBone {
     if (this.mainInstance.renderLabel) {
       const boneNameLabel = document.createElement("div");
       boneNameLabel.innerText = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
+      boneNameLabel.classList.add("bone-name")
       wrapper.appendChild(boneNameLabel);
     }
 
@@ -309,7 +310,13 @@ export class RawBone {
         }
 
         const addButton = document.createElement("sl-button");
-        addButton.innerText = "Add";
+        const addIcon = document.createElement("sl-icon");
+
+        addIcon.setAttribute("name", "plus")
+        addButton.appendChild(addIcon);
+        addButton.setAttribute("variant", "success")
+        addButton.setAttribute("outline", "")
+        addButton.classList.add("add-button")
         addButton.variant = "success"
         let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue)
         addButton.addEventListener("click", () => {
@@ -327,14 +334,22 @@ export class RawBone {
 
         });
 
+        const innerWrap = document.createElement("div");
+        innerWrap.classList.add("bone-inner-wrap")
 
-        wrapper.appendChild(multipleWrapper)
-        wrapper.appendChild(addButton);
+        innerWrap.appendChild(multipleWrapper)
+
         const clearButton = document.createElement("sl-button");
+        const clearIcon = document.createElement("sl-icon");
+
+        clearIcon.setAttribute("name", "x")
+        clearButton.appendChild(clearIcon);
+        clearButton.setAttribute("variant", "danger")
+        clearButton.setAttribute("outline", "")
+        clearButton.classList.add("clear-button")
         clearButton.addEventListener("click", () => {
           multipleWrapper.innerHTML = "";//Clear Wrapper;
         });
-        clearButton.innerText = "Clear";
         clearButton.variant = "danger";
 
         //Undo Button
@@ -345,9 +360,16 @@ export class RawBone {
         undoButton.innerText = "Undo";
         undoButton.variant = "neutral";
 
-        wrapper.appendChild(clearButton);
-        wrapper.appendChild(undoButton);
-        wrapper.appendChild(multipleWrapper);
+        const buttonWrap = document.createElement("div");
+        buttonWrap.classList.add("bone-inner-button-wrap")
+
+        buttonWrap.appendChild(addButton);
+        buttonWrap.appendChild(undoButton);
+        buttonWrap.appendChild(clearButton);
+
+        innerWrap.appendChild(buttonWrap)
+
+        wrapper.appendChild(innerWrap);
 
 
       } else {
@@ -484,30 +506,27 @@ export class RawBone {
     const newboneName = this.generateboneName(lang, index);
     const path = lang === null ? this.boneName : this.boneName + "." + lang
 
-    //TODO outsource style
-    inputWrapper.style.display = "flex";
-    inputWrapper.style.flexDirection = "row";
+    inputWrapper.classList.add("multi-input");
     inputWrapper.dataset.boneName = newboneName;
-
 
     let deleteButton;
     let draggable
     const inputElement: HTMLElement = this.getEditor(value, newboneName);
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
-    inputElement.style.flexGrow = "1";//TODO outsource style
 
     if (this.boneStructure["multiple"]) {
 
       deleteButton = document.createElement("sl-button");
       deleteButton.id = "clearButton"
+      deleteButton.classList.add("clear-button");
       deleteButton.variant = "danger";
-      deleteButton.innerText = "Delete";
       deleteButton.slot = "suffix";
       const xicon: SlIcon = document.createElement("sl-icon");
       xicon.name = "x";
       xicon.slot = "prefix";
       deleteButton.appendChild(xicon);
+      deleteButton.setAttribute("outline", "")
       deleteButton.addEventListener("click", () => {
         let obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
         createPath(obj, newboneName, null, true);
@@ -532,8 +551,8 @@ export class RawBone {
       });
 
       draggable = document.createElement("sl-icon")
-      draggable.name = "chevron-bar-expand";
-      //draggable.name = "draggable";
+      draggable.name = "draggable";
+      draggable.classList.add("drag-button");
       draggable.addEventListener("mousedown", (e) => {
 
         if (!this.absolutePostionSet) {
@@ -559,13 +578,11 @@ export class RawBone {
         }
         e.preventDefault();
         this.moveElement = inputWrapper.cloneNode(true);
-        this.moveElement.style.borderStyle = "solid";
-        this.moveElement.style.position = "absolute";
-        this.moveElement.style.zIndex = "2";
+        this.moveElement.classList.add("is-dragged");
         this.fakeElement = document.createElement("div");
         this.fakeElement.style.height = inputWrapper.clientHeight + "px";
         this.fakeElement.style.width = inputWrapper.clientWidth + "px";
-        this.fakeElement.style.backgroundColor = "#fa003e";
+        this.fakeElement.classList.add("fake-drag-element");
         this.startHeight = inputElement.clientHeight;
         this.startTop = inputElement.getBoundingClientRect().top
         inputWrapper.parentElement.insertBefore(this.moveElement, inputWrapper);

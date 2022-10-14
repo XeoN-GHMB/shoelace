@@ -49,9 +49,7 @@ export class FileBone extends RawBone {
       }
     }
     const fileContainer = document.createElement("div");
-    //TODO outsoucre style
-    fileContainer.style.display = "flex";
-    fileContainer.style.flexDirection = "row";
+    fileContainer.classList.add("file-container")
     fileContainer.dataset.boneName = boneName;
 
     const shadowFile = document.createElement("input");
@@ -59,13 +57,23 @@ export class FileBone extends RawBone {
     const fileNameInput = document.createElement("sl-input");
     const uploadButton = document.createElement("sl-button");
     const clearButton = document.createElement("sl-button");
+    const uploadIcon = document.createElement("sl-icon");
+    const clearIcon = document.createElement("sl-icon");
 
-    uploadButton.innerText = "Select";
+    uploadIcon.setAttribute("name", "file-earmark-arrow-up")
+    uploadButton.appendChild(uploadIcon);
+    uploadButton.setAttribute("variant", "success")
+    uploadButton.setAttribute("outline", "")
+    uploadButton.classList.add("upload-button")
     uploadButton.addEventListener("click", () => {
       shadowFile.click();
     })
 
-    clearButton.innerText = "Clear";
+    clearIcon.setAttribute("name", "x")
+    clearButton.appendChild(clearIcon);
+    clearButton.setAttribute("variant", "danger")
+    clearButton.setAttribute("outline", "")
+    clearButton.classList.add("clear-button")
     clearButton.id = "clearButton";
     shadowFile.type = "file";
     let filter: string;
@@ -119,7 +127,6 @@ export class FileBone extends RawBone {
     });
     //fileNameInput
     fileNameInput.disabled = true;
-    fileNameInput.style.flexGrow = "1";
     if (value !== null && value !== "") { //Fixme why ==""
       try {
         fileNameInput.value = this.mainInstance.relationalCache[value]["dest"]["name"];
