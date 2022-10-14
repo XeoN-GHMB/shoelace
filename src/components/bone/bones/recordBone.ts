@@ -33,8 +33,8 @@ export class RecordBone extends RawBone{
 
       }
       const newBoneName = boneName + "." + _boneName;
-      const tmp_renderer = new BoneEditRenderer(_boneStructure, recordBoneValue, newBoneName, this.mainInstance)
-      const tmp: HTMLElement = tmp_renderer.boneEditor(true, this.depth + 1);
+      const tmp_renderer = new BoneEditRenderer(newBoneName, recordBoneValue,_boneStructure , this.mainInstance).getBone();
+      const tmp: HTMLElement = new tmp_renderer(newBoneName, recordBoneValue,_boneStructure , this.mainInstance).edit(true, this.depth + 1);
       tmp.dataset.fromRecord = "true";
 
       recordboneWrapper.appendChild(tmp);

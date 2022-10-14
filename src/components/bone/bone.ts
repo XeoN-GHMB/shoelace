@@ -42,6 +42,7 @@ export default class SlBone extends ShoelaceElement {
   initBoneValue: any;
   internboneValue: any;
   relationalCache = {};
+  previousBoneValues: any = {};
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
 
@@ -139,12 +140,12 @@ export default class SlBone extends ShoelaceElement {
 
     if (this.renderType === "view") {
 
-      const boneViewer = new BoneViewRenderer(this.boneStructure, this.internboneValue[this.boneName], this.boneName, this)
+      const boneViewer = new BoneViewRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
 
-      const boneEditor = new BoneEditRenderer(this.boneStructure, this.internboneValue[this.boneName], this.boneName, this);
+      const boneEditor = new BoneEditRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
       this.bone = boneEditor.getEditor();
 
 

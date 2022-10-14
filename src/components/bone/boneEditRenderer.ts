@@ -29,8 +29,7 @@ export class BoneEditRenderer {
   depth = 0;
 
 
-
-  constructor(boneStructure: object, boneValue: any, boneName: any, mainInstance: SlBone) {
+  constructor(  boneName: any, boneValue: any,boneStructure: object,mainInstance: SlBone) {
     this.boneStructure = boneStructure;
     this.boneValue = boneValue;
     this.boneName = boneName;
@@ -38,7 +37,13 @@ export class BoneEditRenderer {
   }
 
   getEditor() {
-    let cls:any;
+    const cls:object= this.getBone()
+    return  new cls(this.boneName, this.boneValue, this.boneStructure, this.mainInstance).edit()
+
+  }
+
+  getBone() :object{
+    let cls: any;
     switch (this.boneStructure["type"].split(".")[0]) {
       case "str":
         cls = StringBone;
@@ -70,8 +75,7 @@ export class BoneEditRenderer {
       default:
         cls = RawBone
     }
-    return new cls(this.boneValue, this.boneName, this.boneStructure, this.mainInstance).edit()
-
+    return cls;
   }
 
 }

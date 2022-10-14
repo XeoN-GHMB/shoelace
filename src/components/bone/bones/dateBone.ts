@@ -1,9 +1,7 @@
 import {RawBone} from "./rawBone";
 
 export class DateBone extends RawBone {
-  constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
-    super(boneValue, boneName, boneStructure, mainInstance);
-  }
+
 
   getEditor(value, boneName:string): HTMLElement {
     const dateBone = super.getEditor(value, boneName);
