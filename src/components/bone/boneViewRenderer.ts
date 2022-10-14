@@ -12,6 +12,7 @@ import {FileBone} from "./bones/fileBone";
 import {TextBone} from "./bones/textBone";
 import {SpatialBone} from "./bones/spatialBone";
 import {BooleanBone} from "./bones/booleanBone";
+import SlBone from "./bone";
 
 export class BoneViewRenderer {
   declare boneStructure: {
@@ -58,7 +59,7 @@ export class BoneViewRenderer {
   boneName: string;
   mainInstance: any;
 
-  constructor(boneStructure: object, boneValue: any, boneName: any, mainInstance: any) {
+  constructor(boneName: any, boneValue: any, boneStructure: object, mainInstance: SlBone) {
     this.boneStructure = boneStructure;
     this.boneValue = boneValue;
     this.boneName = boneName;
@@ -102,7 +103,7 @@ export class BoneViewRenderer {
       default:
         cls = RawBone
     }
-    return new cls(this.boneValue, this.boneName, this.boneStructure).view()
+    return new cls(this.boneName,this.boneValue,  this.boneStructure).view()
 
   }
 

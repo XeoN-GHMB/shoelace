@@ -2,9 +2,7 @@ import {RawBone} from "./rawBone";
 import {BoneEditRenderer} from "../boneEditRenderer";
 
 export class SpatialBone extends RawBone {
-  constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
-    super(boneValue, boneName, boneStructure, mainInstance);
-  }
+
 
   getEditor(value: any, boneName: string): HTMLElement {
     const spatialWrapper = document.createElement("div");

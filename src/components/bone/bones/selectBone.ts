@@ -2,9 +2,7 @@ import {RawBone} from "./rawBone";
 import SlSelect from "../../select/select";
 
 export class SelectBone extends RawBone {
-  constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
-    super(boneValue, boneName, boneStructure, mainInstance);
-  }
+
 
   view() {
     if (this.boneStructure["languages"] !== null) {

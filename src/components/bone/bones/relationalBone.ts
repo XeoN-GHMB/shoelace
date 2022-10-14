@@ -4,9 +4,7 @@ import SlIconButton from "../../icon-button/icon-button";
 import {apiurl, formatstring} from "../utils";
 
 export class RelationalBone extends RawBone {
-  constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
-    super(boneValue, boneName, boneStructure, mainInstance);
-  }
+
 
   getEditor(value:any, boneName:string): HTMLElement {
     /**

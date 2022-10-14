@@ -3,9 +3,7 @@ import {html, TemplateResult} from "lit";
 import {formatstring, getSkey, apiurl} from "../utils";
 
 export class FileBone extends RawBone {
-  constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
-    super(boneValue, boneName, boneStructure, mainInstance);
-  }
+
 
   view(): string | TemplateResult<1> {
     function appendImage(data, boneStructure, lang = null) {
