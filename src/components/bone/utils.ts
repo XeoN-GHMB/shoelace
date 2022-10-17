@@ -1,7 +1,5 @@
-import {escapeString, getPath} from "./boneViewRenderer";
-
-
-export function formatstring(data, boneStructure: object, lang = null,ignoreLang=false) {
+import translationtable from "./translations/init"
+export function formatstring(data, boneStructure: object, lang = null, ignoreLang = false) {
   if (!boneStructure) {
 
     return data;
@@ -55,7 +53,7 @@ export function formatstring(data, boneStructure: object, lang = null,ignoreLang
 
     let insidematch = match[1];
 
-    if (boneStructure["languages"] && ! ignoreLang) {
+    if (boneStructure["languages"] && !ignoreLang) {
       if (boneStructure["multiple"]) {
         if (textArray.length === 0) {
           for (const i in data[lang]) {
@@ -143,6 +141,7 @@ export function formatstring(data, boneStructure: object, lang = null,ignoreLang
 
   return text
 }
+
 export function createPath(obj: object, path: string | string[], value: any | null = null, mustdelete = false, mustsplice = false) {
 
   path = typeof path === 'string' ? path.split('.') : path;
@@ -209,6 +208,10 @@ export function escapeString(value: string | string[]): string | string[] {
     value.map(v => escapeString(v));
 
 
+  } else if (typeof value === "object") {
+    for (const key in value) {
+      value[key] = escapeString(value[key]);
+    }
   } else {
     value = value.replaceAll("&lt;", "<")
       .replaceAll("&gt;", ">")
@@ -221,10 +224,11 @@ export function escapeString(value: string | string[]): string | string[] {
   return value
 
 }
+
 //const apiurl=window.location.origin;
 export const apiurl = "http://localhost:8080";
 
-export  function getSkey() {
+export function getSkey() {
   return new Promise((resolve, reject) => {
 
     fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
@@ -234,4 +238,8 @@ export  function getSkey() {
     })
 
   })
+}
+
+export function translate(path: string, lang = "de") {
+  return getPath(translationtable[lang],path)
 }

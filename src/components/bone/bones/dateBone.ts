@@ -1,9 +1,26 @@
-import {RawBone} from "./rawBone";
+import {BoneStructure, RawBone} from "./rawBone";
+import {formatstring, translate} from "../utils";
+import {html, TemplateResult} from "lit";
 
 export class DateBone extends RawBone {
 
+  view(formater: any = formatstring): string | TemplateResult<1> {
 
-  getEditor(value, boneName:string): HTMLElement {
+    function dateFormat(data, boneStructure: BoneStructure, lang = null) {
+      let val = formatstring(data, boneStructure, lang);
+      const date = new Date(val);
+      if (boneStructure["time"]) {
+        return date.toLocaleDateString("de",{hour: '2-digit', minute:'2-digit',second:'2-digit'});
+      } else {
+        return date.toLocaleDateString("de");
+      }
+
+    }
+
+    return super.view(dateFormat);
+  }
+
+  getEditor(value, boneName: string): HTMLElement {
     const dateBone = super.getEditor(value, boneName);
 
     if (this.boneStructure["time"]) {

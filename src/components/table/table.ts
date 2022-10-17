@@ -11,6 +11,7 @@ import {boneEditor, updateData} from "./cellEditorRenderer.tsx";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 import {emit} from "../../internal/event";
+import fa from "../../translations/fa";
 
 /**
  * @since 2.0
@@ -88,6 +89,7 @@ export default class SlTable extends ShoelaceElement {
   /** disable editable Table*/
   @property({type: Boolean, attribute: false}) editabletable: Boolean = false;
 
+  @property({type: String, attribute: false}) dataCursor: String = null;
 
   tableInstance: any;
   tableReady: Boolean = false;
@@ -144,10 +146,28 @@ export default class SlTable extends ShoelaceElement {
     }
     //update Data only if tableReady
     if (this.tableReady) {
+
       this.tableInstance.setData(this.skellist)
 
     }
     return 1
+  }
+
+  addData(data) {
+    if (!this.tableInstance) {
+      return 0;
+    }
+    if (this.tableReady) {
+      this.tableInstance.addData(data)
+
+    }
+  }
+  getSelectedRows()
+  {
+    if (!this.tableInstance) {
+      return 0;
+    }
+    return this.tableInstance.getSelectedRows()
   }
 
   @watchProps(['search'])
@@ -451,8 +471,18 @@ export default class SlTable extends ShoelaceElement {
       this.emit('sl-dblclick', {detail: {cell: cell}})
     });
 
-    this.tableInstance.on("scrollVertical", function (top) {
-      //console.log("top", top)
+    const element = this.tableInstance.rowManager.getElement();
+    const self = this;
+    this.tableInstance.on("scrollVertical", function (top, dir) {
+
+      var diff;
+      diff = element.scrollHeight - element.clientHeight - top;
+      if (top > diff && self.tableReady && self.dataCursor !== null) {
+        self.tableReady = false;
+        self.emit("table-fetchData");//TODo rename event
+      }
+
+
     });
     this.shadowtable.style.display = "block";
   }

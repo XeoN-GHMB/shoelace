@@ -6,7 +6,7 @@ import SlDetails from "../../details/details";
 import {getPath} from "../utils";
 import SlSwitch from "../../switch/switch";
 
-interface BoneStructure {
+export interface BoneStructure {
   descr: string,
   type: string,
   required: boolean,
@@ -72,6 +72,7 @@ export class RawBone {
   }
 
   view(formater: Function = formatstring) {
+    console.log("start view")
     if (this.boneValue === null) {
       return "-";
     }
@@ -385,7 +386,7 @@ export class RawBone {
 
       } else {
         //No Lang, No Multiple
-
+        console.log("?")
         const inputElement = this.getEditor(this.boneValue, this.boneName)
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
@@ -513,6 +514,7 @@ export class RawBone {
   }
 
   addInput(value: any, lang: string, index = null) {
+    console.log("add in")
     const inputWrapper = document.createElement("div");
     const newboneName = this.generateboneName(lang, index);
     const path = lang === null ? this.boneName : this.boneName + "." + lang

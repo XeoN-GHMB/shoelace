@@ -1,13 +1,4 @@
-import {escapeString, formatstring, getPath} from "./boneViewRenderer";
-import {formatstring} from "./utils";
 import SlBone from "./bone";
-import SlCombobox from "../combobox/combobox";
-import SlIcon from "../icon/icon";
-import SlButton from "../button/button";
-import SlIconButton from "../icon-button/icon-button";
-import SlSelect from "../select/select";
-import {emit} from "../../internal/event";
-import SlDetails from "../details/details";
 import {StringBone} from "./bones/stringBone";
 import {NumericBone} from "./bones/numericBone";
 import {DateBone} from "./bones/dateBone";
