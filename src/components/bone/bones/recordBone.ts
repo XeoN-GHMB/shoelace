@@ -7,7 +7,7 @@ export class RecordBone extends RawBone{
    constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
     super(boneValue,boneName,boneStructure,mainInstance);
   }
-  getEditor(value:any, boneName:string): HTMLElement {
+  getEditor(value:any, boneName:string,lang:any=null): HTMLElement {
      console.log("start record")
     const recordboneWrapper = document.createElement("div");
     recordboneWrapper.classList.add("record-wrapper");

@@ -4,7 +4,7 @@ import {BoneEditRenderer} from "../boneEditRenderer";
 export class SpatialBone extends RawBone {
 
 
-  getEditor(value: any, boneName: string): HTMLElement {
+  getEditor(value: any, boneName: string,lang:any=null): HTMLElement {
     const spatialWrapper = document.createElement("div");
     const lat = value[0];
     const lng = value[1];

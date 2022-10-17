@@ -27,7 +27,7 @@ export class FileBone extends RawBone {
     return super.view(appendImage);
   }
 
-  getEditor(value: any, boneName: string): HTMLElement {
+  getEditor(value: any, boneName: string,lang:any=null): HTMLElement {
 
 
     /**

@@ -1,13 +1,15 @@
 import {RawBone} from "./rawBone";
 import SlCombobox from "../../combobox/combobox";
 import SlIconButton from "../../icon-button/icon-button";
-import {apiurl, formatstring} from "../utils";
+import {apiurl, createPath, formatstring, getPath, translate} from "../utils";
 
 export class RelationalBone extends RawBone {
 
+  lang: string;
 
-  getEditor(value: any, boneName: string): HTMLElement {
+  getEditor(value: any, boneName: string, lang: any = null): HTMLElement {
     //return this.getSearchbar(value, boneName);
+    this.lang = lang;
     return this.getSelect(value, boneName);
   }
 
@@ -30,6 +32,8 @@ export class RelationalBone extends RawBone {
     const inputWrapper = document.createElement("div");
     const shadowInput = document.createElement("sl-input")
     const searchBox: SlCombobox = document.createElement("sl-combobox");
+
+    inputWrapper.dataset.boneName = boneName;
 
     const clearButton: SlIconButton = document.createElement("sl-icon-button")
     clearButton.library = "my-icons";
@@ -103,6 +107,7 @@ export class RelationalBone extends RawBone {
      * {dest:{name:"bla",key:"blablakey"}}
      *
      **/
+    console.log("init with ", value);
     if (typeof (value) === "object" && value !== null) {
       if ("dest" in value) {
         const key = value["dest"]["key"]
@@ -111,27 +116,29 @@ export class RelationalBone extends RawBone {
       }
     }
 
+
     const inputWrapper = document.createElement("div");
     const shadowInput = document.createElement("sl-input");
     const showInput = document.createElement("sl-input");
     const selectButton = document.createElement("sl-button");
 
-
-    const url = `${apiurl}/json/${this.boneStructure["module"]}/list?search={q}`;
-
+    inputWrapper.dataset.boneName = boneName;
 
     //Shadow input
     shadowInput.hidden = true;
     shadowInput.name = boneName;
     shadowInput.value = value;
 
-    showInput.disabled=true;
+    showInput.disabled = true;
+    if (this.mainInstance.relationalCache[value] !== undefined) {
+      showInput.value = formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true);
+    }
+
 
     //selectButton
-    selectButton.innerText = "Select";
+    selectButton.innerText = translate("actions.select");
     selectButton.addEventListener("click", () => {
-      console.log("open")
-      this.getDialog(inputWrapper,shadowInput,showInput);
+      this.getDialog(inputWrapper, shadowInput, showInput);
     })
 
 
@@ -144,7 +151,7 @@ export class RelationalBone extends RawBone {
     return inputWrapper;
   }
 
-  getDialog(inputWrapper,shadowInput,showInput) {//Todo store tables
+  getDialog(inputWrapper, shadowInput, showInput) {//Todo store tables
     const dialog = document.createElement("sl-dialog");
     dialog.open = true;
     dialog.label = "Select";
@@ -178,26 +185,60 @@ export class RelationalBone extends RawBone {
     //footer
     const selectButton = document.createElement("sl-button");
     selectButton.slot = "footer";
-    selectButton.textContent = "Select";
+    selectButton.innerText = translate("actions.select");
+
     selectButton.variant = "success";
     selectButton.addEventListener("click", () => { // todo multiple ?
-      if (table.getSelectedRows().length>0)
-      {
+      if (table.getSelectedRows().length === 1) {
         const rowData = table.getSelectedRows()[0].getData();
-        shadowInput.value=rowData["key"];
-        showInput.value=formatstring({"dest": rowData}, this.boneStructure);
-      this.mainInstance.internboneValue = this.reWriteBoneValue();
+        shadowInput.value = rowData["key"];
+        showInput.value = formatstring({"dest": rowData}, this.boneStructure);
+        this.mainInstance.internboneValue = this.reWriteBoneValue();
+        this.mainInstance.handleChange();
+
+      } else if (table.getSelectedRows().length > 1) {
+        const path = this.lang === null ? this.boneName : this.boneName + "." + this.lang;
+
+        const rowData = table.getSelectedRows()[0].getData();
+        shadowInput.value = rowData["key"];
+
+        let boneValues = this.reWriteBoneValue();
+        boneValues = getPath(boneValues, path);
+        for (const index in table.getSelectedRows()) {
+          if(index===0)//skip the firstElement
+          {
+            continue;
+          }
+          const entry=  table.getSelectedRows()[index];
+          const key = entry.getData()["key"];
+          this.mainInstance.relationalCache[key] = {dest: entry.getData()};
+          boneValues.push(key);
+        }
+
+        const obj = {}
+        createPath(obj, path, boneValues)
+
+
+        const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+
+
+        if (mulWrapper !== null) {
+          let [element, index] = this.createMultipleWrapper(getPath(obj, path), this.lang);
+          mulWrapper.replaceWith(element);
+          this.mainInstance.internboneValue = this.reWriteBoneValue();
+          this.mainInstance.handleChange();
+        }
       }
 
 
       dialog.hide();
     });
-    dialog.appendChild(selectButton)
+    dialog.appendChild(selectButton);
 
 
     const closeButton = document.createElement("sl-button");
     closeButton.slot = "footer";
-    closeButton.textContent = "Close";
+    closeButton.textContent = translate("actions.close");
     closeButton.variant = "danger";
     closeButton.addEventListener("click", () => {
       dialog.hide();

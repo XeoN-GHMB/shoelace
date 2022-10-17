@@ -4,7 +4,7 @@ import SlSwitch from "../../switch/switch";
 export class BooleanBone extends RawBone {
 
 
-  getEditor(value, boneName:string): HTMLElement {
+  getEditor(value, boneName:string,lang:any=null): HTMLElement {
     const inputElement:SlSwitch = document.createElement("sl-switch");
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;

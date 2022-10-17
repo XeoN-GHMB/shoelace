@@ -13,6 +13,10 @@ import {TextBone} from "./bones/textBone";
 import {SpatialBone} from "./bones/spatialBone";
 import {BooleanBone} from "./bones/booleanBone";
 import SlBone from "./bone";
+import {PasswordBone} from "./bones/passwordBone";
+import {ColorBone} from "./bones/colorBone";
+import {EmailBone} from "./bones/emailBone";
+import {KeyBone} from "./bones/keyBone";
 
 export class BoneViewRenderer {
   declare boneStructure: {
@@ -67,14 +71,17 @@ export class BoneViewRenderer {
   }
 
 
-  boneFormatter(): any {
-    if (!this.boneStructure) {
-      return;
-    }
+  getBone(): object {
     let cls: any;
+
     switch (this.boneStructure["type"].split(".")[0]) {
       case "str":
-        cls = StringBone;
+        if (this.boneStructure["type"] === "str.email") {
+          cls = EmailBone;
+        } else {
+          cls = StringBone;
+        }
+
         break;
       case "numeric":
         cls = NumericBone;
@@ -100,11 +107,19 @@ export class BoneViewRenderer {
       case "spatial":
         cls = SpatialBone;
         break;
+      case "password":
+        cls = PasswordBone;
+        break;
+      case "color":
+        cls = ColorBone;
+        break;
+      case "key":
+        cls = KeyBone;
+        break;
       default:
         cls = RawBone
     }
-    return new cls(this.boneName,this.boneValue,  this.boneStructure).view()
-
+    return cls;
   }
 
 

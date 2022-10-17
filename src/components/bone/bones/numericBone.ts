@@ -3,7 +3,7 @@ import {RawBone} from "./rawBone";
 export class NumericBone extends RawBone {
 
 
-  getEditor(value, boneName:string): HTMLElement {
+  getEditor(value, boneName:string,lang:any=null): HTMLElement {
     const numericBone= super.getEditor(value, boneName);
     numericBone.type = "number";
     numericBone.min = this.boneStructure["min"];

@@ -6,9 +6,13 @@ import {BooleanBone} from "./bones/booleanBone";
 import {SelectBone} from "./bones/selectBone";
 import {RelationalBone} from "./bones/relationalBone";
 import {RecordBone} from "./bones/recordBone";
-import {RawBone} from "./bones/rawBone";
+import {BoneStructure, RawBone} from "./bones/rawBone";
 import {FileBone} from "./bones/fileBone";
 import {SpatialBone} from "./bones/spatialBone";
+import {PasswordBone} from "./bones/passwordBone";
+import {ColorBone} from "./bones/colorBone";
+import {EmailBone} from "./bones/emailBone";
+import {KeyBone} from "./bones/keyBone";
 
 
 export class BoneEditRenderer {
@@ -18,9 +22,10 @@ export class BoneEditRenderer {
   boneName: string;
   mainInstance: SlBone;
   depth = 0;
+  boneStructure: BoneStructure;
 
 
-  constructor(  boneName: any, boneValue: any,boneStructure: object,mainInstance: SlBone) {
+  constructor(boneName: any, boneValue: any, boneStructure: BoneStructure, mainInstance: SlBone) {
     this.boneStructure = boneStructure;
     this.boneValue = boneValue;
     this.boneName = boneName;
@@ -28,16 +33,22 @@ export class BoneEditRenderer {
   }
 
   getEditor() {
-    const cls:object= this.getBone()
-    return  new cls(this.boneName, this.boneValue, this.boneStructure, this.mainInstance).edit()
+    const cls: object = this.getBone()
+    return new cls(this.boneName, this.boneValue, this.boneStructure, this.mainInstance).edit()
 
   }
 
-  getBone() :object{
+  getBone(): object {
     let cls: any;
+
     switch (this.boneStructure["type"].split(".")[0]) {
       case "str":
-        cls = StringBone;
+        if (this.boneStructure["type"] === "str.email") {
+          cls = EmailBone;
+        } else {
+          cls = StringBone;
+        }
+
         break;
       case "numeric":
         cls = NumericBone;
@@ -62,6 +73,15 @@ export class BoneEditRenderer {
         break;
       case "spatial":
         cls = SpatialBone;
+        break;
+      case "password":
+        cls = PasswordBone;
+        break;
+      case "color":
+        cls = ColorBone;
+        break;
+         case "key":
+        cls = KeyBone;
         break;
       default:
         cls = RawBone

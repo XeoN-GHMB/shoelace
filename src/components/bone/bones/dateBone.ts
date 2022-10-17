@@ -20,8 +20,8 @@ export class DateBone extends RawBone {
     return super.view(dateFormat);
   }
 
-  getEditor(value, boneName: string): HTMLElement {
-    const dateBone = super.getEditor(value, boneName);
+  getEditor(value, boneName: string,lang:any=null): HTMLElement {
+    const dateBone = super.getEditor(value, boneName,lang);
 
     if (this.boneStructure["time"]) {
 
