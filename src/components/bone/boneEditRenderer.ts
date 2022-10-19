@@ -13,6 +13,7 @@ import {PasswordBone} from "./bones/passwordBone";
 import {ColorBone} from "./bones/colorBone";
 import {EmailBone} from "./bones/emailBone";
 import {KeyBone} from "./bones/keyBone";
+import {TextBone} from "./bones/textBone";
 
 
 export class BoneEditRenderer {
@@ -80,8 +81,11 @@ export class BoneEditRenderer {
       case "color":
         cls = ColorBone;
         break;
-         case "key":
+      case "key":
         cls = KeyBone;
+        break;
+      case "text":
+        cls = TextBone;
         break;
       default:
         cls = RawBone

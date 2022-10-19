@@ -70,6 +70,11 @@ export class BoneViewRenderer {
     this.mainInstance = mainInstance;
   }
 
+  boneFormatter() {
+    const cls: object = this.getBone()
+    return new cls(this.boneName, this.boneValue, this.boneStructure, this.mainInstance).view()
+
+  }
 
   getBone(): object {
     let cls: any;
@@ -81,7 +86,6 @@ export class BoneViewRenderer {
         } else {
           cls = StringBone;
         }
-
         break;
       case "numeric":
         cls = NumericBone;

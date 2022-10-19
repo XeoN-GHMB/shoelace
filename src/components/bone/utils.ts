@@ -240,6 +240,6 @@ export function getSkey() {
   })
 }
 
-export function translate(path: string, lang = "de") {
+export function translate(path: string, lang = "de"):string {
   return getPath(translationtable[lang],path)
 }

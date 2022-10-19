@@ -27,7 +27,7 @@ export class FileBone extends RawBone {
     return super.view(appendImage);
   }
 
-  getEditor(value: any, boneName: string,lang:any=null): HTMLElement {
+  getEditor(value: any, boneName: string, lang: any = null): HTMLElement {
 
 
     /**
@@ -100,13 +100,13 @@ export class FileBone extends RawBone {
     shadowFile.addEventListener("change", (e: Event) => {
 
       const file: File = e.target.files[0];
-      this.getUploadUrl(file).then(uploadData => {
+      FileBone.getUploadUrl(file).then(uploadData => {
 
         fileNameInput.value = "Uploading...";
-        this.uploadFile(file, uploadData).then(resp => {
+        FileBone.uploadFile(file, uploadData).then(resp => {
 
 
-          this.addFile(uploadData).then((fileData: object) => {
+          FileBone.addFile(uploadData).then((fileData: object) => {
             this.mainInstance.relationalCache[fileData["values"]["key"]] = {dest: fileData["values"]}
 
             shadowKey.value = fileData["values"]["key"];
@@ -125,6 +125,9 @@ export class FileBone extends RawBone {
     });
     //fileNameInput
     fileNameInput.disabled = true;
+    fileNameInput.addEventListener("click", () => {
+      shadowFile.click();
+    })
     if (value !== null && value !== "") { //Fixme why ==""
       try {
         fileNameInput.value = this.mainInstance.relationalCache[value]["dest"]["name"];
@@ -145,7 +148,7 @@ export class FileBone extends RawBone {
   }
 
 
-  getUploadUrl(file: File) {
+  static getUploadUrl(file: File) {
     return new Promise((resolve, reject) => {
       getSkey().then(skey => {
 
@@ -166,7 +169,7 @@ export class FileBone extends RawBone {
     });
   }
 
-  uploadFile(file: File, uploadData: any) {
+  static uploadFile(file: File, uploadData: any) {
 
     return new Promise((resolve, reject) => {
       fetch(uploadData["values"]["uploadUrl"], {
@@ -181,7 +184,7 @@ export class FileBone extends RawBone {
 
   }
 
-  addFile(uploadData: any) {
+  static addFile(uploadData: any) {
 
 
     return new Promise((resolve, reject) => {

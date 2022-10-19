@@ -241,7 +241,11 @@ export class RawBone {
           if (this.boneValue === null) continue;
           if (this.boneValue[lang] === undefined) continue;
           if (this.boneValue[lang] === null) continue;
-          let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue[lang], lang)
+          let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue[lang], lang);
+          if(this.idx===null)
+          {
+            this.idx={};
+          }
           this.idx[lang]=idx;
           multipleWrapper.classList.add("multiple-wrapper");
 
@@ -756,7 +760,7 @@ export class RawBone {
     })
   }
 
-  reWriteBoneValue() {
+  reWriteBoneValue():object {
     const obj = {};
     this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: HTMLElement) => {
       if (inputElement.name !== undefined ) {

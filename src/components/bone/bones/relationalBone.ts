@@ -157,8 +157,13 @@ export class RelationalBone extends RawBone {
     dialog.label = "Select";
 
     const table = document.createElement("sl-table");
-    table.rowselect = true;
-    table.height = "300px";
+    if (this.boneStructure.multiple) {
+      table.rowselect = true;
+    } else {
+      table.rowselect = 1;
+    }
+
+    table.height = "300px"; // todo auto  height ?
     table.rowindexes = true;
     fetch(`${apiurl}/json/${this.boneStructure["module"]}/list`).then(resp => resp.json().then((respdata) => {
 
@@ -189,7 +194,10 @@ export class RelationalBone extends RawBone {
 
     selectButton.variant = "success";
     selectButton.addEventListener("click", () => { // todo multiple ?
+
+
       if (table.getSelectedRows().length === 1) {
+
         const rowData = table.getSelectedRows()[0].getData();
         shadowInput.value = rowData["key"];
         showInput.value = formatstring({"dest": rowData}, this.boneStructure);
@@ -201,15 +209,17 @@ export class RelationalBone extends RawBone {
 
         const rowData = table.getSelectedRows()[0].getData();
         shadowInput.value = rowData["key"];
+        this.mainInstance.relationalCache[rowData["key"]] = {dest: rowData};
 
         let boneValues = this.reWriteBoneValue();
         boneValues = getPath(boneValues, path);
+        console.log("boneValues", boneValues)
         for (const index in table.getSelectedRows()) {
-          if(index===0)//skip the firstElement
+          if (parseInt(index) === 0)//skip the firstElement
           {
             continue;
           }
-          const entry=  table.getSelectedRows()[index];
+          const entry = table.getSelectedRows()[index];
           const key = entry.getData()["key"];
           this.mainInstance.relationalCache[key] = {dest: entry.getData()};
           boneValues.push(key);
@@ -219,7 +229,7 @@ export class RelationalBone extends RawBone {
         createPath(obj, path, boneValues)
 
 
-        const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+        const mulWrapper: HTMLElement = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
 
 
         if (mulWrapper !== null) {

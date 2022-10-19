@@ -65,7 +65,7 @@ export default class SlTable extends ShoelaceElement {
   @property({type: Boolean, reflect: true}) rowindexes: Boolean = false;
 
   /** are rows selectable?*/
-  @property({type: Boolean, reflect: true}) rowselect: Boolean = false;
+  @property({type: Boolean|Number, reflect: true}) rowselect: Boolean|Number = false;
 
   /** disable columnselection menu?*/
   @property({type: Boolean, reflect: true}) nocolumnsmenu: Boolean = false;
@@ -291,7 +291,7 @@ export default class SlTable extends ShoelaceElement {
       } else {
         this.tableConfig["columns"] = [selectColumn, ...this.tableConfig["columns"]]
       }
-      this.tableConfig["selectable"] = true;
+      this.tableConfig["selectable"] = this.rowselect;
 
     }
 
