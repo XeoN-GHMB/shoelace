@@ -64,9 +64,9 @@ export class RawBone {
   movePath = null;
   moveLang = null;
 
-  idx=null;
+  idx = null;
 
-  constructor( boneName = "",boneValue: any, boneStructure = {}, mainInstance = null) {
+  constructor(boneName = "", boneValue: any, boneStructure = {}, mainInstance = null) {
     this.boneValue = boneValue;
     this.boneName = boneName;
     this.boneStructure = boneStructure;
@@ -242,11 +242,10 @@ export class RawBone {
           if (this.boneValue[lang] === undefined) continue;
           if (this.boneValue[lang] === null) continue;
           let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue[lang], lang);
-          if(this.idx===null)
-          {
-            this.idx={};
+          if (this.idx === null) {
+            this.idx = {};
           }
-          this.idx[lang]=idx;
+          this.idx[lang] = idx;
           multipleWrapper.classList.add("multiple-wrapper");
 
 
@@ -332,7 +331,7 @@ export class RawBone {
         addButton.classList.add("add-button")
         addButton.variant = "success"
         let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
-        this.idx=idx;
+        this.idx = idx;
         addButton.addEventListener("click", () => {
           console.log("add")
           const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + this.boneName + '"]');
@@ -458,7 +457,7 @@ export class RawBone {
 
   }
 
-  getEditor(value: any, boneName: string,lang:any=null) {
+  getEditor(value: any, boneName: string, lang: any = null) {
 
     const inputElement = document.createElement("sl-input");
 
@@ -523,7 +522,7 @@ export class RawBone {
 
     let deleteButton;
     let draggable
-    const inputElement: HTMLElement = this.getEditor(value, newboneName,lang);
+    const inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
 
@@ -548,9 +547,9 @@ export class RawBone {
 
         const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
         if (mulWrapper !== null) {
-          let [element, index] = this.createMultipleWrapper(getPath(obj, path),lang)
+          let [element, index] = this.createMultipleWrapper(getPath(obj, path), lang)
           mulWrapper.replaceWith(element);
-              this.mainInstance.internboneValue = this.reWriteBoneValue();
+          this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange("deleteEntry");
         }
         const undoButton = this.mainInstance.bone.querySelector('[data-name="' + "undoBtn." + path + '"]');
@@ -598,7 +597,7 @@ export class RawBone {
         inputWrapper.parentElement.insertBefore(this.moveElement, inputWrapper);
         inputWrapper.parentElement.insertBefore(this.fakeElement, inputWrapper);
         inputWrapper.style.display = "none";
-        console.log("set bone  in swap ",inputElement.dataset.boneName)
+        console.log("set bone  in swap ", inputElement.dataset.boneName)
         this.swapElements[0] = inputElement.dataset.boneName;
         this.movePath = path;
         this.moveLang = lang;
@@ -760,10 +759,10 @@ export class RawBone {
     })
   }
 
-  reWriteBoneValue():object {
+  reWriteBoneValue(): object {
     const obj = {};
     this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: HTMLElement) => {
-      if (inputElement.name !== undefined ) {
+      if (inputElement.name !== undefined) {
 
         createPath(obj, inputElement.name, inputElement.value);
       }
@@ -775,13 +774,14 @@ export class RawBone {
       }
 
     });
-     this.mainInstance.bone.querySelectorAll("sl-color-picker").forEach((inputElement: HTMLElement) => {
-      if (inputElement.name !== undefined ) {
+    this.mainInstance.bone.querySelectorAll("sl-color-picker").forEach((inputElement: HTMLElement) => {
+      if (inputElement.name !== undefined) {
 
         createPath(obj, inputElement.name, inputElement.getFormattedValue("hex"));
       }
 
     });
+
 
     return obj;
   }
@@ -805,9 +805,8 @@ export class RawBone {
     mulWrapper.replaceWith(element);
     this.mainInstance.internboneValue = this.reWriteBoneValue();
     const undoButton = this.mainInstance.bone.querySelector('[data-name="' + "undoBtn." + path + '"]');
-    if(this.mainInstance.previousBoneValues[path].length===0)
-    {
-       undoButton.style.display = "none";
+    if (this.mainInstance.previousBoneValues[path].length === 0) {
+      undoButton.style.display = "none";
     }
 
   }
@@ -822,12 +821,10 @@ export class RawBone {
     const undoButton = this.mainInstance.bone.querySelector('[data-name="' + "undoBtn." + path + '"]');
 
     undoButton.style.display = "";
-    if(lang==null)
-    {
-      this.idx=0;
-    }
-    else {
-      this.idx[lang]=0;
+    if (lang == null) {
+      this.idx = 0;
+    } else {
+      this.idx[lang] = 0;
     }
 
   }
