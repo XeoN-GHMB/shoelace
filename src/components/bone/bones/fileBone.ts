@@ -1,6 +1,6 @@
 import {RawBone} from "./rawBone";
 import {html, TemplateResult} from "lit";
-import {formatstring, getSkey, apiurl} from "../utils";
+import {formatstring, getSkey, apiurl, createPath, getPath} from "../utils";
 
 export class FileBone extends RawBone {
 
@@ -57,6 +57,7 @@ export class FileBone extends RawBone {
     const clearButton = document.createElement("sl-button");
     const uploadIcon = document.createElement("sl-icon");
     const clearIcon = document.createElement("sl-icon");
+    const progressBar = document.createElement("sl-progress-bar")
 
     uploadIcon.setAttribute("name", "file-earmark-arrow-up")
     uploadButton.appendChild(uploadIcon);
@@ -96,32 +97,59 @@ export class FileBone extends RawBone {
       shadowKey.value = value;
     }
 
+    shadowFile.multiple = this.boneStructure["multiple"];
+    const path = lang === null ? this.boneName : this.boneName + "." + lang;
 
-    shadowFile.addEventListener("change", (e: Event) => {
+    shadowFile.addEventListener("change", async (e: Event) => {
+      const fileInfos = e.target.files;
+      const fileKeys = [];
+      fileNameInput.hidden = true;
+      progressBar.hidden = false;
 
-      const file: File = e.target.files[0];
-      FileBone.getUploadUrl(file).then(uploadData => {
+      console.log(progressBar)
+      for (let i = 0; i < fileInfos.length; i++) {
+        if (i > 0) {
+          progressBar.value = (i / fileInfos.length) * 100;
+        } else {
+          progressBar.value = 0;
 
-        fileNameInput.value = "Uploading...";
-        FileBone.uploadFile(file, uploadData).then(resp => {
+        }
+        progressBar.textContent = `${progressBar.value}%`;
+
+        const fileData = await this.fileUpload(fileInfos[i])
+        this.mainInstance.relationalCache[fileData["values"]["key"]] = {dest: fileData["values"]}
+
+        if (!this.boneStructure["multiple"]) {
+          shadowKey.value = fileData["values"]["key"];
+          fileNameInput.value = fileData["values"]["name"];
+          const obj = this.reWriteBoneValue();
+          this.mainInstance.internboneValue = obj;
+          this.mainInstance.handleChange();
+        } else {
+          console.log("add ", fileData["values"]["key"])
+          fileKeys.push(fileData["values"]["key"]);
+
+        }
+      }
+      if (this.boneStructure["multiple"]) {
+        shadowKey.value = fileKeys.shift();
+        let boneValues = this.reWriteBoneValue();
+        boneValues = getPath(boneValues, path);
+        boneValues = boneValues.concat(fileKeys);
+        const obj = {};
+        createPath(obj, path, boneValues);
+        const mulWrapper: HTMLElement = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+
+        if (mulWrapper !== null) {
+          let [element, index] = this.createMultipleWrapper(getPath(obj, path), lang);
+          mulWrapper.replaceWith(element);
+          this.mainInstance.internboneValue = this.reWriteBoneValue();
+          this.mainInstance.handleChange();
+        }
 
 
-          FileBone.addFile(uploadData).then((fileData: object) => {
-            this.mainInstance.relationalCache[fileData["values"]["key"]] = {dest: fileData["values"]}
+      }
 
-            shadowKey.value = fileData["values"]["key"];
-
-            fileNameInput.value = fileData["values"]["name"];
-
-            const obj = this.reWriteBoneValue();
-
-            this.mainInstance.internboneValue = obj;
-            this.mainInstance.handleChange();
-
-          })
-
-        });
-      });
     });
     //fileNameInput
     fileNameInput.disabled = true;
@@ -136,15 +164,29 @@ export class FileBone extends RawBone {
       }
 
     }
-
+    progressBar.hidden = true;
+    progressBar.classList.add("progress-bar-values");
 
     fileContainer.appendChild(shadowFile);
     fileContainer.appendChild(shadowKey);
     fileContainer.appendChild(fileNameInput);
+    fileContainer.appendChild(progressBar);
 
     fileContainer.appendChild(uploadButton);
     fileContainer.appendChild(clearButton);
     return fileContainer;
+  }
+
+  fileUpload(file: File) {
+    return new Promise((resolve, reject) => {
+      FileBone.getUploadUrl(file).then(uploadData => {
+        FileBone.uploadFile(file, uploadData).then(resp => {
+          FileBone.addFile(uploadData).then((fileData: object) => {
+            resolve(fileData);
+          })
+        })
+      })
+    });
   }
 
 

@@ -56,6 +56,9 @@ export default css`
   .file-container sl-input{
     flex: 1;
   }
+ .file-container sl-progress-bar{
+    flex: 1;
+  }
 
   .file-container sl-input::part(base){
     border-top-left-radius: 0;
