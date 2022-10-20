@@ -1,62 +1,79 @@
-import {html} from "lit";
+import {html, TemplateResult} from "lit";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {formatstring, createPath, getPath} from "../utils";
 import SlIcon from "../../icon/icon";
 import SlDetails from "../../details/details";
 import {getPath} from "../utils";
 import SlSwitch from "../../switch/switch";
+import SlInput from "../../input/input";
+import SlTooltip from "../../tooltip/tooltip";
 
+export type BoneValue=string|number|boolean|any[]|Record<string, any>;
 export interface BoneStructure {
-  descr: string,
-  type: string,
-  required: boolean,
-  params: object,
-  visible: boolean,
-  readonly: boolean,
-  unique: boolean,
-  languages: string[],
-  emptyValue: any,
-  multiple: boolean,
+  descr: string;
+  type: string;
+  required: boolean;
+  params: Record<string, any>;
+  visible: boolean;
+  readonly: boolean;
+  unique: boolean;
+  languages: string[];
+  emptyValue: any;
+  multiple: boolean;
   //Optional Fields
 
   //relational
-  module: string,
-  format: string,
-  using: [],
-  relskel: object,
+  module: string;
+  format: string;
+  using: [];
+  relskel: object;
 
   //select
-  values: [],
+  values: [];
 
   //date
-  date: boolean,
-  time: boolean,
+  date: boolean;
+  time: boolean;
 
   //numeric
-  precision: number,
-  min: number,
-  max: number,
+  precision: number;
+  min: number;
+  max: number;
 
   //text
-  validHtml: string[]
+  validHtml: ValidHtml;
 
   //file
-  validMimeTypes: string[]
+  validMimeTypes: string[];
+
+  //spatial
+  boundsLng: [number, number];
+  boundsLat: [number, number]
+
+
+}
+
+interface ValidHtml {
+  validTags: string[];
+  validAttrs: object;
+  validStyles: string[];
+  validClasses: string[];
+  singleTags: string[];
 
 }
 
 export class RawBone {
-  boneValue;
+  boneValue: BoneValue;
   boneName;
   boneStructure: BoneStructure;
-  mainInstance;
+  mainInstance: any;
   depth = 0;
   //Move Element
   move = false;
-  moveElement;
+  moveElement: any;
   startHeight = 0;
   startTop = 0;
-  fakeElement;
+  fakeElement: any;
   inputsAbsolutePostions = [];
   absolutePostionSet = false;
   swapElements = [null, null];
@@ -66,15 +83,15 @@ export class RawBone {
 
   idx = null;
 
-  constructor(boneName = "", boneValue: any, boneStructure = {}, mainInstance = null) {
-    this.boneValue = boneValue;
+  constructor(boneName: string, boneValue: BoneValue, boneStructure: BoneStructure, mainInstance = null) {
+
     this.boneName = boneName;
+    this.boneValue = boneValue;
     this.boneStructure = boneStructure;
     this.mainInstance = mainInstance;
   }
 
-  view(formater: Function = formatstring) {
-    console.log("start view")
+  view(formater: Function=formatstring) {
     if (this.boneValue === null) {
       return "-";
     }
@@ -112,8 +129,8 @@ export class RawBone {
   }
 
 
-  getTabs() {
-    let tabs: any = [];
+  getTabs():TemplateResult[] {
+    const tabs: TemplateResult[] = [];
     for (const lang of this.boneStructure["languages"]) {
 
       tabs.push(html`
@@ -123,9 +140,9 @@ export class RawBone {
   }
 
 
-  getTabPannels(formater: Function = formatstring) {
+  getTabPannels(formater: Function = formatstring):TemplateResult[] {
     //We are when languages not null
-    let tabpannels: any = [];
+    let tabpannels: TemplateResult[] = [];
     if (this.boneStructure["format"] === undefined) {
       if (this.boneStructure["multiple"]) {
         for (const lang of this.boneStructure["languages"]) {
@@ -164,8 +181,7 @@ export class RawBone {
 
         for (const lang of this.boneStructure["languages"]) {
           if (this.boneValue[lang] === null) {
-            tabpannels += html`
-              <sl-tab-panel name="${lang}">-</sl-tab-panel>`;
+            tabpannels.push(html`<sl-tab-panel name="${lang}">-</sl-tab-panel>`);
           } else {
             tabpannels.push(html`
               <sl-tab-panel name="${lang}">${formater(this.boneValue, this.boneStructure, lang)}</sl-tab-panel>`);
@@ -333,7 +349,6 @@ export class RawBone {
         let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
         this.idx = idx;
         addButton.addEventListener("click", () => {
-          console.log("add")
           const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + this.boneName + '"]');
           mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, this.idx));
           mulWrapper.appendChild(this.addErrorContainer(null, this.idx));
@@ -386,7 +401,8 @@ export class RawBone {
       } else {
         //No Lang, No Multiple
         console.log("?")
-        const inputElement = this.getEditor(this.boneValue, this.boneName)
+        let inputElement:HTMLElement = this.getEditor(this.boneValue, this.boneName);
+        inputElement=this.appendToolTip(inputElement);
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
 
@@ -396,27 +412,7 @@ export class RawBone {
 
       }
     }
-    wrapper.addEventListener("sl-focus", (focus_event) => {
 
-      this.blurCounter += 1;
-
-
-    });
-    wrapper.addEventListener("sl-blur", (blur_event) => {
-
-      this.blurCounter -= 1;
-      return
-      const self = this;
-      setTimeout(function () {
-
-        if (self.blurCounter === 0) {
-          const formData = self.reWriteBoneValue();
-          self.mainInstance.handleChange(formData);
-
-
-        }
-      }, 20)
-    });
     if (!fromRecord) {
       if (this.mainInstance.rendersaveButton) {
         const saveButton = document.createElement("sl-button");
@@ -481,7 +477,7 @@ export class RawBone {
       let isValid: boolean = false;
       if (this.boneStructure["required"]) {
 
-        this.mainInstance.bone.querySelectorAll("sl-input").forEach((tmpInput) => {
+        this.mainInstance.bone.querySelectorAll("sl-input").forEach((tmpInput: SlInput) => {
           if (tmpInput.value !== null) {
             if (tmpInput.value.length > 0) {
               isValid = true;
@@ -522,7 +518,8 @@ export class RawBone {
 
     let deleteButton;
     let draggable
-    const inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
+    let inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
+    inputElement=this.appendToolTip(inputElement);
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
 
@@ -621,14 +618,13 @@ export class RawBone {
     return inputWrapper;
   }
 
-  generateboneName(lang = null, index = null) {
+  generateboneName(lang: any = null, index: any = null) {
     let newboneName = this.boneName;
     if (lang !== null) {
-
-      newboneName += "." + lang.toString();
+      newboneName += `.${lang}`;
     }
     if (index !== null) {
-      newboneName += "." + index.toString();
+      newboneName += `.${index}`;
     }
     return newboneName;
   }
@@ -827,6 +823,17 @@ export class RawBone {
       this.idx[lang] = 0;
     }
 
+  }
+  appendToolTip(inputElement:HTMLElement):HTMLElement
+  {
+    if(this.boneStructure["params"]["tooltip"])
+    {
+        const tooltip:SlTooltip= document.createElement("sl-tooltip");
+        tooltip.content=this.boneStructure["params"]["tooltip"];
+        tooltip.appendChild(inputElement);
+        return tooltip;
+    }
+    return inputElement;
   }
 
 

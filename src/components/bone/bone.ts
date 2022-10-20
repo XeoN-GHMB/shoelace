@@ -1,7 +1,6 @@
 import {LitElement, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {emit} from '../../internal/event';
-import {watch} from '../../internal/watch';
 import {watchProps} from "../../internal/watchProps";
 import styles from './bone.styles';
 import {BoneEditRenderer} from "./boneEditRenderer";
@@ -9,6 +8,12 @@ import {BoneViewRenderer} from "./boneViewRenderer";
 import SlDetails from "../details/details";
 import ShoelaceElement from "../../internal/shoelace-element";
 
+interface boneError {
+  severity: number;
+  fieldPath: string[];
+  errorMessage: string;
+  invalidFields: string[];
+}
 
 /**
  * @since 2.0
@@ -28,13 +33,6 @@ import ShoelaceElement from "../../internal/shoelace-element";
  */
 @customElement('sl-bone')
 export default class SlBone extends ShoelaceElement {
-  //Declare errors ?? //todo  outsource
-  declare boneError: {
-    severity: number,
-    fieldPath: string[],
-    errorMessage: string,
-    invalidFields: string[],
-  }
 
 
   static styles = styles;
@@ -226,6 +224,7 @@ export default class SlBone extends ShoelaceElement {
 
   @watchProps(["errors"])
   handleError() {
+
     //Todo Styling?
     if (this.bone === undefined || this.bone === null) {
       return;
@@ -233,13 +232,14 @@ export default class SlBone extends ShoelaceElement {
     if (this.errors === undefined || this.errors === null) {
       return;
     }
-    if (this.errors.length === 0) {
-      this.bone.querySelectorAll(".error-container").forEach((element) => {
-        console.log(element)
+
+    this.bone.querySelectorAll(".error-container").forEach((element) => {
+      if (this.errors.length === 0) {
         element.style.display = "none";
-        element.innerText = "";
-      })
-    }
+      }
+      element.innerText = "";
+    })
+
     for (const error of this.errors) {
       if (this.boneName === error["fieldPath"][0])
         if (error["severity"] > 1) {

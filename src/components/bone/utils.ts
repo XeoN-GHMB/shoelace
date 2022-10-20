@@ -1,5 +1,6 @@
 import translationtable from "./translations/init"
-export function formatstring(data, boneStructure: object, lang = null, ignoreLang = false) {
+import {BoneStructure, BoneValue} from "./bones/rawBone";
+export function formatstring(data:BoneValue, boneStructure: BoneStructure, lang = null, ignoreLang = false):BoneValue {
   if (!boneStructure) {
 
     return data;
@@ -8,12 +9,12 @@ export function formatstring(data, boneStructure: object, lang = null, ignoreLan
     if (boneStructure["type"] === "str") {
       return escapeString(data);
     }
-    return data.toString();
+    return data;
   }
-  let re = /\$\(([^)]+)\)/g;
+  const re = /\$\(([^)]+)\)/g;
   let newboneStructure = {};
   const isRelational = boneStructure["type"].startsWith("relational")
-  const isRecord = boneStructure["type"].startsWith("record")
+
   if (isRelational) {
     if (Array.isArray(boneStructure["relskel"])) {
 
@@ -200,7 +201,7 @@ export function getPath(obj: object, path: string | string[]): object | undefine
   return current;
 }
 
-export function escapeString(value: string | string[]): string | string[] {
+export function escapeString(value:BoneValue): string | string[] {
   if (value === null) {
     return "";
   }
