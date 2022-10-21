@@ -1,6 +1,7 @@
-import {RawBone} from "./rawBone";
+import {FileSkelValues} from "../interfaces";
 import {html, TemplateResult} from "lit";
 import {formatstring, getSkey, apiurl, createPath, getPath} from "../utils";
+import {RawBone} from "./rawBone";
 
 export class FileBone extends RawBone {
 
@@ -27,7 +28,7 @@ export class FileBone extends RawBone {
     return super.view(appendImage);
   }
 
-  getEditor(value: any, boneName: string, lang: any = null): HTMLElement {
+  getEditor(value: string|object, boneName: string, lang: any = null): HTMLElement {
 
 
     /**
@@ -41,7 +42,7 @@ export class FileBone extends RawBone {
     console.log("init filebone with", value, boneName);
     if (typeof (value) === "object" && value !== null) {
       if ("dest" in value) {
-        const key = value["dest"]["key"]
+        const key:string = value["dest"]["key"];
         this.mainInstance.relationalCache[key] = value;
         value = key;
       }
@@ -100,13 +101,18 @@ export class FileBone extends RawBone {
     shadowFile.multiple = this.boneStructure["multiple"];
     const path = lang === null ? this.boneName : this.boneName + "." + lang;
 
-    shadowFile.addEventListener("change", async (e: Event) => {
-      const fileInfos = e.target.files;
-      const fileKeys = [];
+    shadowFile.addEventListener("change", async (e) => {
+
+      const fileInfos:FileList | null = (<HTMLInputElement>e.target).files;
+      if(fileInfos===null)
+      {
+        return;
+      }
+      const fileKeys:string[] = [];
       fileNameInput.hidden = true;
       progressBar.hidden = false;
 
-      console.log(progressBar)
+
       for (let i = 0; i < fileInfos.length; i++) {
         if (i > 0) {
           progressBar.value = (i / fileInfos.length) * 100;
@@ -116,32 +122,31 @@ export class FileBone extends RawBone {
         }
         progressBar.textContent = `${progressBar.value}%`;
 
-        const fileData = await this.fileUpload(fileInfos[i])
-        this.mainInstance.relationalCache[fileData["values"]["key"]] = {dest: fileData["values"]}
+        const fileData:FileSkelValues = await this.fileUpload(fileInfos[i])
+        this.mainInstance.relationalCache[fileData["key"]] = {"dest": fileData}
 
         if (!this.boneStructure["multiple"]) {
-          shadowKey.value = fileData["values"]["key"];
-          fileNameInput.value = fileData["values"]["name"];
+          shadowKey.value = fileData["key"];
+          fileNameInput.value = fileData["name"];
           const obj = this.reWriteBoneValue();
           this.mainInstance.internboneValue = obj;
           this.mainInstance.handleChange();
         } else {
-          console.log("add ", fileData["values"]["key"])
-          fileKeys.push(fileData["values"]["key"]);
+          fileKeys.push(fileData["key"]);
 
         }
       }
       if (this.boneStructure["multiple"]) {
         shadowKey.value = fileKeys.shift();
-        let boneValues = this.reWriteBoneValue();
+        let boneValues:object = this.reWriteBoneValue();
         boneValues = getPath(boneValues, path);
         boneValues = boneValues.concat(fileKeys);
         const obj = {};
         createPath(obj, path, boneValues);
-        const mulWrapper: HTMLElement = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+        const mulWrapper: HTMLElement|null = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
 
         if (mulWrapper !== null) {
-          let [element, index] = this.createMultipleWrapper(getPath(obj, path), lang);
+          const element = this.createMultipleWrapper(getPath(obj, path), lang)[0];
           mulWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange();
@@ -177,12 +182,13 @@ export class FileBone extends RawBone {
     return fileContainer;
   }
 
-  fileUpload(file: File) {
+  fileUpload(file: File):Promise<FileSkelValues> {
     return new Promise((resolve, reject) => {
       FileBone.getUploadUrl(file).then(uploadData => {
-        FileBone.uploadFile(file, uploadData).then(resp => {
-          FileBone.addFile(uploadData).then((fileData: object) => {
-            resolve(fileData);
+        FileBone.uploadFile(file, uploadData).then(_ => {
+          FileBone.addFile(uploadData).then((fileData: Record<string, FileSkelValues>) => {
+
+            resolve(fileData["values"]);
           })
         })
       })
@@ -230,7 +236,7 @@ export class FileBone extends RawBone {
 
 
     return new Promise((resolve, reject) => {
-      const currentUpload: object = {};
+      const currentUpload: Record<string,any> = {};
       currentUpload["key"] = uploadData["values"]["uploadKey"];
       currentUpload["node"] = undefined;
       currentUpload["skelType"] = "leaf";

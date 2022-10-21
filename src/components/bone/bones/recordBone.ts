@@ -1,12 +1,9 @@
 import {RawBone} from "./rawBone";
-import SlButton from "../../button/button";
-import SlIcon from "../../icon/icon";
 import {BoneEditRenderer} from "../boneEditRenderer";
 
+
 export class RecordBone extends RawBone{
-   constructor(boneValue: any, boneName = "", boneStructure = {}, mainInstance = null) {
-    super(boneValue,boneName,boneStructure,mainInstance);
-  }
+
   getEditor(value:any, boneName:string,lang:any=null): HTMLElement {
      console.log("start record")
     const recordboneWrapper = document.createElement("div");
@@ -25,7 +22,7 @@ export class RecordBone extends RawBone{
 
       }
       const newBoneName = boneName + "." + _boneName;
-      const bone = new BoneEditRenderer(newBoneName, recordBoneValue,_boneStructure , this.mainInstance).getBone();
+      const bone:object = new BoneEditRenderer(newBoneName, recordBoneValue,_boneStructure , this.mainInstance).getBone();
       const tmp: HTMLElement = new bone(newBoneName, recordBoneValue,_boneStructure , this.mainInstance).edit(true, this.depth + 1);
       tmp.dataset.fromRecord = "true";
 

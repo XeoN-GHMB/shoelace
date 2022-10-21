@@ -6,8 +6,8 @@ import ShoelaceElement from '../../internal/shoelace-element';
 import {watchProps} from '../../internal/watchProps';
 
 import styles from './table.styles';
-import {boneFormatter} from "./cellRenderer.tsx";
-import {boneEditor, updateData} from "./cellEditorRenderer.tsx";
+import {boneFormatter} from "./cellRenderer.ts";
+import {boneEditor, updateData} from "./cellEditorRenderer.ts";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 import {emit} from "../../internal/event";

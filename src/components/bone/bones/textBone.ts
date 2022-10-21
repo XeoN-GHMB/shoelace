@@ -13,11 +13,11 @@ import image from "tinymce/plugins/image";
 import {apiurl, createPath} from "../utils";
 import {FileBone} from "./fileBone";
 
-import contentCss from "tinymce/skins/content/default/content.css";
+
+import {FileSkelValues} from "../interfaces";
 
 export class TextBone extends RawBone {
   getEditor(value: any, boneName: string, lang: any = null): HTMLElement {
-
     const ele = document.createElement("div");
     let _;
     _ = theme;
@@ -33,7 +33,7 @@ export class TextBone extends RawBone {
       tinymce.init({
         target: ele,
         width: "100%",
-        base_url: `${apiurl}/_tinymce/`,
+        //base_url: `${apiurl}/_tinymce/`,
         relative_urls: false,
         toolbar: 'undo redo | blocks | bold italic backcolor | '
           + 'alignleft aligncenter alignright alignjustify | '
@@ -99,7 +99,7 @@ export class TextBone extends RawBone {
     let i = nodes.length;
     while (i--) {
 
-      const node = nodes[i];
+      const node:AstNode = nodes[i];
       const classList = node.attr('class').split(" ");
       let classValue = '';
       for (let ci = 0; ci < classList.length; ci++) {
@@ -112,7 +112,6 @@ export class TextBone extends RawBone {
         }
         if (!valid) {
           for (const key of Object.keys(validClassesMap)) {
-            console.log("Keys", key)
             if (key.endsWith("*"))//we have an wildcard
             {
               if (className.startsWith(key.substring(0, key.indexOf("*")))) {
@@ -133,16 +132,16 @@ export class TextBone extends RawBone {
     }
 
   }
-
-  uploadHandler(blobInfo:any, progress) {
+//todo BlobInfo ist not been exported by tinymce :< Write own interface
+  uploadHandler(blobInfo, progress) {
     //Todo error handling
     return new Promise((resolve, reject) => {
       FileBone.getUploadUrl(blobInfo.blob()).then(uploadData => {
 
         FileBone.uploadFile(blobInfo.blob(), uploadData).then(resp => {
 
-          FileBone.addFile(uploadData).then((fileData: object) => {
-            resolve(fileData["values"]["downloadUrl"])
+          FileBone.addFile(uploadData).then((fileData: FileSkelValues) => {
+            resolve(fileData["downloadUrl"])
 
           })
         })

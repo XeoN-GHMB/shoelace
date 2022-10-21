@@ -1,7 +1,7 @@
 import {RawBone} from "./rawBone";
 
 export class PasswordBone extends RawBone {
-  getEditor(value, boneName: string, lang: any = null): HTMLElement {
+  getEditor(value:string|null, boneName: string, lang: any = null): HTMLElement {
     const passwordBone = super.getEditor(value, boneName);
     passwordBone.type = "password";
     return passwordBone;

@@ -27,7 +27,6 @@ export class SpatialBone extends RawBone {
     lngInput.max = this.boneStructure["boundsLng"][1];
     lngInput.step = "any";
     spatialWrapper.appendChild(lngInput);
-
     latInput.addEventListener("sl-change", () => {
       this.mainInstance.internboneValue = this.reWriteBoneValue();
       this.mainInstance.handleChange();

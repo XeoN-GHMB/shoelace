@@ -2,6 +2,7 @@ import {RawBone} from "./rawBone";
 import SlCombobox from "../../combobox/combobox";
 import SlIconButton from "../../icon-button/icon-button";
 import {apiurl, createPath, formatstring, getPath, translate} from "../utils";
+import SlTable from "../../table/table";
 
 export class RelationalBone extends RawBone {
 
@@ -156,7 +157,7 @@ export class RelationalBone extends RawBone {
     dialog.open = true;
     dialog.label = "Select";
 
-    const table = document.createElement("sl-table");
+    const table:SlTable = document.createElement("sl-table");
     if (this.boneStructure.multiple) {
       table.rowselect = true;
     } else {
@@ -167,7 +168,7 @@ export class RelationalBone extends RawBone {
     table.rowindexes = true;
     fetch(`${apiurl}/json/${this.boneStructure["module"]}/list`).then(resp => resp.json().then((respdata) => {
 
-      let structure: any = {}
+      const structure: Record<string, object> = {}
       for (const item of respdata["structure"]) {
 
         structure[item[0]] = item[1]
