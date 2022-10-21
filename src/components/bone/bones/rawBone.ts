@@ -9,66 +9,17 @@ import SlSwitch from "../../switch/switch";
 import SlInput from "../../input/input";
 import SlTooltip from "../../tooltip/tooltip";
 import SlAvatar from "../../avatar/avatar";
+import SlBone from "../bone";
+import {BoneStructure} from "../interfaces";
 
 export type BoneValue=string|number|boolean|any[]|Record<string, any>;
-export interface BoneStructure {
-  descr: string;
-  type: string;
-  required: boolean;
-  params: Record<string, any>;
-  visible: boolean;
-  readonly: boolean;
-  unique: boolean;
-  languages: string[];
-  emptyValue: any;
-  multiple: boolean;
-  //Optional Fields
 
-  //relational
-  module: string;
-  format: string;
-  using: [];
-  relskel: object;
-
-  //select
-  values: [];
-
-  //date
-  date: boolean;
-  time: boolean;
-
-  //numeric
-  precision: number;
-  min: number;
-  max: number;
-
-  //text
-  validHtml: ValidHtml;
-
-  //file
-  validMimeTypes: string[];
-
-  //spatial
-  boundsLng: [number, number];
-  boundsLat: [number, number]
-
-
-}
-
-interface ValidHtml {
-  validTags: string[];
-  validAttrs: object;
-  validStyles: string[];
-  validClasses: string[];
-  singleTags: string[];
-
-}
 
 export class RawBone {
   boneValue: BoneValue;
   boneName;
   boneStructure: BoneStructure;
-  mainInstance: any;
+  mainInstance: SlBone;
   depth = 0;
   //Move Element
   move = false;
@@ -535,6 +486,7 @@ export class RawBone {
     let deleteButton;
     let draggable
     let inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
+    inputElement.dataset.boneName = newboneName;
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
 

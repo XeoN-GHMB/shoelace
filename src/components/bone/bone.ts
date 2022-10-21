@@ -7,13 +7,9 @@ import {BoneEditRenderer} from "./boneEditRenderer";
 import {BoneViewRenderer} from "./boneViewRenderer";
 import SlDetails from "../details/details";
 import ShoelaceElement from "../../internal/shoelace-element";
+import {boneError} from "./interfaces";
 
-interface boneError {
-  severity: number;
-  fieldPath: string[];
-  errorMessage: string;
-  invalidFields: string[];
-}
+
 
 /**
  * @since 2.0
@@ -39,7 +35,7 @@ export default class SlBone extends ShoelaceElement {
   bone: HTMLFormElement = null;
   initBoneValue: any;
   internboneValue: any;
-  relationalCache = {};
+  relationalCache:Record<string, object> = {};
   previousBoneValues: any = {};
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
@@ -59,7 +55,7 @@ export default class SlBone extends ShoelaceElement {
   /** set rendersaveButton */
   @property({type: Boolean, reflect: true}) rendersaveButton = false;
   /** set boneValue */
-  @property({type: Array, attribute: false}) errors: [];
+  @property({type: Array, attribute: false}) errors: boneError;
   /** set boneValue */
   @property({type: Boolean, attribute: false}) inTable = false;
 
