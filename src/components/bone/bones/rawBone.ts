@@ -1,6 +1,6 @@
 import {html, TemplateResult} from "lit";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
-import {formatstring, createPath, getPath} from "../utils";
+import {formatstring, createPath, getPath, translate} from "../utils";
 import SlIcon from "../../icon/icon";
 import SlDetails from "../../details/details";
 import SlAlert from "../../alert/alert";
@@ -234,6 +234,15 @@ export class RawBone {
 
 
           const addButton = document.createElement("sl-button");
+          const addIcon = document.createElement("sl-icon");
+
+          addIcon.setAttribute("name", "plus");
+          addButton.appendChild(addIcon);
+          addButton.setAttribute("variant", "success");
+          addButton.setAttribute("outline", "");
+          addButton.classList.add("add-button");
+          addButton.variant = "success";
+          addButton.title = translate("actions.add");
 
           addButton.addEventListener("click", () => {
             console.log("add")
@@ -244,8 +253,6 @@ export class RawBone {
 
           });
           languageWrapper.appendChild(multipleWrapper);
-          addButton.innerText = "Add";
-          addButton.variant = "success";
 
           const clearButton = document.createElement("sl-button");
 
@@ -253,14 +260,15 @@ export class RawBone {
             this.clearMultipleWrapper(lang)
 
           });
-          clearButton.innerText = "Clear";
           clearButton.id = "clearButton"
           clearButton.variant = "danger";
+          clearButton.setAttribute("outline", "");
           const xicon: SlIcon = document.createElement("sl-icon");
           xicon.name = "x";
           xicon.slot = "suffix";
           clearButton.appendChild(xicon);
           clearButton.variant = "danger";
+          clearButton.title = translate("actions.deleteAll");
 
           //Undo Button
           const undoButton = document.createElement("sl-button");
@@ -314,6 +322,7 @@ export class RawBone {
         addButton.setAttribute("outline", "")
         addButton.classList.add("add-button")
         addButton.variant = "success"
+        addButton.title = translate("actions.add");
         let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
         this.idx = idx;
         addButton.addEventListener("click", () => {
@@ -338,10 +347,10 @@ export class RawBone {
         clearButton.setAttribute("variant", "danger")
         clearButton.setAttribute("outline", "")
         clearButton.classList.add("clear-button")
+        clearButton.title = translate("actions.deleteAll");
         clearButton.addEventListener("click", () => {
           this.clearMultipleWrapper()
         });
-        clearButton.variant = "danger";
 
         //Undo Button
         const undoButton = document.createElement("sl-button");

@@ -124,7 +124,7 @@ export default css`
   }
 
   .multi-input .clear-button{
-    margin-left: 5px;
+    margin-left: var(--sl-spacing-small);
   }
 
   .drag-button{
@@ -234,6 +234,16 @@ export default css`
 
   .tooltip::part(body){
     padding: var(--sl-spacing-small);
+  }
+
+  .relBone-wrap{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .relBone-wrap .add-button{
+    margin-left: var(--sl-spacing-small);
   }
 
   @media (max-width: 900px) {

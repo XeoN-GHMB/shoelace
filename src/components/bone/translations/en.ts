@@ -1,4 +1,9 @@
 export default {
-  select: "Select",
-  close: "Close",
+  actions: {
+    add:"Add",
+    delete: "Delete",
+    deleteAll: "Delete All",
+    select:"Select",
+    close:"Close",
+    },
 }

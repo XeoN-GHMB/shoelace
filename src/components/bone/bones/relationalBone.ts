@@ -122,7 +122,9 @@ export class RelationalBone extends RawBone {
     const shadowInput = document.createElement("sl-input");
     const showInput = document.createElement("sl-input");
     const selectButton = document.createElement("sl-button");
+    const selectIcon = document.createElement("sl-icon");
 
+    inputWrapper.classList.add("relBone-wrap")
     inputWrapper.dataset.boneName = boneName;
 
     //Shadow input
@@ -137,7 +139,12 @@ export class RelationalBone extends RawBone {
 
 
     //selectButton
-    selectButton.innerText = translate("actions.select");
+    selectButton.title = translate("actions.select");
+    selectIcon.setAttribute("name", "plus")
+    selectButton.appendChild(selectIcon);
+    selectButton.setAttribute("variant", "success")
+    selectButton.setAttribute("outline", "")
+    selectButton.classList.add("add-button")
     selectButton.addEventListener("click", () => {
       this.getDialog(inputWrapper, shadowInput, showInput);
     })
