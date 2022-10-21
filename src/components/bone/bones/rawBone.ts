@@ -3,10 +3,12 @@ import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {formatstring, createPath, getPath} from "../utils";
 import SlIcon from "../../icon/icon";
 import SlDetails from "../../details/details";
+import SlAlert from "../../alert/alert";
 import {getPath} from "../utils";
 import SlSwitch from "../../switch/switch";
 import SlInput from "../../input/input";
 import SlTooltip from "../../tooltip/tooltip";
+import SlAvatar from "../../avatar/avatar";
 
 export type BoneValue=string|number|boolean|any[]|Record<string, any>;
 export interface BoneStructure {
@@ -225,6 +227,21 @@ export class RawBone {
       const boneNameLabel = document.createElement("div");
       boneNameLabel.innerText = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
       boneNameLabel.classList.add("bone-name")
+      if(this.boneStructure["params"]["tooltip"])
+      {
+          const tooltip:SlTooltip= document.createElement("sl-tooltip");
+          const avatar:SlAvatar= document.createElement("sl-avatar");
+          const icon:SlIcon= document.createElement("sl-icon");
+          avatar.classList.add("tooltip-bubble");
+          icon.setAttribute("name", "question");
+          icon.setAttribute("slot", "icon");
+          icon.classList.add("tooltip-icon");
+          avatar.appendChild(icon);
+          tooltip.content=this.boneStructure["params"]["tooltip"];
+          tooltip.classList.add("tooltip");
+          tooltip.appendChild(avatar);
+          boneNameLabel.appendChild(tooltip);
+      }
       wrapper.appendChild(boneNameLabel);
     }
 
@@ -402,7 +419,6 @@ export class RawBone {
         //No Lang, No Multiple
         console.log("?")
         let inputElement:HTMLElement = this.getEditor(this.boneValue, this.boneName);
-        inputElement=this.appendToolTip(inputElement);
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
 
@@ -519,7 +535,6 @@ export class RawBone {
     let deleteButton;
     let draggable
     let inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
-    inputElement=this.appendToolTip(inputElement);
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
 
@@ -630,9 +645,16 @@ export class RawBone {
   }
 
   addErrorContainer(lang: string, index = null): SlDetails {
-    const errorContainer: SlDetails = document.createElement("sl-details");
+    const errorContainer: SlAlert = document.createElement("sl-alert");
     errorContainer.dataset.name = this.generateboneName(lang, index) + "_errorcontainer";
     errorContainer.style.display = "none";
+    const icon: SlIcon = document.createElement("sl-icon");
+    icon.setAttribute("name", "exclamation-triangle");
+    icon.setAttribute("slot", "icon");
+    errorContainer.appendChild(icon);
+    this.div = document.createElement("div");
+    this.div.classList.add("error-msg");
+    errorContainer.appendChild(this.div);
     errorContainer.summary = "Errors";
     errorContainer.classList.add("error-container");
     return errorContainer;
@@ -824,18 +846,6 @@ export class RawBone {
     }
 
   }
-  appendToolTip(inputElement:HTMLElement):HTMLElement
-  {
-    if(this.boneStructure["params"]["tooltip"])
-    {
-        const tooltip:SlTooltip= document.createElement("sl-tooltip");
-        tooltip.content=this.boneStructure["params"]["tooltip"];
-        tooltip.appendChild(inputElement);
-        return tooltip;
-    }
-    return inputElement;
-  }
-
 
 }
 

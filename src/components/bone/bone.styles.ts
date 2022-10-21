@@ -9,9 +9,8 @@ export default css`
   }
 
   .bone-wrapper{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
+    display: grid;
+    grid-template-columns: 230px 1fr;
     margin-bottom: 10px;
   }
 
@@ -25,7 +24,6 @@ export default css`
     flex-direction: row;
     align-items: center;
     align-self: flex-start;
-    min-width: 230px;
     font-size: var(--sl-input-font-size-medium);
     min-height: var(--sl-input-height-medium);
     padding: 0.4em 0.7em;
@@ -33,6 +31,7 @@ export default css`
     border: 1px solid var(--sl-color-neutral-200);
     border-top-left-radius: var(--sl-input-border-radius-medium);
     border-bottom-left-radius: var(--sl-input-border-radius-medium);
+    gap: 10px;
   }
 
   sl-input::part(base),
@@ -41,7 +40,9 @@ export default css`
   }
 
   .bone-name + sl-input::part(base),
-  .bone-name + sl-select::part(control) {
+  .bone-name + sl-select::part(control),
+  .bone-name + .tooltip-wrap > sl-input::part(base),
+  .bone-name + .tooltip-wrap > sl-select::part(control){
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
@@ -164,6 +165,10 @@ export default css`
     overflow-x: hidden;
   }
 
+  .language-tab-group::part(nav){
+    align-self: flex-start;
+  }
+
   .language-tab-group sl-tab-panel::part(base){
     padding: 0;
     border: none;
@@ -181,12 +186,59 @@ export default css`
    .language-wrapper .multi-input sl-select:first-child::part(control){
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border-bottom-right-radius: 0;
+  }
+
+   .error-container::part(base){
+    grid-column: 2;
+    margin-top: var(--sl-spacing-small);
+    margin-bottom: var(--sl-spacing-small);
+  }
+
+  .error-container::part(message){
+    padding: 8px var(--sl-spacing-small);
+  }
+
+  .error-container::part(icon){
+    padding-left: 10px;
+  }
+
+  .error-msg{
+    font-weight: bold;
+  }
+
+  .tooltip-bubble{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: calc(var(--sl-input-height-medium) * .4);
+      height: calc(var(--sl-input-height-medium) * .4);
+      min-width: calc(var(--sl-input-height-medium) * .4);
+      min-height: calc(var(--sl-input-height-medium) * .4);
+      margin-left: auto;
+  }
+
+  .tooltip-bubble::part(base){
+      width: 100%;
+      height: 100%;
+      background-color: var(--sl-color-info-500);
+  }
+
+  .tooltip-icon{
+    width: 60%;
+    height: 60%;
+  }
+
+  .tooltip{
+    --sl-tooltip-background-color: var(--sl-color-info-500)
+  }
+
+  .tooltip::part(body){
+    padding: var(--sl-spacing-small);
   }
 
   @media (max-width: 900px) {
     .bone-wrapper{
-      flex-direction: column;
+      grid-template-columns: 1fr;
     }
 
     .multiple-wrapper{
@@ -202,7 +254,9 @@ export default css`
     }
 
     .bone-name + sl-input::part(base),
-    .bone-name + sl-select::part(control) {
+    .bone-name + sl-select::part(control),
+    .bone-name + .tooltip-wrap > sl-input::part(base),
+    .bone-name + .tooltip-wrap > sl-select::part(control) {
       border-top-left-radius: 0;
       border-top-right-radius: 0;
       border-bottom-left-radius: var(--sl-input-border-radius-medium);
@@ -222,5 +276,15 @@ export default css`
       border-bottom-right-radius: 0;
     }
 
+    .error-container::part(base){
+      grid-column: 1;
+    }
+
+    .tooltip-bubble{
+      position: absolute;
+      top: calc(0px - var(--sl-input-height-medium));
+      right: 0;
+    }
   }
+
 `;

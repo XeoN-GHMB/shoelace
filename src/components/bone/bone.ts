@@ -237,7 +237,7 @@ export default class SlBone extends ShoelaceElement {
       if (this.errors.length === 0) {
         element.style.display = "none";
       }
-      element.innerText = "";
+      element.querySelector(".error-msg").innerText = "";
     })
 
     for (const error of this.errors) {
@@ -248,7 +248,7 @@ export default class SlBone extends ShoelaceElement {
           if (element !== null) {
             element.style.display = "";
             element.open = true;
-            element.innerText += error["errorMessage"];
+            element.querySelector(".error-msg").innerText += error["errorMessage"];
           }
 
         }
