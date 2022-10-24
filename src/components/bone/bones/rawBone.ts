@@ -169,7 +169,7 @@ export class RawBone {
 
     }
 
-
+    wrapper.classList.add("bone-type-" + this.boneStructure["type"])
     wrapper.classList.add("bone-wrapper")
     wrapper.dataset.boneWrapper = "true";
     wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
@@ -504,6 +504,7 @@ export class RawBone {
       deleteButton = document.createElement("sl-button");
       deleteButton.id = "clearButton"
       deleteButton.classList.add("clear-button");
+      deleteButton.title = translate("actions.delete");
       deleteButton.variant = "danger";
       deleteButton.slot = "suffix";
       const xicon: SlIcon = document.createElement("sl-icon");

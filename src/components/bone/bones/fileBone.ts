@@ -1,6 +1,6 @@
 import {FileSkelValues} from "../interfaces";
 import {html, TemplateResult} from "lit";
-import {formatstring, getSkey, apiurl, createPath, getPath} from "../utils";
+import {formatstring, getSkey, apiurl, createPath, getPath, translate} from "../utils";
 import {RawBone} from "./rawBone";
 
 export class FileBone extends RawBone {
@@ -65,6 +65,7 @@ export class FileBone extends RawBone {
     uploadButton.setAttribute("variant", "success")
     uploadButton.setAttribute("outline", "")
     uploadButton.classList.add("upload-button")
+    uploadButton.title = translate("actions.addFile");
     uploadButton.addEventListener("click", () => {
       shadowFile.click();
     })
@@ -74,6 +75,7 @@ export class FileBone extends RawBone {
     clearButton.setAttribute("variant", "danger")
     clearButton.setAttribute("outline", "")
     clearButton.classList.add("clear-button")
+    clearButton.title = translate("actions.delete");
     clearButton.id = "clearButton";
     shadowFile.type = "file";
     let filter: string;

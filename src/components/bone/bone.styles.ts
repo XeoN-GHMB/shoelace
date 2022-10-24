@@ -68,7 +68,7 @@ export default css`
 
   .file-container .upload-button,
   .file-container .clear-button{
-    margin-left: 5px;
+    margin-left: var(--sl-spacing-small);;
   }
 
   .bone-wrapper .upload-button::part(base),
@@ -104,12 +104,23 @@ export default css`
 
   .bone-inner-button-wrap .clear-button,
   .bone-inner-button-wrap .undo-button{
-    margin-left: 5px;
+    margin-left: var(--sl-spacing-small);
   }
 
   .bone-inner-button-wrap .add-button{
-    margin-right: 5px;
     flex: 1;
+  }
+
+  .bone-type-record .bone-inner-wrap{
+      border-top: 1px solid var(--sl-color-neutral-200);
+      padding-top: var(--sl-spacing-small);
+      grid-column: span 2;
+  }
+
+  .bone-type-record > .bone-name{
+    border-bottom: none;
+    border-top-right-radius: var(--sl-input-border-radius-medium);
+    border-bottom-left-radius: 0;
   }
 
   .multi-input{
@@ -294,6 +305,10 @@ export default css`
       position: absolute;
       top: calc(0px - var(--sl-input-height-medium));
       right: 0;
+    }
+
+    .bone-type-record .bone-inner-wrap{
+      padding-top: 0;
     }
   }
 
