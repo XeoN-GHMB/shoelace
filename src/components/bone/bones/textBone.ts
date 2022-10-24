@@ -10,6 +10,7 @@ import icons from "tinymce/icons/default/";
 import table from "tinymce/plugins/table";
 import code from "tinymce/plugins/code";
 import image from "tinymce/plugins/image";
+
 import {apiurl, createPath} from "../utils";
 import {FileBone} from "./fileBone";
 
@@ -28,22 +29,25 @@ export class TextBone extends RawBone {
     _ = code;
     _ = image;
 
+
     const self = this;
     setTimeout(function () {
       tinymce.init({
         target: ele,
         width: "100%",
-        //base_url: `${apiurl}/_tinymce/`,
+        menubar: false,
         relative_urls: false,
+        skin: false,//we load the css local
+        content_css:false,
         toolbar: 'undo redo | blocks | bold italic backcolor | '
           + 'alignleft aligncenter alignright alignjustify | '
-          + 'table  image help',
+          + 'table code advcode',
 
-        plugins: ["table", "code", "image"],
+        plugins: ["table", "code","advcode"],
         formats: {bold: {inline: 'span', 'classes': 'viur-txt-bold'}},
         valid_elements: self.getValidTagString(),
-        valid_classes: self.boneStructure["validHtml"]["validClasses"],
-        images_upload_handler: self.uploadHandler,
+        valid_classes: {"*":self.boneStructure["validHtml"]["validClasses"].join(" ")},
+        //images_upload_handler: self.uploadHandler,
 
         setup: function (editor) {
           editor.on('preinit', () => {
@@ -61,8 +65,10 @@ export class TextBone extends RawBone {
 
             editor.setContent(value);
           });
+          console.log("?? ",editor)
           editor.on('Change', (e) => {
             createPath(self.mainInstance.internboneValue, boneName, editor.getContent());
+            console.log( "get content",editor.getContent())
             self.mainInstance.handleChange();
 
           });
@@ -101,6 +107,7 @@ export class TextBone extends RawBone {
 
       const node:AstNode = nodes[i];
       const classList = node.attr('class').split(" ");
+      node.attr('class',null)
       let classValue = '';
       for (let ci = 0; ci < classList.length; ci++) {
         const className = classList[ci];
@@ -141,7 +148,8 @@ export class TextBone extends RawBone {
         FileBone.uploadFile(blobInfo.blob(), uploadData).then(resp => {
 
           FileBone.addFile(uploadData).then((fileData: FileSkelValues) => {
-            resolve(fileData["downloadUrl"])
+            console.log(fileData)
+            resolve(fileData["values"]["downloadUrl"])
 
           })
         })

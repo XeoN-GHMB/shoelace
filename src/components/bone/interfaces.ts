@@ -66,4 +66,12 @@ export interface SkelValues{
 export interface FileSkelValues extends  SkelValues{
   name:string;
   downloadUrl:string;
+  size:string;
+  dlkey:string;
+  mimetype:string;
+  weak:boolean;
+  pending:boolean;
+  width:number;
+  height:number;
+
 }

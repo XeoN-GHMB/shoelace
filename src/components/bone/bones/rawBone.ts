@@ -292,7 +292,15 @@ export class RawBone {
           //Lang , no multipler
           const languageWrapper = document.createElement("div");
           languageWrapper.classList.add("language-wrapper");
-          languageWrapper.appendChild(this.addInput(this.boneValue[lang], lang));
+          if(this.boneValue!==null)
+          {
+            languageWrapper.appendChild(this.addInput(this.boneValue[lang], lang));
+          }
+          else
+          {
+            languageWrapper.appendChild(this.addInput(null, lang));
+          }
+
           languageWrapper.appendChild(this.addErrorContainer(lang));
 
 

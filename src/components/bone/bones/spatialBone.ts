@@ -6,6 +6,10 @@ export class SpatialBone extends RawBone {
 
   getEditor(value: [number,number], boneName: string,lang:any=null): HTMLElement {
     const spatialWrapper = document.createElement("div");
+    if(value===null)
+    {
+      value=["",""];
+    }
     const lat = value[0];
     const lng = value[1];
 
