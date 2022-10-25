@@ -1,4 +1,4 @@
-export interface boneError {
+export interface BoneError {
   severity: number;
   fieldPath: string[];
   errorMessage: string;
@@ -74,4 +74,8 @@ export interface FileSkelValues extends  SkelValues{
   width:number;
   height:number;
 
+}
+export  interface UploadUrlResponse{
+  uploadKey:string;
+  uploadUrl:string;
 }

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import SlBone from "./bone";
 import {StringBone} from "./bones/stringBone";
 import {NumericBone} from "./bones/numericBone";
@@ -6,7 +7,7 @@ import {BooleanBone} from "./bones/booleanBone";
 import {SelectBone} from "./bones/selectBone";
 import {RelationalBone} from "./bones/relationalBone";
 import {RecordBone} from "./bones/recordBone";
-import {BoneStructure, RawBone} from "./bones/rawBone";
+import {RawBone} from "./bones/rawBone";
 import {FileBone} from "./bones/fileBone";
 import {SpatialBone} from "./bones/spatialBone";
 import {PasswordBone} from "./bones/passwordBone";
@@ -14,6 +15,7 @@ import {ColorBone} from "./bones/colorBone";
 import {EmailBone} from "./bones/emailBone";
 import {KeyBone} from "./bones/keyBone";
 import {TextBone} from "./bones/textBone";
+import {BoneStructure} from "./interfaces";
 
 
 export class BoneEditRenderer {

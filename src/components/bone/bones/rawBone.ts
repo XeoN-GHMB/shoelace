@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {html, TemplateResult} from "lit";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
 import {formatstring, createPath, getPath, translate} from "../utils";
@@ -747,7 +748,7 @@ export class RawBone {
     })
   }
 
-  reWriteBoneValue(): object {
+  reWriteBoneValue(): Record<string, BoneValue> {
     const obj = {};
     this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: HTMLElement) => {
       if (inputElement.name !== undefined) {

@@ -1,7 +1,8 @@
-import {FileSkelValues} from "../interfaces";
+// @ts-nocheck
+import {FileSkelValues, UploadUrlResponse} from "../interfaces";
 import {html, TemplateResult} from "lit";
 import {formatstring, getSkey, apiurl, createPath, getPath, translate} from "../utils";
-import {RawBone} from "./rawBone";
+import {BoneValue, RawBone} from "./rawBone";
 
 export class FileBone extends RawBone {
 
@@ -28,7 +29,7 @@ export class FileBone extends RawBone {
     return super.view(appendImage);
   }
 
-  getEditor(value: string|object, boneName: string, lang: any = null): HTMLElement {
+  getEditor(value: string | Record<string, FileSkelValues>, boneName: string, lang: null|string = null): HTMLElement {
 
 
     /**
@@ -39,14 +40,17 @@ export class FileBone extends RawBone {
      *
      *
      */
-    console.log("init filebone with", value, boneName);
+    let key = "";
     if (typeof (value) === "object" && value !== null) {
       if ("dest" in value) {
-        const key:string = value["dest"]["key"];
+        key = value["dest"]["key"];
         this.mainInstance.relationalCache[key] = value;
-        value = key;
+
       }
+    } else {
+      key = value;
     }
+
     const fileContainer = document.createElement("div");
     fileContainer.classList.add("file-container")
     fileContainer.dataset.boneName = boneName;
@@ -81,7 +85,7 @@ export class FileBone extends RawBone {
     let filter: string;
 
     if (this.boneStructure["validMimeTypes"] !== null && this.boneStructure["validMimeTypes"] !== undefined) {
-      if (this.boneStructure["validMimeTypes"].indexOf("*") == -1) {
+      if (this.boneStructure["validMimeTypes"].indexOf("*") === -1) {
         filter = this.boneStructure["validMimeTypes"].join(",")
       } else {
         filter = "*";
@@ -97,20 +101,19 @@ export class FileBone extends RawBone {
     shadowKey.hidden = true;
     shadowKey.name = boneName;
     if (value !== null) {
-      shadowKey.value = value;
+      shadowKey.value = key.toString();
     }
 
     shadowFile.multiple = this.boneStructure["multiple"];
-    const path = lang === null ? this.boneName : this.boneName + "." + lang;
+    const path = lang === null ? this.boneName : `${this.boneName}.${lang.toString()}`;
 
     shadowFile.addEventListener("change", async (e) => {
 
-      const fileInfos:FileList | null = (<HTMLInputElement>e.target).files;
-      if(fileInfos===null)
-      {
+      const fileInfos: FileList | null = (<HTMLInputElement>e.target).files;
+      if (fileInfos === null) {
         return;
       }
-      const fileKeys:string[] = [];
+      const fileKeys: string[] = [];
       fileNameInput.hidden = true;
       progressBar.hidden = false;
 
@@ -124,7 +127,7 @@ export class FileBone extends RawBone {
         }
         progressBar.textContent = `${progressBar.value}%`;
 
-        const fileData:FileSkelValues = await this.fileUpload(fileInfos[i])
+        const fileData: FileSkelValues = await this.fileUpload(fileInfos[i])
         this.mainInstance.relationalCache[fileData["key"]] = {"dest": fileData}
 
         if (!this.boneStructure["multiple"]) {
@@ -140,12 +143,12 @@ export class FileBone extends RawBone {
       }
       if (this.boneStructure["multiple"]) {
         shadowKey.value = fileKeys.shift();
-        let boneValues:object = this.reWriteBoneValue();
-        boneValues = getPath(boneValues, path);
-        boneValues = boneValues.concat(fileKeys);
+        const boneValues: Record<string, BoneValue> = this.reWriteBoneValue();
+        let boneValues_array: BoneValue[]  = getPath(boneValues, path);
+        boneValues_array = boneValues_array.concat(fileKeys);
         const obj = {};
-        createPath(obj, path, boneValues);
-        const mulWrapper: HTMLElement|null = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+        createPath(obj, path, boneValues_array);
+        const mulWrapper: HTMLElement | null = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
 
         if (mulWrapper !== null) {
           const element = this.createMultipleWrapper(getPath(obj, path), lang)[0];
@@ -184,16 +187,21 @@ export class FileBone extends RawBone {
     return fileContainer;
   }
 
-  fileUpload(file: File):Promise<FileSkelValues> {
+  fileUpload(file: File): Promise<FileSkelValues> {
     return new Promise((resolve, reject) => {
-      FileBone.getUploadUrl(file).then(uploadData => {
+      FileBone.getUploadUrl(file).then((uploadData: UploadUrlResponse) => {
         FileBone.uploadFile(file, uploadData).then(_ => {
           FileBone.addFile(uploadData).then((fileData: Record<string, FileSkelValues>) => {
-
             resolve(fileData["values"]);
-          })
-        })
-      })
+          }).catch((err) => {
+            reject(err)
+          });
+        }).catch((err) => {
+          reject(err)
+        });
+      }).catch((err) => {
+        reject(err)
+      });
     });
   }
 
@@ -202,10 +210,10 @@ export class FileBone extends RawBone {
     return new Promise((resolve, reject) => {
       getSkey().then(skey => {
 
-        const data: object = {
+        const data: Record<string, string> = {
           "fileName": file.name,
           "mimeType": file.type,
-          "size": file.size,
+          "size": file.size.toString(),
           "skey": skey,
         }
         fetch(`${apiurl}/json/file/getUploadURL`, {
@@ -214,15 +222,19 @@ export class FileBone extends RawBone {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
           body: new URLSearchParams(data).toString()
-        }).then(response => response.json()).then((data) => resolve(data))
+        }).then(response => response.json())
+          .then((uploadValues: Record<string, any>) => resolve(uploadValues["values"]))
+          .catch((err) => {
+            reject(err)
+          })
       })
     });
   }
 
-  static uploadFile(file: File, uploadData: any) {
+  static uploadFile(file: File, uploadData: UploadUrlResponse) {
 
     return new Promise((resolve, reject) => {
-      fetch(uploadData["values"]["uploadUrl"], {
+      fetch(uploadData["uploadUrl"], {
         method: "POST",
         body: file,
         mode: "no-cors",
@@ -234,12 +246,12 @@ export class FileBone extends RawBone {
 
   }
 
-  static addFile(uploadData: any) {
+  static addFile(uploadData: UploadUrlResponse) {
 
 
     return new Promise((resolve, reject) => {
-      const currentUpload: Record<string,any> = {};
-      currentUpload["key"] = uploadData["values"]["uploadKey"];
+      const currentUpload: Record<string, any> = {};
+      currentUpload["key"] = uploadData["uploadKey"];
       currentUpload["node"] = undefined;
       currentUpload["skelType"] = "leaf";
       getSkey().then(skey => {
@@ -253,6 +265,8 @@ export class FileBone extends RawBone {
           body: new URLSearchParams(currentUpload).toString(),
         }).then(response => response.json()).then((data) => {
           resolve(data);
+        }).catch((err) => {
+          reject(err)
         });
       });
     });

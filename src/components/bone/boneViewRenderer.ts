@@ -1,10 +1,8 @@
-import {html} from "lit";
-import {unsafeHTML} from "lit/directives/unsafe-html.js";
+// @ts-nocheck
 import {RawBone} from "./bones/rawBone";
 import {StringBone} from "./bones/stringBone";
 import {NumericBone} from "./bones/numericBone";
 import {SelectBone} from "./bones/selectBone";
-import Da from "../../translations/da";
 import {DateBone} from "./bones/dateBone";
 import {RecordBone} from "./bones/recordBone";
 import {RelationalBone} from "./bones/relationalBone";

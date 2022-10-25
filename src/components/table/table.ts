@@ -10,8 +10,7 @@ import {boneFormatter} from "./cellRenderer.ts";
 import {boneEditor, updateData} from "./cellEditorRenderer.ts";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
-import {emit} from "../../internal/event";
-import fa from "../../translations/fa";
+
 
 /**
  * @since 2.0

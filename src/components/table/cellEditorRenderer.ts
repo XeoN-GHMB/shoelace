@@ -1,6 +1,6 @@
-//import {formatstring} from "./cellRenderer";
-//const apiurl=window.location.origin;
+// @ts-ignore
 const apiurl = "http://localhost:8080";
+
 
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, editParams: any): any {
   const boneStructure = editParams[0];
@@ -11,15 +11,7 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
 
   cell.getElement().style.height = "auto"
   cell.getElement().style.overflow = "visible";
-  /*
-  //cell.getRow().getElement().style.overflow = "visible";
-  if (boneStructure["type"] === "select" || boneStructure["type"].startsWith("relational")) {
-    cell._cell.table.element.style.overflow = "visible";
-    cell._cell.table.rowManager.element.style.overflow = "visible";
 
-  }
-
-  */
   const bone = document.createElement("sl-bone");
   bone.boneStructure = boneStructure;
   bone.boneValue = cell.getValue();

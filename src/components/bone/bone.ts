@@ -1,4 +1,4 @@
-import {LitElement, html} from 'lit';
+// @ts-nocheck
 import {customElement, property} from 'lit/decorators.js';
 import {emit} from '../../internal/event';
 import {watchProps} from "../../internal/watchProps";
@@ -7,7 +7,9 @@ import {BoneEditRenderer} from "./boneEditRenderer";
 import {BoneViewRenderer} from "./boneViewRenderer";
 import SlDetails from "../details/details";
 import ShoelaceElement from "../../internal/shoelace-element";
-import {boneError} from "./interfaces";
+import {BoneError, BoneStructure} from "./interfaces";
+import {BoneValue} from "./bones/rawBone";
+import {html} from "lit";
 
 
 
@@ -32,9 +34,9 @@ export default class SlBone extends ShoelaceElement {
 
 
   static styles = styles;
-  bone: HTMLFormElement = null;
+  bone: HTMLFormElement;
   initBoneValue: any;
-  internboneValue: any;
+  internboneValue: Record<string, BoneValue>;
   relationalCache:Record<string, object> = {};
   previousBoneValues: any = {};
   /** set boneStructure */
@@ -54,8 +56,8 @@ export default class SlBone extends ShoelaceElement {
 
   /** set rendersaveButton */
   @property({type: Boolean, reflect: true}) rendersaveButton = false;
-  /** set boneValue */
-  @property({type: Array, attribute: false}) errors: boneError;
+  /** set boneError */
+  @property() errors: BoneError[];
   /** set boneValue */
   @property({type: Boolean, attribute: false}) inTable = false;
 
@@ -64,27 +66,27 @@ export default class SlBone extends ShoelaceElement {
     return this._getBoneValue();
   }
 
-  _getBoneValue() {
+  _getBoneValue():BoneValue {
     return this.internboneValue[this.boneName];
   }
 
   toFormValue() {
-    function rewriteData(val, key = null) {
-      let ret = []
+    function rewriteData(val:any, key:string|null = null):any[] {
+      const ret = []
       if (Array.isArray(val)) {
         if (Object.values(val).filter(c => c === Object(c)).length > 0) {
           for (const [i, v] of val.entries()) {
-            ret.push(rewriteData(v, key + "." + i))
+            ret.push(rewriteData(v, `${key}.${i}`))
           }
         } else {
-          for (const [i, v] of val.entries()) {
+          for (const [_, v] of val.entries()) {
             ret.push(rewriteData(v, key))
           }
         }
       } else if (val === Object(val)) {
         for (const [k, v] of Object.entries(val)) {
           if (key) {
-            ret.push(rewriteData(v, key + "." + k))
+            ret.push(rewriteData(v, `${key}.${k}`))
           } else {
             ret.push(rewriteData(v, k))
           }
@@ -103,8 +105,6 @@ export default class SlBone extends ShoelaceElement {
     let value = rewriteData(this.internboneValue[this.boneName], this.boneName)
     value = value.flat(10)
     return value;
-
-
   }
 
   toFormData() {
@@ -112,7 +112,7 @@ export default class SlBone extends ShoelaceElement {
     const formData: FormData = new FormData();
     for (const data of value) {
       for (const [k, v] of Object.entries(data)) {
-        formData.append(k, v);
+        formData.append(k, v.toString());
       }
     }
 
@@ -148,14 +148,12 @@ export default class SlBone extends ShoelaceElement {
 
   }
 
-  convertboneStructure(boneStructure: any) {
+  convertboneStructure(boneStructure: BoneStructure) {
     const isRelational = boneStructure["type"].startsWith("relational")
     const isRecord = boneStructure["type"].startsWith("record")
     if (isRecord) {
       const newboneStructure = {}
       if (Array.isArray(boneStructure["using"])) {
-
-
         for (let i = 0; i < boneStructure["using"].length; i++) {
           for (let j = 0; j < boneStructure["using"][i].length; j += 2) {
 
@@ -229,7 +227,7 @@ export default class SlBone extends ShoelaceElement {
       return;
     }
 
-    this.bone.querySelectorAll(".error-container").forEach((element) => {
+    this.bone.querySelectorAll(".error-container").forEach((element:HTMLElement) => {
       if (this.errors.length === 0) {
         element.style.display = "none";
       }

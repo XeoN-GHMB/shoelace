@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { BoneValue, RawBone} from "./rawBone";
 import {formatstring} from "../utils";
 import {TemplateResult} from "lit";

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import translationtable from "./translations/init"
 import {BoneStructure, BoneValue} from "./bones/rawBone";
 export function formatstring(data:BoneValue, boneStructure: BoneStructure, lang = null, ignoreLang = false):BoneValue {
@@ -180,7 +181,7 @@ export function createPath(obj: object, path: string | string[], value: any | nu
 
 }
 
-export function getPath(obj: object, path: string | string[]): object | undefined {
+export function getPath(obj: object, path: string | string[]): object | undefined |BoneValue|BoneValue[] {
   path = typeof path === 'string' ? path.split('.') : path;
 
   let current: object = JSON.parse(JSON.stringify(obj));//Depth Copy to lose Reference;
@@ -230,9 +231,9 @@ export function escapeString(value:BoneValue): string | string[] {
 export const apiurl = "http://localhost:8080";
 
 export function getSkey() {
-  return new Promise((resolve, reject) => {
+  return new Promise<string>((resolve, reject) => {
 
-    fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
+    fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey:string) => {
       resolve(skey)
     }).catch((reason) => {
       reject(reason)

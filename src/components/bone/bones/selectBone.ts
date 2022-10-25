@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {RawBone} from "./rawBone";
 import SlSelect from "../../select/select";
 

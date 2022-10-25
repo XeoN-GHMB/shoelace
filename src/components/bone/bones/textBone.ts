@@ -1,17 +1,13 @@
+// @ts-nocheck
 import {RawBone} from "./rawBone";
-
 import tinymce, {AstNode, Editor} from "tinymce";
-
 import theme from "tinymce/themes/silver/theme.js";
 import models from "tinymce/models/dom/";
 import icons from "tinymce/icons/default/";
-
-
 import table from "tinymce/plugins/table";
 import code from "tinymce/plugins/code";
 import image from "tinymce/plugins/image";
-
-import {apiurl, createPath} from "../utils";
+import { createPath} from "../utils";
 import {FileBone} from "./fileBone";
 
 
@@ -65,7 +61,6 @@ export class TextBone extends RawBone {
 
             editor.setContent(value);
           });
-          console.log("?? ",editor)
           editor.on('Change', (e) => {
             createPath(self.mainInstance.internboneValue, boneName, editor.getContent());
             console.log( "get content",editor.getContent())

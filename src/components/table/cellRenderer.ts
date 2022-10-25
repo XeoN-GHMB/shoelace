@@ -1,3 +1,4 @@
+// @ts-nocheck
 export function boneFormatter(cell: any, boneStructure: object, onRendered: any): any {
   let boneValue;
   if (typeof (cell.getValue()) === "object") {
