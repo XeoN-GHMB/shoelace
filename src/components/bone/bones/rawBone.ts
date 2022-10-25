@@ -13,7 +13,7 @@ import SlAvatar from "../../avatar/avatar";
 import SlBone from "../bone";
 import {BoneStructure} from "../interfaces";
 
-export type BoneValue=string|number|boolean|any[]|Record<string, any>;
+export type BoneValue = string | number | boolean | any[] | Record<string, any>;
 
 
 export class RawBone {
@@ -35,7 +35,7 @@ export class RawBone {
   movePath = null;
   moveLang = null;
 
-  idx = null;
+  idx: number | Record<string, number> | null = null;
 
   constructor(boneName: string, boneValue: BoneValue, boneStructure: BoneStructure, mainInstance = null) {
 
@@ -45,7 +45,7 @@ export class RawBone {
     this.mainInstance = mainInstance;
   }
 
-  view(formater: Function=formatstring) {
+  view(formater: Function = formatstring) {
     if (this.boneValue === null) {
       return "-";
     }
@@ -83,7 +83,7 @@ export class RawBone {
   }
 
 
-  getTabs():TemplateResult[] {
+  getTabs(): TemplateResult[] {
     const tabs: TemplateResult[] = [];
     for (const lang of this.boneStructure["languages"]) {
 
@@ -94,7 +94,7 @@ export class RawBone {
   }
 
 
-  getTabPannels(formater: Function = formatstring):TemplateResult[] {
+  getTabPannels(formater: Function = formatstring): TemplateResult[] {
     //We are when languages not null
     let tabpannels: TemplateResult[] = [];
     if (this.boneStructure["format"] === undefined) {
@@ -135,7 +135,8 @@ export class RawBone {
 
         for (const lang of this.boneStructure["languages"]) {
           if (this.boneValue[lang] === null) {
-            tabpannels.push(html`<sl-tab-panel name="${lang}">-</sl-tab-panel>`);
+            tabpannels.push(html`
+              <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
           } else {
             tabpannels.push(html`
               <sl-tab-panel name="${lang}">${formater(this.boneValue, this.boneStructure, lang)}</sl-tab-panel>`);
@@ -148,9 +149,9 @@ export class RawBone {
 
   }
 
-  edit(fromRecord: boolean = false, depth: number): HTMLElement {
+  edit(fromRecord = false, depth: number | null = null): HTMLElement {
 
-    if (depth !== undefined) {
+    if (depth !== null) {
       this.depth = depth;
     }
 
@@ -179,20 +180,19 @@ export class RawBone {
       const boneNameLabel = document.createElement("div");
       boneNameLabel.innerText = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
       boneNameLabel.classList.add("bone-name")
-      if(this.boneStructure["params"]["tooltip"])
-      {
-          const tooltip:SlTooltip= document.createElement("sl-tooltip");
-          const avatar:SlAvatar= document.createElement("sl-avatar");
-          const icon:SlIcon= document.createElement("sl-icon");
-          avatar.classList.add("tooltip-bubble");
-          icon.setAttribute("name", "question");
-          icon.setAttribute("slot", "icon");
-          icon.classList.add("tooltip-icon");
-          avatar.appendChild(icon);
-          tooltip.content=this.boneStructure["params"]["tooltip"];
-          tooltip.classList.add("tooltip");
-          tooltip.appendChild(avatar);
-          boneNameLabel.appendChild(tooltip);
+      if (this.boneStructure["params"]["tooltip"]) {
+        const tooltip: SlTooltip = document.createElement("sl-tooltip");
+        const avatar: SlAvatar = document.createElement("sl-avatar");
+        const icon: SlIcon = document.createElement("sl-icon");
+        avatar.classList.add("tooltip-bubble");
+        icon.setAttribute("name", "question");
+        icon.setAttribute("slot", "icon");
+        icon.classList.add("tooltip-icon");
+        avatar.appendChild(icon);
+        tooltip.content = this.boneStructure["params"]["tooltip"];
+        tooltip.classList.add("tooltip");
+        tooltip.appendChild(avatar);
+        boneNameLabel.appendChild(tooltip);
       }
       wrapper.appendChild(boneNameLabel);
     }
@@ -226,7 +226,7 @@ export class RawBone {
           if (this.boneValue === null) continue;
           if (this.boneValue[lang] === undefined) continue;
           if (this.boneValue[lang] === null) continue;
-          let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue[lang], lang);
+          const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue[lang], lang);
           if (this.idx === null) {
             this.idx = {};
           }
@@ -293,12 +293,9 @@ export class RawBone {
           //Lang , no multipler
           const languageWrapper = document.createElement("div");
           languageWrapper.classList.add("language-wrapper");
-          if(this.boneValue!==null)
-          {
+          if (this.boneValue !== null) {
             languageWrapper.appendChild(this.addInput(this.boneValue[lang], lang));
-          }
-          else
-          {
+          } else {
             languageWrapper.appendChild(this.addInput(null, lang));
           }
 
@@ -335,7 +332,7 @@ export class RawBone {
         let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
         this.idx = idx;
         addButton.addEventListener("click", () => {
-          const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + this.boneName + '"]');
+          const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.boneName}']`);
           mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, this.idx));
           mulWrapper.appendChild(this.addErrorContainer(null, this.idx));
           this.idx += 1;
@@ -387,7 +384,7 @@ export class RawBone {
       } else {
         //No Lang, No Multiple
         console.log("?")
-        let inputElement:HTMLElement = this.getEditor(this.boneValue, this.boneName);
+        let inputElement: HTMLElement = this.getEditor(this.boneValue, this.boneName);
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
 
@@ -421,7 +418,7 @@ export class RawBone {
     const path = lang === null ? this.boneName : this.boneName + "." + lang
     multipleWrapper.dataset.multiplebone = path;
 
-    let idx: number = 0;
+    let idx = 0;
     for (const [i, tmpValue] of value.entries()) {
 
       multipleWrapper.appendChild(this.addInput(tmpValue, lang, i));
@@ -528,14 +525,14 @@ export class RawBone {
         createPath(obj, newboneName, null, true);
 
 
-        const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+        const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
         if (mulWrapper !== null) {
           let [element, index] = this.createMultipleWrapper(getPath(obj, path), lang)
           mulWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange("deleteEntry");
         }
-        const undoButton = this.mainInstance.bone.querySelector('[data-name="' + "undoBtn." + path + '"]');
+        const undoButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
         undoButton.style.display = "";
 
         //this.mainInstance.boneValue = obj[this.mainInstance.boneName];
@@ -675,7 +672,7 @@ export class RawBone {
           this.mainInstance.internboneValue = obj;
           this.mainInstance.handleChange();
 
-          const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + this.movePath + '"]');
+          const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.movePath}']`);
           if (mulWrapper !== null) {
             let [element, index] = this.createMultipleWrapper(getPath(obj, this.movePath), this.moveLang)
             mulWrapper.replaceWith(element);
@@ -787,13 +784,13 @@ export class RawBone {
 
   undo(lang = null) {
     const path = lang === null ? this.boneName : this.boneName + "." + lang
-    const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+    const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
 
     const obj = this.mainInstance.previousBoneValues[path].pop();
     let [element, index] = this.createMultipleWrapper(obj, lang);
     mulWrapper.replaceWith(element);
     this.mainInstance.internboneValue = this.reWriteBoneValue();
-    const undoButton = this.mainInstance.bone.querySelector('[data-name="' + "undoBtn." + path + '"]');
+    const undoButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
     if (this.mainInstance.previousBoneValues[path].length === 0) {
       undoButton.style.display = "none";
     }
@@ -802,12 +799,12 @@ export class RawBone {
 
   clearMultipleWrapper(lang: any = null) {
     const path = lang === null ? this.boneName : this.boneName + "." + lang
-    const mulWrapper = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+    const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
     this.saveState(lang);
     mulWrapper.innerHTML = "";//Clear Wrapper;
     this.mainInstance.internboneValue = this.reWriteBoneValue();
 
-    const undoButton = this.mainInstance.bone.querySelector('[data-name="' + "undoBtn." + path + '"]');
+    const undoButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
 
     undoButton.style.display = "";
     if (lang == null) {

@@ -79,3 +79,8 @@ export  interface UploadUrlResponse{
   uploadKey:string;
   uploadUrl:string;
 }
+
+export interface ListResponse
+{
+  action:string;
+}

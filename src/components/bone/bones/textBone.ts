@@ -1,13 +1,11 @@
 // @ts-nocheck
+/**
+ * Todo/problem/fixme ??
+ * the problem is tiny mce load the css from a server
+ */
 import {RawBone} from "./rawBone";
 import tinymce, {AstNode, Editor} from "tinymce";
-import theme from "tinymce/themes/silver/theme.js";
-import models from "tinymce/models/dom/";
-import icons from "tinymce/icons/default/";
-import table from "tinymce/plugins/table";
-import code from "tinymce/plugins/code";
-import image from "tinymce/plugins/image";
-import { createPath} from "../utils";
+import {apiurl, createPath} from "../utils";
 import {FileBone} from "./fileBone";
 
 
@@ -16,30 +14,23 @@ import {FileSkelValues} from "../interfaces";
 export class TextBone extends RawBone {
   getEditor(value: any, boneName: string, lang: any = null): HTMLElement {
     const ele = document.createElement("div");
-    let _;
-    _ = theme;
-    _ = models;
-    _ = icons;
-
-    _ = table;
-    _ = code;
-    _ = image;
 
 
     const self = this;
     setTimeout(function () {
       tinymce.init({
         target: ele,
+       base_url:`https://cdn.jsdelivr.net/npm/tinymce@6.2.0/`,
+        suffix:".min",
         width: "100%",
         menubar: false,
         relative_urls: false,
-        skin: false,//we load the css local
-        content_css:false,
+
         toolbar: 'undo redo | blocks | bold italic backcolor | '
           + 'alignleft aligncenter alignright alignjustify | '
-          + 'table code advcode',
+          + 'table code preview',
 
-        plugins: ["table", "code","advcode"],
+        plugins: ["table", "code", "preview"],
         formats: {bold: {inline: 'span', 'classes': 'viur-txt-bold'}},
         valid_elements: self.getValidTagString(),
         valid_classes: {"*":self.boneStructure["validHtml"]["validClasses"].join(" ")},
@@ -70,6 +61,8 @@ export class TextBone extends RawBone {
         }
 
 
+      }).catch((err)=>{
+        console.log("err",err)
       })
     }, 1) //wait 1 tick for init;
 
@@ -134,7 +127,7 @@ export class TextBone extends RawBone {
     }
 
   }
-//todo BlobInfo ist not been exported by tinymce :< Write own interface
+//todo BlobInfo ist not been exported by tinymce :( Write own interface
   uploadHandler(blobInfo, progress) {
     //Todo error handling
     return new Promise((resolve, reject) => {

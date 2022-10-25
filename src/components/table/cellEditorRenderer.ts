@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-nocheck
 const apiurl = "http://localhost:8080";
 
 
