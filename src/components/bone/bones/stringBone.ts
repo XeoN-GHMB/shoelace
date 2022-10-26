@@ -1,6 +1,6 @@
 // @ts-nocheck
 import {RawBone} from "./rawBone";
 
-export class StringBone extends RawBone{
+export class StringBone extends RawBone {
 
 }

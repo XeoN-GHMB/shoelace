@@ -12,8 +12,13 @@ import SlTooltip from "../../tooltip/tooltip";
 import SlAvatar from "../../avatar/avatar";
 import SlBone from "../bone";
 import {BoneStructure} from "../interfaces";
+import SlSelect from "../../select/select";
+import SlColorPicker from "../../color-picker/color-picker";
+import SlButton from "../../button/button";
 
-export type BoneValue = string | number | boolean | any[] | Record<string, any>;
+export type  LangBoneValue = Record<string, BoneValue> | Record<string, BoneValue[]>;
+export type  MultiBoneValue = BoneValue[];
+export type BoneValue = string | number | boolean | null | LangBoneValue | MultiBoneValue;// todo bone ? what can all happend?
 
 
 export class RawBone {
@@ -24,16 +29,16 @@ export class RawBone {
   depth = 0;
   //Move Element
   move = false;
-  moveElement: any;
+  moveElement: HTMLElement;
   startHeight = 0;
   startTop = 0;
-  fakeElement: any;
-  inputsAbsolutePostions = [];
+  fakeElement: HTMLElement;
+  inputsAbsolutePostions: any[] = [];
   absolutePostionSet = false;
   swapElements = [null, null];
   moveElementSrc: HTMLElement;
-  movePath = null;
-  moveLang = null;
+  movePath: string | null = null;
+  moveLang: string | null = null;
 
   idx: number | Record<string, number> | null = null;
 
@@ -45,7 +50,7 @@ export class RawBone {
     this.mainInstance = mainInstance;
   }
 
-  view(formater: Function = formatstring) {
+  view(formater: () => BoneValue = formatstring) {
     if (this.boneValue === null) {
       return "-";
     }
@@ -94,16 +99,16 @@ export class RawBone {
   }
 
 
-  getTabPannels(formater: Function = formatstring): TemplateResult[] {
+  getTabPannels(formater: () => BoneValue = formatstring): TemplateResult[] {
     //We are when languages not null
-    let tabpannels: TemplateResult[] = [];
+    const tabpanels: TemplateResult[] = [];
     if (this.boneStructure["format"] === undefined) {
       if (this.boneStructure["multiple"]) {
         for (const lang of this.boneStructure["languages"]) {
           if (!Array.isArray(this.boneValue[lang])) {
             this.boneValue[lang] = [this.boneValue[lang]];
           }
-          tabpannels.push(html`
+          tabpanels.push(html`
             <sl-tab-panel name="${lang}"> ${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}
             </sl-tab-panel>`);
         }
@@ -111,10 +116,10 @@ export class RawBone {
 
         for (const lang of this.boneStructure["languages"]) {
           if (this.boneValue[lang] === null) {
-            tabpannels.push(html`
+            tabpanels.push(html`
               <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
           } else {
-            tabpannels.push(html`
+            tabpanels.push(html`
               <sl-tab-panel name="${lang}">${this.boneValue[lang].toString()}</sl-tab-panel>`);
           }
 
@@ -124,28 +129,27 @@ export class RawBone {
       if (this.boneStructure["multiple"]) {
         for (const lang of this.boneStructure["languages"]) {
 
-          console.log("call format", this.boneValue,)
           this.boneValue[lang] = formater(this.boneValue, this.boneStructure, lang);
 
 
-          tabpannels.push(html`
+          tabpanels.push(html`
             <sl-tab-panel name="${lang}">${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
         }
       } else {
 
         for (const lang of this.boneStructure["languages"]) {
           if (this.boneValue[lang] === null) {
-            tabpannels.push(html`
+            tabpanels.push(html`
               <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
           } else {
-            tabpannels.push(html`
+            tabpanels.push(html`
               <sl-tab-panel name="${lang}">${formater(this.boneValue, this.boneStructure, lang)}</sl-tab-panel>`);
           }
 
         }
       }
     }
-    return tabpannels;
+    return tabpanels;
 
   }
 
@@ -411,11 +415,11 @@ export class RawBone {
     return wrapper;
   }
 
-  createMultipleWrapper(value: any, lang: any = null): [HTMLElement, number] {
+  createMultipleWrapper(value: any, lang: string | null = null): [HTMLElement, number] {
 
     const multipleWrapper = document.createElement("div");
     multipleWrapper.classList.add("multiple-wrapper");
-    const path = lang === null ? this.boneName : this.boneName + "." + lang
+    const path = lang === null ? this.boneName : `${this.boneName}.${lang}`;
     multipleWrapper.dataset.multiplebone = path;
 
     let idx = 0;
@@ -435,9 +439,9 @@ export class RawBone {
 
   }
 
-  getEditor(value: any, boneName: string, lang: any = null) {
+  getEditor(value: BoneValue, boneName: string, lang: string | null = null) {
 
-    const inputElement = document.createElement("sl-input");
+    const inputElement: SlInput = document.createElement("sl-input");
 
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
@@ -491,16 +495,16 @@ export class RawBone {
   }
 
   addInput(value: any, lang: string, index = null) {
-    const inputWrapper = document.createElement("div");
+    const inputWrapper: HTMLDivElement = document.createElement("div");
     const newboneName = this.generateboneName(lang, index);
-    const path = lang === null ? this.boneName : this.boneName + "." + lang
+    const path = lang === null ? this.boneName : `${this.boneName}.${lang}`;
 
     inputWrapper.classList.add("multi-input");
     inputWrapper.dataset.boneName = newboneName;
 
     let deleteButton;
     let draggable
-    let inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
+    const inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
     inputElement.dataset.boneName = newboneName;
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
@@ -521,7 +525,7 @@ export class RawBone {
       deleteButton.addEventListener("click", () => {
         this.saveState(lang);
 
-        let obj = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
+        const obj: BoneValue = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
         createPath(obj, newboneName, null, true);
 
 
@@ -532,7 +536,7 @@ export class RawBone {
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange("deleteEntry");
         }
-        const undoButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
+        const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
         undoButton.style.display = "";
 
         //this.mainInstance.boneValue = obj[this.mainInstance.boneName];
@@ -547,9 +551,9 @@ export class RawBone {
         if (!this.absolutePostionSet) {
           this.absolutePostionSet = true;
 
-          for (const _input of this.inputsAbsolutePostions) {
+          for (const _input: Array<HTMLElement, Array<number, number>> of this.inputsAbsolutePostions) {
 
-            const elemRect = _input[0].getBoundingClientRect();
+            const elemRect: DOMRect = _input[0].getBoundingClientRect();
             const offsetTop = elemRect.top;
             const offsetBottom = elemRect.bottom;
             if (_input.length === 2) {
@@ -569,8 +573,8 @@ export class RawBone {
         this.moveElement = inputWrapper.cloneNode(true);
         this.moveElement.classList.add("is-dragged");
         this.fakeElement = document.createElement("div");
-        this.fakeElement.style.height = inputWrapper.clientHeight + "px";
-        this.fakeElement.style.width = inputWrapper.clientWidth + "px";
+        this.fakeElement.style.height = `${inputWrapper.clientHeight}px`;
+        this.fakeElement.style.width = `${inputWrapper.clientWidth}px`;
         this.fakeElement.classList.add("fake-drag-element");
         this.startHeight = inputElement.clientHeight;
         this.startTop = inputElement.getBoundingClientRect().top
@@ -601,7 +605,7 @@ export class RawBone {
     return inputWrapper;
   }
 
-  generateboneName(lang: any = null, index: any = null) {
+  generateboneName(lang: string | null = null, index: number | null = null) {
     let newboneName = this.boneName;
     if (lang !== null) {
       newboneName += `.${lang}`;
@@ -614,15 +618,15 @@ export class RawBone {
 
   addErrorContainer(lang: string, index = null): SlDetails {
     const errorContainer: SlAlert = document.createElement("sl-alert");
-    errorContainer.dataset.name = this.generateboneName(lang, index) + "_errorcontainer";
+    errorContainer.dataset.name = `${this.generateboneName(lang, index)}_errorcontainer`;
     errorContainer.style.display = "none";
     const icon: SlIcon = document.createElement("sl-icon");
     icon.setAttribute("name", "exclamation-triangle");
     icon.setAttribute("slot", "icon");
     errorContainer.appendChild(icon);
-    this.div = document.createElement("div");
-    this.div.classList.add("error-msg");
-    errorContainer.appendChild(this.div);
+    const errordiv: HTMLDivElement = document.createElement("div");
+    errordiv.classList.add("error-msg");
+    errorContainer.appendChild(errordiv);
     errorContainer.summary = "Errors";
     errorContainer.classList.add("error-container");
     return errorContainer;
@@ -636,9 +640,9 @@ export class RawBone {
 
   addScroll() {
     document.addEventListener("scroll", () => {
-      for (const _input of this.inputsAbsolutePostions) {
+      for (const _input: Array<HTMLElement, Array<number, number>> of this.inputsAbsolutePostions) {
 
-        const elemRect = _input[0].getBoundingClientRect();
+        const elemRect: DOMRect = _input[0].getBoundingClientRect();
         const offsetTop = elemRect.top;
         const offsetBottom = elemRect.bottom;
         if (_input.length === 2) {
@@ -664,7 +668,7 @@ export class RawBone {
         console.log(this.swapElements)
         if (this.swapElements[0] !== null && this.swapElements[1] !== null) {
           const obj = this.reWriteBoneValue();
-          const _value = getPath(obj, this.swapElements[0]);
+          const _value: BoneValue = getPath(obj, this.swapElements[0]);
 
           createPath(obj, this.swapElements[0], null, true,);
           createPath(obj, this.swapElements[1], _value, false, true);
@@ -676,6 +680,7 @@ export class RawBone {
           if (mulWrapper !== null) {
             let [element, index] = this.createMultipleWrapper(getPath(obj, this.movePath), this.moveLang)
             mulWrapper.replaceWith(element);
+            this.absolutePostionSet = false;
 
           }
 
@@ -709,31 +714,34 @@ export class RawBone {
         //this.moveElement.style.top = yPos  + "px";
         const y = e.clientY;
 
-        for (const tmpPos of this.inputsAbsolutePostions) {
+        for (const absolutePostions: Array<HTMLElement, number[]> of this.inputsAbsolutePostions) {
+          const tmpElement: HTMLElement = absolutePostions[0];
+          const tmpPos: number[] = absolutePostions[1];
 
-          if (y > tmpPos[1][0])//top
+          if (y > tmpPos[0])//top
           {
-            if (y < tmpPos[1][1])//bottom
+            if (y < tmpPos[1])//bottom
             {
-              if (this.moveElementSrc === tmpPos[0]) {
+              if (this.moveElementSrc === tmpElement) {
                 break;
               }
-              if (y - tmpPos[1][0] < (tmpPos[1][1] - tmpPos[1][0]) / 2) {
-                if (elemetBefor !== tmpPos[0]) {
-                  elemetBefor = tmpPos[0];
-                  const parent = tmpPos[0].parentElement;
+              if (y - tmpPos[0] < (tmpPos[1] - tmpPos[0]) / 2) {
+                if (elemetBefor !== tmpElement) {
+                  elemetBefor = tmpElement;
+                  const parent = tmpElement.parentElement;
                   if (parent) {
                     this.fakeElement.remove();
-                    parent.insertBefore(this.fakeElement, tmpPos[0]);
-                    this.swapElements[1] = tmpPos[0].dataset.boneName;
+                    parent.insertBefore(this.fakeElement, tmpElement);
+                    this.swapElements[1] = tmpElement.dataset.boneName;
+
                   }
                 }
               } else {
                 if (elemetAfter !== tmpPos[0]) {
                   elemetAfter = tmpPos[0];
                   this.fakeElement.remove();
-                  tmpPos[0].after(this.fakeElement);
-                  this.swapElements[1] = tmpPos[0].dataset.boneName;
+                  tmpElement.after(this.fakeElement);
+                  this.swapElements[1] = tmpElement.dataset.boneName;
                 }
 
               }
@@ -747,7 +755,7 @@ export class RawBone {
 
   reWriteBoneValue(): Record<string, BoneValue> {
     const obj = {};
-    this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: HTMLElement) => {
+    this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: SlInput | SlSelect) => {
       if (inputElement.name !== undefined) {
 
         createPath(obj, inputElement.name, inputElement.value);
@@ -760,7 +768,7 @@ export class RawBone {
       }
 
     });
-    this.mainInstance.bone.querySelectorAll("sl-color-picker").forEach((inputElement: HTMLElement) => {
+    this.mainInstance.bone.querySelectorAll("sl-color-picker").forEach((inputElement: SlColorPicker) => {
       if (inputElement.name !== undefined) {
 
         createPath(obj, inputElement.name, inputElement.getFormattedValue("hex"));
@@ -772,8 +780,8 @@ export class RawBone {
     return obj;
   }
 
-  saveState(lang = null) {
-    const path = lang === null ? this.boneName : this.boneName + "." + lang;
+  saveState(lang: string | null = null) {
+    const path = lang === null ? this.boneName : `${this.boneName}.${lang}`;
     if (this.mainInstance.previousBoneValues[path] === undefined) {
       this.mainInstance.previousBoneValues[path] = []
     }
@@ -782,23 +790,23 @@ export class RawBone {
 
   }
 
-  undo(lang = null) {
-    const path = lang === null ? this.boneName : this.boneName + "." + lang
+  undo(lang: string | null = null) {
+    const path = lang === null ? this.boneName : `${this.boneName}.${lang}`;
     const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
 
     const obj = this.mainInstance.previousBoneValues[path].pop();
     let [element, index] = this.createMultipleWrapper(obj, lang);
     mulWrapper.replaceWith(element);
     this.mainInstance.internboneValue = this.reWriteBoneValue();
-    const undoButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
+    const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
     if (this.mainInstance.previousBoneValues[path].length === 0) {
       undoButton.style.display = "none";
     }
 
   }
 
-  clearMultipleWrapper(lang: any = null) {
-    const path = lang === null ? this.boneName : this.boneName + "." + lang
+  clearMultipleWrapper(lang: string | null = null) {
+    const path = lang === null ? this.boneName : `${this.boneName}.${lang}`
     const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
     this.saveState(lang);
     mulWrapper.innerHTML = "";//Clear Wrapper;
@@ -816,6 +824,3 @@ export class RawBone {
   }
 
 }
-
-
-

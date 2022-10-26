@@ -8,7 +8,7 @@ export class FileBone extends RawBone {
 
 
   view(): string | TemplateResult<1> {
-    function appendImage(data, boneStructure, lang = null) {
+    function appendImage(data, boneStructure, lang: string | null = null) {
       let val = formatstring(data, boneStructure, lang);
       if (lang !== null) {
         if (boneStructure["multiple"]) {
@@ -29,7 +29,7 @@ export class FileBone extends RawBone {
     return super.view(appendImage);
   }
 
-  getEditor(value: string | Record<string, FileSkelValues>, boneName: string, lang: null|string = null): HTMLElement {
+  getEditor(value: string | Record<string, FileSkelValues>, boneName: string, lang: null | string = null): HTMLElement {
 
 
     /**
@@ -144,7 +144,7 @@ export class FileBone extends RawBone {
       if (this.boneStructure["multiple"]) {
         shadowKey.value = fileKeys.shift();
         const boneValues: Record<string, BoneValue> = this.reWriteBoneValue();
-        let boneValues_array: BoneValue[]  = getPath(boneValues, path);
+        let boneValues_array: BoneValue[] = getPath(boneValues, path);
         boneValues_array = boneValues_array.concat(fileKeys);
         const obj = {};
         createPath(obj, path, boneValues_array);

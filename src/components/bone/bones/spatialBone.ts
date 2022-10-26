@@ -5,11 +5,10 @@ import SlInput from "../../input/input";
 export class SpatialBone extends RawBone {
 
 
-  getEditor(value: [number,number], boneName: string,lang:any=null): HTMLElement {
+  getEditor(value: [number, number], boneName: string, lang: string | null = null): HTMLElement {
     const spatialWrapper = document.createElement("div");
-    if(value===null)
-    {
-      value=["",""];
+    if (value === null) {
+      value = ["", ""];
     }
     const lat = value[0];
     const lng = value[1];
@@ -24,7 +23,7 @@ export class SpatialBone extends RawBone {
     latInput.step = "any";
     spatialWrapper.appendChild(latInput);
 
-    const lngInput:SlInput = document.createElement("sl-input")
+    const lngInput: SlInput = document.createElement("sl-input")
     lngInput.name = boneName + ".lng";
     lngInput.value = lng.toString();
     lngInput.type = "number";

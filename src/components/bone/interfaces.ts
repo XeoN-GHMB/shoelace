@@ -1,3 +1,5 @@
+import {BoneValue} from "./bones/rawBone";
+
 export interface BoneError {
   severity: number;
   fieldPath: string[];
@@ -13,7 +15,7 @@ export interface BoneStructure {
   readonly: boolean;
   unique: boolean;
   languages: string[];
-  emptyValue: any;
+  emptyValue: BoneValue;
   multiple: boolean;
   //Optional Fields
 

@@ -1,6 +1,6 @@
 // @ts-nocheck
 import {RawBone} from "./rawBone";
-
-export class KeyBone extends RawBone{
+//Todo Key checking ?
+export class KeyBone extends RawBone {
 
 }

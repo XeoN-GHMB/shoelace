@@ -1,7 +1,7 @@
 // @ts-nocheck
 import translationtable from "./translations/init"
 import {BoneStructure, BoneValue} from "./bones/rawBone";
-export function formatstring(data:BoneValue, boneStructure: BoneStructure, lang = null, ignoreLang = false):BoneValue {
+export function formatstring(data:BoneValue, boneStructure: BoneStructure, lang:string|null  = null, ignoreLang = false):BoneValue {
   if (!boneStructure) {
 
     return data;
@@ -181,7 +181,7 @@ export function createPath(obj: object, path: string | string[], value: any | nu
 
 }
 
-export function getPath(obj: object, path: string | string[]): object | undefined |BoneValue|BoneValue[] {
+export function getPath(obj: object, path: string | string[]):  BoneValue | undefined {
   path = typeof path === 'string' ? path.split('.') : path;
 
   let current: object = JSON.parse(JSON.stringify(obj));//Depth Copy to lose Reference;

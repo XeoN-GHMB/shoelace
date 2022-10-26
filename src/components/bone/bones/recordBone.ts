@@ -3,10 +3,10 @@ import {RawBone} from "./rawBone";
 import {BoneEditRenderer} from "../boneEditRenderer";
 
 
-export class RecordBone extends RawBone{
+export class RecordBone extends RawBone {
 
-  getEditor(value:any, boneName:string,lang:any=null): HTMLElement {
-     console.log("start record")
+  getEditor(value: any, boneName: string, lang: string | null = null): HTMLElement {
+
     const recordboneWrapper = document.createElement("div");
     recordboneWrapper.classList.add("record-wrapper");
 
@@ -23,8 +23,8 @@ export class RecordBone extends RawBone{
 
       }
       const newBoneName = boneName + "." + _boneName;
-      const bone:object = new BoneEditRenderer(newBoneName, recordBoneValue,_boneStructure , this.mainInstance).getBone();
-      const tmp: HTMLElement = new bone(newBoneName, recordBoneValue,_boneStructure , this.mainInstance).edit(true, this.depth + 1);
+      const bone: object = new BoneEditRenderer(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).getBone();
+      const tmp: HTMLElement = new bone(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).edit(true, this.depth + 1);
       tmp.dataset.fromRecord = "true";
 
       recordboneWrapper.appendChild(tmp);

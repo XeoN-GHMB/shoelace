@@ -9,7 +9,7 @@ export class RelationalBone extends RawBone {
 
   lang: string;
 
-  getEditor(value: any, boneName: string, lang: any = null): HTMLElement {
+  getEditor(value: any, boneName: string, lang: string|null = null): HTMLElement {
     //return this.getSearchbar(value, boneName);
     this.lang = lang;
     return this.getSelect(value, boneName);
@@ -165,7 +165,7 @@ export class RelationalBone extends RawBone {
     dialog.open = true;
     dialog.label = "Select";
 
-    const table:SlTable = document.createElement("sl-table");
+    const table: SlTable = document.createElement("sl-table");
     if (this.boneStructure.multiple) {
       table.rowselect = true;
     } else {

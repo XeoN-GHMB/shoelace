@@ -38,7 +38,7 @@ export default class SlBone extends ShoelaceElement {
   initBoneValue: any;
   internboneValue: Record<string, BoneValue>;
   relationalCache:Record<string, object> = {};
-  previousBoneValues: any = {};
+  previousBoneValues: Record<string, BoneValue[]> = {};
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
 
