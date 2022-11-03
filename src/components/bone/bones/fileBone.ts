@@ -1,8 +1,10 @@
 // @ts-nocheck
-import {FileSkelValues, UploadUrlResponse} from "../interfaces";
-import {html, TemplateResult} from "lit";
+import {html} from "lit";
 import {formatstring, getSkey, apiurl, createPath, getPath, translate} from "../utils";
-import {BoneValue, RawBone} from "./rawBone";
+import {RawBone} from "./rawBone";
+import type {FileSkelValues, UploadUrlResponse} from "../interfaces";
+import type {BoneValue} from "./rawBone";
+import type {TemplateResult} from "lit";
 
 export class FileBone extends RawBone {
 
@@ -148,7 +150,7 @@ export class FileBone extends RawBone {
         boneValues_array = boneValues_array.concat(fileKeys);
         const obj = {};
         createPath(obj, path, boneValues_array);
-        const mulWrapper: HTMLElement | null = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+        const mulWrapper: HTMLElement | null = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
 
         if (mulWrapper !== null) {
           const element = this.createMultipleWrapper(getPath(obj, path), lang)[0];

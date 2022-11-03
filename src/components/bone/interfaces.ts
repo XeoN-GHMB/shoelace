@@ -1,4 +1,4 @@
-import {BoneValue} from "./bones/rawBone";
+import type {BoneValue} from "./bones/rawBone";
 
 export interface BoneError {
   severity: number;
@@ -6,6 +6,7 @@ export interface BoneError {
   errorMessage: string;
   invalidFields: string[];
 }
+
 export interface BoneStructure {
   descr: string;
   type: string;
@@ -45,44 +46,46 @@ export interface BoneStructure {
 
   //spatial
   boundsLng: [number, number];
-  boundsLat: [number, number]
+  boundsLat: [number, number];
 
 
 }
 
 interface ValidHtml {
   validTags: string[];
-  validAttrs: Record<string, Array<string>>;
+  validAttrs: Record<string, string[]>;
   validStyles: string[];
   validClasses: string[];
   singleTags: string[];
 
 }
-export interface SkelValues{
-  key:string;
-  creationdate:string;
-  changedate:string;
-  viurCurrentSeoKeys:string;
+
+export interface SkelValues {
+  key: string;
+  creationdate: string;
+  changedate: string;
+  viurCurrentSeoKeys: string;
 
 }
-export interface FileSkelValues extends  SkelValues{
-  name:string;
-  downloadUrl:string;
-  size:string;
-  dlkey:string;
-  mimetype:string;
-  weak:boolean;
-  pending:boolean;
-  width:number;
-  height:number;
+
+export interface FileSkelValues extends SkelValues {
+  name: string;
+  downloadUrl: string;
+  size: string;
+  dlkey: string;
+  mimetype: string;
+  weak: boolean;
+  pending: boolean;
+  width: number;
+  height: number;
 
 }
-export  interface UploadUrlResponse{
-  uploadKey:string;
-  uploadUrl:string;
+
+export interface UploadUrlResponse {
+  uploadKey: string;
+  uploadUrl: string;
 }
 
-export interface ListResponse
-{
-  action:string;
+export interface ListResponse {
+  action: string;
 }

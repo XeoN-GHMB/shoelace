@@ -1,16 +1,15 @@
 // @ts-nocheck
+import {html} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 import {emit} from '../../internal/event';
+import ShoelaceElement from "../../internal/shoelace-element";
 import {watchProps} from "../../internal/watchProps";
 import styles from './bone.styles';
 import {BoneEditRenderer} from "./boneEditRenderer";
 import {BoneViewRenderer} from "./boneViewRenderer";
-import SlDetails from "../details/details";
-import ShoelaceElement from "../../internal/shoelace-element";
-import {BoneError, BoneStructure} from "./interfaces";
-import {BoneValue} from "./bones/rawBone";
-import {html} from "lit";
-
+import type SlDetails from "../details/details";
+import type {BoneValue} from "./bones/rawBone";
+import type {BoneError, BoneStructure} from "./interfaces";
 
 
 /**
@@ -37,7 +36,7 @@ export default class SlBone extends ShoelaceElement {
   bone: HTMLFormElement;
   initBoneValue: any;
   internboneValue: Record<string, BoneValue>;
-  relationalCache:Record<string, object> = {};
+  relationalCache: Record<string, object> = {};
   previousBoneValues: Record<string, BoneValue[]> = {};
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
@@ -66,12 +65,12 @@ export default class SlBone extends ShoelaceElement {
     return this._getBoneValue();
   }
 
-  _getBoneValue():BoneValue {
+  _getBoneValue(): BoneValue {
     return this.internboneValue[this.boneName];
   }
 
   toFormValue() {
-    function rewriteData(val:any, key:string|null = null):any[] {
+    function rewriteData(val: any, key: string | null = null): any[] {
       const ret = []
       if (Array.isArray(val)) {
         if (Object.values(val).filter(c => c === Object(c)).length > 0) {
@@ -227,7 +226,7 @@ export default class SlBone extends ShoelaceElement {
       return;
     }
 
-    this.bone.querySelectorAll(".error-container").forEach((element:HTMLElement) => {
+    this.bone.querySelectorAll(".error-container").forEach((element: HTMLElement) => {
       if (this.errors.length === 0) {
         element.style.display = "none";
       }
@@ -237,7 +236,7 @@ export default class SlBone extends ShoelaceElement {
     for (const error of this.errors) {
       if (this.boneName === error["fieldPath"][0])
         if (error["severity"] > 1) {
-          const element: SlDetails = this.bone.querySelector('[data-name="' + error["fieldPath"].join(".") + "_errorcontainer" + '"]');
+          const element: SlDetails = this.bone.querySelector(`[data-name="${error["fieldPath"].join(".")}_errorcontainer` + `"]`);
 
           if (element !== null) {
             element.style.display = "";

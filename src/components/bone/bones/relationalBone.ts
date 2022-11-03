@@ -1,18 +1,26 @@
 // @ts-nocheck
-import {RawBone} from "./rawBone";
-import SlCombobox from "../../combobox/combobox";
-import SlIconButton from "../../icon-button/icon-button";
 import {apiurl, createPath, formatstring, getPath, translate} from "../utils";
-import SlTable from "../../table/table";
+import {RawBone} from "./rawBone";
+import type SlCombobox from "../../combobox/combobox";
+import type SlIconButton from "../../icon-button/icon-button";
+import type SlTable from "../../table/table";
+import type {BoneStructure} from "../interfaces";
 
 export class RelationalBone extends RawBone {
 
   lang: string;
 
-  getEditor(value: any, boneName: string, lang: string|null = null): HTMLElement {
+  getEditor(value: any, boneName: string, lang: string | null = null): HTMLElement {
     //return this.getSearchbar(value, boneName);
     this.lang = lang;
+    if (this.boneStructure["params"]["search"]) //TODO Better name ?
+    {
+      return this.getSearchbar(value, boneName);
+    }
+
     return this.getSelect(value, boneName);
+
+
   }
 
   getSearchbar(value: any, boneName: string): HTMLElement {
@@ -151,7 +159,7 @@ export class RelationalBone extends RawBone {
     })
 
 
-    inputWrapper.dataset.name = "relational-" + boneName;
+    inputWrapper.dataset.name = `relational-${boneName}`;
     inputWrapper.appendChild(shadowInput);
     inputWrapper.appendChild(showInput);
     inputWrapper.appendChild(selectButton);
@@ -176,7 +184,7 @@ export class RelationalBone extends RawBone {
     table.rowindexes = true;
     fetch(`${apiurl}/json/${this.boneStructure["module"]}/list`).then(resp => resp.json().then((respdata) => {
 
-      const structure: Record<string, object> = {}
+      const structure: BoneStructure = {}
       for (const item of respdata["structure"]) {
 
         structure[item[0]] = item[1]
@@ -214,7 +222,7 @@ export class RelationalBone extends RawBone {
         this.mainInstance.handleChange();
 
       } else if (table.getSelectedRows().length > 1) {
-        const path = this.lang === null ? this.boneName : this.boneName + "." + this.lang;
+        const path = this.lang === null ? this.boneName : `${this.boneName}.${this.lang}`;
 
         const rowData = table.getSelectedRows()[0].getData();
         shadowInput.value = rowData["key"];
@@ -238,11 +246,11 @@ export class RelationalBone extends RawBone {
         createPath(obj, path, boneValues)
 
 
-        const mulWrapper: HTMLElement = this.mainInstance.bone.querySelector('[data-multiplebone="' + path + '"]');
+        const mulWrapper: HTMLElement = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
 
 
         if (mulWrapper !== null) {
-          let [element, index] = this.createMultipleWrapper(getPath(obj, path), this.lang);
+          const [element, index] = this.createMultipleWrapper(getPath(obj, path), this.lang);
           mulWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange();

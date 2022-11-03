@@ -1,4 +1,4 @@
-import { expect, fixture, html } from '@open-wc/testing';
+import {expect, fixture, html} from '@open-wc/testing';
 
 describe('<sl-bone>', () => {
   it('should render a component', async () => {

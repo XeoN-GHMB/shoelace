@@ -1,6 +1,6 @@
 // @ts-nocheck
 import {RawBone} from "./rawBone";
-import SlInput from "../../input/input";
+import type SlInput from "../../input/input";
 
 export class SpatialBone extends RawBone {
 
@@ -14,7 +14,7 @@ export class SpatialBone extends RawBone {
     const lng = value[1];
 
     const latInput = document.createElement("sl-input")
-    latInput.name = boneName + ".lat";
+    latInput.name = `${boneName}.lat`;
     latInput.value = lat.toString();
     latInput.type = "number";
 
@@ -24,7 +24,7 @@ export class SpatialBone extends RawBone {
     spatialWrapper.appendChild(latInput);
 
     const lngInput: SlInput = document.createElement("sl-input")
-    lngInput.name = boneName + ".lng";
+    lngInput.name = `${boneName}.lng`;
     lngInput.value = lng.toString();
     lngInput.type = "number";
     lngInput.min = this.boneStructure["boundsLng"][0];

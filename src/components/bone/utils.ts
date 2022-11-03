@@ -1,7 +1,8 @@
 // @ts-nocheck
 import translationtable from "./translations/init"
-import {BoneStructure, BoneValue} from "./bones/rawBone";
-export function formatstring(data:BoneValue, boneStructure: BoneStructure, lang:string|null  = null, ignoreLang = false):BoneValue {
+import type {BoneStructure, BoneValue} from "./bones/rawBone";
+
+export function formatstring(data: BoneValue, boneStructure: BoneStructure, lang: string | null = null, ignoreLang = false): BoneValue {
   if (!boneStructure) {
 
     return data;
@@ -48,12 +49,12 @@ export function formatstring(data:BoneValue, boneStructure: BoneStructure, lang:
     }
   }
 
-  let format = boneStructure["format"];
+  const format = boneStructure["format"];
   let text = boneStructure["format"];
   let textArray = [];
   for (const match of format.matchAll(re)) {
 
-    let insidematch = match[1];
+    const insidematch = match[1];
 
     if (boneStructure["languages"] && !ignoreLang) {
       if (boneStructure["multiple"]) {
@@ -181,7 +182,7 @@ export function createPath(obj: object, path: string | string[], value: any | nu
 
 }
 
-export function getPath(obj: object, path: string | string[]):  BoneValue | undefined {
+export function getPath(obj: object, path: string | string[]): BoneValue | undefined {
   path = typeof path === 'string' ? path.split('.') : path;
 
   let current: object = JSON.parse(JSON.stringify(obj));//Depth Copy to lose Reference;
@@ -202,7 +203,7 @@ export function getPath(obj: object, path: string | string[]):  BoneValue | unde
   return current;
 }
 
-export function escapeString(value:BoneValue): string | string[] {
+export function escapeString(value: BoneValue): string | string[] {
   if (value === null) {
     return "";
   }
@@ -233,7 +234,7 @@ export const apiurl = "http://localhost:8080";
 export function getSkey() {
   return new Promise<string>((resolve, reject) => {
 
-    fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey:string) => {
+    fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey: string) => {
       resolve(skey)
     }).catch((reason) => {
       reject(reason)
@@ -242,6 +243,6 @@ export function getSkey() {
   })
 }
 
-export function translate(path: string, lang = "de"):string {
-  return getPath(translationtable[lang],path)
+export function translate(path: string, lang = "de"): string {
+  return getPath(translationtable[lang], path)
 }

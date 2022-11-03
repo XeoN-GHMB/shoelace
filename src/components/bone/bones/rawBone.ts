@@ -1,20 +1,20 @@
 // @ts-nocheck
-import {html, TemplateResult} from "lit";
+import {html} from "lit";
 import {unsafeHTML} from "lit/directives/unsafe-html.js";
-import {formatstring, createPath, getPath, translate} from "../utils";
-import SlIcon from "../../icon/icon";
-import SlDetails from "../../details/details";
-import SlAlert from "../../alert/alert";
-import {getPath} from "../utils";
-import SlSwitch from "../../switch/switch";
-import SlInput from "../../input/input";
-import SlTooltip from "../../tooltip/tooltip";
-import SlAvatar from "../../avatar/avatar";
-import SlBone from "../bone";
-import {BoneStructure} from "../interfaces";
-import SlSelect from "../../select/select";
-import SlColorPicker from "../../color-picker/color-picker";
-import SlButton from "../../button/button";
+import {getPath, formatstring, createPath, getPath, translate} from "../utils";
+import type SlAlert from "../../alert/alert";
+import type SlAvatar from "../../avatar/avatar";
+import type SlButton from "../../button/button";
+import type SlColorPicker from "../../color-picker/color-picker";
+import type SlDetails from "../../details/details";
+import type SlIcon from "../../icon/icon";
+import type SlInput from "../../input/input";
+import type SlSelect from "../../select/select";
+import type SlSwitch from "../../switch/switch";
+import type SlTooltip from "../../tooltip/tooltip";
+import type SlBone from "../bone";
+import type {BoneStructure} from "../interfaces";
+import type {TemplateResult} from "lit";
 
 export type  LangBoneValue = Record<string, BoneValue> | Record<string, BoneValue[]>;
 export type  MultiBoneValue = BoneValue[];
@@ -63,24 +63,24 @@ export class RawBone {
           ${this.getTabPannels(formater)}
         </sl-tab-group>`;
 
-    } else {
-
-
-      if (this.boneStructure["multiple"]) {
-        if (!Array.isArray(this.boneValue)) {
-          this.boneValue = [this.boneValue];
-        }
-        for (const index in this.boneValue) {
-
-          this.boneValue[index] = formater(this.boneValue[index], this.boneStructure, null);
-        }
-        return html`${this.boneValue.map((val: any) => [
-          html`${val}<br>`
-        ])}`
-
-
-      }
     }
+
+
+    if (this.boneStructure["multiple"]) {
+      if (!Array.isArray(this.boneValue)) {
+        this.boneValue = [this.boneValue];
+      }
+      for (const index in this.boneValue) {
+
+        this.boneValue[index] = formater(this.boneValue[index], this.boneStructure, null);
+      }
+      return html`${this.boneValue.map((val: any) => [
+        html`${val}<br>`
+      ])}`
+
+
+    }
+
     if (this.boneStructure["type"].startsWith("text")) {
       return html`${unsafeHTML(this.boneValue)}`;
     }
@@ -175,7 +175,7 @@ export class RawBone {
 
     }
 
-    wrapper.classList.add("bone-type-" + this.boneStructure["type"])
+    wrapper.classList.add(`bone-type-${this.boneStructure["type"]}`)
     wrapper.classList.add("bone-wrapper")
     wrapper.dataset.boneWrapper = "true";
     wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
@@ -280,7 +280,7 @@ export class RawBone {
           undoButton.addEventListener("click", () => {
             this.undo(lang)
           });
-          undoButton.dataset.name = "undoBtn." + this.boneName + "." + lang
+          undoButton.dataset.name = `undoBtn.${this.boneName}.${lang}`
           undoButton.innerText = "Undo";
           undoButton.variant = "neutral";
           undoButton.style.display = "none";
@@ -333,7 +333,7 @@ export class RawBone {
         addButton.classList.add("add-button")
         addButton.variant = "success"
         addButton.title = translate("actions.add");
-        let [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
+        const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
         this.idx = idx;
         addButton.addEventListener("click", () => {
           const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.boneName}']`);
@@ -368,7 +368,7 @@ export class RawBone {
           this.undo()
 
         });
-        undoButton.dataset.name = "undoBtn." + this.boneName
+        undoButton.dataset.name = `undoBtn.${this.boneName}`
         undoButton.innerText = "Undo";
         undoButton.variant = "neutral";
         undoButton.style.display = "none";
@@ -388,7 +388,7 @@ export class RawBone {
       } else {
         //No Lang, No Multiple
         console.log("?")
-        let inputElement: HTMLElement = this.getEditor(this.boneValue, this.boneName);
+        const inputElement: HTMLElement = this.getEditor(this.boneValue, this.boneName);
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
 
@@ -460,7 +460,7 @@ export class RawBone {
     inputElement.addEventListener("keypress", (keypress_event) => {
 
       if (keypress_event.key !== "Enter") return;
-      let isValid: boolean = false;
+      let isValid = false;
       if (this.boneStructure["required"]) {
 
         this.mainInstance.bone.querySelectorAll("sl-input").forEach((tmpInput: SlInput) => {
@@ -531,7 +531,7 @@ export class RawBone {
 
         const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
         if (mulWrapper !== null) {
-          let [element, index] = this.createMultipleWrapper(getPath(obj, path), lang)
+          const [element, index] = this.createMultipleWrapper(getPath(obj, path), lang)
           mulWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange("deleteEntry");
@@ -678,7 +678,7 @@ export class RawBone {
 
           const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.movePath}']`);
           if (mulWrapper !== null) {
-            let [element, index] = this.createMultipleWrapper(getPath(obj, this.movePath), this.moveLang)
+            const [element, index] = this.createMultipleWrapper(getPath(obj, this.movePath), this.moveLang)
             mulWrapper.replaceWith(element);
             this.absolutePostionSet = false;
 
@@ -706,9 +706,9 @@ export class RawBone {
     document.addEventListener("mousemove", (e: MouseEvent) => {
       if (this.move) {
         if (this.mainInstance.inTable) {
-          this.moveElement.style.top = (e.pageY - (this.startHeight / 2) - this.mainInstance.getBoundingClientRect().top).toString() + "px";//in of table
+          this.moveElement.style.top = `${(e.pageY - (this.startHeight / 2) - this.mainInstance.getBoundingClientRect().top).toString()}px`;//in of table
         } else {
-          this.moveElement.style.top = (e.pageY - (this.startHeight / 2)).toString() + "px";//out of table
+          this.moveElement.style.top = `${(e.pageY - (this.startHeight / 2)).toString()}px`;//out of table
         }
 
         //this.moveElement.style.top = yPos  + "px";
@@ -795,7 +795,7 @@ export class RawBone {
     const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
 
     const obj = this.mainInstance.previousBoneValues[path].pop();
-    let [element, index] = this.createMultipleWrapper(obj, lang);
+    const [element, index] = this.createMultipleWrapper(obj, lang);
     mulWrapper.replaceWith(element);
     this.mainInstance.internboneValue = this.reWriteBoneValue();
     const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);

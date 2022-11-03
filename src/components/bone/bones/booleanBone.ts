@@ -1,6 +1,6 @@
 // @ts-nocheck
 import {RawBone} from "./rawBone";
-import SlSwitch from "../../switch/switch";
+import type SlSwitch from "../../switch/switch";
 
 export class BooleanBone extends RawBone {
 

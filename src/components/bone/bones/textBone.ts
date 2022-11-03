@@ -4,18 +4,16 @@
  * the problem is tiny mce load the css from a server
  */
 import tinymce from "tinymce";
+import icons from "tinymce/icons/default/";
+import model from "tinymce/models/dom/";
+import code_plugin from "tinymce/plugins/code/";
+import table_plugin from "tinymce/plugins/table/";
+import theme from "tinymce/themes/silver/";
 import {createPath} from "../utils";
 import {FileBone} from "./fileBone";
 import {RawBone} from "./rawBone";
 import type {FileSkelValues} from "../interfaces";
 import type {AstNode, Editor} from "tinymce";
-import theme from "tinymce/themes/silver/";
-import model from "tinymce/models/dom/";
-import icons from "tinymce/icons/default/";
-
-import code_plugin from "tinymce/plugins/code/";
-import table_plugin from "tinymce/plugins/table/";
-
 
 
 export class TextBone extends RawBone {
@@ -32,14 +30,14 @@ export class TextBone extends RawBone {
 
     const self = this;
 
-    setTimeout(function () {
+    setTimeout(() => {
       tinymce.init({
         target: ele,
         width: "100%",
         menubar: false,
         relative_urls: false,
-        skin:false,
-        content_css:false,
+        skin: false,
+        content_css: false,
 
         toolbar: 'undo redo | blocks | bold italic backcolor | '
           + 'alignleft aligncenter alignright alignjustify | '
@@ -96,7 +94,7 @@ export class TextBone extends RawBone {
         this.boneStructure["validHtml"]["validAttrs"][tag].push("class")
       }
 
-      s += tag + "[" + this.boneStructure["validHtml"]["validAttrs"][tag].join("|") + "],";
+      s += `${tag}[${this.boneStructure["validHtml"]["validAttrs"][tag].join("|")}],`;
 
     }
 
@@ -116,7 +114,7 @@ export class TextBone extends RawBone {
       for (let ci = 0; ci < classList.length; ci++) {
         const className = classList[ci];
         let valid = false;
-        let validClassesMap = validClasses['*'];
+        const validClassesMap = validClasses['*'];
         if (validClassesMap[className]) // direct match
         {
           valid = true;
@@ -132,7 +130,7 @@ export class TextBone extends RawBone {
           }
         }
         if (valid) {
-          classValue += className + " ";
+          classValue += `${className} `;
         }
 
       }

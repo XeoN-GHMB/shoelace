@@ -1,6 +1,6 @@
 // @ts-nocheck
 import {RawBone} from "./rawBone";
-import SlInput from "../../input/input";
+import type SlInput from "../../input/input";
 
 export class NumericBone extends RawBone {
 

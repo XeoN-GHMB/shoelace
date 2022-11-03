@@ -1,6 +1,6 @@
 // @ts-nocheck
 import {RawBone} from "./rawBone";
-import SlSelect from "../../select/select";
+import type SlSelect from "../../select/select";
 
 export class SelectBone extends RawBone {
 

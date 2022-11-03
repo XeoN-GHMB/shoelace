@@ -1,21 +1,21 @@
 // @ts-nocheck
-import SlBone from "./bone";
-import {StringBone} from "./bones/stringBone";
-import {NumericBone} from "./bones/numericBone";
-import {DateBone} from "./bones/dateBone";
 import {BooleanBone} from "./bones/booleanBone";
-import {SelectBone} from "./bones/selectBone";
-import {RelationalBone} from "./bones/relationalBone";
-import {RecordBone} from "./bones/recordBone";
-import {RawBone} from "./bones/rawBone";
-import {FileBone} from "./bones/fileBone";
-import {SpatialBone} from "./bones/spatialBone";
 import {PasswordBone} from "./bones/passwordBone";
 import {ColorBone} from "./bones/colorBone";
+import {DateBone} from "./bones/dateBone";
 import {EmailBone} from "./bones/emailBone";
+import {FileBone} from "./bones/fileBone";
 import {KeyBone} from "./bones/keyBone";
+import {NumericBone} from "./bones/numericBone";
+import {RawBone} from "./bones/rawBone";
+import {RecordBone} from "./bones/recordBone";
+import {RelationalBone} from "./bones/relationalBone";
+import {SelectBone} from "./bones/selectBone";
+import {SpatialBone} from "./bones/spatialBone";
+import {StringBone} from "./bones/stringBone";
 import {TextBone} from "./bones/textBone";
-import {BoneStructure} from "./interfaces";
+import type SlBone from "./bone";
+import type {BoneStructure} from "./interfaces";
 
 
 export class BoneEditRenderer {

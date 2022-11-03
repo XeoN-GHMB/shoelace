@@ -1,58 +1,58 @@
 // @ts-nocheck
-import {RawBone} from "./bones/rawBone";
-import {StringBone} from "./bones/stringBone";
-import {NumericBone} from "./bones/numericBone";
-import {SelectBone} from "./bones/selectBone";
-import {DateBone} from "./bones/dateBone";
-import {RecordBone} from "./bones/recordBone";
-import {RelationalBone} from "./bones/relationalBone";
-import {FileBone} from "./bones/fileBone";
-import {TextBone} from "./bones/textBone";
-import {SpatialBone} from "./bones/spatialBone";
 import {BooleanBone} from "./bones/booleanBone";
 import SlBone from "./bone";
 import {PasswordBone} from "./bones/passwordBone";
 import {ColorBone} from "./bones/colorBone";
+import {DateBone} from "./bones/dateBone";
 import {EmailBone} from "./bones/emailBone";
+import {FileBone} from "./bones/fileBone";
 import {KeyBone} from "./bones/keyBone";
+import {NumericBone} from "./bones/numericBone";
+import {RawBone} from "./bones/rawBone";
+import {RecordBone} from "./bones/recordBone";
+import {RelationalBone} from "./bones/relationalBone";
+import {SelectBone} from "./bones/selectBone";
+import {SpatialBone} from "./bones/spatialBone";
+import {StringBone} from "./bones/stringBone";
+import {TextBone} from "./bones/textBone";
 
 export class BoneViewRenderer {
   declare boneStructure: {
-    descr: string,
-    type: string,
-    required: boolean,
-    params: object,
-    visible: boolean,
-    readonly: boolean,
-    unique: boolean,
-    languages: string[],
-    emptyValue: any,
-    multiple: boolean,
+    descr: string;
+    type: string;
+    required: boolean;
+    params: object;
+    visible: boolean;
+    readonly: boolean;
+    unique: boolean;
+    languages: string[];
+    emptyValue: any;
+    multiple: boolean;
     //Optional Fields
 
     //relational
-    module: string,
-    format: string,
-    using: [],
-    relskel: object,
+    module: string;
+    format: string;
+    using: [];
+    relskel: object;
 
     //select
-    values: [],
+    values: [];
 
     //date
-    date: boolean,
-    time: boolean,
+    date: boolean;
+    time: boolean;
 
     //numeric
-    precision: number,
-    min: number,
-    max: number,
+    precision: number;
+    min: number;
+    max: number;
 
     //text
-    validHtml: string[],
+    validHtml: string[];
 
     //file
-    validMimeTypes: string[],
+    validMimeTypes: string[];
 
     //spatial
 

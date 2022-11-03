@@ -1,10 +1,10 @@
 // @ts-nocheck
 import {RawBone} from "./rawBone";
-import SlColorPicker from "../../color-picker/color-picker";
+import type SlColorPicker from "../../color-picker/color-picker";
 
 export class ColorBone extends RawBone {
   //Todo how to show ?
-  getEditor(value: string, boneName: string, lang: string|null = null): HTMLElement {
+  getEditor(value: string, boneName: string, lang: string | null = null): HTMLElement {
     const inputElement: SlColorPicker = document.createElement("sl-color-picker");
     //Todo this write always ??
     inputElement.addEventListener("sl-change", () => {

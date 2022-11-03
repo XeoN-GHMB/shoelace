@@ -1,9 +1,10 @@
 // @ts-nocheck
-import {BoneValue, RawBone} from "./rawBone";
 import {formatstring} from "../utils";
-import {TemplateResult} from "lit";
-import SlInput from "../../input/input";
-import {BoneStructure} from "../interfaces";
+import {RawBone} from "./rawBone";
+import type SlInput from "../../input/input";
+import type {BoneStructure} from "../interfaces";
+import type {BoneValue} from "./rawBone";
+import type {TemplateResult} from "lit";
 
 export class DateBone extends RawBone {
 
@@ -14,9 +15,9 @@ export class DateBone extends RawBone {
       const date = new Date(val);
       if (boneStructure["time"]) {
         return date.toLocaleDateString("de", {hour: '2-digit', minute: '2-digit', second: '2-digit'});
-      } else {
-        return date.toLocaleDateString("de");
       }
+      return date.toLocaleDateString("de");
+
 
     }
 

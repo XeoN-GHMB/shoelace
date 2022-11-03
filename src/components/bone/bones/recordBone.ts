@@ -1,6 +1,6 @@
 // @ts-nocheck
-import {RawBone} from "./rawBone";
 import {BoneEditRenderer} from "../boneEditRenderer";
+import {RawBone} from "./rawBone";
 
 
 export class RecordBone extends RawBone {
@@ -22,7 +22,7 @@ export class RecordBone extends RawBone {
         recordBoneValue = value[_boneName];
 
       }
-      const newBoneName = boneName + "." + _boneName;
+      const newBoneName = `${boneName}.${_boneName}`;
       const bone: object = new BoneEditRenderer(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).getBone();
       const tmp: HTMLElement = new bone(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).edit(true, this.depth + 1);
       tmp.dataset.fromRecord = "true";
