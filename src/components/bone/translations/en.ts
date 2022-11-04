@@ -8,4 +8,8 @@ export default {
     close: "Close",
     undo: "Undo",
   },
+  names: {
+    lat: "Latitude",
+    lng: "Longitude",
+  },
 }

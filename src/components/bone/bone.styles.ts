@@ -277,6 +277,22 @@ export default css`
     border-top: 1px solid var(--sl-color-neutral-200);
   }
 
+  .spatial-wrapper{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+
+  .lat-input::part(base){
+    border-radius: 0 !important;
+    border-right: none;
+  }
+
+  .lng-input::part(base){
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
   @media (max-width: 900px) {
     .bone-wrapper{
       grid-template-columns: 1fr;
@@ -349,6 +365,21 @@ export default css`
 
     .tox-tinymce{
       border-top-right-radius: 0 !important;
+    }
+
+    .spatial-wrapper{
+      flex-direction: column;
+    }
+
+    .lat-input::part(base){
+      border-right: 1px solid var(--sl-color-neutral-200);
+      border-bottom: none;
+    }
+
+    .lng-input::part(base){
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--sl-input-border-radius-medium);
     }
   }
 

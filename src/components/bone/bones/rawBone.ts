@@ -521,6 +521,7 @@ export class RawBone {
     inputElement.dataset.boneName = newboneName;
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
+    inputElement.placeholder = this.boneStructure["descr"];
 
     if (this.boneStructure["multiple"]) {
 

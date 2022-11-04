@@ -166,6 +166,7 @@ export class FileBone extends RawBone {
     //fileNameInput
     fileNameInput.disabled = true;
     fileNameInput.title = translate("actions.addFile");
+    fileNameInput.placeholder = translate("actions.addFile");
     fileNameInput.addEventListener("click", () => {
       shadowFile.click();
     })

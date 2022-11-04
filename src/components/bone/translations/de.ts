@@ -7,5 +7,11 @@ export default {
     select: "Auswählen",
     close: "Schließen",
     undo: "Änderung Rückgänig machen",
+    lat: "Latitude",
+    lng: "Longitude",
+  },
+  names: {
+    lat: "Latitude",
+    lng: "Longitude",
   },
 }

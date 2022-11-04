@@ -1,12 +1,14 @@
 // @ts-nocheck
 import {RawBone} from "./rawBone";
 import type SlInput from "../../input/input";
+import {translate} from "../utils";
 
 export class SpatialBone extends RawBone {
 
 
   getEditor(value: [number, number], boneName: string, lang: string | null = null): HTMLElement {
     const spatialWrapper = document.createElement("div");
+    spatialWrapper.classList.add("spatial-wrapper");
     if (value === null) {
       value = ["", ""];
     }
@@ -17,6 +19,8 @@ export class SpatialBone extends RawBone {
     latInput.name = `${boneName}.lat`;
     latInput.value = lat.toString();
     latInput.type = "number";
+    latInput.placeholder = translate("names.lat");;
+    latInput.classList.add("lat-input");
 
     latInput.min = this.boneStructure["boundsLat"][0];
     latInput.max = this.boneStructure["boundsLat"][1];
@@ -27,6 +31,8 @@ export class SpatialBone extends RawBone {
     lngInput.name = `${boneName}.lng`;
     lngInput.value = lng.toString();
     lngInput.type = "number";
+    lngInput.placeholder = translate("names.lng");;
+    lngInput.classList.add("lng-input");
     lngInput.min = this.boneStructure["boundsLng"][0];
     lngInput.max = this.boneStructure["boundsLng"][1];
     lngInput.step = "any";
