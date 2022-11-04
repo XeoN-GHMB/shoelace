@@ -13,12 +13,12 @@ export class RelationalBone extends RawBone {
   getEditor(value: any, boneName: string, lang: string | null = null): HTMLElement {
     //return this.getSearchbar(value, boneName);
     this.lang = lang;
-    if (this.boneStructure["params"]["search"]) //TODO Better name ?
+    if (this.boneStructure["params"]["widget"] === "search") //TODO Better name ?
     {
       return this.getSearchbar(value, boneName);
+    } else {
+      return this.getSelect(value, boneName);
     }
-
-    return this.getSelect(value, boneName);
 
 
   }
