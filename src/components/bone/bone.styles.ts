@@ -66,6 +66,10 @@ export default css`
     border-bottom-left-radius: 0;
   }
 
+  .file-container sl-input::part(input){
+    cursor: pointer;
+  }
+
   .file-container .upload-button,
   .file-container .clear-button{
     margin-left: var(--sl-spacing-small);;
@@ -128,6 +132,7 @@ export default css`
     flex-direction: row;
     flex-wrap: nowrap;
     margin-bottom: 10px;
+    border-bottom: 1px solid var(--sl-color-neutral-200);
   }
 
   .multi-input > div{
@@ -257,9 +262,22 @@ export default css`
     margin-left: var(--sl-spacing-small);
   }
 
+  .color-bone::part(trigger){
+    border-radius: 0;
+    width: calc(2 * var(--sl-input-height-medium));
+    border-top-right-radius: var(--sl-input-border-radius-medium);
+    border-bottom-right-radius: var(--sl-input-border-radius-medium);
+  }
+
+  .color-bone::part(trigger):before{
+    box-shadow: none;
+    border-top: 1px solid var(--sl-color-neutral-200);
+  }
+
   @media (max-width: 900px) {
     .bone-wrapper{
       grid-template-columns: 1fr;
+      margin-bottom: var(--sl-spacing-large);
     }
 
     .multiple-wrapper{
@@ -309,6 +327,21 @@ export default css`
 
     .bone-type-record .bone-inner-wrap{
       padding-top: 0;
+    }
+
+    .record-wrapper .bone-wrapper{
+      margin-bottom: var(--sl-spacing-small);
+    }
+
+    .color-bone{
+      display: contents;
+    }
+
+    .color-bone::part(trigger){
+      width: 100%;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--sl-input-border-radius-medium);
+      border-bottom-right-radius: var(--sl-input-border-radius-medium);
     }
   }
 

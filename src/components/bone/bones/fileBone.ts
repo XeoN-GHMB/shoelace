@@ -64,23 +64,23 @@ export class FileBone extends RawBone {
     const clearButton = document.createElement("sl-button");
     const uploadIcon = document.createElement("sl-icon");
     const clearIcon = document.createElement("sl-icon");
-    const progressBar = document.createElement("sl-progress-bar")
+    const progressBar = document.createElement("sl-progress-bar");
 
-    uploadIcon.setAttribute("name", "file-earmark-arrow-up")
+    uploadIcon.setAttribute("name", "file-earmark-arrow-up");
     uploadButton.appendChild(uploadIcon);
-    uploadButton.setAttribute("variant", "success")
-    uploadButton.setAttribute("outline", "")
-    uploadButton.classList.add("upload-button")
+    uploadButton.setAttribute("variant", "success");
+    uploadButton.setAttribute("outline", "");
+    uploadButton.classList.add("upload-button");
     uploadButton.title = translate("actions.addFile");
     uploadButton.addEventListener("click", () => {
       shadowFile.click();
     })
 
-    clearIcon.setAttribute("name", "x")
+    clearIcon.setAttribute("name", "x");
     clearButton.appendChild(clearIcon);
-    clearButton.setAttribute("variant", "danger")
-    clearButton.setAttribute("outline", "")
-    clearButton.classList.add("clear-button")
+    clearButton.setAttribute("variant", "danger");
+    clearButton.setAttribute("outline", "");
+    clearButton.classList.add("clear-button");
     clearButton.title = translate("actions.delete");
     clearButton.id = "clearButton";
     shadowFile.type = "file";
@@ -165,6 +165,7 @@ export class FileBone extends RawBone {
     });
     //fileNameInput
     fileNameInput.disabled = true;
+    fileNameInput.title = translate("actions.addFile");
     fileNameInput.addEventListener("click", () => {
       shadowFile.click();
     })

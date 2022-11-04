@@ -6,5 +6,6 @@ export default {
     deleteAll: "Delete All",
     select: "Select",
     close: "Close",
+    undo: "Undo",
   },
 }

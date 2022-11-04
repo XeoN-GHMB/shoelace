@@ -6,5 +6,6 @@ export default {
     deleteAll: "Alle Löschen",
     select: "Auswählen",
     close: "Schließen",
+    undo: "Änderung Rückgänig machen",
   },
 }

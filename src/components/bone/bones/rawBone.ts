@@ -277,12 +277,19 @@ export class RawBone {
 
           //Undo Button
           const undoButton = document.createElement("sl-button");
+          const undoIcon = document.createElement("sl-icon");
+
+          undoIcon.setAttribute("name", "arrow-counterclockwise");
+          undoButton.appendChild(undoIcon);
+          undoButton.setAttribute("outline", "");
+          undoButton.classList.add("undo-button");
+          undoButton.variant = "neutral";
+          undoButton.title = translate("actions.undo");
+
           undoButton.addEventListener("click", () => {
             this.undo(lang)
           });
           undoButton.dataset.name = `undoBtn.${this.boneName}.${lang}`
-          undoButton.innerText = "Undo";
-          undoButton.variant = "neutral";
           undoButton.style.display = "none";
 
 
@@ -364,13 +371,19 @@ export class RawBone {
 
         //Undo Button
         const undoButton = document.createElement("sl-button");
+        const undoIcon = document.createElement("sl-icon");
+
+        undoIcon.setAttribute("name", "arrow-counterclockwise");
+        undoButton.appendChild(undoIcon);
+        undoButton.setAttribute("outline", "");
+        undoButton.classList.add("undo-button");
+        undoButton.variant = "neutral";
+        undoButton.title = translate("actions.undo");
         undoButton.addEventListener("click", () => {
           this.undo()
 
         });
         undoButton.dataset.name = `undoBtn.${this.boneName}`
-        undoButton.innerText = "Undo";
-        undoButton.variant = "neutral";
         undoButton.style.display = "none";
 
         const buttonWrap = document.createElement("div");

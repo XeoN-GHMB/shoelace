@@ -14,7 +14,7 @@ export class ColorBone extends RawBone {
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
     inputElement.value = value;
-
+    inputElement.classList.add("color-bone");
 
     return inputElement;
   }
