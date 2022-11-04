@@ -121,6 +121,10 @@ export default css`
       grid-column: span 2;
   }
 
+  .bone-type-record > .bone-inner-wrap > .multiple-wrapper > .multi-input{
+      border-bottom: 1px solid var(--sl-color-neutral-200);
+  }
+
   .bone-type-record > .bone-name{
     border-bottom: none;
     border-top-right-radius: var(--sl-input-border-radius-medium);
@@ -132,7 +136,6 @@ export default css`
     flex-direction: row;
     flex-wrap: nowrap;
     margin-bottom: 10px;
-    border-bottom: 1px solid var(--sl-color-neutral-200);
   }
 
   .multi-input > div{
