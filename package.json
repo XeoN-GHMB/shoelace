@@ -1,12 +1,15 @@
 {
   "name": "@viur/viur-shoelace",
   "description": "A forward-thinking library of web components.",
-  "version": "2.0.0-beta.83-viur-11",
+  "version": "2.0.0-beta.83-viur-12",
   "homepage": "https://github.com/viur-framework/viur-shoelace",
   "author": "Cory LaViska",
   "contributors": [
     "Andreas H. Kelch",
-    "Stefan Kögl"
+    "Stefan Kögl",
+    "Arne Gudermann",
+    "Tim Klasener",
+    "Christopher Reinbothe"
   ],
   "license": "MIT",
   "main": "dist/shoelace.js",
