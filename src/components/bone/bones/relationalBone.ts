@@ -105,6 +105,10 @@ export class RelationalBone extends RawBone {
       //this.mainInstance.handleChange(formData);
 
     });
+    if(this.boneStructure["readonly"])
+    {
+      searchBox.disabled=true;
+    }
 
     return inputWrapper;
   }
@@ -117,7 +121,6 @@ export class RelationalBone extends RawBone {
      * {dest:{name:"bla",key:"blablakey"}}
      *
      **/
-    console.log("init with ", value);
     if (typeof (value) === "object" && value !== null) {
       if ("dest" in value) {
         const key = value["dest"]["key"]
@@ -162,7 +165,11 @@ export class RelationalBone extends RawBone {
     inputWrapper.dataset.name = `relational-${boneName}`;
     inputWrapper.appendChild(shadowInput);
     inputWrapper.appendChild(showInput);
-    inputWrapper.appendChild(selectButton);
+    if(!this.boneStructure["readonly"])
+    {
+          inputWrapper.appendChild(selectButton);
+    }
+
 
 
     return inputWrapper;
