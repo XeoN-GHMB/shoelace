@@ -1488,6 +1488,7 @@ class Cell extends CoreFeature{
 	generateElement(){
 		this.element = document.createElement('div');
 		this.element.className = "tabulator-cell";
+    this.element.part = "tabulator-cell";
 		this.element.setAttribute("role", "gridcell");
 		this.element = this.element;
 	}
@@ -2212,6 +2213,7 @@ class Column extends CoreFeature{
 
 		var contentElement = document.createElement("div");
 		contentElement.classList.add("tabulator-col-content");
+    contentElement.part = "tabulator-col-content";
 
 		this.titleHolderElement = document.createElement("div");
 		this.titleHolderElement.classList.add("tabulator-col-title-holder");
@@ -2232,6 +2234,7 @@ class Column extends CoreFeature{
 
 		var titleHolderElement = document.createElement("div");
 		titleHolderElement.classList.add("tabulator-col-title");
+		titleHolderElement.part = "tabulator-col-title";
 
 		if(def.editableTitle){
 			var titleElement = document.createElement("input");
@@ -3032,6 +3035,7 @@ class Row extends CoreFeature{
 		var el = document.createElement("div");
 
 		el.classList.add("tabulator-row");
+    el.part = "tabulator-row";
 		el.setAttribute("role", "row");
 
 		this.element = el;
@@ -10711,6 +10715,7 @@ class Group{
 	createElements(){
 		var arrow = document.createElement("div");
 		arrow.classList.add("tabulator-arrow");
+		arrow.part = "tabulator-arrow";
 
 		this.element = document.createElement("div");
 		this.element.classList.add("tabulator-row");
@@ -13209,6 +13214,7 @@ class Menu extends Module{
 
 		headerMenuEl = document.createElement("span");
 		headerMenuEl.classList.add("tabulator-header-popup-button");
+		headerMenuEl.part = "tabulator-header-popup-button";
 
 		if(icon){
 			if(typeof icon === "function"){
@@ -18224,6 +18230,7 @@ class Sort extends Module{
 
 			arrowEl = document.createElement("div");
 			arrowEl.classList.add("tabulator-col-sorter");
+			arrowEl.part = "tabulator-col-sorter";
 
 			if(typeof this.table.options.headerSortElement == "object"){
 				arrowEl.appendChild(this.table.options.headerSortElement);
@@ -20098,6 +20105,7 @@ class ColumnManager extends CoreFeature {
 		var el = document.createElement("div");
 
 		el.classList.add("tabulator-header");
+    el.part = "tabulator-header";
 		el.setAttribute("role", "rowgroup");
 
 		if(!this.table.options.headerVisible){
