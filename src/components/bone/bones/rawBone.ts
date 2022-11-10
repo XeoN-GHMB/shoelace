@@ -507,7 +507,7 @@ export class RawBone {
     return inputElement;
   }
 
-  addInput(value: any, lang: string, index = null) {
+  addInput(value: any, lang: string, index: number | null = null) {
     const inputWrapper: HTMLDivElement = document.createElement("div");
     const newboneName = this.generateboneName(lang, index);
     const path = lang === null ? this.boneName : `${this.boneName}.${lang}`;
@@ -538,14 +538,14 @@ export class RawBone {
       deleteButton.setAttribute("outline", "")
       deleteButton.addEventListener("click", () => {
         this.saveState(lang);
-
-        const obj: BoneValue = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
+        this.mainInstance.internboneValue = this.reWriteBoneValue();
+        const obj: object = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
         createPath(obj, newboneName, null, true);
 
 
         const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
         if (mulWrapper !== null) {
-          const [element, index] = this.createMultipleWrapper(getPath(obj, path), lang)
+          const element = this.createMultipleWrapper(getPath(obj, path), lang)[0];
           mulWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange("deleteEntry");
@@ -692,7 +692,7 @@ export class RawBone {
 
           const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.movePath}']`);
           if (mulWrapper !== null) {
-            const [element, index] = this.createMultipleWrapper(getPath(obj, this.movePath), this.moveLang)
+            const element = this.createMultipleWrapper(getPath(obj, this.movePath), this.moveLang)[0]
             mulWrapper.replaceWith(element);
             this.absolutePostionSet = false;
 
@@ -809,7 +809,7 @@ export class RawBone {
     const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
 
     const obj = this.mainInstance.previousBoneValues[path].pop();
-    const [element, index] = this.createMultipleWrapper(obj, lang);
+    const element = this.createMultipleWrapper(obj, lang)[0];
     mulWrapper.replaceWith(element);
     this.mainInstance.internboneValue = this.reWriteBoneValue();
     const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);

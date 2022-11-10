@@ -61,9 +61,8 @@ export class FileBone extends RawBone {
     const shadowKey = document.createElement("sl-input");
     const fileNameInput = document.createElement("sl-input");
     const uploadButton = document.createElement("sl-button");
-    const clearButton = document.createElement("sl-button");
     const uploadIcon = document.createElement("sl-icon");
-    const clearIcon = document.createElement("sl-icon");
+
     const progressBar = document.createElement("sl-progress-bar");
 
     uploadIcon.setAttribute("name", "file-earmark-arrow-up");
@@ -76,13 +75,7 @@ export class FileBone extends RawBone {
       shadowFile.click();
     })
 
-    clearIcon.setAttribute("name", "x");
-    clearButton.appendChild(clearIcon);
-    clearButton.setAttribute("variant", "danger");
-    clearButton.setAttribute("outline", "");
-    clearButton.classList.add("clear-button");
-    clearButton.title = translate("actions.delete");
-    clearButton.id = "clearButton";
+
     shadowFile.type = "file";
     let filter: string;
 
@@ -187,7 +180,6 @@ export class FileBone extends RawBone {
     fileContainer.appendChild(progressBar);
 
     fileContainer.appendChild(uploadButton);
-    fileContainer.appendChild(clearButton);
     return fileContainer;
   }
 
