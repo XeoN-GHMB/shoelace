@@ -1,6 +1,10 @@
 <div class="splash">
 <div class="splash-start">
-<img class="splash-logo" src="assets/images/wordmark.svg" alt="Shoelace">
+<div style="display:flex;flex-direction: row;gap:20px;margin-bottom:40px;">
+  <img style="width: 100px" class="splash-logo" src="assets/images/icon-shoelace.svg" alt="Shoelace">
+  <img class="splash-logo" src="assets/images/wordmark.svg" alt="Shoelace">
+</div>
+
 
 # <sl-visually-hidden>Shoelace:</sl-visually-hidden> A forward-thinking library of web components.
 
