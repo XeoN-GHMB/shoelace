@@ -97,8 +97,11 @@ export default class SlTable extends ShoelaceElement {
 
   @watchProps(['structure', 'skellist', "editabletable"])
   optionUpdate() {
-    console.log("update");
     //only rebuild table if structure changed
+    if(this.skellist===undefined || this.structure===undefined || Object.keys(this.structure).length===0 || this.skellist.length===0)
+    {
+      return ;
+    }
     this._editabletable = this.editabletable;
     if (this.previousStructure !== this.structure) {
       this.previousStructure = this.structure

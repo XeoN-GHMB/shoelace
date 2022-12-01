@@ -250,7 +250,6 @@ export class RawBone {
           addButton.title = translate("actions.add");
 
           addButton.addEventListener("click", () => {
-            console.log("add")
             multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
             multipleWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
             this.idx[lang] += 1;
@@ -400,7 +399,6 @@ export class RawBone {
 
       } else {
         //No Lang, No Multiple
-        console.log("?")
         const inputElement: HTMLElement = this.getEditor(this.boneValue, this.boneName);
         inputElement.dataset.lang = "null";
         inputElement.dataset.multiple = this.boneStructure["multiple"];
@@ -460,7 +458,7 @@ export class RawBone {
     inputElement.name = boneName;
     inputElement.disabled = this.boneStructure["readonly"];
 
-    if (value === null) {
+    if (value === null || value === undefined) {
       inputElement.value = this.boneStructure["emptyValue"];
     } else {
       inputElement.value = value;
@@ -770,8 +768,7 @@ export class RawBone {
   reWriteBoneValue(): Record<string, BoneValue> {
     const obj = {};
     this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: SlInput | SlSelect) => {
-      if (inputElement.name !== undefined) {
-
+      if (inputElement.name !== undefined &&  inputElement.value !== undefined) {
         createPath(obj, inputElement.name, inputElement.value);
       }
 

@@ -64,7 +64,10 @@ export class SelectBone extends RawBone {
     const inputSelect: SlSelect = document.createElement("sl-select");
 
     inputSelect.name = boneName;
-    inputSelect.value = value;
+    if (value !== null && value !== undefined) {
+      inputSelect.value = value;
+    }
+
     inputSelect.dataset.boneName = boneName;
     //inputSelect.hoist = true; //Todo styling
 
@@ -77,9 +80,7 @@ export class SelectBone extends RawBone {
 
     }
     inputSelect.addEventListener("sl-change", (event) => {
-
-      const obj = this.reWriteBoneValue();
-      this.mainInstance.internboneValue = obj;
+      this.mainInstance.internboneValue = this.reWriteBoneValue();
       this.mainInstance.handleChange();
       //this.mainInstance.boneValue = obj[this.mainInstance.boneName];
 

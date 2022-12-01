@@ -62,12 +62,10 @@ export default class SlBone extends ShoelaceElement {
 
   /** Gets boneValue */
   get getBoneValue(): any {
-    return this._getBoneValue();
-  }
-
-  _getBoneValue(): BoneValue {
     return this.internboneValue[this.boneName];
   }
+
+
 
   toFormValue() {
     function rewriteData(val: any, key: string | null = null): any[] {
@@ -119,7 +117,7 @@ export default class SlBone extends ShoelaceElement {
   }
 
 
-  @watchProps(['boneStructure', 'boneValue', "renderTyp"])
+  @watchProps(['boneStructure', 'boneValue', "renderType"])
   optionUpdate() {
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};
@@ -137,7 +135,6 @@ export default class SlBone extends ShoelaceElement {
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
-
       const boneEditor = new BoneEditRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
       this.bone = boneEditor.getEditor();
 
@@ -203,7 +200,7 @@ export default class SlBone extends ShoelaceElement {
   //Events
   handleChange(type = "edit") {
     const options = {
-      boneValue: this._getBoneValue(),
+      boneValue: this.getBoneValue,
       boneName: this.boneName,
       formValue: this.toFormValue(),
       formData: this.toFormData(),
