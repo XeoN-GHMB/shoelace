@@ -1,5 +1,5 @@
 import * as React from 'react';
 import { createComponent } from '@lit-labs/react';
-import Component from '../../components/progress-bar/progress-bar';
+import Component from '../../components/progress-bar/progress-bar.js';
 
 export default createComponent(React, 'sl-progress-bar', Component, {});

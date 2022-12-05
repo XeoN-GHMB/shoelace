@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createComponent } from '@lit-labs/react';
-import Component from '../../components/drawer/drawer';
+import Component from '../../components/drawer/drawer.js';
 
 export default createComponent(React, 'sl-drawer', Component, {
   onSlShow: 'sl-show',

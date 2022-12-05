@@ -12,6 +12,8 @@ import styles from './details.styles';
 import type { CSSResultGroup } from 'lit';
 
 /**
+ * @summary Details show a brief summary and expand to show additional content.
+ *
  * @since 2.0
  * @status stable
  *
@@ -134,7 +136,11 @@ export default class SlDetails extends ShoelaceElement {
   async handleOpenChange() {
     if (this.open) {
       // Show
-      this.emit('sl-show');
+      const slShow = this.emit('sl-show', { cancelable: true });
+      if (slShow.defaultPrevented) {
+        this.open = false;
+        return;
+      }
 
       await stopAnimations(this.body);
       this.body.hidden = false;
@@ -146,7 +152,11 @@ export default class SlDetails extends ShoelaceElement {
       this.emit('sl-after-show');
     } else {
       // Hide
-      this.emit('sl-hide');
+      const slHide = this.emit('sl-hide', { cancelable: true });
+      if (slHide.defaultPrevented) {
+        this.open = true;
+        return;
+      }
 
       await stopAnimations(this.body);
 

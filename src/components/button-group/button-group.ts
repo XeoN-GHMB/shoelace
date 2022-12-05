@@ -7,6 +7,8 @@ import type { CSSResultGroup } from 'lit';
 const BUTTON_CHILDREN = ['sl-button', 'sl-radio-button', 'sl-input', 'sl-select', 'sl-combobox'];
 
 /**
+ * @summary Button groups can be used to group related buttons into sections.
+ *
  * @since 2.0
  * @status stable
  *

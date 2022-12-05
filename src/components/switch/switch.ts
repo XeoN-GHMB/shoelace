@@ -8,9 +8,12 @@ import { FormSubmitController } from '../../internal/form';
 import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
 import styles from './switch.styles';
+import type { ShoelaceFormControl } from '../../internal/shoelace-element';
 import type { CSSResultGroup } from 'lit';
 
 /**
+ * @summary Switches allow the user to toggle an option on or off.
+ *
  * @since 2.0
  * @status stable
  * @viur 0.5
@@ -31,7 +34,7 @@ import type { CSSResultGroup } from 'lit';
  * @cssproperty --thumb-size - The size of the thumb.
  */
 @customElement('sl-switch')
-export default class SlSwitch extends ShoelaceElement {
+export default class SlSwitch extends ShoelaceElement implements ShoelaceFormControl {
   static styles: CSSResultGroup = styles;
 
   @query('input[type="checkbox"]') input: HTMLInputElement;
@@ -44,6 +47,7 @@ export default class SlSwitch extends ShoelaceElement {
   });
 
   @state() private hasFocus = false;
+  @state() invalid = false;
 
   /** The switch's name attribute. */
   @property() name: string;
@@ -60,12 +64,8 @@ export default class SlSwitch extends ShoelaceElement {
   /** Draws the switch in a checked state. */
   @property({ type: Boolean, reflect: true }) checked = false;
 
-  /** This will be true when the control is in an invalid state. Validity is determined by the `required` prop. */
-  @property({ type: Boolean, reflect: true }) invalid = false;
-
   /** Gets or sets the default value used to reset this element. The initial value corresponds to the one originally specified in the HTML that created this element. */
-  @defaultValue('checked')
-  defaultChecked = false;
+  @defaultValue('checked') defaultChecked = false;
 
   firstUpdated() {
     this.invalid = !this.input.checkValidity();
@@ -86,6 +86,11 @@ export default class SlSwitch extends ShoelaceElement {
     this.input.blur();
   }
 
+  /** Checks for validity but does not show the browser's validation message. */
+  checkValidity() {
+    return this.input.checkValidity();
+  }
+
   /** Checks for validity and shows the browser's validation message if the control is invalid. */
   reportValidity() {
     return this.input.reportValidity();
@@ -104,7 +109,7 @@ export default class SlSwitch extends ShoelaceElement {
 
   @watch('checked', { waitUntilFirstUpdate: true })
   handleCheckedChange() {
-    this.input.checked = this.checked;
+    this.input.checked = this.checked; // force a sync update
     this.invalid = !this.input.checkValidity();
   }
 

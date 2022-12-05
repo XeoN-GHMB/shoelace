@@ -1,6 +1,5 @@
 import { html } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { ifDefined } from 'lit/directives/if-defined.js';
 import { unsafeSVG } from 'lit/directives/unsafe-svg.js';
 import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
@@ -12,14 +11,14 @@ import type { CSSResultGroup } from 'lit';
 let parser: DOMParser;
 
 /**
+ * @summary Icons are symbols that can be used to represent various options within an application.
+ *
  * @since 2.0
  * @status stable
  * @viur 0.5
  *
  * @event sl-load - Emitted when the icon has loaded.
  * @event sl-error - Emitted when the icon fails to load due to an error.
- *
- * @csspart base - The component's internal wrapper.
  */
 @customElement('sl-icon')
 export default class SlIcon extends ShoelaceElement {
@@ -81,6 +80,21 @@ export default class SlIcon extends ShoelaceElement {
     if (!this.sprite) this.setIcon();
   }
 
+  @watch('label')
+  handleLabelChange() {
+    const hasLabel = typeof this.label === 'string' && this.label.length > 0;
+
+    if (hasLabel) {
+      this.setAttribute('role', 'img');
+      this.setAttribute('aria-label', this.label);
+      this.removeAttribute('aria-hidden');
+    } else {
+      this.removeAttribute('role');
+      this.removeAttribute('aria-label');
+      this.setAttribute('aria-hidden', 'true');
+    }
+  }
+
   @watch('name')
   @watch('src')
   @watch('library')
@@ -131,23 +145,12 @@ export default class SlIcon extends ShoelaceElement {
   }
 
   render() {
-    const hasLabel = typeof this.label === 'string' && this.label.length > 0;
-
-    return html` <div
-      part="base"
-      class="icon"
-      role=${ifDefined(hasLabel ? 'img' : undefined)}
-      aria-label=${ifDefined(hasLabel ? this.label : undefined)}
-      aria-hidden=${ifDefined(hasLabel ? undefined : 'true')}
-    >
-
+    return html`
     ${this.sprite?
       html`<svg width="1em" height="1em">
             <use href="${this.getDir()}/_sprite.svg#${this.name}"></use>
           </svg>`
-      :html`${unsafeSVG(this.svg)}`}
-
-    </div>`;
+      :html`${unsafeSVG(this.svg)}`}`;
   }
 }
 

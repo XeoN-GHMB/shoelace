@@ -5,7 +5,7 @@
 Spinners are used to show the progress of an indeterminate operation.
 
 ```html preview
-<sl-spinne-circler></sl-spinner>
+<sl-spinner-circle></sl-spinner-circle>
 ```
 
 ```jsx react

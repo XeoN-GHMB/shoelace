@@ -15,6 +15,8 @@ import type { CSSResultGroup } from 'lit';
 const toastStack = Object.assign(document.createElement('div'), { className: 'sl-toast-stack' });
 
 /**
+ * @summary Alerts are used to display important messages inline or as toast notifications.
+ *
  * @since 2.0
  * @status stable
  * @viur 0.5
@@ -49,7 +51,7 @@ export default class SlAlert extends ShoelaceElement {
   private readonly hasSlotController = new HasSlotController(this, 'icon', 'suffix');
   private readonly localize = new LocalizeController(this);
 
-  @query('[part="base"]') base: HTMLElement;
+  @query('[part~="base"]') base: HTMLElement;
 
   /** Indicates whether or not the alert is open. You can use this in lieu of the show/hide methods. */
   @property({ type: Boolean, reflect: true }) open = false;

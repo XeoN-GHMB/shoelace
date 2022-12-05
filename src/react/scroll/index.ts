@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createComponent } from '@lit-labs/react';
-import Component from '../../components/scroll/scroll';
+import Component from '../../components/scroll/scroll.js';
 
 export default createComponent(React, 'sl-scroll', Component, {
   onSlScrollY: 'sl-scroll-y',

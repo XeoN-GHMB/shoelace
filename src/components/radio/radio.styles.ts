@@ -67,9 +67,9 @@ export default css`
 
   /* Checked */
   .radio--checked .radio__control {
-    color: var(--sl-color-neutral-0);
+    color: var(--sl-color-success-600);
     border-color: var(--sl-color-success-600);
-    background-color: var(--sl-color-success-600);
+    background-color: var(--sl-color-neutral-0);
   }
 
   /* Checked + hover */

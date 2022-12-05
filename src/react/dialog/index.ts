@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createComponent } from '@lit-labs/react';
-import Component from '../../components/dialog/dialog';
+import Component from '../../components/dialog/dialog.js';
 
 export default createComponent(React, 'sl-dialog', Component, {
   onSlShow: 'sl-show',

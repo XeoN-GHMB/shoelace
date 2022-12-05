@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createComponent } from '@lit-labs/react';
-import Component from '../../components/dropdown/dropdown';
+import Component from '../../components/dropdown/dropdown.js';
 
 export default createComponent(React, 'sl-dropdown', Component, {
   onSlShow: 'sl-show',

@@ -4,8 +4,6 @@
 
 [component-header:sl-details]
 
-Details show a brief summary and expand to show additional content.
-
 ```html preview
 <sl-details prefix="puzzle" summary="Toggle Me">
 

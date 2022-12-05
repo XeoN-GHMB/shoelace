@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createComponent } from '@lit-labs/react';
-import Component from '../../components/router/router';
+import Component from '../../components/router/router.js';
 
 export default createComponent(React, 'sl-router', Component, {
   onHashRouterBefore: 'hash-router-before',

@@ -72,7 +72,13 @@ export default css`
   .form-control--has-label.form-control--large .form-control_label {
     font-size: var(--sl-input-label-font-size-large);
   }
-
+  
+  :host([required]) .form-control--has-label .form-control__label::after {
+    content: var(--sl-input-required-content);
+    margin-inline-start: var(--sl-input-required-content-offset);
+    color: var(--sl-input-required-content-color);
+  }
+  
   /* Help text */
   .form-control--has-help-text .form-control__help-text {
     display: block;
@@ -93,5 +99,9 @@ export default css`
 
   .form-control--has-help-text.form-control--large .form-control__help-text {
     font-size: var(--sl-input-help-text-font-size-large);
+  }
+
+  .form-control--has-help-text.form-control--radio-group .form-control__help-text {
+    margin-top: var(--sl-spacing-2x-small);
   }
 `;

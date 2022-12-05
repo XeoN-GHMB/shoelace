@@ -16,3 +16,7 @@ declare namespace Chai {
     accessible: (options?: Object) => PromiseLike<Assertion>;
   }
 }
+
+interface HTMLInputElement {
+  showPicker: () => void;
+}

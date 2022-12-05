@@ -8,6 +8,8 @@ import styles from './avatar.styles';
 import type { CSSResultGroup } from 'lit';
 
 /**
+ * @summary Avatars are used to represent a person or object.
+ *
  * @since 2.0
  * @status stable
  *
@@ -36,6 +38,9 @@ export default class SlAvatar extends ShoelaceElement {
 
   /** Initials to use as a fallback when no image is available (1-2 characters max recommended). */
   @property() initials = '';
+
+  /** Indicates how the browser should load the image. */
+  @property() loading: 'eager' | 'lazy' = 'eager';
 
   /** The shape of the avatar. */
   @property({ reflect: true }) shape: 'circle' | 'square' | 'rounded' = 'circle';
@@ -74,6 +79,7 @@ export default class SlAvatar extends ShoelaceElement {
                 part="image"
                 class="avatar__image"
                 src="${this.image}"
+                loading="${this.loading}"
                 alt=""
                 @error="${() => (this.hasError = true)}"
               />

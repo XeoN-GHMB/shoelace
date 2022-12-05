@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { createComponent } from '@lit-labs/react';
-import Component from '../../components/input/input';
+import Component from '../../components/input/input.js';
 
 export default createComponent(React, 'sl-input', Component, {
   onSlChange: 'sl-change',

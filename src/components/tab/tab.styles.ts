@@ -62,5 +62,11 @@ export default css`
   .tab__close-button::part(base) {
     padding: var(--sl-spacing-3x-small);
   }
-
+  
+  @media (forced-colors: active) {
+    .tab.tab--active:not(.tab--disabled) {
+      outline: solid 1px transparent;
+      outline-offset: -3px;
+    }
+  }
 `;

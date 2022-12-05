@@ -3,13 +3,18 @@ import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import ShoelaceElement from '../../internal/shoelace-element';
 import { watch } from '../../internal/watch';
+import '../icon/icon';
 import styles from './radio.styles';
 import type { CSSResultGroup } from 'lit';
 
 /**
+ * @summary Radios allow the user to select a single option from a group.
+ *
  * @since 2.0
  * @status stable
  * @viur 0.5
+ *
+ * @dependency sl-icon
  *
  * @slot - The radio's label.
  *
@@ -18,7 +23,8 @@ import type { CSSResultGroup } from 'lit';
  *
  * @csspart base - The component's internal wrapper.
  * @csspart control - The radio control.
- * @csspart checked-icon - The container the wraps the checked icon.
+ * @csspart control--checked - The radio control if radio is checked.
+ * @csspart checked-icon - The checked icon.
  * @csspart label - The radio label.
  */
 @customElement('sl-radio')
@@ -90,14 +96,8 @@ export default class SlRadio extends ShoelaceElement {
           'radio--focused': this.hasFocus
         })}
       >
-        <span part="control" class="radio__control">
-          <span part="checked-icon" class="radio__icon">
-            <svg viewBox="0 0 16 16">
-              <g stroke="currentColor" stroke-width="2" fill="none" fill-rule="evenodd">
-                <circle cx="8" cy="8" r="7"></circle>
-              </g>
-            </svg>
-          </span>
+        <span part="${`control${this.checked ? ' control--checked' : ''}`}" class="radio__control">
+          ${this.checked ? html` <sl-icon part="checked-icon" library="system" name="radio"></sl-icon> ` : ''}
         </span>
 
         <span part="label" class="radio__label">

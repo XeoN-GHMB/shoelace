@@ -9,6 +9,8 @@ import styles from './menu-item.styles';
 import type { CSSResultGroup } from 'lit';
 
 /**
+ * @summary Menu items provide options for the user to pick from in a menu.
+ *
  * @since 2.0
  * @status stable
  *
@@ -22,6 +24,8 @@ import type { CSSResultGroup } from 'lit';
  * @slot suffix - Used to append an icon or similar element to the menu item.
  *
  * @csspart base - The component's internal wrapper.
+ * @csspart checked-icon - The checked icon, which is only visible when the menu item is checked.
+
  * @csspart prefix - The prefix container.
  * @csspart label - The menu item label.
  * @csspart suffix - The suffix container.
@@ -93,8 +97,8 @@ export default class SlMenuItem extends ShoelaceElement {
           'menu-item--has-submenu': false // reserved for future use
         })}
       >
-        <span class="menu-item__check">
-          <sl-icon name="check-lg" library="system" aria-hidden="true"></sl-icon>
+        <span part="checked-icon" class="menu-item__check">
+          <sl-icon name="check" library="system" aria-hidden="true"></sl-icon>
         </span>
 
         <span part="prefix" class="menu-item__prefix">
