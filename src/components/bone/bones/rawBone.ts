@@ -184,7 +184,7 @@ export class RawBone {
       const boneNameLabel = document.createElement("div");
       boneNameLabel.innerText = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
       boneNameLabel.classList.add("bone-name")
-      if (this.boneStructure["params"]["tooltip"]) {
+      if (this.boneStructure["params"]?.["tooltip"]) {
         const tooltip: SlTooltip = document.createElement("sl-tooltip");
         const avatar: SlAvatar = document.createElement("sl-avatar");
         const icon: SlIcon = document.createElement("sl-icon");
