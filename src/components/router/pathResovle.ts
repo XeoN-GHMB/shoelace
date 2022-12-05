@@ -112,6 +112,7 @@ const getPathNames = (path: string, pattern: string) => {
   const result = matchFun(path);
   let pathNames: PathNameResult = {};
   if (result != false) {
+    //@ts-ignore
     pathNames = Object.assign({}, (result as MatchResult).params);
   }
   return pathNames;
