@@ -226,6 +226,13 @@ export class RawBone {
         languageWrapper.classList.add("language-wrapper");
 
         if (this.boneStructure.multiple && this.boneStructure["type"] !== "select") {
+          if (this.boneValue === null) {
+            this.boneValue = {}
+
+            for (const lang of this.boneStructure["languages"]) {
+              this.boneValue[lang] = []
+            }
+          }
           // Lang and Mul
           if (this.boneValue === null) continue;
           if (this.boneValue[lang] === undefined) continue;
