@@ -201,7 +201,6 @@ export class RawBone {
       wrapper.appendChild(boneNameLabel);
     }
 
-
     if (this.boneStructure["languages"] !== null) {
 
 
@@ -218,10 +217,8 @@ export class RawBone {
       }
 
       for (const lang of this.boneStructure["languages"]) {
-
         const tab_panel = document.createElement("sl-tab-panel")
         tab_panel.name = lang;
-
         const languageWrapper = document.createElement("div");
         languageWrapper.classList.add("language-wrapper");
 
@@ -237,13 +234,13 @@ export class RawBone {
           if (this.boneValue === null) continue;
           if (this.boneValue[lang] === undefined) continue;
           if (this.boneValue[lang] === null) continue;
+
           const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue[lang], lang);
           if (this.idx === null) {
             this.idx = {};
           }
           this.idx[lang] = idx;
           multipleWrapper.classList.add("multiple-wrapper");
-
 
           const addButton = document.createElement("sl-button");
           const addIcon = document.createElement("sl-icon");
@@ -260,8 +257,6 @@ export class RawBone {
             multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
             multipleWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
             this.idx[lang] += 1;
-
-
           });
           languageWrapper.appendChild(multipleWrapper);
 
@@ -298,10 +293,17 @@ export class RawBone {
           undoButton.dataset.name = `undoBtn.${this.boneName}.${lang}`
           undoButton.style.display = "none";
 
+          const buttonWrap = document.createElement("div");
+          buttonWrap.classList.add("bone-inner-button-wrap")
 
-          tab_panel.appendChild(addButton);
-          tab_panel.appendChild(clearButton);
-          tab_panel.appendChild(undoButton);
+          buttonWrap.appendChild(addButton);
+          buttonWrap.appendChild(undoButton);
+          buttonWrap.appendChild(clearButton);
+          if ( !this.boneStructure["readonly"]){
+            tab_panel.appendChild(buttonWrap)
+          }
+
+
           tab_panel.appendChild(languageWrapper);
           this.addScroll();
           this.addMouseMove();
@@ -322,7 +324,6 @@ export class RawBone {
           tab_panel.appendChild(languageWrapper);
         }
         tabGroup.appendChild(tab_panel);
-
 
       }
       wrapper.appendChild(tabGroup);
@@ -399,7 +400,9 @@ export class RawBone {
         buttonWrap.appendChild(undoButton);
         buttonWrap.appendChild(clearButton);
 
-        innerWrap.appendChild(buttonWrap)
+        if ( !this.boneStructure["readonly"]) {
+          innerWrap.appendChild(buttonWrap)
+        }
 
         wrapper.appendChild(innerWrap);
 
@@ -613,11 +616,11 @@ export class RawBone {
       this.inputsAbsolutePostions.push([inputWrapper])
 
     }
-    if (this.boneStructure["multiple"]) {
+    if (this.boneStructure["multiple"] && !this.boneStructure["readonly"]) {
       inputWrapper.appendChild(draggable);
     }
     inputWrapper.appendChild(inputElement);
-    if (this.boneStructure["multiple"]) {
+    if (this.boneStructure["multiple"] && !this.boneStructure["readonly"]) {
       inputWrapper.appendChild(deleteButton);
     }
 
