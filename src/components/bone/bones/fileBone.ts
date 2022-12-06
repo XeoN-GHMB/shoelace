@@ -95,7 +95,7 @@ export class FileBone extends RawBone {
 
     shadowKey.hidden = true;
     shadowKey.name = boneName;
-    if (value !== null) {
+    if (value !== null && value !== undefined) {
       shadowKey.value = key.toString();
     }
 

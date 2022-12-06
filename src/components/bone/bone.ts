@@ -57,8 +57,10 @@ export default class SlBone extends ShoelaceElement {
   @property({type: Boolean, reflect: true}) rendersaveButton = false;
   /** set boneError */
   @property() errors: BoneError[];
-  /** set boneValue */
+
   @property({type: Boolean, attribute: false}) inTable = false;
+
+  @property({type: Boolean, reflect: true}) disabled = false;
 
   /** Gets boneValue */
   get getBoneValue(): any {
@@ -117,7 +119,7 @@ export default class SlBone extends ShoelaceElement {
   }
 
 
-  @watchProps(['boneStructure', 'boneValue', "renderType"])
+  @watchProps(['boneStructure', 'boneValue', "renderType","disabled"])
   optionUpdate() {
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};

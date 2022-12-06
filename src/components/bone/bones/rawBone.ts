@@ -312,7 +312,7 @@ export class RawBone {
           //Lang , no multipler
           const languageWrapper = document.createElement("div");
           languageWrapper.classList.add("language-wrapper");
-          if (this.boneValue !== null) {
+          if (this.boneValue !== null && value !== undefined) {
             languageWrapper.appendChild(this.addInput(this.boneValue[lang], lang));
           } else {
             languageWrapper.appendChild(this.addInput(null, lang));
@@ -466,7 +466,10 @@ export class RawBone {
 
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
-    inputElement.disabled = this.boneStructure["readonly"];
+
+    if (this.boneStructure["readonly"] || this.mainInstance.disabled) {
+      inputElement.disabled = true;
+    }
 
     if (value === null || value === undefined) {
       inputElement.value = this.boneStructure["emptyValue"];
@@ -485,7 +488,7 @@ export class RawBone {
       if (this.boneStructure["required"]) {
 
         this.mainInstance.bone.querySelectorAll("sl-input").forEach((tmpInput: SlInput) => {
-          if (tmpInput.value !== null) {
+          if (tmpInput.value !== null && value !== undefined) {
             if (tmpInput.value.length > 0) {
               isValid = true;
             }
@@ -778,7 +781,7 @@ export class RawBone {
   reWriteBoneValue(): Record<string, BoneValue> {
     const obj = {};
     this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: SlInput | SlSelect) => {
-      if (inputElement.name !== undefined &&  inputElement.value !== undefined) {
+      if (inputElement.name !== undefined && inputElement.value !== undefined) {
         createPath(obj, inputElement.name, inputElement.value);
       }
 

@@ -18,7 +18,7 @@ export class RecordBone extends RawBone {
     for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
 
       let recordBoneValue: any = null;
-      if (value !== null) {
+      if (value !== null && value !== undefined) {
         recordBoneValue = value[_boneName];
 
       }

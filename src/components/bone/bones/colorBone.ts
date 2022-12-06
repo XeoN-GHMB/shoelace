@@ -13,6 +13,9 @@ export class ColorBone extends RawBone {
     });
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
+    if (this.boneStructure["readonly"] || this.mainInstance.disabled) {
+      inputElement.disabled = true;
+    }
     inputElement.value = value;
     inputElement.classList.add("color-bone");
 

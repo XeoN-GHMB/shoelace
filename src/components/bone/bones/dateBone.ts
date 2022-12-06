@@ -30,14 +30,14 @@ export class DateBone extends RawBone {
     if (this.boneStructure["time"]) {
 
       dateBone.type = "datetime-local"
-      if(value!==null)
+      if(value!==null && value !==undefined)
       {
         dateBone.value = value.split('+')[0]
       }
 
     } else {
       dateBone.type = "date"
-      if(value!==null) {
+      if(value!==null && value !==undefined) {
         dateBone.value = (new Date(value)).toISOString().substr(0, 10);
       }
     }

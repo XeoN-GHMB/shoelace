@@ -10,6 +10,10 @@ export class BooleanBone extends RawBone {
 
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
+     if(this.boneStructure["readonly"] || this.mainInstance.disabled)
+    {
+      inputElement.disabled =true;
+    }
     inputElement.addEventListener("sl-change", () => {
       this.mainInstance.internboneValue = this.reWriteBoneValue();
       this.mainInstance.handleChange();

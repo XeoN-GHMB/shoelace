@@ -17,6 +17,9 @@ export class SpatialBone extends RawBone {
 
     const latInput = document.createElement("sl-input")
     latInput.name = `${boneName}.lat`;
+    if (this.boneStructure["readonly"] || this.mainInstance.disabled) {
+      latInput.disabled = true;
+    }
     latInput.value = lat.toString();
     latInput.type = "number";
     latInput.placeholder = translate("names.lat");;
@@ -29,6 +32,9 @@ export class SpatialBone extends RawBone {
 
     const lngInput: SlInput = document.createElement("sl-input")
     lngInput.name = `${boneName}.lng`;
+     if (this.boneStructure["readonly"] || this.mainInstance.disabled) {
+      lngInput.disabled = true;
+    }
     lngInput.value = lng.toString();
     lngInput.type = "number";
     lngInput.placeholder = translate("names.lng");;

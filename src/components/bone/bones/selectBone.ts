@@ -69,6 +69,9 @@ export class SelectBone extends RawBone {
     }
 
     inputSelect.dataset.boneName = boneName;
+    if (this.boneStructure["readonly"] || this.mainInstance.disabled) {
+      inputSelect.disabled = true;
+    }
     //inputSelect.hoist = true; //Todo styling
 
     inputSelect.multiple = this.boneStructure["multiple"];
