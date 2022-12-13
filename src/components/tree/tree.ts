@@ -203,7 +203,8 @@ export default class SlTree extends ShoelaceElement {
       previousSelection.length !== nextSelection.length ||
       nextSelection.some(item => !previousSelection.includes(item))
     ) {
-      this.emit('sl-selection-change', { detail: { selection: nextSelection } });
+      let indexes = nextSelection.map(i => this.getPathToItem(i))
+      this.emit('sl-selection-change', { detail: { selection: nextSelection, paths: indexes } });
     }
   }
 
@@ -217,6 +218,15 @@ export default class SlTree extends ShoelaceElement {
 
   getAllTreeItems() {
     return [...this.querySelectorAll<SlTreeItem>('sl-tree-item')];
+  }
+
+  getPathToItem(item){
+    var nodes = [];
+    while(item.nodeName.toLowerCase() !== "sl-tree") {
+        nodes.unshift(Array.from(item.parentNode.children).filter(i => i.nodeName.toLowerCase()==="sl-tree-item").indexOf(item));
+        item = item.parentNode;
+    }
+    return nodes
   }
 
   getFocusableItems() {
