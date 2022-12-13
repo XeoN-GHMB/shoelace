@@ -25,7 +25,7 @@ export default css`
 
   .tab-group__indicator {
     position: absolute;
-    transition: var(--sl-transition-fast) transform ease, var(--sl-transition-fast) width ease;
+    transition: var(--sl-transition-fast) translate ease, var(--sl-transition-fast) width ease;
   }
 
   .tab-group--has-scroll-controls .tab-group__nav-container {
@@ -34,6 +34,7 @@ export default css`
   }
 
   .tab-group__body {
+    display: block;
     overflow: auto;
   }
 

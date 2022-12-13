@@ -19,20 +19,20 @@ import type { CSSResultGroup } from 'lit';
  * @since 2.0
  * @status stable
  *
- * @slot label - The input's label. Alternatively, you can use the `label` attribute.
- * @slot help-text - Help text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
+ * @slot label - The range's label. Alternatively, you can use the `label` attribute.
+ * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
  *
  * @event sl-change - Emitted when the control's value changes.
  * @event sl-blur - Emitted when the control loses focus.
  * @event sl-focus - Emitted when the control gains focus.
  *
- * @csspart form-control - The form control that wraps the label, input, and help-text.
+ * @csspart form-control - The form control that wraps the label, input, and help text.
  * @csspart form-control-label - The label's wrapper.
  * @csspart form-control-input - The range's wrapper.
  * @csspart form-control-help-text - The help text's wrapper.
- * @csspart base - The component's internal wrapper.
- * @csspart input - The native range input.
- * @csspart tooltip - The range tooltip.
+ * @csspart base - The component's base wrapper.
+ * @csspart input - The internal `<input>` element.
+ * @csspart tooltip - The range's tooltip.
  *
  * @cssproperty --thumb-size - The size of the thumb.
  * @cssproperty --tooltip-offset - The vertical distance the tooltip is offset from the track.
@@ -57,41 +57,45 @@ export default class SlRange extends ShoelaceElement implements ShoelaceFormCont
   @state() private hasFocus = false;
   @state() private hasTooltip = false;
   @state() invalid = false;
+  @property() title = ''; // make reactive to pass through
 
-  /** The input's name attribute. */
+  /** The name of the range, submitted as a name/value pair with form data. */
   @property() name = '';
 
-  /** The input's value attribute. */
+  /** The current value of the range, submitted as a name/value pair with form data. */
   @property({ type: Number }) value = 0;
 
-  /** The range's label. If you need to display HTML, you can use the `label` slot instead. */
+  /** The range's label. If you need to display HTML, use the `label` slot instead. */
   @property() label = '';
 
   /** The input's label position */
   @property() labelposition: 'top' | 'left' = 'top';
 
-  /** The range's help text. If you need to display HTML, you can use the help-text slot instead. */
+  /** The range's help text. If you need to display HTML, use the help-text slot instead. */
   @property({ attribute: 'help-text' }) helpText = '';
 
   /** Disables the range. */
   @property({ type: Boolean, reflect: true }) disabled = false;
 
-  /** The input's min attribute. */
+  /** The minimum acceptable value of the range. */
   @property({ type: Number }) min = 0;
 
-  /** The input's max attribute. */
+  /** The maximum acceptable value of the range. */
   @property({ type: Number }) max = 100;
 
-  /** The input's step attribute. */
+  /** The interval at which the range will increase and decrease. */
   @property({ type: Number }) step = 1;
 
-  /** The preferred placement of the tooltip. */
+  /** The preferred placement of the range's tooltip. */
   @property() tooltip: 'top' | 'bottom' | 'none' = 'top';
 
-  /** A function used to format the tooltip's value. */
+  /**
+   * A function used to format the tooltip's value. The range's value is passed as the first and only argument. The
+   * function should return a string to display in the tooltip.
+   */
   @property({ attribute: false }) tooltipFormatter: (value: number) => string = (value: number) => value.toString();
 
-  /** Gets or sets the default value used to reset this element. The initial value corresponds to the one originally specified in the HTML that created this element. */
+  /** The default value of the form control. Primarily used for resetting the form control. */
   @defaultValue() defaultValue = 0;
 
   connectedCallback() {
@@ -116,17 +120,17 @@ export default class SlRange extends ShoelaceElement implements ShoelaceFormCont
     this.resizeObserver.unobserve(this.input);
   }
 
-  /** Sets focus on the input. */
+  /** Sets focus on the range. */
   focus(options?: FocusOptions) {
     this.input.focus(options);
   }
 
-  /** Removes focus from the input. */
+  /** Removes focus from the range. */
   blur() {
     this.input.blur();
   }
 
-  /** Increments the value of the input by the value of the step attribute. */
+  /** Increments the value of the range by the value of the step attribute. */
   stepUp() {
     this.input.stepUp();
     if (this.value !== Number(this.input.value)) {
@@ -135,7 +139,7 @@ export default class SlRange extends ShoelaceElement implements ShoelaceFormCont
     }
   }
 
-  /** Decrements the value of the input by the value of the step attribute. */
+  /** Decrements the value of the range by the value of the step attribute. */
   stepDown() {
     this.input.stepDown();
     if (this.value !== Number(this.input.value)) {
@@ -234,10 +238,10 @@ export default class SlRange extends ShoelaceElement implements ShoelaceFormCont
       // off depending on the size of the control, thumb, and tooltip dimensions.
       if (isRtl) {
         const x = `${inputWidth - percentAsWidth}px + ${percent} * ${thumbSize}`;
-        this.output.style.transform = `translateX(calc((${x} - ${tooltipWidth / 2}px - ${thumbSize} / 2)))`;
+        this.output.style.translate = `calc((${x} - ${tooltipWidth / 2}px - ${thumbSize} / 2))`;
       } else {
         const x = `${percentAsWidth}px - ${percent} * ${thumbSize}`;
-        this.output.style.transform = `translateX(calc(${x} - ${tooltipWidth / 2}px + ${thumbSize} / 2))`;
+        this.output.style.translate = `calc(${x} - ${tooltipWidth / 2}px + ${thumbSize} / 2)`;
       }
     }
   }
@@ -288,8 +292,9 @@ export default class SlRange extends ShoelaceElement implements ShoelaceFormCont
             <input
               part="input"
               id="input"
-              type="range"
               class="range__control"
+              title=${this.title /* An empty title prevents browser validation tooltips from appearing on hover */}
+              type="range"
               name=${ifDefined(this.name)}
               ?disabled=${this.disabled}
               min=${ifDefined(this.min)}
@@ -310,14 +315,16 @@ export default class SlRange extends ShoelaceElement implements ShoelaceFormCont
               : ''}
           </div>
         </div>
-        <div
+
+        <slot
+          name="help-text"
           part="form-control-help-text"
           id="help-text"
           class="form-control__help-text"
           aria-hidden=${hasHelpText ? 'false' : 'true'}
         >
-          <slot name="help-text">${this.helpText}</slot>
-        </div>
+          ${this.helpText}
+        </slot>
       </div>
     `;
   }

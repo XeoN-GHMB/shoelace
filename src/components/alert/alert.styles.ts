@@ -20,7 +20,6 @@ export default css`
     border: solid var(--sl-panel-border-width) var(--sl-panel-border-color);
     /*border-top-width: calc(var(--sl-panel-border-width) * 3)*/
     border-radius: var(--sl-border-radius-medium);
-    box-shadow: var(--box-shadow);
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-small);
     font-weight: var(--sl-font-weight-normal);
@@ -107,6 +106,7 @@ export default css`
 
   .alert__message {
     flex: 1 1 auto;
+    display: block;
     padding: var(--sl-spacing-large);
     overflow: hidden;
   }
@@ -115,7 +115,7 @@ export default css`
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    font-size: var(--sl-font-size-large);
+    font-size: var(--sl-font-size-medium);
     padding-inline-end: var(--sl-spacing-medium);
   }
 `;

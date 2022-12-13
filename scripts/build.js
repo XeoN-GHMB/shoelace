@@ -28,7 +28,6 @@ fs.mkdirSync(outdir, { recursive: true });
     execSync(`node scripts/make-metadata.js --outdir "${outdir}"`, { stdio: 'inherit' });
     execSync(`node scripts/make-search.js --outdir "${outdir}"`, { stdio: 'inherit' });
     execSync(`node scripts/make-react.js --outdir "${outdir}"`, { stdio: 'inherit' });
-    execSync(`node scripts/make-vscode-data.js --outdir "${outdir}"`, { stdio: 'inherit' });
     execSync(`node scripts/make-web-types.js --outdir "${outdir}"`, { stdio: 'inherit' });
     execSync(`node scripts/make-themes.js --outdir "${outdir}"`, { stdio: 'inherit' });
     execSync(`node scripts/make-icons.js --outdir "${outdir}"`, { stdio: 'inherit' });
@@ -128,15 +127,6 @@ fs.mkdirSync(outdir, { recursive: true });
         baseDir: 'docs',
         routes: {
           '/dist': './dist'
-        }
-      },
-      socket: {
-        socketIoClientConfig: {
-          // Configure socketIO to retry forever when disconnected to enable the auto-reattach timeout below to work
-          reconnectionAttempts: Infinity,
-          reconnectionDelay: 500,
-          reconnectionDelayMax: 500,
-          timeout: 1000
         }
       }
     };

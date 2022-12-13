@@ -6,6 +6,8 @@ import styles from './spinner-circle.styles';
 import type { CSSResultGroup } from 'lit';
 
 /**
+ * @summary Spinners are used to show the progress of an indeterminate operation.
+ *
  * @since 2.0
  * @status stable
  *
@@ -13,7 +15,7 @@ import type { CSSResultGroup } from 'lit';
  *
  * @cssproperty --track-width - The width of the track.
  * @cssproperty --track-color - The color of the track.
- * @cssproperty --indicator-color - The color of the indicator.
+ * @cssproperty --indicator-color - The color of the spinner's indicator.
  * @cssproperty --speed - The time it takes for the spinner to complete one animation cycle.
  */
 @customElement('sl-spinner-circle')
