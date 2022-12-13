@@ -4,8 +4,6 @@ import ShoelaceElement from '../../internal/shoelace-element';
 import styles from './button-group.styles';
 import type { CSSResultGroup } from 'lit';
 
-const BUTTON_CHILDREN = ['sl-button', 'sl-radio-button', 'sl-input', 'sl-select', 'sl-combobox'];
-
 /**
  * @summary Button groups can be used to group related buttons into sections.
  *
