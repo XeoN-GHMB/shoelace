@@ -220,11 +220,14 @@ export default class SlTree extends ShoelaceElement {
     return [...this.querySelectorAll<SlTreeItem>('sl-tree-item')];
   }
 
-  getPathToItem(item){
+  getPathToItem(item:SlTreeItem){
     var nodes = [];
     while(item.nodeName.toLowerCase() !== "sl-tree") {
+      if (item.parentNode){
         nodes.unshift(Array.from(item.parentNode.children).filter(i => i.nodeName.toLowerCase()==="sl-tree-item").indexOf(item));
-        item = item.parentNode;
+      }
+      item = item.parentNode as SlTreeItem;
+
     }
     return nodes
   }
