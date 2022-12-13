@@ -579,7 +579,7 @@ describe('<sl-tree>', () => {
 
           // Assert
           expect(selectedChangeSpy).to.have.been.calledOnce;
-          expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node] } });
+          expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node], paths:[[0]] } });
         });
       });
     });
@@ -605,7 +605,7 @@ describe('<sl-tree>', () => {
 
         // Assert
         expect(selectedChangeSpy).to.have.been.calledOnce;
-        expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node] } });
+        expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node], paths:[[0]] } });
       });
     });
 
@@ -650,8 +650,8 @@ describe('<sl-tree>', () => {
 
         // Assert
         expect(selectedChangeSpy).to.have.been.calledTwice;
-        expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node] } });
-        expect(selectedChangeSpy.args[1][0]).to.deep.include({ detail: { selection: [] } });
+        expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node], paths:[[0]] } }); 
+        expect(selectedChangeSpy.args[1][0]).to.deep.include({ detail: { selection: [], paths:[] } });
       });
     });
   });
