@@ -71,7 +71,7 @@
     "path-to-regexp": "^6.2.0",
     "qr-creator": "^1.0.0",
     "string-natural-compare": "^3.0.1",
-    "tabulator-tables": "^5.2.3",
+    "tabulator-tables": "^5.4.3",
     "tinymce": "^6.2.0"
   },
   "devDependencies": {

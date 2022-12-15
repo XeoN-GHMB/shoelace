@@ -64,7 +64,7 @@ export default class SlTable extends ShoelaceElement {
   @property({type: Boolean, reflect: true}) rowindexes: Boolean = false;
 
   /** are rows selectable?*/
-  @property({type: Boolean|Number, reflect: true}) rowselect: Boolean|Number = false;
+  @property({type: Boolean | Number, reflect: true}) rowselect: Boolean | Number = false;
 
   /** disable columnselection menu?*/
   @property({type: Boolean, reflect: true}) nocolumnsmenu: Boolean = false;
@@ -90,18 +90,32 @@ export default class SlTable extends ShoelaceElement {
 
   @property({type: String, attribute: false}) dataCursor: String = null;
 
+  @property({type: String, attribute: false}) mode: String = "list";
+
+  //Hierachy part
+  @property({type: Object, attribute: false}) rootNodes: Object;
+
+
   tableInstance: any;
   tableReady: Boolean = false;
   previousStructure: any = null;
   _editabletable: boolean = this.editabletable;
 
-  @watchProps(['structure', 'skellist', "editabletable"])
+  @watchProps(['structure', 'skellist', "editabletable", "rootNodes", "mode"])
   optionUpdate() {
     //only rebuild table if structure changed
-    if(this.skellist===undefined || this.structure===undefined || Object.keys(this.structure).length===0 || this.skellist.length===0)
-    {
-      return ;
+    if (this.mode === "list") {
+      if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0 || this.skellist.length === 0) {
+        return;
+      }
+    } else if (this.mode === "hierachy") {
+      if (this.rootNodes === undefined || this.structure === undefined || Object.keys(this.structure).length === 0 || this.rootNodes.length === 0) {
+        console.log("out !")
+        return;
+      }
     }
+
+
     this._editabletable = this.editabletable;
     if (this.previousStructure !== this.structure) {
       this.previousStructure = this.structure
@@ -115,7 +129,11 @@ export default class SlTable extends ShoelaceElement {
 
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
-        this.tableInstance.setData(this.skellist)
+        if (this.mode === "list") {
+          this.tableInstance.setData(this.skellist)
+        } else if (this.mode === "hierachy") {
+          this.tableInstance.setData(this.rootNodes)
+        }
         this.tableReady = true
       })
 
@@ -144,6 +162,14 @@ export default class SlTable extends ShoelaceElement {
           updateData(formData, row.getData()["key"], this)
         })
       }
+      if (this.mode === "hierachy") {
+        const self = this;//keep instance hack
+        this.tableInstance.on("dataTreeRowExpanded", function (row, level) {//we must fetch new data
+          row._row.data["_children"] = [];
+          self.emit("table-fetchNodes",{detail:{"key":row.getData().key,"level":level,"row":row}});
+
+        });
+      }
 
     }
     //update Data only if tableReady
@@ -164,8 +190,8 @@ export default class SlTable extends ShoelaceElement {
 
     }
   }
-  getSelectedRows()
-  {
+
+  getSelectedRows() {
     if (!this.tableInstance) {
       return 0;
     }
@@ -242,6 +268,10 @@ export default class SlTable extends ShoelaceElement {
     currentstructure["columns"] = columns
     this.tableConfig = {...this.tableConfig, ...currentstructure}
     this.tableConfig["editabletable"] = this.editabletable
+
+    if (this.mode === "hierachy") {
+      this.tableConfig["dataTree"] = true;
+    }
   }
 
   editCheck(cell) {
