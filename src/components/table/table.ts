@@ -10,6 +10,7 @@ import {boneFormatter} from "./cellRenderer.ts";
 import {boneEditor, updateData} from "./cellEditorRenderer.ts";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
+import {CustomMoveRowsModule} from './tabulator_move_rows.js';
 
 
 /**
@@ -92,8 +93,8 @@ export default class SlTable extends ShoelaceElement {
 
   @property({type: String, attribute: false}) mode: String = "list";
 
-  //Hierachy part
-  @property({type: Object, attribute: false}) rootNodes: Object;
+  //hierarchy part
+  @property({type: Object, attribute: false}) nodes: Object;
 
 
   tableInstance: any;
@@ -101,16 +102,15 @@ export default class SlTable extends ShoelaceElement {
   previousStructure: any = null;
   _editabletable: boolean = this.editabletable;
 
-  @watchProps(['structure', 'skellist', "editabletable", "rootNodes", "mode"])
+  @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode"])
   optionUpdate() {
     //only rebuild table if structure changed
     if (this.mode === "list") {
       if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0 || this.skellist.length === 0) {
         return;
       }
-    } else if (this.mode === "hierachy") {
-      if (this.rootNodes === undefined || this.structure === undefined || Object.keys(this.structure).length === 0 || this.rootNodes.length === 0) {
-        console.log("out !")
+    } else if (this.mode === "hierarchy") {
+      if (this.nodes === undefined || this.structure === undefined || Object.keys(this.structure).length === 0 || this.nodes.length === 0) {
         return;
       }
     }
@@ -125,50 +125,76 @@ export default class SlTable extends ShoelaceElement {
       if (!this.shadowtable) {
         return 0
       }
+
+      TabulatorFull.registerModule(CustomMoveRowsModule);
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
 
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
         if (this.mode === "list") {
           this.tableInstance.setData(this.skellist)
-        } else if (this.mode === "hierachy") {
-          this.tableInstance.setData(this.rootNodes)
+        } else if (this.mode === "hierarchy") {
+          this.tableInstance.setData(this.nodes)
         }
         this.tableReady = true
       })
 
       if (this.moveablerows) {
-        this.tableInstance.on("rowMoved", (row) => {
-          const nextRow = row.getNextRow();
-          const prevRow = row.getPrevRow();
-          let newSortIndex = 0;
-          if (nextRow) {
-            if (prevRow) {
-              newSortIndex = (nextRow.getData()["sortindex"] + prevRow.getData()["sortindex"]) / 2.0
+        if(this.mode==="list") {
+          this.tableInstance.on("rowMoved", (row) => {
+
+            const nextRow = row.getNextRow();
+            const prevRow = row.getPrevRow();
+            let newSortIndex = 0;
+            if (nextRow) {
+              if (prevRow) {
+                newSortIndex = (nextRow.getData()["sortindex"] + prevRow.getData()["sortindex"]) / 2.0
+              } else {
+                newSortIndex = nextRow.getData()["sortindex"] - 1;
+              }
             } else {
-              newSortIndex = nextRow.getData()["sortindex"] - 1;
+              if (prevRow) {
+                newSortIndex = prevRow.getData()["sortindex"] + 1;
+              } else {
+                return;
+              }
+
             }
-          } else {
-            if (prevRow) {
-              newSortIndex = prevRow.getData()["sortindex"] + 1;
-            } else {
-              return;
-            }
+
+            const formData = new FormData();
+            formData.set("sortindex", newSortIndex);
+            updateData(formData, row.getData()["key"], this)
+
+
+          })
+        }
+        if(this.mode==="hierarchy")
+        {   const self=this;
+            this.tableInstance.on("rowMovedDataTree", (detail) => {
+              const eventdata={};
+              eventdata["srcKey"]=detail["srcRow"].getData()["key"]
+              eventdata["destKey"]=detail["destRow"].getData()["key"]
+              self.emit("table-rowMovedDataTree",{detail:eventdata });
+
+            });
+
+        }
+
+      }
+      if (this.mode === "hierarchy") {
+
+        const self = this;//keep instance hack
+        this.tableInstance.on("dataTreeRowExpanded", function (row, level) {//we must fetch new data
+
+          if (row._row.data["_children"][0] === undefined) {//we not trigger the event when we already have data
+            row._row.data["_children"] = [];
+            self.emit("table-fetchNodes", {detail: {"key": row.getData().key, "level": level, "row": row}});
 
           }
 
-          const formData = new FormData();
-          formData.set("sortindex", newSortIndex);
-          updateData(formData, row.getData()["key"], this)
-        })
-      }
-      if (this.mode === "hierachy") {
-        const self = this;//keep instance hack
-        this.tableInstance.on("dataTreeRowExpanded", function (row, level) {//we must fetch new data
-          row._row.data["_children"] = [];
-          self.emit("table-fetchNodes",{detail:{"key":row.getData().key,"level":level,"row":row}});
 
         });
+
       }
 
     }
@@ -269,8 +295,9 @@ export default class SlTable extends ShoelaceElement {
     this.tableConfig = {...this.tableConfig, ...currentstructure}
     this.tableConfig["editabletable"] = this.editabletable
 
-    if (this.mode === "hierachy") {
+    if (this.mode === "hierarchy") {
       this.tableConfig["dataTree"] = true;
+      this.tableConfig["dataTreeSelectPropagate"] = true;
     }
   }
 
@@ -282,6 +309,7 @@ export default class SlTable extends ShoelaceElement {
 
 
   updateConfig() {
+
     this.tableConfig["height"] = this.height
     this.tableConfig["minHeight"] = this.minheight
     this.tableConfig["placeholder"] = this.placeholder
@@ -366,6 +394,22 @@ export default class SlTable extends ShoelaceElement {
           }
           col["headerMenu"] = this.headerMenu
         }
+      }
+    }
+    if (this.mode === "hierarchy") {
+      let handleColumn = {
+        rowHandle: true,
+        resizable: true,
+        headerSort: false,
+        frozen: true,
+        width: 70,
+        minWidth: 40
+      }
+
+      if (!Object.keys(this.tableConfig).includes("columns") || this.tableConfig["columns"].length === 0) {
+        this.tableConfig["columns"] = [handleColumn]
+      } else {
+        this.tableConfig["columns"] = [handleColumn, ...this.tableConfig["columns"]]
       }
     }
   }
@@ -496,6 +540,7 @@ export default class SlTable extends ShoelaceElement {
 
   postBuildTable() {
     this.tableInstance.on("rowSelectionChanged", (data: any, rows: any) => {
+      console.log("selec", rows)
       this.emit('sl-selectionChanged', {detail: {data: data, row: rows}})
     })
     this.tableInstance.on("cellDblClick", (date: any, cell: any) => {
@@ -525,7 +570,6 @@ export default class SlTable extends ShoelaceElement {
     if (!tableElement || !tableElement.parentNode || this.tableInstance) {
       return 0
     }
-
     this.updateConfig()
     this.tableInstance = new TabulatorFull(tableElement,
       this.tableConfig)
