@@ -10,7 +10,8 @@ import {boneFormatter} from "./cellRenderer.ts";
 import {boneEditor, updateData} from "./cellEditorRenderer.ts";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
-import {CustomMoveRowsModule} from './tabulator_move_rows.js';
+import {CustomMoveRowsModule} from './modules/tabulator_move_rows';
+import {CustomDataTree} from "./modules/tabulator_removeTreeChildRow";
 
 
 /**
@@ -101,16 +102,18 @@ export default class SlTable extends ShoelaceElement {
   tableReady: Boolean = false;
   previousStructure: any = null;
   _editabletable: boolean = this.editabletable;
+  expandDepth = 0
 
   @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode"])
   optionUpdate() {
+    console.log("update", this.nodes)
     //only rebuild table if structure changed
     if (this.mode === "list") {
-      if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0 || this.skellist.length === 0) {
+      if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
         return;
       }
     } else if (this.mode === "hierarchy") {
-      if (this.nodes === undefined || this.structure === undefined || Object.keys(this.structure).length === 0 || this.nodes.length === 0) {
+      if (this.nodes === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
         return;
       }
     }
@@ -127,20 +130,17 @@ export default class SlTable extends ShoelaceElement {
       }
 
       TabulatorFull.registerModule(CustomMoveRowsModule);
+      TabulatorFull.registerModule(CustomDataTree);
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
 
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
-        if (this.mode === "list") {
-          this.tableInstance.setData(this.skellist)
-        } else if (this.mode === "hierarchy") {
-          this.tableInstance.setData(this.nodes)
-        }
+
         this.tableReady = true
       })
 
       if (this.moveablerows) {
-        if(this.mode==="list") {
+        if (this.mode === "list") {
           this.tableInstance.on("rowMoved", (row) => {
 
             const nextRow = row.getNextRow();
@@ -168,15 +168,15 @@ export default class SlTable extends ShoelaceElement {
 
           })
         }
-        if(this.mode==="hierarchy")
-        {   const self=this;
-            this.tableInstance.on("rowMovedDataTree", (detail) => {
-              const eventdata={};
-              eventdata["srcKey"]=detail["srcRow"].getData()["key"]
-              eventdata["destKey"]=detail["destRow"].getData()["key"]
-              self.emit("table-rowMovedDataTree",{detail:eventdata });
+        if (this.mode === "hierarchy") {
+          const self = this;
+          this.tableInstance.on("rowMovedDataTree", (detail) => {
+            const eventdata = {};
+            eventdata["srcKey"] = detail["srcRow"].getData()["key"]
+            eventdata["destKey"] = detail["destRow"].getData()["key"]
+            self.emit("table-rowMovedDataTree", {detail: eventdata});
 
-            });
+          });
 
         }
 
@@ -184,24 +184,35 @@ export default class SlTable extends ShoelaceElement {
       if (this.mode === "hierarchy") {
 
         const self = this;//keep instance hack
-        this.tableInstance.on("dataTreeRowExpanded", function (row, level) {//we must fetch new data
+        this.tableInstance.on("dataTreeRowExpanded", function (row, level: number) {//we must fetch new data
+          self.expandDepth = Math.max(self.expandDepth, level);
 
+          self.tableInstance.columnManager.getColumnByIndex(0).setWidth(70 + (20 * self.expandDepth))
           if (row._row.data["_children"][0] === undefined) {//we not trigger the event when we already have data
             row._row.data["_children"] = [];
             self.emit("table-fetchNodes", {detail: {"key": row.getData().key, "level": level, "row": row}});
 
           }
 
-
         });
+        this.tableInstance.on("dataTreeRowCollapsed", (row, level: number) => {
+
+          self.expandDepth = Math.min(self.expandDepth, level);
+
+          self.tableInstance.columnManager.getColumnByIndex(0).setWidth(70 + (20 * self.expandDepth))
+        })
 
       }
 
     }
     //update Data only if tableReady
     if (this.tableReady) {
+      if (this.mode === "list") {
+        this.tableInstance.setData(this.skellist)
+      } else if (this.mode === "hierarchy") {
+        this.tableInstance.setData(this.nodes)
+      }
 
-      this.tableInstance.setData(this.skellist)
 
     }
     return 1
@@ -333,25 +344,31 @@ export default class SlTable extends ShoelaceElement {
     }
 
     if (this.rowselect) {
-      let selectColumn = {
-        formatter: this.slRowSelection,
-        resizable: false,
-        width: 47,
-        minWidth: 47,
-        titleFormatter: this.slRowSelection,
-        hozAlign: "center",
-        headerSort: false,
-        cellClick: function (e, cell) {
-          cell.getRow().toggleSelect();
+      if (this.mode === "list") {
+        let selectColumn = {
+          formatter: this.slRowSelection,
+          resizable: false,
+          width: 47,
+          minWidth: 47,
+          titleFormatter: this.slRowSelection,
+          hozAlign: "center",
+          headerSort: false,
+          cellClick: function (e, cell) {
+            cell.getRow().toggleSelect();
+          }
         }
+
+        if (!Object.keys(this.tableConfig).includes("columns") || this.tableConfig["columns"].length === 0) {
+          this.tableConfig["columns"] = [selectColumn]
+        } else {
+          this.tableConfig["columns"] = [selectColumn, ...this.tableConfig["columns"]]
+        }
+        this.tableConfig["selectable"] = this.rowselect;
+      }
+      if (this.mode === "hierarchy") {
+        this.tableConfig["selectable"] = 1;
       }
 
-      if (!Object.keys(this.tableConfig).includes("columns") || this.tableConfig["columns"].length === 0) {
-        this.tableConfig["columns"] = [selectColumn]
-      } else {
-        this.tableConfig["columns"] = [selectColumn, ...this.tableConfig["columns"]]
-      }
-      this.tableConfig["selectable"] = this.rowselect;
 
     }
 
@@ -411,6 +428,10 @@ export default class SlTable extends ShoelaceElement {
       } else {
         this.tableConfig["columns"] = [handleColumn, ...this.tableConfig["columns"]]
       }
+
+      this.tableConfig["dataTreeExpandElement"] = '<sl-icon name="chevron-right"></sl-icon>';
+      this.tableConfig["dataTreeCollapseElement"] =  '<sl-icon name="chevron-down"></sl-icon>';
+
     }
   }
 
@@ -540,11 +561,9 @@ export default class SlTable extends ShoelaceElement {
 
   postBuildTable() {
     this.tableInstance.on("rowSelectionChanged", (data: any, rows: any) => {
-      console.log("selec", rows)
       this.emit('sl-selectionChanged', {detail: {data: data, row: rows}})
     })
     this.tableInstance.on("cellDblClick", (date: any, cell: any) => {
-      console.log("dbl")
       this.emit('sl-dblclick', {detail: {cell: cell}})
     });
 
