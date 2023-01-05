@@ -7,9 +7,6 @@ class CustomDataTree extends DataTreeModule {
 
   }
   removeTreeChildRow(row:RowComponent,  index:number){
-		var childIndex = false;
-
-
 		if(!Array.isArray(row.data[this.field])){
 			row.data[this.field] = [];
 
