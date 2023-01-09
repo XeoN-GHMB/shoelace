@@ -106,9 +106,11 @@ export default class SlTable extends ShoelaceElement {
 
   @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode"])
   optionUpdate() {
+    console.log("start")
     //only rebuild table if structure changed
     if (this.mode === "list") {
       if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
+        console.log("out")
         return;
       }
     } else if (this.mode === "hierarchy") {
@@ -122,8 +124,8 @@ export default class SlTable extends ShoelaceElement {
     if (this.previousStructure !== this.structure) {
       this.previousStructure = this.structure
 
-      this.buildStructure()
-      this.updateConfig()
+      this.buildStructure();
+      this.updateConfig();
       if (!this.shadowtable) {
         return 0
       }
@@ -199,9 +201,8 @@ export default class SlTable extends ShoelaceElement {
           self.tableInstance.columnManager.getColumnByIndex(0).setWidth(70 + (20 * self.expandDepth))
           if (row._row.data["_children"][0] === undefined) {//we not trigger the event when we already have data
             row._row.data["_children"] = [];
-            self.emit("table-fetchNodes", {detail: {"key": row.getData().key, "level": level, "row": row}});
-
           }
+          self.emit("table-fetchNodes", {detail: {"key": row.getData().key, "level": level, "row": row}});
 
         });
         this.tableInstance.on("dataTreeRowCollapsed", (row, level: number) => {

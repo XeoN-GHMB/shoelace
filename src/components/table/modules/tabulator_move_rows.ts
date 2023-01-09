@@ -7,11 +7,13 @@ class CustomMoveRowsModule extends MoveRowsModule {
     this.tableInstance = table;
     this.hoverRow = false;
     this.addAsChild = false;
+    this.timeOutId = null;
   }
 
   startMove(e, row: Row) {
-    console.log("has childs", row.getComponent().getTreeChildren())
-    if (row.getComponent().getTreeChildren().lenght > 0) {
+    console.log("has childs", row.getComponent().getTreeChildren().length)
+    if (row.getComponent().getTreeChildren().length > 0 && row.getComponent().isTreeExpanded()) {
+      console.log("treeCollapse")
       row.getComponent().treeCollapse();
     }
     var element = row.getElement();
@@ -79,6 +81,22 @@ class CustomMoveRowsModule extends MoveRowsModule {
         if (self.hoverRow) {
           self.hoverRow.getComponent().deselect();
         }
+        /*//maybe later
+        if (self.timeOutId !== null) {
+          clearTimeout(self.timeOutId)
+        }
+
+        self.timeOutId = setTimeout(() => {
+
+          if (!self.hoverRow.getComponent().isTreeExpanded() && self.hoverRow !== self.moving) {
+            self.hoverRow.getComponent().treeExpand();
+            const tmp_Y = self.startY;
+            self.startMove(e, self.moving);
+            self.startY = tmp_Y;
+          }
+
+        }, 1500)
+    */
 
       }
 
@@ -179,9 +197,9 @@ class CustomMoveRowsModule extends MoveRowsModule {
           hoverRowComponent._row.data["_children"] = [];
         }
         console.log(`update parent entry form ${movingRowComponent.getData()["parententry"]} to ${hoverRowComponent.getData()["key"]}`)
-        const tmp_data = movingRowComponent.getData();
-        tmp_data["parententry"] = hoverRowComponent.getData()["key"];
-        movingRowComponent.update(tmp_data).then(() => {
+        const updateData = {};
+        updateData["parententry"] = hoverRowComponent.getData()["key"];
+        movingRowComponent.update(updateData).then(() => {
           console.log(`parent entry form ${movingRowComponent.getData()["parententry"]}`)
           this.moveRowToChild(hoverRowComponent, movingRowComponent)
           self.moving.table.rowManager.deleteRow(self.moving);
@@ -200,162 +218,149 @@ class CustomMoveRowsModule extends MoveRowsModule {
         console.log("hover name=", hoverRowComponent.getData()["name"], hoverRowComponent.getData())
         console.log("same parent=", movingRowComponent.getData()["parententry"] === hoverRowComponent.getData()["parententry"])
         console.log("after =", this.toRowAfter)
+        /*if the hover row is expanded and we want append after the row we must set  toRowAfter to  false and
+                  *hoverRowComponent to the first child
+                  *
+                  *  */
+        if (hoverRowComponent.isTreeExpanded() && this.toRowAfter && hoverRowComponent.getTreeChildren().length > 0) {
+          this.toRowAfter = false;
+          this.hoverRow = hoverRowComponent.getTreeChildren()[0]._getSelf();
+          this.endMove(e);
+          return;
+        }
+        if (movingRowComponent.getData()["parententry"] === hoverRowComponent.getData()["parententry"]) { // we move in the same parententry
+          /** (after = true)
+           * >1
+           *  >2 moving
+           *  >3 hover
+           * =======
+           * >1
+           *  >3
+           *  >2
+           */
+
+
+
+          const sortindex = this.calcSortIndex(hoverRowComponent, this.toRowAfter);
+          this.table.rowManager.moveRow(this.moving, this.toRow, this.toRowAfter);
+          this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling);
+          this.placeholderElement.parentNode.removeChild(this.placeholderElement);
+
+          movingRowComponent.update({"sortindex": sortindex}).then(() => {
+            this.dispatchExternal("rowMovedDataTree", {
+              "move": false,
+              "sortindex": sortindex,
+              "srcKey": movingRowComponent.getData()["key"]
+            });
+
+            this._endMove()
+          })
+          return;
+        }
 
 
         if (movingRowComponent.getTreeParent()) { //moving is a child
 
-          if (movingRowComponent.getData()["parententry"] === hoverRowComponent.getData()["parententry"]) { // we move in the same parententry
+          // we must move and set new sort index
+          if (hoverRowComponent.getTreeParent()) {//move form child to child
+
+
             /** (after = true)
              * >1
              *  >2 moving
-             *  >3 hover
+             * >3
+             *  >4 hover
+             *  >5
              * =======
              * >1
-             *  >3
+             * >3
+             *  >4
              *  >2
-             */
-            console.log("We change only the sort index");
-            this.table.rowManager.moveRow(this.moving, this.toRow, this.toRowAfter);
-            this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling);
-            this.placeholderElement.parentNode.removeChild(this.placeholderElement);
-            const sortindex = this.calcSortIndex(hoverRowComponent, this.toRowAfter)
-            movingRowComponent.update({"sortindex": sortindex}).then(() => {
-              this.dispatchExternal("rowMovedDataTree", {
-                "move": false,
-                "sortindex": sortindex,
-                "srcKey": movingRowComponent.getData()["key"]
-              });
-
-              this._endMove()
-            })
-          } else {
-            // we must move and set new sort index
-            if (hoverRowComponent.getTreeParent()) {//move form child to child
-              //not add if is last child
-              const sortindex = this.calcSortIndex(hoverRowComponent, this.toRowAfter);
-
-              /** (after = true)
-               * >1
-               *  >2 moving
-               * >3
-               *  >4 hover
-               *  >5
-               * =======
-               * >1
-               * >3
-               *  >4
-               *  >2
-               *  >5
-               */
-
-              const tmp_data = movingRowComponent.getData();
-              console.log("asd")
-              // this.table.rowManager.moveRow(this.moving, this.toRow, this.toRowAfter);
-
-              tmp_data["parententry"] = hoverRowComponent.getTreeParent().getData()["key"];
-              this.moveRowToChild(hoverRowComponent.getTreeParent(), movingRowComponent, hoverRowComponent, this.toRowAfter)
-
-
-              tmp_data["sortindex"] = sortindex;
-              movingRowComponent.update(tmp_data).then(() => {
-
-
-                this.dispatchExternal("rowMovedDataTree", {
-                  "move": true,
-                  "sortindex": sortindex,
-                  "srcKey": movingRowComponent.getData()["key"],
-                  "destKey": tmp_data["parententry"]
-                });
-                this._endMove(e);
-              })
-            } else {//we move form child to root
-              /** (after = true)
-               * >1
-               *  >2 moving
-               *  >3
-               * >4 hover
-               * =======
-               *
-               * >1
-               *  >3
-               * >4
-               * >2
-               */
-
-              const tmp_data = movingRowComponent.getData();
-              tmp_data["parententry"] = hoverRowComponent.getData()["parententry"];
-              movingRowComponent.update(tmp_data).then(() => {
-                this.dispatchExternal("rowMovedDataTree", {
-                  "move": true,
-                  "sortindex": this.calcSortIndex(hoverRowComponent, this.toRowAfter),
-                  "srcKey": movingRowComponent.getData()["key"],
-                  "destKey": tmp_data["parententry"]
-                });
-                self.moveRowToRoot(hoverRowComponent, movingRowComponent, self.toRowAfter)
-                self.moving.table.rowManager.deleteRow(self.moving);
-                this._endMove(e);
-              })
-            }
-
-
-          }
-        } else { // from root to child or only a sortindex
-          if (hoverRowComponent.getTreeParent()) { // hover is a child
-            /** (after = false)
-             * >1 moving
-             * >2
-             *  >3 hover
-             * =======
-             * >2
-             *  >1
-             *  >3
+             *  >5
              */
 
-            const hoverRowComponentParent = hoverRowComponent.getTreeParent();
+
+            const sortindex = this.calcSortIndex(hoverRowComponent, this.toRowAfter);
             this.table.rowManager.moveRow(this.moving, this.toRow, this.toRowAfter);
-            this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling);
-            this.placeholderElement.parentNode.removeChild(this.placeholderElement);
-            const tmp_data = movingRowComponent.getData();
-            const sortindex = this.calcSortIndex(hoverRowComponent, this.toRowAfter)
-            tmp_data["parententry"] = hoverRowComponentParent.getData()["key"];
-            tmp_data["sortindex"] = sortindex;
-            movingRowComponent.update(tmp_data).then(() => {
+            const updateData = {};
+            updateData["parententry"] = hoverRowComponent.getTreeParent().getData()["key"];
+            this.moveRowToChild(hoverRowComponent.getTreeParent(), movingRowComponent, hoverRowComponent, this.toRowAfter)
+
+
+            updateData["sortindex"] = sortindex;
+            movingRowComponent.update(updateData).then(() => {
+
+
               this.dispatchExternal("rowMovedDataTree", {
                 "move": true,
                 "sortindex": sortindex,
                 "srcKey": movingRowComponent.getData()["key"],
-                "destKey": hoverRowComponentParent.getData()["key"]
+                "destKey": updateData["parententry"]
               });
-              self.moveRowToChild(hoverRowComponentParent, movingRowComponent, hoverRowComponent, self.toRowAfter)
-              self.moving.table.rowManager.deleteRow(self.moving);
-              this._endMove(e)
+              this._endMove(e);
             })
-
-
-          } else { //we move from root to root change only the sortindex
-            /** (after = false)
-             * >1 moving
-             * >2
-             * >3 hover
-             * =======
-             * >2
+          } else {//we move form child to root
+            /** (after = true)
              * >1
-             * >3
+             *  >2 moving
+             *  >3
+             * >4 hover
+             * =======
+             *
+             * >1
+             *  >3
+             * >4
+             * >2
              */
-            console.log("a0s")
-            this.table.rowManager.moveRow(this.moving, this.toRow, this.toRowAfter);
-            this.placeholderElement.parentNode.insertBefore(this.moving.getElement(), this.placeholderElement.nextSibling);
-            this.placeholderElement.parentNode.removeChild(this.placeholderElement);
-            const sortindex = this.calcSortIndex(hoverRowComponent, this.toRowAfter)
-            movingRowComponent.update({"sortindex": sortindex}).then(() => {
+
+            const updateData = {};
+            const sortindex = this.calcSortIndex(hoverRowComponent, this.toRowAfter);
+            updateData["parententry"] = hoverRowComponent.getData()["parententry"];
+            updateData["sortindex"] = sortindex;
+            movingRowComponent.update(updateData).then(() => {
               this.dispatchExternal("rowMovedDataTree", {
-                "move": false,
+                "move": true,
                 "sortindex": sortindex,
-                "srcKey": movingRowComponent.getData()["key"]
+                "srcKey": movingRowComponent.getData()["key"],
+                "destKey": updateData["parententry"]
               });
-            });
-            this._endMove(e)
+              console.log("move to root")
+              self.moveRowToRoot(hoverRowComponent, movingRowComponent, self.toRowAfter)
+              //self.moving.table.rowManager.deleteRow(self.moving);
+              this._endMove(e);
+            })
           }
+
+
+        } else { // from root to child
+
+          /** (after = false)
+           * >1 moving
+           * >2
+           *  >3 hover
+           * =======
+           * >2
+           *  >1
+           *  >3
+           */
+          console.log("here ? =>1")
+
+          const hoverRowComponentParent = hoverRowComponent.getTreeParent();
+          const updateData = {};
+          const sortindex = this.calcSortIndex(hoverRowComponent, this.toRowAfter)
+          updateData["parententry"] = hoverRowComponentParent.getData()["key"];
+          updateData["sortindex"] = sortindex;
+          movingRowComponent.update(updateData).then(() => {
+            this.dispatchExternal("rowMovedDataTree", {
+              "move": true,
+              "sortindex": sortindex,
+              "srcKey": movingRowComponent.getData()["key"],
+              "destKey": hoverRowComponentParent.getData()["key"]
+            });
+            self.moveRowToChild(hoverRowComponentParent, movingRowComponent, hoverRowComponent, self.toRowAfter)
+            self.moving.table.rowManager.deleteRow(self.moving);
+            this._endMove(e)
+          })
 
 
         }
@@ -365,13 +370,11 @@ class CustomMoveRowsModule extends MoveRowsModule {
     }
 
   }
-  update_and_fireEvent()
-  {
 
-  }
 
   _endMove(e) {
     if (!e || e.which === 1 || this.touchMove) {
+      clearTimeout(this.timeOutId)
       this._unbindMouseMove();
 
       try {
@@ -438,8 +441,10 @@ class CustomMoveRowsModule extends MoveRowsModule {
       const idx = srcRowComponent.getTreeParent().getData()["_children"].indexOf(srcRowComponent.getData());
       srcRowComponent.getTreeParent().removeTreeChild(idx)
     }
+    console.log(" srcRowComponent getTreeParent", srcRowComponent.getTreeParent())
     console.log("after", after)
     console.log("destrow", destRowComponent)
+    console.log("getPosition", destRowComponent.getPosition())
 
     //WTF  the docu is completely wrong here (addData)
     if (!after && destRowComponent.getPosition() === 1) {
@@ -459,6 +464,8 @@ class CustomMoveRowsModule extends MoveRowsModule {
 
     let nextRow = destRow.getNextRow();
     let prevRow = destRow.getPrevRow();
+    console.log("next", nextRow)
+    console.log("prevRow", prevRow)
     //check if nextrow is same level
     if (nextRow) {
       nextRow = nextRow.getData()["parententry"] === destRow.getData()["parententry"] ? nextRow : false;
@@ -468,34 +475,13 @@ class CustomMoveRowsModule extends MoveRowsModule {
     }
 
 
-    if (after) {
-      if (nextRow)// we have the src row
-      {
-        nextRow = nextRow.getNextRow();
-        if (nextRow) {
-          nextRow = nextRow.getData()["parententry"] === destRow.getData()["parententry"] ? nextRow : false;
-        }
-
-
-      }
-    } else {
-      if (prevRow)// we have the src row
-      {
-        prevRow = prevRow.getPrevRow();
-        if (prevRow) {
-          prevRow = prevRow.getData()["parententry"] === destRow.getData()["parententry"] ? prevRow : false;
-        }
-
-      }
-    }
-
-
     let newSortIndex;
 
     if (after) {
       if (nextRow) {
         newSortIndex = (nextRow.getData()["sortindex"] + destRow.getData()["sortindex"]) / 2.0
       } else {
+        console.log("we have no nextRow we must calc +1")
         newSortIndex = destRow.getData()["sortindex"] + 1
       }
     } else {
@@ -503,7 +489,7 @@ class CustomMoveRowsModule extends MoveRowsModule {
 
         newSortIndex = (prevRow.getData()["sortindex"] + destRow.getData()["sortindex"]) / 2.0
       } else {
-        console.log("at end")
+        console.log("we have no prevRow we must calc -1")
         newSortIndex = destRow.getData()["sortindex"] - 1
       }
 
