@@ -11,7 +11,8 @@ import {boneEditor, updateData} from "./cellEditorRenderer.ts";
 //@ts-ignore
 import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 import {CustomMoveRowsModule} from './modules/tabulator_move_rows';
-import {CustomDataTree} from "./modules/tabulator_removeTreeChildRow";
+import {CustomReactiveDataModule} from "./modules/tabulator_removeTreeChildRow";
+import {CustomControllElements} from "./modules/tabulator_control_element";
 
 
 /**
@@ -110,11 +111,12 @@ export default class SlTable extends ShoelaceElement {
     //only rebuild table if structure changed
     if (this.mode === "list") {
       if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
-        console.log("out")
+        console.log("out list")
         return;
       }
     } else if (this.mode === "hierarchy") {
       if (this.nodes === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
+        console.log("out hierarchy")
         return;
       }
     }
@@ -122,6 +124,7 @@ export default class SlTable extends ShoelaceElement {
 
     this._editabletable = this.editabletable;
     if (this.previousStructure !== this.structure) {
+      console.log("in struct")
       this.previousStructure = this.structure
 
       this.buildStructure();
@@ -131,12 +134,18 @@ export default class SlTable extends ShoelaceElement {
       }
 
       TabulatorFull.registerModule(CustomMoveRowsModule);
-      TabulatorFull.registerModule(CustomDataTree);
+      TabulatorFull.registerModule(CustomReactiveDataModule);
+      TabulatorFull.registerModule(CustomControllElements);
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
 
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
-
+        if (this.mode === "list") {
+          console.log("set data ")
+          this.tableInstance.setData(this.skellist)
+        } else if (this.mode === "hierarchy") {
+          this.tableInstance.setData(this.nodes)
+        }
         this.tableReady = true
       })
 
@@ -218,6 +227,7 @@ export default class SlTable extends ShoelaceElement {
     //update Data only if tableReady
     if (this.tableReady) {
       if (this.mode === "list") {
+        console.log("set data ")
         this.tableInstance.setData(this.skellist)
       } else if (this.mode === "hierarchy") {
         this.tableInstance.setData(this.nodes)

@@ -1432,11 +1432,16 @@ export default css`
   .tabulator-print-table .tabulator-print-table-group span {
     color: var(--sl-color-neutral-500);
   }
-
+  /*Custom STYLE*/
   .tabulator-row.tabulator-row-disabled div {
     background-color: rgba(159, 159, 159, 0.15);
     opacity: 0.2;
   }
+
+  .tabulator-control-element.control-element-disabled{
+     opacity: 0.4;
+  }
+
 
 
 `;

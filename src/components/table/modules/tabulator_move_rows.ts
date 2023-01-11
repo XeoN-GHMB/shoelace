@@ -42,7 +42,7 @@ class CustomMoveRowsModule extends MoveRowsModule {
 
     this.hoverElement.style.left = "0";
     this.hoverElement.style.top = "0";
-    this.hoverElement.style.height = "50px";
+    // this.hoverElement.style.height = "50px";
     this.hoverElement.style.opacity = "0.5";
 
     this._bindMouseMove();
@@ -121,7 +121,7 @@ class CustomMoveRowsModule extends MoveRowsModule {
     el.classList.add("tabulator-col");
     el.classList.add("tabulator-col-placeholder");
     el.style.backgroundColor = "blue"
-    el.style.height = "5px"
+    el.style.height = "10px"
 
     return el;
   }
@@ -150,7 +150,7 @@ class CustomMoveRowsModule extends MoveRowsModule {
         this.placeholderElement.style.backgroundColor = "red"
       }
       this.addAsChild = false;
-      this.placeholderElement.style.height = "5px";
+      this.placeholderElement.style.height = "10px";
 
       this.hoverRow.getComponent().deselect();
     }
@@ -193,6 +193,9 @@ class CustomMoveRowsModule extends MoveRowsModule {
          * >3
          *  >1 (child)
          */
+        if (!hoverRowComponent._row.data.hasOwnProperty("_children")) {
+          hoverRowComponent._row.data["_children"] = []
+        }
         if (hoverRowComponent._row.data["_children"][0] === undefined) {
           hoverRowComponent._row.data["_children"] = [];
         }
@@ -201,8 +204,9 @@ class CustomMoveRowsModule extends MoveRowsModule {
         updateData["parententry"] = hoverRowComponent.getData()["key"];
         movingRowComponent.update(updateData).then(() => {
           console.log(`parent entry form ${movingRowComponent.getData()["parententry"]}`)
-          this.moveRowToChild(hoverRowComponent, movingRowComponent)
-          self.moving.table.rowManager.deleteRow(self.moving);
+          this.moveRowToChild(hoverRowComponent, movingRowComponent);
+          self.moving.delete();
+
           self.dispatchExternal("rowMovedDataTree", {
             "move": true,
             "sortindex": false,
@@ -357,8 +361,8 @@ class CustomMoveRowsModule extends MoveRowsModule {
               "srcKey": movingRowComponent.getData()["key"],
               "destKey": hoverRowComponentParent.getData()["key"]
             });
-            self.moveRowToChild(hoverRowComponentParent, movingRowComponent, hoverRowComponent, self.toRowAfter)
-            self.moving.table.rowManager.deleteRow(self.moving);
+            self.moveRowToChild(hoverRowComponentParent, movingRowComponent, hoverRowComponent, self.toRowAfter);
+            self.moving.delete();
             this._endMove(e)
           })
 
@@ -403,6 +407,9 @@ class CustomMoveRowsModule extends MoveRowsModule {
      * if childComponent is set we insert the srcRowComponent before or after it
      */
     console.log("movetochild")
+    if (!destRowComponent._row.data.hasOwnProperty("_children")) {
+      destRowComponent._row.data["_children"] = []
+    }
     if (destRowComponent._row.data["_children"][0] === undefined) {
       destRowComponent._row.data["_children"] = [];
     }
@@ -430,16 +437,20 @@ class CustomMoveRowsModule extends MoveRowsModule {
 
 
     if (srcRowComponent.getTreeParent()) {
+      srcRowComponent.delete();
+      /*
       const idx = srcRowComponent.getTreeParent().getData()["_children"].indexOf(srcRowComponent.getData());
-      srcRowComponent.getTreeParent().removeTreeChild(idx)
+      srcRowComponent.getTreeParent().removeTreeChild(idx)*/
 
     }
   }
 
   moveRowToRoot(destRowComponent, srcRowComponent, after = true) {
     if (srcRowComponent.getTreeParent()) {
+      srcRowComponent.delete();
+      /*
       const idx = srcRowComponent.getTreeParent().getData()["_children"].indexOf(srcRowComponent.getData());
-      srcRowComponent.getTreeParent().removeTreeChild(idx)
+      srcRowComponent.getTreeParent().removeTreeChild(idx)*/
     }
     console.log(" srcRowComponent getTreeParent", srcRowComponent.getTreeParent())
     console.log("after", after)

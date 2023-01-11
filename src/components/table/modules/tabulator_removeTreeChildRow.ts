@@ -1,33 +1,49 @@
-import {Tabulator, DataTreeModule, RowComponent} from '../tabulator_esm.js';
+import {ReactiveDataModule} from '../tabulator_esm.js';
 
-class CustomDataTree extends DataTreeModule {
-  constructor(table: Tabulator) {
-    super(table);
-    this.registerComponentFunction("row", "removeTreeChild", this.removeTreeChildRow.bind(this));
+class CustomReactiveDataModule extends ReactiveDataModule {
+  watchTreeChildren(row) {
+    super.watchTreeChildren(row)
+    var self = this,
+      childField = row.getData()[this.table.options.dataTreeChildField],
+      origFuncs = {};
+    if (childField) {
+      origFuncs.splice = childField.splice;
+      Object.defineProperty(childField, "splice", {
+        enumerable: false,
+        configurable: true,
+        value: (idx, len, obj) => {
+          if (!self.blocked) { // fixme pausetracking not work
 
+            self.block("tree-splice");
+            const tmp = Array.from(childField);
+            if (obj === undefined) {
+
+              var result = tmp.splice(idx, len);
+
+            } else {
+              var result = tmp.splice(idx, len, obj);
+            }
+            const field = this.table.options.dataTreeChildField;
+            row.getComponent().update({[field]: tmp}).then(() => {
+              this.rebuildTree(row);
+              self.unblock("tree-splice");
+            })
+
+          } else {
+            console.error(`Tree:Splice failed blocked:${self.blocked}`)
+            console.error(`origFuncs:${childField} ${typeof (childField)}`)
+
+          }
+
+          return result;
+        }
+      });
+
+    }
   }
-  removeTreeChildRow(row:RowComponent,  index:number){
-		if(!Array.isArray(row.data[this.field])){
-			row.data[this.field] = [];
-
-			row.modules.dataTree.open = this.startOpen(row.getComponent(), row.modules.dataTree.index);
-		}
-
-		if(typeof index !== "undefined"){
-
-				row.data[this.field].splice(index, 1 );
-
-		}
-
-		this.initializeRow(row);
-		this.layoutRow(row);
-
-		this.refreshData(true);
-	}
-
 
 
 }
 
 
-export {CustomDataTree};
+export {CustomReactiveDataModule};
