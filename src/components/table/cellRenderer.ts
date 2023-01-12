@@ -11,7 +11,6 @@ export function boneFormatter(cell: any, boneStructure: object, onRendered: any)
   bone.boneStructure = boneStructure;
   bone.boneValue = boneValue;
   bone.boneName = cell.getField();
-  bone.style.display = "unset";
   return bone;
 }
 

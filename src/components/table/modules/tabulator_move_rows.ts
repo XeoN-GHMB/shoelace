@@ -120,8 +120,6 @@ class CustomMoveRowsModule extends MoveRowsModule {
     var el = document.createElement("div");
     el.classList.add("tabulator-col");
     el.classList.add("tabulator-col-placeholder");
-    el.style.backgroundColor = "blue"
-    el.style.height = "10px"
 
     return el;
   }
@@ -144,11 +142,6 @@ class CustomMoveRowsModule extends MoveRowsModule {
 
       this.placeholderElement.style.height = "0px";
     } else {
-      if (sameParent) {
-        this.placeholderElement.style.backgroundColor = "blue"
-      } else {
-        this.placeholderElement.style.backgroundColor = "red"
-      }
       this.addAsChild = false;
       this.placeholderElement.style.height = "10px";
 

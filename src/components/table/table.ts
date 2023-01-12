@@ -453,8 +453,8 @@ export default class SlTable extends ShoelaceElement {
 
        */
 
-      this.tableConfig["dataTreeExpandElement"] = '<sl-icon name="chevron-right"></sl-icon>';
-      this.tableConfig["dataTreeCollapseElement"] = '<sl-icon name="chevron-down"></sl-icon>';
+      this.tableConfig["dataTreeExpandElement"] = '<div class="tabulator-collapse-chevron expand"><sl-icon name="play"></sl-icon></div>';
+      this.tableConfig["dataTreeCollapseElement"] = '<div class="tabulator-collapse-chevron"><sl-icon name="play"></sl-icon></div>';
 
     }
   }

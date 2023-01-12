@@ -10340,7 +10340,7 @@ function rownum(cell, formatterParams, onRendered){
 
 function handle(cell, formatterParams, onRendered){
 	cell.getElement().classList.add("tabulator-row-handle");
-	return "<div class='tabulator-row-handle-box'><div class='tabulator-row-handle-bar'></div><div class='tabulator-row-handle-bar'></div><div class='tabulator-row-handle-bar'></div></div>";
+	return "<div class='tabulator-row-handle-box'><sl-icon name='draggable'></sl-icon></div>";
 }
 
 function responsiveCollapse(cell, formatterParams, onRendered){

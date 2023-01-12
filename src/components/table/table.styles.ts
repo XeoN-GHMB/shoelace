@@ -8,8 +8,8 @@ export default css`
     --table-head-background: var(--sl-color-primary-500);
     --table-head-color: var(--sl-color-neutral-100);
 
-    --table-head-background-hover: var(--sl-color-primary-100);
-    --table-head-color-hover: var(--sl-color-neutral-800);
+    --table-head-background-hover: var(--sl-color-primary-700);
+    --table-head-color-hover: #fff;
 
     --table-row-color-even: var(--sl-color-neutral-100);
     --table-row-color-hover: var(--sl-color-neutral-300);
@@ -71,6 +71,7 @@ export default css`
     text-align: left;
     vertical-align: bottom;
     overflow: hidden;
+    transition: background ease.3s;
   }
 
   .tabulator .tabulator-header .tabulator-col.tabulator-moving {
@@ -497,12 +498,24 @@ export default css`
     cursor: pointer;
   }
 
+  .tabulator-row.tabulator-selectable:hover .tabulator-data-tree-branch{
+    border-color: var(--sl-color-neutral-600);
+  }
+
   .tabulator-row.tabulator-selected {
-    background-color: var(--table-row-color-hover);
+    background-color: var(--table-row-color-hover) !important;
+  }
+
+  .tabulator-row.tabulator-selected .tabulator-data-tree-branch{
+    border-color: var(--sl-color-primary-500) !important;
+  }
+
+  .tabulator-row.tabulator-selected .tabulator-collapse-chevron sl-icon{
+    color: var(--sl-color-primary-500) !important;
   }
 
   .tabulator-row.tabulator-selected:hover {
-    background-color: var(--table-row-color-hover);
+    background-color: var(--table-row-color-hover) !important;
     cursor: pointer;
   }
 
@@ -575,13 +588,18 @@ export default css`
   }
 
   .tabulator-row .tabulator-cell {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     position: relative;
     box-sizing: border-box;
     padding: 4px;
     border-right: 1px solid #ddd;
-    vertical-align: middle;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .tabulator-row .tabulator-cell sl-bone{
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -618,29 +636,31 @@ export default css`
     -khtml-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
+    cursor: move;
   }
 
   .tabulator-row .tabulator-cell.tabulator-row-handle .tabulator-row-handle-box {
-    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: .3;
+    transition: all ease .3s;
   }
 
-  .tabulator-row .tabulator-cell.tabulator-row-handle .tabulator-row-handle-box .tabulator-row-handle-bar {
-    width: 100%;
-    height: 3px;
-    margin-top: 2px;
-    background: var(--sl-color-neutral-500);
+  .tabulator-row:hover .tabulator-cell.tabulator-row-handle .tabulator-row-handle-box {
+    opacity: 1;
   }
 
   .tabulator-row .tabulator-cell .tabulator-data-tree-branch {
     display: inline-block;
     vertical-align: middle;
     height: 9px;
-    width: 7px;
-    margin-top: -9px;
-    margin-right: 5px;
+    min-width: 7px;
+    margin-top: -8px;
     border-bottom-left-radius: 1px;
-    border-left: 2px solid #ddd;
-    border-bottom: 2px solid #ddd;
+    border-left: 1px solid var(--sl-color-neutral-400);
+    border-bottom: 1px solid var(--sl-color-neutral-400);
+    transition: all ease .3s;
   }
 
   .tabulator-row .tabulator-cell .tabulator-data-tree-control {
@@ -1161,7 +1181,7 @@ export default css`
   }
 
   .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
-    padding: 0.92857em 0.78571em;
+    padding: 0.6em 0.4em;
   }
 
   .tabulator .tabulator-tableholder .tabulator-table {
@@ -1279,7 +1299,7 @@ export default css`
     color: rgba(0, 0, 0, 0.2);
   }
 
-  .tabulator.striped .tabulator-row:nth-child(even) {
+  .tabulator-list.striped .tabulator-row:nth-child(even) {
     background-color: var(--table-row-color-even);
   }
 
@@ -1349,6 +1369,7 @@ export default css`
 
   .tabulator-row {
     border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+    transition: all ease .3s;
   }
 
   .tabulator-row.tabulator-row-even {
@@ -1356,18 +1377,17 @@ export default css`
   }
 
   .tabulator-row.tabulator-selectable:hover {
-    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.87) inset;
     background: var(--table-row-color-hover) !important;
     color: var(--sl-color-neutral-800);
-  !important;
   }
 
   .tabulator-row.tabulator-selected {
-    background-color: var(--sl-color-primary-200) !important;
+    background-color: var(--sl-color-primary-50) !important;
+    font-weight: 600;
   }
 
   .tabulator-row.tabulator-selected:hover {
-    background-color: var(--sl-color-primary-200) !important;
+    background-color: var(--sl-color-primary-50) !important;
     cursor: pointer;
   }
 
@@ -1435,13 +1455,83 @@ export default css`
   /*Custom STYLE*/
   .tabulator-row.tabulator-row-disabled div {
     background-color: rgba(159, 159, 159, 0.15);
-    opacity: 0.2;
+    opacity: 0.4;
   }
 
   .tabulator-control-element.control-element-disabled{
-     opacity: 0.4;
+     opacity: 0.2;
   }
 
 
+/*//////////////////////// Hierachy //////////////////////*/
+
+  .tabulator-hierarchy{
+
+  }
+
+  .tabulator-collapse-chevron{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 1.6em;
+    padding-right: .4em;
+    padding-left: .2em;
+    transition: all ease .3s;
+  }
+
+  .tabulator-collapse-chevron.expand sl-icon{
+    transform: rotate(0deg);
+  }
+
+  .tabulator-collapse-chevron sl-icon{
+    width: .6em;
+    height: .6em;
+    color: var(--sl-color-neutral-500);
+    transform: rotate(90deg);
+  }
+
+  .tabulator-col-placeholder{
+    background-color: var(--sl-color-primary-50);
+  }
+
+  .tabulator-row.tabulator-tree-level-0{
+    background-color: #fff;
+  }
+
+  .tabulator-row.tabulator-tree-level-1{
+    background-color: #f8f8f8;
+  }
+
+  .tabulator-row.tabulator-tree-level-2{
+    background-color: #F0F0F0;
+  }
+
+  .tabulator-row.tabulator-tree-level-3{
+    background-color: #E8E8E8;
+  }
+
+  .tabulator-row.tabulator-tree-level-4{
+    background-color: #E0E0E0;
+  }
+
+  .tabulator-row.tabulator-tree-level-5{
+    background-color: #DCDCDC;
+  }
+
+  .tabulator-row.tabulator-tree-level-6{
+    background-color: #D8D8D8;
+  }
+
+  .tabulator-row.tabulator-tree-level-7{
+    background-color: #D3D3D3;
+  }
+
+  .tabulator-row.tabulator-tree-level-8{
+    background-color: #D0D0D0;
+  }
+
+  .tabulator-row.tabulator-tree-level-9{
+    background-color: #C8C8C8;
+  }
 
 `;
