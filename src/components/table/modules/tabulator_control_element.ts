@@ -7,7 +7,6 @@ class CustomControllElements extends DataTreeModule {
       oldControl = config.controlEl;
 
     el = el || row.getCells()[0].getElement();
-    console.log("create CustomControllElements", config.children)
     if (config.children !== false) {
 
       if (config.open) {

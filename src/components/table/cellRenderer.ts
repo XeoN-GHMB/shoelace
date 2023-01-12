@@ -8,9 +8,10 @@ export function boneFormatter(cell: any, boneStructure: object, onRendered: any)
   }
 
   const bone = document.createElement("sl-bone");
-  bone.boneStructure=boneStructure;
-  bone.boneValue=boneValue;
-  bone.boneName=cell.getField();
+  bone.boneStructure = boneStructure;
+  bone.boneValue = boneValue;
+  bone.boneName = cell.getField();
+  bone.style.display = "unset";
   return bone;
 }
 

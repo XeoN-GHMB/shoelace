@@ -432,7 +432,9 @@ class CustomMoveRowsModule extends MoveRowsModule {
       }
       destRowComponent.addTreeChild(srcRowComponent.getData(), idx === 0 && !after, idxChild)
     } else {
-      destRowComponent.addTreeChild(srcRowComponent.getData())
+      console.log("we add",srcRowComponent.getData()["name"],"to ",destRowComponent)
+      destRowComponent.addTreeChild(srcRowComponent.getData());
+      console.log("childs,",destRowComponent.getTreeChildren())
     }
 
 

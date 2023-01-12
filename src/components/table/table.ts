@@ -207,7 +207,7 @@ export default class SlTable extends ShoelaceElement {
         this.tableInstance.on("dataTreeRowExpanded", function (row, level: number) {//we must fetch new data
           self.expandDepth = Math.max(self.expandDepth, level);
 
-          self.tableInstance.columnManager.getColumnByIndex(0).setWidth(70 + (20 * self.expandDepth))
+
           if (row._row.data["_children"][0] === undefined) {//we not trigger the event when we already have data
             row._row.data["_children"] = [];
           }
@@ -218,7 +218,6 @@ export default class SlTable extends ShoelaceElement {
 
           self.expandDepth = Math.min(self.expandDepth, level);
 
-          self.tableInstance.columnManager.getColumnByIndex(0).setWidth(70 + (20 * self.expandDepth))
         })
 
       }
@@ -315,6 +314,7 @@ export default class SlTable extends ShoelaceElement {
         variableHeight: true,
         editorParams: [item, this], editor: boneEditor,
         editable: this.editCheck,
+        name:itemName,
 
       })
 
@@ -325,9 +325,12 @@ export default class SlTable extends ShoelaceElement {
     currentstructure["columns"] = columns
     this.tableConfig = {...this.tableConfig, ...currentstructure}
     this.tableConfig["editabletable"] = this.editabletable
-
+    console.log(this.tableConfig["columns"][0]["name"])
     if (this.mode === "hierarchy") {
       this.tableConfig["dataTree"] = true;
+      this.tableConfig["dataTreeElementColumn"] = "name";
+      this.tableConfig["dataTreeChildIndent"] = 10;
+
     }
   }
 
@@ -433,8 +436,8 @@ export default class SlTable extends ShoelaceElement {
       }
     }
     if (this.mode === "hierarchy") {
+      /*
       let handleColumn = {
-        rowHandle: true,
         resizable: true,
         headerSort: false,
         frozen: true,
@@ -447,6 +450,8 @@ export default class SlTable extends ShoelaceElement {
       } else {
         this.tableConfig["columns"] = [handleColumn, ...this.tableConfig["columns"]]
       }
+
+       */
 
       this.tableConfig["dataTreeExpandElement"] = '<sl-icon name="chevron-right"></sl-icon>';
       this.tableConfig["dataTreeCollapseElement"] = '<sl-icon name="chevron-down"></sl-icon>';

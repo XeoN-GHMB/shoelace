@@ -4625,7 +4625,7 @@ class DataTree extends Module{
 
 	addTreeChildRow(row, data, top, index){
 		var childIndex = false;
-
+    console.log("add=>",data,top,index)
 		if(typeof data === "string"){
 			data = JSON.parse(data);
 		}
