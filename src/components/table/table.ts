@@ -636,7 +636,7 @@ export default class SlTable extends ShoelaceElement {
   render() {
     return html`
       <div style="width:100%;height:100%">
-        <div id="shadowtable" style="display: none" part="base" class="striped celled">
+        <div id="shadowtable" style="display: none" part="base" class="striped celled tabulator-${this.mode}">
 
         </div>
         <slot @slotchange="${this.prebuildTable}"></slot>
