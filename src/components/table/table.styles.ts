@@ -1156,7 +1156,10 @@ export default css`
   }
 
   .tabulator {
+    display: flex !important;
+    flex-direction: column;
     width: 100%;
+    height: 100% !important;
     margin: 1em 0em;
     border: 1px solid rgba(34, 36, 38, 0.15);
     box-shadow: none;
