@@ -597,6 +597,8 @@ export default css`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    min-height: 36px;
+    height: auto !important;
   }
 
   .tabulator-row .tabulator-cell sl-bone{
@@ -1372,7 +1374,7 @@ export default css`
 
   .tabulator-row {
     border-bottom: 1px solid rgba(34, 36, 38, 0.1);
-    transition: all ease .3s;
+    transition: background-color ease .3s;
   }
 
   .tabulator-row.tabulator-row-even {
