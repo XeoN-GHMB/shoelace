@@ -37,6 +37,7 @@ export default class SlBone extends ShoelaceElement {
   initBoneValue: any;
   internboneValue: Record<string, BoneValue>;
   relationalCache: Record<string, object> = {};
+  textboneCache: Record<string, object> = {};
   previousBoneValues: Record<string, BoneValue[]> = {};
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
@@ -66,7 +67,6 @@ export default class SlBone extends ShoelaceElement {
   get getBoneValue(): any {
     return this.internboneValue[this.boneName];
   }
-
 
 
   toFormValue() {
@@ -111,7 +111,10 @@ export default class SlBone extends ShoelaceElement {
     const formData: FormData = new FormData();
     for (const data of value) {
       for (const [k, v] of Object.entries(data)) {
-        formData.append(k, v.toString());
+        if (v) {
+          formData.append(k, v.toString());
+        }
+
       }
     }
 
@@ -119,7 +122,7 @@ export default class SlBone extends ShoelaceElement {
   }
 
 
-  @watchProps(['boneStructure', 'boneValue', "renderType","disabled"])
+  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled"])
   optionUpdate() {
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};

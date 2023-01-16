@@ -22,7 +22,7 @@ export class SpatialBone extends RawBone {
     }
     latInput.value = lat.toString();
     latInput.type = "number";
-    latInput.placeholder = translate("names.lat");;
+    latInput.placeholder = translate("names.lat");
     latInput.classList.add("lat-input");
 
     latInput.min = this.boneStructure["boundsLat"][0];

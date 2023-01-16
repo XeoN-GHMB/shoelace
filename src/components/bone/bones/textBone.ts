@@ -19,6 +19,8 @@ import type {AstNode, Editor} from "tinymce";
 export class TextBone extends RawBone {
   getEditor(value: any, boneName: string, lang: string | null = null): HTMLElement {
     const ele = document.createElement("div");
+    ele.dataset["name"] = boneName;
+    ele.dataset["textbone"] = "true";
     //IMport scripts
     let _ = theme;
     _ = model;
@@ -47,7 +49,7 @@ export class TextBone extends RawBone {
         formats: {bold: {inline: 'span', 'classes': 'viur-txt-bold'}}, // TODO add classes
         valid_elements: self.getValidTagString(),
         valid_classes: {"*": self.boneStructure["validHtml"]["validClasses"].join(" ")},
-
+        readonly: self.boneStructure["readonly"],
         //images_upload_handler: self.uploadHandler,
 
         setup: function (editor) {
@@ -63,8 +65,11 @@ export class TextBone extends RawBone {
             })
           })
           editor.on('init', () => {
-
-            editor.setContent(value);
+            if(value)
+            {
+              editor.setContent(value);
+            }
+            self.mainInstance.textboneCache[boneName]=editor;
           });
           editor.on('Change', (e) => {
             createPath(self.mainInstance.internboneValue, boneName, editor.getContent());

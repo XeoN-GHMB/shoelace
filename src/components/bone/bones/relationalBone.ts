@@ -54,7 +54,7 @@ export class RelationalBone extends RawBone {
 
     searchBox.hoist = true;
     if (value !== null && value !== "") {
-      console.log("form", formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true));
+
       searchBox.placeholder = formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true);
     }
 
@@ -105,9 +105,8 @@ export class RelationalBone extends RawBone {
       //this.mainInstance.handleChange(formData);
 
     });
-    if(this.boneStructure["readonly"])
-    {
-      searchBox.disabled=true;
+    if (this.boneStructure["readonly"]) {
+      searchBox.disabled = true;
     }
 
     return inputWrapper;
@@ -146,7 +145,11 @@ export class RelationalBone extends RawBone {
 
     showInput.disabled = true;
     if (this.mainInstance.relationalCache[value] !== undefined) {
-      showInput.value = formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true);
+      if (this.boneStructure["format"]) {
+        showInput.placeholder = formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true);
+      } else {
+        showInput.placeholder = value;
+      }
     }
 
 
@@ -165,11 +168,9 @@ export class RelationalBone extends RawBone {
     inputWrapper.dataset.name = `relational-${boneName}`;
     inputWrapper.appendChild(shadowInput);
     inputWrapper.appendChild(showInput);
-    if(!this.boneStructure["readonly"])
-    {
-          inputWrapper.appendChild(selectButton);
+    if (!this.boneStructure["readonly"]) {
+      inputWrapper.appendChild(selectButton);
     }
-
 
 
     return inputWrapper;
@@ -224,7 +225,14 @@ export class RelationalBone extends RawBone {
 
         const rowData = table.getSelectedRows()[0].getData();
         shadowInput.value = rowData["key"];
-        showInput.value = formatstring({"dest": rowData}, this.boneStructure);
+        if (this.boneStructure["format"]) {
+          showInput.placeholder = formatstring({"dest": rowData}, this.boneStructure);
+        } else {
+          showInput.placeholder = rowData["key"]
+
+        }
+
+
         this.mainInstance.internboneValue = this.reWriteBoneValue();
         this.mainInstance.handleChange();
 

@@ -71,6 +71,7 @@ export class FileBone extends RawBone {
     uploadButton.setAttribute("outline", "");
     uploadButton.classList.add("upload-button");
     uploadButton.title = translate("actions.addFile");
+    uploadButton.setAttribute("disabled", this.boneStructure["readonly"]);
     uploadButton.addEventListener("click", () => {
       shadowFile.click();
     })
@@ -161,7 +162,11 @@ export class FileBone extends RawBone {
     fileNameInput.title = translate("actions.addFile");
     fileNameInput.placeholder = translate("actions.addFile");
     fileNameInput.addEventListener("click", () => {
-      shadowFile.click();
+      if (!this.boneStructure["readonly"]) {
+        shadowFile.click();
+      }
+
+
     })
     if (value !== null && value !== "") { //Fixme why ==""
       try {

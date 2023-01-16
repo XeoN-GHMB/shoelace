@@ -299,7 +299,7 @@ export class RawBone {
           buttonWrap.appendChild(addButton);
           buttonWrap.appendChild(undoButton);
           buttonWrap.appendChild(clearButton);
-          if ( !this.boneStructure["readonly"]){
+          if (!this.boneStructure["readonly"]) {
             tab_panel.appendChild(buttonWrap)
           }
 
@@ -312,7 +312,7 @@ export class RawBone {
           //Lang , no multipler
           const languageWrapper = document.createElement("div");
           languageWrapper.classList.add("language-wrapper");
-          if (this.boneValue !== null && value !== undefined) {
+          if (this.boneValue !== null && this.boneValue !== undefined) {
             languageWrapper.appendChild(this.addInput(this.boneValue[lang], lang));
           } else {
             languageWrapper.appendChild(this.addInput(null, lang));
@@ -336,7 +336,6 @@ export class RawBone {
         if (this.boneValue === null) {
           this.boneValue = []
         }
-
         const addButton = document.createElement("sl-button");
         const addIcon = document.createElement("sl-icon");
 
@@ -347,6 +346,9 @@ export class RawBone {
         addButton.classList.add("add-button")
         addButton.variant = "success"
         addButton.title = translate("actions.add");
+        addButton.disabled=this.boneStructure["readonly"];
+
+
         const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
         this.idx = idx;
         addButton.addEventListener("click", () => {
@@ -372,6 +374,7 @@ export class RawBone {
         clearButton.setAttribute("outline", "")
         clearButton.classList.add("clear-button")
         clearButton.title = translate("actions.deleteAll");
+        clearButton.disabled=this.boneStructure["readonly"];
         clearButton.addEventListener("click", () => {
           this.clearMultipleWrapper()
         });
@@ -399,10 +402,8 @@ export class RawBone {
         buttonWrap.appendChild(addButton);
         buttonWrap.appendChild(undoButton);
         buttonWrap.appendChild(clearButton);
+        innerWrap.appendChild(buttonWrap)
 
-        if ( !this.boneStructure["readonly"]) {
-          innerWrap.appendChild(buttonWrap)
-        }
 
         wrapper.appendChild(innerWrap);
 
@@ -477,6 +478,7 @@ export class RawBone {
       inputElement.value = value;
     }
     inputElement.addEventListener("sl-change", (change_event) => {
+      console.log("change")
       this.mainInstance.internboneValue = this.reWriteBoneValue();
       this.mainInstance.handleChange();
     });
@@ -551,12 +553,22 @@ export class RawBone {
         this.saveState(lang);
         this.mainInstance.internboneValue = this.reWriteBoneValue();
         const obj: object = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
+        console.log(obj,newboneName)
         createPath(obj, newboneName, null, true);
-
-
         const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
+
         if (mulWrapper !== null) {
-          const element = this.createMultipleWrapper(getPath(obj, path), lang)[0];
+
+          const [element, idx] = this.createMultipleWrapper(getPath(obj, path), lang);
+          if (lang) {
+            if (this.idx === null) {
+              this.idx = {};
+            }
+            this.idx[lang] = idx;
+          } else {
+            this.idx = idx;
+          }
+
           mulWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange("deleteEntry");
@@ -796,6 +808,14 @@ export class RawBone {
       if (inputElement.name !== undefined) {
 
         createPath(obj, inputElement.name, inputElement.getFormattedValue("hex"));
+      }
+
+    });
+    this.mainInstance.bone.querySelectorAll(`[data-textbone="true"]`).forEach((inputElement: HTMLElement) => {
+
+      if (inputElement.dataset["name"] !== undefined) {
+
+        createPath(obj, inputElement.dataset["name"], this.mainInstance.textboneCache[inputElement.dataset["name"]].getContent());
       }
 
     });
