@@ -165,7 +165,7 @@ class CustomMoveRowsModule extends MoveRowsModule {
 
 
     if (this.hoverRow) {
-      this.hoverRow.getElement().style.borderWidth = "0px";
+      //this.hoverRow.getElement().style.borderWidth = "0px";
       const self = this;
       //reset movingelement
       this.moving.getElement().classList.remove("tabulator-row-disabled")
@@ -173,6 +173,7 @@ class CustomMoveRowsModule extends MoveRowsModule {
       const hoverRowComponent: RowComponent = this.hoverRow.getComponent();
       const movingRowComponent: RowComponent = this.moving.getComponent();
       if (hoverRowComponent === movingRowComponent) {
+        this.placeholderElement.parentNode.removeChild(this.placeholderElement);
         this._endMove(e)
         return;
       }
