@@ -13,6 +13,7 @@ import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 import {CustomMoveRowsModule} from './modules/tabulator_move_rows';
 import {CustomReactiveDataModule} from "./modules/tabulator_removeTreeChildRow";
 import {CustomControllElements} from "./modules/tabulator_control_element";
+import {CustomCell} from "./modules/tabulator_cell";
 
 
 /**
@@ -136,6 +137,7 @@ export default class SlTable extends ShoelaceElement {
       TabulatorFull.registerModule(CustomMoveRowsModule);
       TabulatorFull.registerModule(CustomReactiveDataModule);
       TabulatorFull.registerModule(CustomControllElements);
+      //TabulatorFull.registerModule(CustomCell);
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
 
       this.tableInstance.on("tableBuilt", () => {
@@ -310,7 +312,7 @@ export default class SlTable extends ShoelaceElement {
       //Fixme inefficient
       columns.push({
         title: title, field: itemName,
-        formatterParams: item, formatter: boneFormatter,
+        formatterParams: [item,this], formatter: boneFormatter,
         variableHeight: true,
         editorParams: [item, this], editor: boneEditor,
         editable: this.editCheck,
@@ -328,7 +330,7 @@ export default class SlTable extends ShoelaceElement {
     console.log(this.tableConfig["columns"][0]["name"])
     if (this.mode === "hierarchy") {
       this.tableConfig["dataTree"] = true;
-      this.tableConfig["dataTreeElementColumn"] = "name";
+      this.tableConfig["dataTreeElementColumn"] = this.tableConfig["columns"][0]["name"];
       this.tableConfig["dataTreeChildIndent"] = 10;
 
     }
