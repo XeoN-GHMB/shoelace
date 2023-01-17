@@ -1,6 +1,7 @@
 // @ts-nocheck
 import translationtable from "./translations/init"
 import type {BoneStructure, BoneValue} from "./bones/rawBone";
+import * as path from "path";
 
 export function formatstring(data: BoneValue, boneStructure: BoneStructure, lang: string | null = null, ignoreLang = false): BoneValue {
   if (!boneStructure) {
@@ -243,6 +244,26 @@ export function getSkey() {
   })
 }
 
-export function translate(path: string, lang = "de"): string {
-  return getPath(translationtable[lang], path)
+function _translate({path="", lang = "en", values = {}}): string {
+
+  let msg:string= getPath(translationtable[lang], path)
+  for(const key of Object.keys(values))
+  {
+    msg = msg.replace(`{{${key}}}`,values[key]);
+  }
+
+  return msg
+}
+//Proxy function for translate
+export  function translate(...args)
+{
+  console.log(args)
+  if(args.length===1)
+  {
+    return _translate({path:args[0]})
+  }
+  else if(args.length===2)
+  {
+    return _translate({...{path:args[0]},...args[1]})
+  }
 }
