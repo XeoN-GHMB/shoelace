@@ -659,6 +659,7 @@ export default css`
     height: 9px;
     min-width: 7px;
     margin-top: -8px;
+    transform: translate(5px, 0);
     border-bottom-left-radius: 1px;
     border-left: 1px solid var(--sl-color-neutral-400);
     border-bottom: 1px solid var(--sl-color-neutral-400);
@@ -1404,6 +1405,18 @@ export default css`
     padding: 0.78571em 0.78571em;
     border-right: none;
     vertical-align: middle;
+  }
+
+  .tabulator-row .tabulator-cell.tabulator-root-cell-children{
+    padding: 0;
+  }
+
+  .tabulator-row .tabulator-cell.tabulator-root-cell-children .tabulator-collapse-chevron{
+     padding: 0.78571em 0.78571em;
+  }
+
+  .tabulator-row .tabulator-cell.tabulator-root-cell-children sl-bone{
+    padding: 0.78571em 0.78571em 0.78571em 0;
   }
 
   .tabulator-row .tabulator-cell:last-of-type {
