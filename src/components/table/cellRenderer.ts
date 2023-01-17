@@ -13,7 +13,7 @@ export function boneFormatter(cell: any, viewParams: object, onRendered: any): a
   if (tableInstance.mode === "hierarchy") {
     onRendered(() => {
       if (cell.getField() === cell.getTable().options.dataTreeElementColumn) {
-        if (cell.getRow()._getSelf().modules.dataTree.children && !cell.getRow()._getSelf().modules.dataTree.parent) {
+        if (cell.getRow()._getSelf().modules.dataTree.children) {
 
           cell.getElement().classList.add("tabulator-root-cell-children")
 
