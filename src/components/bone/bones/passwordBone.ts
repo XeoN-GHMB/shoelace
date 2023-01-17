@@ -2,6 +2,8 @@
 import {RawBone} from "./rawBone";
 import SlInput from "../../input/input";
 import {SlIcon} from "../../icon/icon";
+import SlDetails from "../../details/details";
+import {translate} from "../utils";
 
 export class PasswordBone extends RawBone {
   private vaildIcon: any;
@@ -48,13 +50,23 @@ export class PasswordBone extends RawBone {
         if (this.first_passwordBone.value.length > 0) {
           if (this.second_passwordBone.value.length > 0) {
             //this.first_passwordBone.value.setCustomValidity("Please Fill");
-            this.second_passwordBone.setCustomValidity("Passwords do not match"); //fixme not work
+            const element: SlDetails = this.mainInstance.bone.querySelector(`[data-name="${boneName}_errorcontainer"]`);
+            if (element !== null) {
+              element.style.display = "";
+              element.open = true;
+              element.querySelector(".error-msg").innerText += translate("error.password");
+            }
 
           }
         }
       } else {
         this.mainInstance.internboneValue = this.reWriteBoneValue();
         this.mainInstance.handleChange();
+        const element: SlDetails = this.mainInstance.bone.querySelector(`[data-name="${boneName}_errorcontainer"]`);
+        if (element !== null) {
+          element.style.display = "none";
+
+        }
       }
 
 

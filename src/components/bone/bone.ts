@@ -238,7 +238,7 @@ export default class SlBone extends ShoelaceElement {
     for (const error of this.errors) {
       if (this.boneName === error["fieldPath"][0])
         if (error["severity"] > 1) {
-          const element: SlDetails = this.bone.querySelector(`[data-name="${error["fieldPath"].join(".")}_errorcontainer` + `"]`);
+          const element: SlDetails = this.bone.querySelector(`[data-name="${error["fieldPath"].join(".")}_errorcontainer"]`);
 
           if (element !== null) {
             element.style.display = "";

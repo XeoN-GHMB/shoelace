@@ -12,4 +12,7 @@ export default {
     lat: "Latitude",
     lng: "Longitude",
   },
+  error:{
+    password:"The passwords must match"
+  }
 }
