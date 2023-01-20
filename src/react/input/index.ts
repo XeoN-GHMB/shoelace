@@ -3,9 +3,9 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/input/input.js';
 
 export default createComponent(React, 'sl-input', Component, {
+  onSlBlur: 'sl-blur',
   onSlChange: 'sl-change',
   onSlClear: 'sl-clear',
-  onSlInput: 'sl-input',
   onSlFocus: 'sl-focus',
-  onSlBlur: 'sl-blur'
+  onSlInput: 'sl-input'
 });

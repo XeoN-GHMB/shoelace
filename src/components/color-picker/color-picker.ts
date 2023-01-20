@@ -1,9 +1,8 @@
-import Color from 'color';
+import { TinyColor } from '@ctrl/tinycolor';
 import { html } from 'lit';
 import { customElement, property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
-import { live } from 'lit/directives/live.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { defaultValue } from '../../internal/default-value';
 import { drag } from '../../internal/drag';
@@ -51,6 +50,7 @@ declare const EyeDropper: EyeDropperConstructor;
  * @slot label - The color picker's form label. Alternatively, you can use the `label` attribute.
  *
  * @event sl-change Emitted when the color picker's value changes.
+ * @event sl-input Emitted when the color picker receives input.
  *
  * @csspart base - The component's base wrapper.
  * @csspart trigger - The color picker's dropdown trigger.
@@ -125,10 +125,10 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
   @property() label = '';
 
   /**
-   * The format to use. If opacity is enabled, these will translate to HEXA, RGBA, and HSLA respectively. The color
+   * The format to use. If opacity is enabled, these will translate to HEXA, RGBA, HSLA, and HSVA respectively. The color
    * picker will accept user input in any format (including CSS color names) and convert it to the desired format.
    */
-  @property() format: 'hex' | 'rgb' | 'hsl' = 'hex';
+  @property() format: 'hex' | 'rgb' | 'hsl' | 'hsv' = 'hex';
 
   /** Renders the color picker inline rather than in a dropdown. */
   @property({ type: Boolean, reflect: true }) inline = false;
@@ -159,7 +159,7 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
 
   /**
    * An array of predefined color swatches to display. Can include any format the color picker can parse, including
-   * HEX(A), RGB(A), HSL(A), and CSS color names.
+   * HEX(A), RGB(A), HSL(A), HSV(A), and CSS color names.
    */
   @property({ attribute: false }) swatches: string[] = [
     '#d0021b',
@@ -196,7 +196,7 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
   }
 
   /** Returns the current value as a string in the specified format. */
-  getFormattedValue(format: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla' = 'hex') {
+  getFormattedValue(format: 'hex' | 'hexa' | 'rgb' | 'rgba' | 'hsl' | 'hsla' | 'hsv' | 'hsva' = 'hex') {
     const currentColor = this.parseColor(
       `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, ${this.alpha / 100})`
     );
@@ -218,6 +218,10 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
         return currentColor.hsl.string;
       case 'hsla':
         return currentColor.hsla.string;
+      case 'hsv':
+        return currentColor.hsv.string;
+      case 'hsva':
+        return currentColor.hsva.string;
       default:
         return '';
     }
@@ -267,15 +271,19 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
   }
 
   handleFormatToggle() {
-    const formats = ['hex', 'rgb', 'hsl'];
+    const formats = ['hex', 'rgb', 'hsl', 'hsv'];
     const nextIndex = (formats.indexOf(this.format) + 1) % formats.length;
-    this.format = formats[nextIndex] as 'hex' | 'rgb' | 'hsl';
+    this.format = formats[nextIndex] as 'hex' | 'rgb' | 'hsl' | 'hsv';
+    this.setColor(this.value);
+    this.emit('sl-change');
+    this.emit('sl-input');
   }
 
   handleAlphaDrag(event: PointerEvent) {
     const container = this.shadowRoot!.querySelector<HTMLElement>('.color-picker__slider.color-picker__alpha')!;
     const handle = container.querySelector<HTMLElement>('.color-picker__slider-handle')!;
     const { width } = container.getBoundingClientRect();
+    let oldValue = this.value;
 
     handle.focus();
     event.preventDefault();
@@ -284,6 +292,12 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       onMove: x => {
         this.alpha = clamp((x / width) * 100, 0, 100);
         this.syncValues();
+
+        if (this.value !== oldValue) {
+          oldValue = this.value;
+          this.emit('sl-change');
+          this.emit('sl-input');
+        }
       },
       initialEvent: event
     });
@@ -293,6 +307,7 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
     const container = this.shadowRoot!.querySelector<HTMLElement>('.color-picker__slider.color-picker__hue')!;
     const handle = container.querySelector<HTMLElement>('.color-picker__slider-handle')!;
     const { width } = container.getBoundingClientRect();
+    let oldValue = this.value;
 
     handle.focus();
     event.preventDefault();
@@ -301,6 +316,12 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       onMove: x => {
         this.hue = clamp((x / width) * 360, 0, 360);
         this.syncValues();
+
+        if (this.value !== oldValue) {
+          oldValue = this.value;
+          this.emit('sl-change');
+          this.emit('sl-input');
+        }
       },
       initialEvent: event
     });
@@ -310,6 +331,7 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
     const grid = this.shadowRoot!.querySelector<HTMLElement>('.color-picker__grid')!;
     const handle = grid.querySelector<HTMLElement>('.color-picker__grid-handle')!;
     const { width, height } = grid.getBoundingClientRect();
+    let oldValue = this.value;
 
     handle.focus();
     event.preventDefault();
@@ -322,6 +344,12 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
         this.brightness = clamp(100 - (y / height) * 100, 0, 100);
         this.lightness = this.getLightness(this.brightness);
         this.syncValues();
+
+        if (this.value !== oldValue) {
+          oldValue = this.value;
+          this.emit('sl-change');
+          this.emit('sl-input');
+        }
       },
       onStop: () => (this.isDraggingGridHandle = false),
       initialEvent: event
@@ -330,6 +358,7 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
 
   handleAlphaKeyDown(event: KeyboardEvent) {
     const increment = event.shiftKey ? 10 : 1;
+    const oldValue = this.value;
 
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
@@ -354,10 +383,16 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       this.alpha = 100;
       this.syncValues();
     }
+
+    if (this.value !== oldValue) {
+      this.emit('sl-change');
+      this.emit('sl-input');
+    }
   }
 
   handleHueKeyDown(event: KeyboardEvent) {
     const increment = event.shiftKey ? 10 : 1;
+    const oldValue = this.value;
 
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
@@ -382,10 +417,16 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       this.hue = 360;
       this.syncValues();
     }
+
+    if (this.value !== oldValue) {
+      this.emit('sl-change');
+      this.emit('sl-input');
+    }
   }
 
   handleGridKeyDown(event: KeyboardEvent) {
     const increment = event.shiftKey ? 10 : 1;
+    const oldValue = this.value;
 
     if (event.key === 'ArrowLeft') {
       event.preventDefault();
@@ -414,10 +455,19 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       this.lightness = this.getLightness(this.brightness);
       this.syncValues();
     }
+
+    if (this.value !== oldValue) {
+      this.emit('sl-change');
+      this.emit('sl-input');
+    }
   }
 
   handleInputChange(event: CustomEvent) {
     const target = event.target as HTMLInputElement;
+    const oldValue = this.value;
+
+    // Prevent the <sl-input>'s sl-change event from bubbling up
+    event.stopPropagation();
 
     if (this.input.value) {
       this.setColor(target.value);
@@ -426,14 +476,30 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       this.value = '';
     }
 
+    if (this.value !== oldValue) {
+      this.emit('sl-change');
+      this.emit('sl-input');
+    }
+  }
+
+  handleInputInput(event: CustomEvent) {
+    // Prevent the <sl-input>'s sl-input event from bubbling up
     event.stopPropagation();
   }
 
   handleInputKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter') {
+      const oldValue = this.value;
+
       if (this.input.value) {
         this.setColor(this.input.value);
         this.input.value = this.value;
+
+        if (this.value !== oldValue) {
+          this.emit('sl-change');
+          this.emit('sl-input');
+        }
+
         setTimeout(() => this.input.select());
       } else {
         this.hue = 0;
@@ -441,90 +507,37 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
     }
   }
 
-  normalizeColorString(colorString: string) {
-    //
-    // The color module we're using doesn't parse % values for the alpha channel in RGBA and HSLA. It also doesn't parse
-    // hex colors when the # is missing. This pre-parser tries to normalize these edge cases to provide a better
-    // experience for users who type in color values.
-    //
-    if (/rgba?/i.test(colorString)) {
-      const rgba = colorString
-        .replace(/[^\d.%]/g, ' ')
-        .split(' ')
-        .map(val => val.trim())
-        .filter(val => val.length);
-
-      if (rgba.length < 4) {
-        rgba[3] = '1';
-      }
-
-      if (rgba[3].indexOf('%') > -1) {
-        rgba[3] = (parseFloat(rgba[3].replace(/%/g, '')) / 100).toString();
-      }
-
-      return `rgba(${rgba[0]}, ${rgba[1]}, ${rgba[2]}, ${rgba[3]})`;
-    }
-
-    if (/hsla?/i.test(colorString)) {
-      const hsla = colorString
-        .replace(/[^\d.%]/g, ' ')
-        .split(' ')
-        .map(val => val.trim())
-        .filter(val => val.length);
-
-      if (hsla.length < 4) {
-        hsla[3] = '1';
-      }
-
-      if (hsla[3].indexOf('%') > -1) {
-        hsla[3] = (parseFloat(hsla[3].replace(/%/g, '')) / 100).toString();
-      }
-
-      return `hsla(${hsla[0]}, ${hsla[1]}, ${hsla[2]}, ${hsla[3]})`;
-    }
-
-    if (/^[0-9a-f]+$/i.test(colorString)) {
-      return `#${colorString}`;
-    }
-
-    return colorString;
+  handleTouchMove(event: TouchEvent) {
+    event.preventDefault();
   }
 
   parseColor(colorString: string) {
-    let parsed: Color;
-
-    // The color module has a weak parser, so we normalize certain things to make the user experience better
-    colorString = this.normalizeColorString(colorString);
-
-    try {
-      parsed = Color(colorString);
-    } catch {
+    const color = new TinyColor(colorString);
+    if (!color.isValid) {
       return null;
     }
 
-    const hslColor = parsed.hsl();
-
+    const hslColor = color.toHsl();
+    // Adjust saturation and lightness from 0-1 to 0-100
     const hsl = {
-      h: hslColor.hue(),
-      s: hslColor.saturationl(),
-      l: hslColor.lightness(),
-      a: hslColor.alpha()
+      h: hslColor.h,
+      s: hslColor.s * 100,
+      l: hslColor.l * 100,
+      a: hslColor.a
     };
 
-    const rgbColor = parsed.rgb();
+    const rgb = color.toRgb();
 
-    const rgb = {
-      r: rgbColor.red(),
-      g: rgbColor.green(),
-      b: rgbColor.blue(),
-      a: rgbColor.alpha()
-    };
+    const hex = color.toHexString();
+    const hexa = color.toHex8String();
 
-    const hex = {
-      r: toHex(rgb.r),
-      g: toHex(rgb.g),
-      b: toHex(rgb.b),
-      a: toHex(rgb.a * 255)
+    const hsvColor = color.toHsv();
+    // Adjust saturation and value from 0-1 to 0-100
+    const hsv = {
+      h: hsvColor.h,
+      s: hsvColor.s * 100,
+      v: hsvColor.v * 100,
+      a: hsvColor.a
     };
 
     return {
@@ -543,6 +556,21 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
           `hsla(${Math.round(hsl.h)}, ${Math.round(hsl.s)}%, ${Math.round(hsl.l)}%, ${hsl.a.toFixed(2).toString()})`
         )
       },
+      hsv: {
+        h: hsv.h,
+        s: hsv.s,
+        v: hsv.v,
+        string: this.setLetterCase(`hsv(${Math.round(hsv.h)}, ${Math.round(hsv.s)}%, ${Math.round(hsv.v)}%)`)
+      },
+      hsva: {
+        h: hsv.h,
+        s: hsv.s,
+        v: hsv.v,
+        a: hsv.a,
+        string: this.setLetterCase(
+          `hsva(${Math.round(hsv.h)}, ${Math.round(hsv.s)}%, ${Math.round(hsv.v)}%, ${hsv.a.toFixed(2).toString()})`
+        )
+      },
       rgb: {
         r: rgb.r,
         g: rgb.g,
@@ -558,8 +586,8 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
           `rgba(${Math.round(rgb.r)}, ${Math.round(rgb.g)}, ${Math.round(rgb.b)}, ${rgb.a.toFixed(2).toString()})`
         )
       },
-      hex: this.setLetterCase(`#${hex.r}${hex.g}${hex.b}`),
-      hexa: this.setLetterCase(`#${hex.r}${hex.g}${hex.b}${hex.a}`)
+      hex: this.setLetterCase(hex),
+      hexa: this.setLetterCase(hexa)
     };
   }
 
@@ -602,6 +630,8 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       this.inputValue = this.opacity ? currentColor.hsla.string : currentColor.hsl.string;
     } else if (this.format === 'rgb') {
       this.inputValue = this.opacity ? currentColor.rgba.string : currentColor.rgb.string;
+    } else if (this.format === 'hsv') {
+      this.inputValue = this.opacity ? currentColor.hsva.string : currentColor.hsv.string;
     } else {
       this.inputValue = this.opacity ? currentColor.hexa : currentColor.hex;
     }
@@ -632,6 +662,19 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       .catch(() => {
         // The user canceled, do nothing
       });
+  }
+
+  selectSwatch(color: string) {
+    const oldValue = this.value;
+
+    if (!this.disabled) {
+      this.setColor(color);
+
+      if (this.value !== oldValue) {
+        this.emit('sl-change');
+        this.emit('sl-input');
+      }
+    }
   }
 
   @watch('format', { waitUntilFirstUpdate: true })
@@ -671,7 +714,6 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
     }
 
     if (this.value !== this.lastValueEmitted) {
-      this.emit('sl-change');
       this.lastValueEmitted = this.value;
     }
   }
@@ -703,8 +745,8 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
           part="grid"
           class="color-picker__grid"
           style=${styleMap({ backgroundColor: `hsl(${this.hue}deg, 100%, 50%)` })}
-          @mousedown=${this.handleGridDrag}
-          @touchstart=${this.handleGridDrag}
+          @pointerdown=${this.handleGridDrag}
+          @touchmove=${this.handleTouchMove}
         >
           <span
             part="grid-handle"
@@ -728,8 +770,8 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
             <div
               part="slider hue-slider"
               class="color-picker__hue color-picker__slider"
-              @mousedown=${this.handleHueDrag}
-              @touchstart=${this.handleHueDrag}
+              @pointerdown=${this.handleHueDrag}
+              @touchmove=${this.handleTouchMove}
             >
               <span
                 part="slider-handle"
@@ -752,8 +794,8 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
                   <div
                     part="slider opacity-slider"
                     class="color-picker__alpha color-picker__slider color-picker__transparent-bg"
-                    @mousedown="${this.handleAlphaDrag}"
-                    @touchstart="${this.handleAlphaDrag}"
+                    @pointerdown="${this.handleAlphaDrag}"
+                    @touchmove=${this.handleTouchMove}
                   >
                     <div
                       class="color-picker__alpha-gradient"
@@ -804,11 +846,12 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
             autocorrect="off"
             autocapitalize="off"
             spellcheck="false"
-            .value=${live(this.isEmpty ? '' : this.inputValue)}
+            value=${this.isEmpty ? '' : this.inputValue}
             ?disabled=${this.disabled}
             aria-label=${this.localize.term('currentValue')}
             @keydown=${this.handleInputKeyDown}
             @sl-change=${this.handleInputChange}
+            @sl-input=${this.handleInputInput}
           ></sl-input>
           <sl-button-group>
             ${!this.noFormatToggle
@@ -863,7 +906,7 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
                       tabindex=${ifDefined(this.disabled ? undefined : '0')}
                       role="button"
                       aria-label=${swatch}
-                      @click=${() => !this.disabled && this.setColor(swatch)}
+                      @click=${() => this.selectSwatch(swatch)}
                       @keydown=${(event: KeyboardEvent) =>
                         !this.disabled && event.key === 'Enter' && this.setColor(swatch)}
                     >
@@ -917,11 +960,6 @@ export default class SlColorPicker extends ShoelaceElement implements ShoelaceFo
       </sl-dropdown>
     `;
   }
-}
-
-function toHex(value: number) {
-  const hex = Math.round(value).toString(16);
-  return hex.length === 1 ? `0${hex}` : hex;
 }
 
 declare global {

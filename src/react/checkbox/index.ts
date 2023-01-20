@@ -5,5 +5,6 @@ import Component from '../../components/checkbox/checkbox.js';
 export default createComponent(React, 'sl-checkbox', Component, {
   onSlBlur: 'sl-blur',
   onSlChange: 'sl-change',
-  onSlFocus: 'sl-focus'
+  onSlFocus: 'sl-focus',
+  onSlInput: 'sl-input'
 });

@@ -22,6 +22,7 @@ import type { CSSResultGroup } from 'lit';
  *
  * @event sl-blur - Emitted when the control loses focus.
  * @event sl-change - Emitted when the control's checked state changes.
+ * @event sl-input - Emitted when the control receives input.
  * @event sl-focus - Emitted when the control gains focus.
  *
  * @csspart base - The component's base wrapper.
@@ -55,6 +56,9 @@ export default class SlSwitch extends ShoelaceElement implements ShoelaceFormCon
 
   /** The current value of the switch, submitted as a name/value pair with form data. */
   @property() value: string;
+
+  /** The switch's size. */
+  @property({ reflect: true }) size: 'small' | 'medium' | 'large' = 'medium';
 
   /** Disables the switch. */
   @property({ type: Boolean, reflect: true }) disabled = false;
@@ -108,6 +112,10 @@ export default class SlSwitch extends ShoelaceElement implements ShoelaceFormCon
     this.emit('sl-blur');
   }
 
+  handleInput() {
+    this.emit('sl-input');
+  }
+
   @watch('checked', { waitUntilFirstUpdate: true })
   handleCheckedChange() {
     this.input.checked = this.checked; // force a sync update
@@ -136,12 +144,14 @@ export default class SlSwitch extends ShoelaceElement implements ShoelaceFormCon
       event.preventDefault();
       this.checked = false;
       this.emit('sl-change');
+      this.emit('sl-input');
     }
 
     if (event.key === 'ArrowRight') {
       event.preventDefault();
       this.checked = true;
       this.emit('sl-change');
+      this.emit('sl-input');
     }
   }
 
@@ -153,7 +163,10 @@ export default class SlSwitch extends ShoelaceElement implements ShoelaceFormCon
           switch: true,
           'switch--checked': this.checked,
           'switch--disabled': this.disabled,
-          'switch--focused': this.hasFocus
+          'switch--focused': this.hasFocus,
+          'switch--small': this.size === 'small',
+          'switch--medium': this.size === 'medium',
+          'switch--large': this.size === 'large'
         })}
       >
         <input
@@ -168,6 +181,7 @@ export default class SlSwitch extends ShoelaceElement implements ShoelaceFormCon
           role="switch"
           aria-checked=${this.checked ? 'true' : 'false'}
           @click=${this.handleClick}
+          @input=${this.handleInput}
           @blur=${this.handleBlur}
           @focus=${this.handleFocus}
           @keydown=${this.handleKeyDown}

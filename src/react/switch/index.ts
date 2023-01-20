@@ -5,5 +5,6 @@ import Component from '../../components/switch/switch.js';
 export default createComponent(React, 'sl-switch', Component, {
   onSlBlur: 'sl-blur',
   onSlChange: 'sl-change',
+  onSlInput: 'sl-input',
   onSlFocus: 'sl-focus'
 });

@@ -41,11 +41,11 @@ const isFirefox = isChromium ? false : navigator.userAgent.includes('Firefox');
  * @slot hide-password-icon - An icon to use in lieu of the default hide password icon.
  * @slot help-text - Text that describes how to use the input. Alternatively, you can use the `help-text` attribute.
  *
+ * @event sl-blur - Emitted when the control loses focus.
  * @event sl-change - Emitted when an alteration to the control's value is committed by the user.
  * @event sl-clear - Emitted when the clear button is activated.
- * @event sl-input - Emitted when the control receives input and its value changes.
  * @event sl-focus - Emitted when the control gains focus.
- * @event sl-blur - Emitted when the control loses focus.
+ * @event sl-input - Emitted when the control receives input.
  *
  * @csspart form-control - The form control that wraps the label, input, and help text.
  * @csspart form-control-label - The label's wrapper.
@@ -176,7 +176,15 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
   @property() enterkeyhint: 'enter' | 'done' | 'go' | 'next' | 'previous' | 'search' | 'send';
 
   /** Enables spell checking on the input. */
-  @property({ type: Boolean }) spellcheck: boolean;
+  @property({
+    type: Boolean,
+    converter: {
+      // Allow "true|false" attribute values but keep the property boolean
+      fromAttribute: value => (!value || value === 'false' ? false : true),
+      toAttribute: value => (value ? 'true' : 'false')
+    }
+  })
+  spellcheck = true;
 
   /**
    * Tells the browser what type of data will be entered by the user, allowing it to display the appropriate virtual
@@ -235,16 +243,15 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
   /** Replaces a range of text with a new string. */
   setRangeText(
     replacement: string,
-    start: number,
-    end: number,
-    selectMode: 'select' | 'start' | 'end' | 'preserve' = 'preserve'
+    start?: number,
+    end?: number,
+    selectMode?: 'select' | 'start' | 'end' | 'preserve'
   ) {
+    // @ts-expect-error - start, end, and selectMode are optional
     this.input.setRangeText(replacement, start, end, selectMode);
 
     if (this.value !== this.input.value) {
       this.value = this.input.value;
-      this.emit('sl-input');
-      this.emit('sl-change');
     }
   }
 
@@ -260,8 +267,6 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
     this.input.stepUp();
     if (this.value !== this.input.value) {
       this.value = this.input.value;
-      this.emit('sl-input');
-      this.emit('sl-change');
     }
   }
 
@@ -270,8 +275,6 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
     this.input.stepDown();
     if (this.value !== this.input.value) {
       this.value = this.input.value;
-      this.emit('sl-input');
-      this.emit('sl-change');
     }
   }
 
@@ -443,7 +446,7 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
               autocomplete=${ifDefined(this.type === 'password' ? 'off' : this.autocomplete)}
               autocorrect=${ifDefined(this.type === 'password' ? 'off' : this.autocorrect)}
               ?autofocus=${this.autofocus}
-              spellcheck=${ifDefined(this.spellcheck)}
+              spellcheck=${this.spellcheck}
               pattern=${ifDefined(this.pattern)}
               enterkeyhint=${ifDefined(this.enterkeyhint)}
               inputmode=${ifDefined(this.inputmode)}
