@@ -5,9 +5,14 @@ import type SlMenuItem from './menu-item';
 describe('<sl-menu-item>', () => {
   it('passes accessibility test', async () => {
     const el = await fixture<SlMenuItem>(html`
-      <sl-select>
-        <sl-menu-item>Test</sl-menu-item>
-      </sl-select>
+      <sl-menu>
+        <sl-menu-item>Item 1</sl-menu-item>
+        <sl-menu-item>Item 2</sl-menu-item>
+        <sl-menu-item>Item 3</sl-menu-item>
+        <sl-divider></sl-divider>
+        <sl-menu-item type="checkbox" checked>Checked</sl-menu-item>
+        <sl-menu-item type="checkbox">Unchecked</sl-menu-item>
+      </sl-menu>
     `);
     await expect(el).to.be.accessible();
   });
@@ -15,8 +20,6 @@ describe('<sl-menu-item>', () => {
   it('default properties', async () => {
     const el = await fixture<SlMenuItem>(html` <sl-menu-item>Test</sl-menu-item> `);
 
-    expect(el.checked).to.be.false;
-    expect(el.getAttribute('aria-checked')).to.equal('false');
     expect(el.value).to.equal('');
     expect(el.disabled).to.be.false;
     expect(el.getAttribute('aria-disabled')).to.equal('false');
@@ -25,9 +28,6 @@ describe('<sl-menu-item>', () => {
   it('changes aria attributes', async () => {
     const el = await fixture<SlMenuItem>(html` <sl-menu-item>Test</sl-menu-item> `);
 
-    el.checked = true;
-    await aTimeout(100);
-    expect(el.getAttribute('aria-checked')).to.equal('true');
     el.disabled = true;
     await aTimeout(100);
     expect(el.getAttribute('aria-disabled')).to.equal('true');
@@ -38,13 +38,14 @@ describe('<sl-menu-item>', () => {
     expect(el.getTextLabel()).to.equal('Test');
   });
 
-  it('emit sl-label-change event on label change', async () => {
-    const el = await fixture<SlMenuItem>(html` <sl-menu-item>Test</sl-menu-item> `);
+  it('emits the slotchange event when the label changes', async () => {
+    const el = await fixture<SlMenuItem>(html` <sl-menu-item>Text</sl-menu-item> `);
+    const slotChangeHandler = sinon.spy();
 
-    const labelChangeHandler = sinon.spy();
+    el.addEventListener('slotchange', slotChangeHandler);
     el.textContent = 'New Text';
-    el.addEventListener('sl-label-change', labelChangeHandler);
-    await waitUntil(() => labelChangeHandler.calledOnce);
-    expect(labelChangeHandler).to.have.been.calledOnce;
+    await waitUntil(() => slotChangeHandler.calledOnce);
+
+    expect(slotChangeHandler).to.have.been.calledOnce;
   });
 });

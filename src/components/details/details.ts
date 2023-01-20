@@ -47,12 +47,12 @@ import type { CSSResultGroup } from 'lit';
 export default class SlDetails extends ShoelaceElement {
   static styles: CSSResultGroup = styles;
 
+  private readonly localize = new LocalizeController(this);
+
   @query('.details') details: HTMLElement;
   @query('.details__header') header: HTMLElement;
   @query('.details__body') body: HTMLElement;
   @query('.details__expand-icon-slot') expandIconSlot: HTMLSlotElement;
-
-  private readonly localize = new LocalizeController(this);
 
   /**
    * Indicates whether or not the details is open. You can toggle this attribute to show and hide the details, or you
@@ -84,27 +84,7 @@ export default class SlDetails extends ShoelaceElement {
     this.body.style.height = this.open ? 'auto' : '0';
   }
 
-  /** Shows the details. */
-  async show() {
-    if (this.open || this.disabled) {
-      return undefined;
-    }
-
-    this.open = true;
-    return waitForEvent(this, 'sl-after-show');
-  }
-
-  /** Hides the details */
-  async hide() {
-    if (!this.open || this.disabled) {
-      return undefined;
-    }
-
-    this.open = false;
-    return waitForEvent(this, 'sl-after-hide');
-  }
-
-  handleSummaryClick() {
+  private handleSummaryClick() {
     if (!this.disabled) {
       if (this.open) {
         this.hide();
@@ -116,7 +96,7 @@ export default class SlDetails extends ShoelaceElement {
     }
   }
 
-  handleSummaryKeyDown(event: KeyboardEvent) {
+  private handleSummaryKeyDown(event: KeyboardEvent) {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
 
@@ -173,6 +153,26 @@ export default class SlDetails extends ShoelaceElement {
 
       this.emit('sl-after-hide');
     }
+  }
+
+  /** Shows the details. */
+  async show() {
+    if (this.open || this.disabled) {
+      return undefined;
+    }
+
+    this.open = true;
+    return waitForEvent(this, 'sl-after-show');
+  }
+
+  /** Hides the details */
+  async hide() {
+    if (!this.open || this.disabled) {
+      return undefined;
+    }
+
+    this.open = false;
+    return waitForEvent(this, 'sl-after-hide');
   }
 
   render() {

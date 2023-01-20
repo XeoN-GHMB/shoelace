@@ -26,3 +26,9 @@
 .sl-toast-stack sl-alert::part(base) {
   box-shadow: var(--sl-shadow-large);
 }
+
+
+sl-tab-group[variant=flap] sl-tab::part(base){
+  display: flex;
+  padding: 5px 12px;
+}

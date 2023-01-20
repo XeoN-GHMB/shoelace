@@ -38,6 +38,7 @@ export { default as SlMenu } from './menu';
 export { default as SlMenuItem } from './menu-item';
 export { default as SlMenuLabel } from './menu-label';
 export { default as SlMutationObserver } from './mutation-observer';
+export { default as SlOption } from './option';
 export { default as SlOrgNode } from './org-node';
 export { default as SlOrgTree } from './org-tree';
 export { default as SlPageBtn } from './page-btn';
