@@ -482,7 +482,12 @@
   --sl-input-help-text-font-size-large: var(--sl-font-size-medium);
   --sl-input-help-text-color: var(--sl-color-neutral-500);
   /* Toggles (checkboxes, radios, switches) */
-  --sl-toggle-size: 1rem;
+  --sl-toggle-size-small: 0.875rem;
+  /* 14px @ 16px base  */
+  --sl-toggle-size-medium: 1.125rem;
+  /* 18px @ 16px base */
+  --sl-toggle-size-large: 1.375rem;
+  /* 22px @ 16px base */
   /*
      * Overlays
      */
@@ -491,7 +496,7 @@
   /*
      * Panels
      */
-  --sl-panel-background-color: var(--sl-surface-base-alt);
+  --sl-panel-background-color: var(--sl-color-neutral-0);
   --sl-panel-border-color: var(--sl-color-neutral-200);
   --sl-panel-border-width: 1px;
   /*
@@ -505,8 +510,7 @@
   --sl-tooltip-font-size: var(--sl-font-size-small);
   --sl-tooltip-line-height: var(--sl-line-height-dense);
   --sl-tooltip-padding: var(--sl-spacing-2x-small) var(--sl-spacing-x-small);
-  --sl-tooltip-arrow-size: 5px;
-  --sl-tooltip-arrow-start-end-offset: 8px;
+  --sl-tooltip-arrow-size: 6px;
   /*
      * Z-indexes
      */
