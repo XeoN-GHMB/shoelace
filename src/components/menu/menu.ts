@@ -27,15 +27,12 @@ export default class SlMenu extends ShoelaceElement {
   /** Deactivate setting tabindex on active menu item. For menus where focus should remain on the trigger. */
   @property({ type: Boolean, reflect: true, attribute: 'not-tabbable' }) notTabbable = false;
 
-  private typeToSelectString = '';
-  private typeToSelectTimeout: number;
-
   connectedCallback() {
     super.connectedCallback();
     this.setAttribute('role', 'menu');
   }
 
-  private getAllItems() {
+  getAllItems() {
     return [...this.defaultSlot.assignedElements({ flatten: true })].filter((el: HTMLElement) => {
       if (!this.isMenuItem(el)) {
         return false;
