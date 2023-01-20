@@ -1,8 +1,8 @@
 import { expect, fixture, html, triggerBlurFor, triggerFocusFor } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 import sinon from 'sinon';
-import type SlTreeItem from '../tree-item/tree-item';
 import type SlTree from './tree';
+import type SlTreeItem from '../tree-item/tree-item';
 
 describe('<sl-tree>', () => {
   let el: SlTree;
@@ -579,7 +579,7 @@ describe('<sl-tree>', () => {
 
           // Assert
           expect(selectedChangeSpy).to.have.been.calledOnce;
-          expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node], paths:[[0]] } });
+          expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node] } });
         });
       });
     });
@@ -605,7 +605,7 @@ describe('<sl-tree>', () => {
 
         // Assert
         expect(selectedChangeSpy).to.have.been.calledOnce;
-        expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node], paths:[[0]] } });
+        expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node] } });
       });
     });
 
@@ -650,8 +650,8 @@ describe('<sl-tree>', () => {
 
         // Assert
         expect(selectedChangeSpy).to.have.been.calledTwice;
-        expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node], paths:[[0]] } }); 
-        expect(selectedChangeSpy.args[1][0]).to.deep.include({ detail: { selection: [], paths:[] } });
+        expect(selectedChangeSpy.args[0][0]).to.deep.include({ detail: { selection: [node] } });
+        expect(selectedChangeSpy.args[1][0]).to.deep.include({ detail: { selection: [] } });
       });
     });
   });
