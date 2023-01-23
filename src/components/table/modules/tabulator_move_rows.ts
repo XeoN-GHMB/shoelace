@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {Tabulator, MoveRowsModule, RowComponent, Row} from '../tabulator_esm.js';
 
 

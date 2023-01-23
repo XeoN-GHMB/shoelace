@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {DataTreeModule} from "../tabulator_esm";
 
 class CustomControllElements extends DataTreeModule {

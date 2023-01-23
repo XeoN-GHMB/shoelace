@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {ReactiveDataModule} from '../tabulator_esm.js';
 
 class CustomReactiveDataModule extends ReactiveDataModule {
