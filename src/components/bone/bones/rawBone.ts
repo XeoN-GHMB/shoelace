@@ -478,7 +478,6 @@ export class RawBone {
       inputElement.value = value;
     }
     inputElement.addEventListener("sl-change", (change_event) => {
-      console.log("change")
       this.mainInstance.internboneValue = this.reWriteBoneValue();
       this.mainInstance.handleChange();
     });

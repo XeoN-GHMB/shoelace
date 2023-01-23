@@ -151,11 +151,11 @@ export class TextBone extends RawBone {
   uploadHandler(blobInfo, progress) {
     //Todo error handling
     return new Promise((resolve, reject) => {
-      FileBone.getUploadUrl(blobInfo.blob()).then(uploadData => {
+      FileBone.getUploadUrl(blobInfo.blob(),this.mainInstance).then(uploadData => {
 
         FileBone.uploadFile(blobInfo.blob(), uploadData).then(resp => {
 
-          FileBone.addFile(uploadData).then((fileData: FileSkelValues) => {
+          FileBone.addFile(uploadData,this.mainInstance).then((fileData: FileSkelValues) => {
             console.log(fileData)
             resolve(fileData["values"]["downloadUrl"])
 

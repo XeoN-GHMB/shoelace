@@ -2,6 +2,7 @@
 import translationtable from "./translations/init"
 import type {BoneStructure, BoneValue} from "./bones/rawBone";
 import * as path from "path";
+import SlBone from "./bone";
 
 export function formatstring(data: BoneValue, boneStructure: BoneStructure, lang: string | null = null, ignoreLang = false): BoneValue {
   if (!boneStructure) {
@@ -229,13 +230,12 @@ export function escapeString(value: BoneValue): string | string[] {
 
 }
 
-//const apiurl=window.location.origin;
-export const apiurl = "http://localhost:8080";
 
-export function getSkey() {
+export function getSkey(apiUrl:string) {
+  console.log("get skey",`${apiUrl}/json/skey`)
   return new Promise<string>((resolve, reject) => {
 
-    fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey: string) => {
+    fetch(`${apiUrl}/json/skey`).then(response => response.json()).then((skey: string) => {
       resolve(skey)
     }).catch((reason) => {
       reject(reason)

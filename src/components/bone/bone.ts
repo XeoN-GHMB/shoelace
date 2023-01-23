@@ -39,6 +39,7 @@ export default class SlBone extends ShoelaceElement {
   relationalCache: Record<string, object> = {};
   textboneCache: Record<string, object> = {};
   previousBoneValues: Record<string, BoneValue[]> = {};
+  initFired = false;
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
 
@@ -62,6 +63,9 @@ export default class SlBone extends ShoelaceElement {
   @property({type: Boolean, attribute: false}) inTable = false;
 
   @property({type: Boolean, reflect: true}) disabled = false;
+
+
+  @property({type: String, reflect: true}) apiUrl = window.location.origin;
 
   /** Gets boneValue */
   get getBoneValue(): any {
@@ -124,6 +128,10 @@ export default class SlBone extends ShoelaceElement {
 
   @watchProps(['boneStructure', 'boneValue', "renderType", "disabled"])
   optionUpdate() {
+    if(this.apiUrl.startsWith("http://localhost:"))//set apiurl for local devserver
+    {
+      this.apiUrl="http://localhost:8080"
+    }
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};
     if (this.boneStructure === null || this.boneStructure === undefined) {
@@ -140,9 +148,12 @@ export default class SlBone extends ShoelaceElement {
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
+      if (this.boneValue !== undefined && this.boneValue !== null) {
+        this.handleInit()
+      }
+
       const boneEditor = new BoneEditRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
       this.bone = boneEditor.getEditor();
-
 
     }
 
@@ -211,10 +222,30 @@ export default class SlBone extends ShoelaceElement {
       formData: this.toFormData(),
       type: type
     }
-    console.log("emit", options)
+    this.handleInit(options)
+
     emit(this, 'sl-boneChange', {
       detail: options
     });
+  }
+
+  handleInit(options) {
+    if (!this.initFired) {
+      if (options === undefined) {
+         options = {
+          boneValue: this.getBoneValue,
+          boneName: this.boneName,
+          formValue: this.toFormValue(),
+          formData: this.toFormData(),
+        }
+      }
+      options["type"]="init";
+      console.log("init fire")
+      this.initFired = true;
+      emit(this, 'sl-boneInit', {
+        detail: options
+      });
+    }
   }
 
   @watchProps(["errors"])
