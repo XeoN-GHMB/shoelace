@@ -58,6 +58,14 @@
     "node": ">=14.17.0"
   },
   "dependencies": {
+    "@codemirror/autocomplete": "^6.0.0",
+    "@codemirror/commands": "^6.0.0",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/language": "^6.0.0",
+    "@codemirror/lint": "^6.0.0",
+    "@codemirror/search": "^6.0.0",
+    "@codemirror/state": "^6.0.0",
+    "@codemirror/view": "^6.0.0",
     "@ctrl/tinycolor": "^3.5.0",
     "@floating-ui/dom": "^1.0.7",
     "@lit-labs/react": "^1.1.0",
@@ -65,6 +73,7 @@
     "@shoelace-style/localize": "^3.0.4",
     "@tinymce/tinymce-webcomponent": "^2.0.1",
     "@types/tabulator-tables": "^5.1.1",
+    "codemirror": "^6.0.1",
     "crypto-js": "^4.1.1",
     "leaflet": "^1.7.1",
     "lit": "^2.4.1",

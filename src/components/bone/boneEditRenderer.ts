@@ -16,6 +16,7 @@ import {StringBone} from "./bones/stringBone";
 import {TextBone} from "./bones/textBone";
 import type SlBone from "./bone";
 import type {BoneStructure} from "./interfaces";
+import {JsonBone} from "./bones/jsonBone";
 
 
 export class BoneEditRenderer {
@@ -51,7 +52,6 @@ export class BoneEditRenderer {
         } else {
           cls = StringBone;
         }
-
         break;
       case "numeric":
         cls = NumericBone;
@@ -89,6 +89,13 @@ export class BoneEditRenderer {
       case "text":
         cls = TextBone;
         break;
+      case "raw":
+        if (this.boneStructure["type"].startsWith("raw.json")) {
+          cls = JsonBone;
+        } else {
+          cls = RawBone
+        }
+        break
       default:
         cls = RawBone
     }

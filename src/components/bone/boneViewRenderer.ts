@@ -119,6 +119,9 @@ export class BoneViewRenderer {
       case "key":
         cls = KeyBone;
         break;
+      case "text":
+        cls = TextBone;
+        break;
       case "raw":
         if (this.boneStructure["type"].startsWith("raw.json")) {
           cls = JsonBone;

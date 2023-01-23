@@ -346,7 +346,7 @@ export class RawBone {
         addButton.classList.add("add-button")
         addButton.variant = "success"
         addButton.title = translate("actions.add");
-        addButton.disabled=this.boneStructure["readonly"];
+        addButton.disabled = this.boneStructure["readonly"];
 
 
         const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
@@ -374,7 +374,7 @@ export class RawBone {
         clearButton.setAttribute("outline", "")
         clearButton.classList.add("clear-button")
         clearButton.title = translate("actions.deleteAll");
-        clearButton.disabled=this.boneStructure["readonly"];
+        clearButton.disabled = this.boneStructure["readonly"];
         clearButton.addEventListener("click", () => {
           this.clearMultipleWrapper()
         });
@@ -552,7 +552,7 @@ export class RawBone {
         this.saveState(lang);
         this.mainInstance.internboneValue = this.reWriteBoneValue();
         const obj: object = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
-        console.log(obj,newboneName)
+        console.log(obj, newboneName)
         createPath(obj, newboneName, null, true);
         const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
 
@@ -818,7 +818,14 @@ export class RawBone {
       }
 
     });
+    this.mainInstance.bone.querySelectorAll(`[data-jsonbone="true"]`).forEach((inputElement: HTMLElement) => {
 
+      if (inputElement.dataset["name"] !== undefined) {
+
+        createPath(obj, inputElement.dataset["name"], this.mainInstance.jsonboneCache[inputElement.dataset["name"]]);
+      }
+
+    });
 
     return obj;
   }
