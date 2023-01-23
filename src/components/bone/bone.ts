@@ -37,7 +37,9 @@ export default class SlBone extends ShoelaceElement {
   initBoneValue: any;
   internboneValue: Record<string, BoneValue>;
   relationalCache: Record<string, object> = {};
+  textboneCache: Record<string, object> = {};
   previousBoneValues: Record<string, BoneValue[]> = {};
+  initFired = false;
   /** set boneStructure */
   @property({type: Object, attribute: false}) boneStructure: any;
 
@@ -62,11 +64,13 @@ export default class SlBone extends ShoelaceElement {
 
   @property({type: Boolean, reflect: true}) disabled = false;
 
+
+  @property({type: String, reflect: true}) apiUrl = window.location.origin;
+
   /** Gets boneValue */
   get getBoneValue(): any {
     return this.internboneValue[this.boneName];
   }
-
 
 
   toFormValue() {
@@ -111,7 +115,10 @@ export default class SlBone extends ShoelaceElement {
     const formData: FormData = new FormData();
     for (const data of value) {
       for (const [k, v] of Object.entries(data)) {
-        formData.append(k, v.toString());
+        if (v) {
+          formData.append(k, v.toString());
+        }
+
       }
     }
 
@@ -119,8 +126,12 @@ export default class SlBone extends ShoelaceElement {
   }
 
 
-  @watchProps(['boneStructure', 'boneValue', "renderType","disabled"])
+  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled"])
   optionUpdate() {
+    if(this.apiUrl.startsWith("http://localhost:"))//set apiurl for local devserver
+    {
+      this.apiUrl="http://localhost:8080"
+    }
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};
     if (this.boneStructure === null || this.boneStructure === undefined) {
@@ -137,9 +148,12 @@ export default class SlBone extends ShoelaceElement {
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
+      if (this.boneValue !== undefined && this.boneValue !== null) {
+        this.handleInit()
+      }
+
       const boneEditor = new BoneEditRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
       this.bone = boneEditor.getEditor();
-
 
     }
 
@@ -208,10 +222,30 @@ export default class SlBone extends ShoelaceElement {
       formData: this.toFormData(),
       type: type
     }
-    console.log("emit", options)
+    this.handleInit(options)
+
     emit(this, 'sl-boneChange', {
       detail: options
     });
+  }
+
+  handleInit(options) {
+    if (!this.initFired) {
+      if (options === undefined) {
+         options = {
+          boneValue: this.getBoneValue,
+          boneName: this.boneName,
+          formValue: this.toFormValue(),
+          formData: this.toFormData(),
+        }
+      }
+      options["type"]="init";
+      console.log("init fire")
+      this.initFired = true;
+      emit(this, 'sl-boneInit', {
+        detail: options
+      });
+    }
   }
 
   @watchProps(["errors"])
@@ -235,7 +269,7 @@ export default class SlBone extends ShoelaceElement {
     for (const error of this.errors) {
       if (this.boneName === error["fieldPath"][0])
         if (error["severity"] > 1) {
-          const element: SlDetails = this.bone.querySelector(`[data-name="${error["fieldPath"].join(".")}_errorcontainer` + `"]`);
+          const element: SlDetails = this.bone.querySelector(`[data-name="${error["fieldPath"].join(".")}_errorcontainer"]`);
 
           if (element !== null) {
             element.style.display = "";

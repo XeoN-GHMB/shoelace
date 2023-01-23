@@ -14,4 +14,7 @@ export default {
     lat: "Latitude",
     lng: "Longitude",
   },
+   error:{
+    password:"Die Passörter müssen übereinstimmen"
+  }
 }

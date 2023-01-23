@@ -1,5 +1,5 @@
 // @ts-nocheck
-import {apiurl, createPath, formatstring, getPath, translate} from "../utils";
+import {createPath, formatstring, getPath, translate} from "../utils";
 import {RawBone} from "./rawBone";
 import type SlCombobox from "../../combobox/combobox";
 import type SlIconButton from "../../icon-button/icon-button";
@@ -54,11 +54,11 @@ export class RelationalBone extends RawBone {
 
     searchBox.hoist = true;
     if (value !== null && value !== "") {
-      console.log("form", formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true));
+
       searchBox.placeholder = formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true);
     }
 
-    const url = `${apiurl}/json/${this.boneStructure["module"]}/list?search={q}`;
+    const url = `${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/list?search={q}`;
 
 
     //searchBox.style.width = "100%";
@@ -93,7 +93,7 @@ export class RelationalBone extends RawBone {
 
     searchBox.addEventListener("sl-item-select", async (e: CustomEvent) => {
       shadowInput.value = e.detail.item.value;
-      await fetch(`${apiurl}/json/${this.boneStructure["module"]}/view/${e.detail.item.value}`)
+      await fetch(`${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/view/${e.detail.item.value}`)
         .then(response => response.json())
         .then((data) => {
           this.mainInstance.relationalCache[e.detail.item.value] = {dest: data["values"]}
@@ -105,9 +105,8 @@ export class RelationalBone extends RawBone {
       //this.mainInstance.handleChange(formData);
 
     });
-    if(this.boneStructure["readonly"])
-    {
-      searchBox.disabled=true;
+    if (this.boneStructure["readonly"]) {
+      searchBox.disabled = true;
     }
 
     return inputWrapper;
@@ -146,7 +145,11 @@ export class RelationalBone extends RawBone {
 
     showInput.disabled = true;
     if (this.mainInstance.relationalCache[value] !== undefined) {
-      showInput.value = formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true);
+      if (this.boneStructure["format"]) {
+        showInput.placeholder = formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true);
+      } else {
+        showInput.placeholder = value;
+      }
     }
 
 
@@ -165,11 +168,9 @@ export class RelationalBone extends RawBone {
     inputWrapper.dataset.name = `relational-${boneName}`;
     inputWrapper.appendChild(shadowInput);
     inputWrapper.appendChild(showInput);
-    if(!this.boneStructure["readonly"])
-    {
-          inputWrapper.appendChild(selectButton);
+    if (!this.boneStructure["readonly"]) {
+      inputWrapper.appendChild(selectButton);
     }
-
 
 
     return inputWrapper;
@@ -189,7 +190,7 @@ export class RelationalBone extends RawBone {
 
     table.height = "300px"; // todo auto  height ?
     table.rowindexes = true;
-    fetch(`${apiurl}/json/${this.boneStructure["module"]}/list`).then(resp => resp.json().then((respdata) => {
+    fetch(`${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/list`).then(resp => resp.json().then((respdata) => {
 
       const structure: BoneStructure = {}
       for (const item of respdata["structure"]) {
@@ -203,7 +204,7 @@ export class RelationalBone extends RawBone {
 
     }))
     table.addEventListener("table-fetchData", () => {
-      fetch(`${apiurl}/json/${this.boneStructure["module"]}/list?cursor=${table.dataCursor}`).then(resp => resp.json().then((respdata) => {
+      fetch(`${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/list?cursor=${table.dataCursor}`).then(resp => resp.json().then((respdata) => {
         table.tableReady = true;
         table.addData(respdata["skellist"]);
         table.dataCursor = respdata["cursor"];
@@ -224,7 +225,14 @@ export class RelationalBone extends RawBone {
 
         const rowData = table.getSelectedRows()[0].getData();
         shadowInput.value = rowData["key"];
-        showInput.value = formatstring({"dest": rowData}, this.boneStructure);
+        if (this.boneStructure["format"]) {
+          showInput.placeholder = formatstring({"dest": rowData}, this.boneStructure);
+        } else {
+          showInput.placeholder = rowData["key"]
+
+        }
+
+
         this.mainInstance.internboneValue = this.reWriteBoneValue();
         this.mainInstance.handleChange();
 

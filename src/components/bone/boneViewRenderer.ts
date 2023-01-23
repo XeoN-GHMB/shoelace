@@ -15,6 +15,7 @@ import {SelectBone} from "./bones/selectBone";
 import {SpatialBone} from "./bones/spatialBone";
 import {StringBone} from "./bones/stringBone";
 import {TextBone} from "./bones/textBone";
+import {JsonBone} from "./bones/jsonBone";
 
 export class BoneViewRenderer {
   declare boneStructure: {
@@ -118,6 +119,13 @@ export class BoneViewRenderer {
       case "key":
         cls = KeyBone;
         break;
+      case "raw":
+        if (this.boneStructure["type"].startsWith("raw.json")) {
+          cls = JsonBone;
+        } else {
+          cls = RawBone
+        }
+        break
       default:
         cls = RawBone
     }

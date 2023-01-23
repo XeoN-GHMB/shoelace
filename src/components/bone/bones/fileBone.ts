@@ -1,10 +1,11 @@
 // @ts-nocheck
 import {html} from "lit";
-import {formatstring, getSkey, apiurl, createPath, getPath, translate} from "../utils";
+import {formatstring, getSkey, createPath, getPath, translate} from "../utils";
 import {RawBone} from "./rawBone";
 import type {FileSkelValues, UploadUrlResponse} from "../interfaces";
 import type {BoneValue} from "./rawBone";
 import type {TemplateResult} from "lit";
+import SlBone from "../bone";
 
 export class FileBone extends RawBone {
 
@@ -71,6 +72,7 @@ export class FileBone extends RawBone {
     uploadButton.setAttribute("outline", "");
     uploadButton.classList.add("upload-button");
     uploadButton.title = translate("actions.addFile");
+    uploadButton.disabled = this.boneStructure["readonly"];
     uploadButton.addEventListener("click", () => {
       shadowFile.click();
     })
@@ -131,6 +133,8 @@ export class FileBone extends RawBone {
           const obj = this.reWriteBoneValue();
           this.mainInstance.internboneValue = obj;
           this.mainInstance.handleChange();
+          progressBar.hidden = true;
+          fileNameInput.hidden = false;
         } else {
           fileKeys.push(fileData["key"]);
 
@@ -155,13 +159,18 @@ export class FileBone extends RawBone {
 
       }
 
+
     });
     //fileNameInput
     fileNameInput.disabled = true;
     fileNameInput.title = translate("actions.addFile");
     fileNameInput.placeholder = translate("actions.addFile");
     fileNameInput.addEventListener("click", () => {
-      shadowFile.click();
+      if (!this.boneStructure["readonly"]) {
+        shadowFile.click();
+      }
+
+
     })
     if (value !== null && value !== "") { //Fixme why ==""
       try {
@@ -185,9 +194,9 @@ export class FileBone extends RawBone {
 
   fileUpload(file: File): Promise<FileSkelValues> {
     return new Promise((resolve, reject) => {
-      FileBone.getUploadUrl(file).then((uploadData: UploadUrlResponse) => {
+      FileBone.getUploadUrl(file, this.mainInstance).then((uploadData: UploadUrlResponse) => {
         FileBone.uploadFile(file, uploadData).then(_ => {
-          FileBone.addFile(uploadData).then((fileData: Record<string, FileSkelValues>) => {
+          FileBone.addFile(uploadData, this.mainInstance).then((fileData: Record<string, FileSkelValues>) => {
             resolve(fileData["values"]);
           }).catch((err) => {
             reject(err)
@@ -202,9 +211,9 @@ export class FileBone extends RawBone {
   }
 
 
-  static getUploadUrl(file: File) {
+  static getUploadUrl(file: File, mainInstance: SlBone) {
     return new Promise((resolve, reject) => {
-      getSkey().then(skey => {
+      getSkey(mainInstance.apiUrl).then(skey => {
 
         const data: Record<string, string> = {
           "fileName": file.name,
@@ -212,7 +221,7 @@ export class FileBone extends RawBone {
           "size": file.size.toString(),
           "skey": skey,
         }
-        fetch(`${apiurl}/json/file/getUploadURL`, {
+        fetch(`${mainInstance.apiUrl}/json/file/getUploadURL`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -227,7 +236,7 @@ export class FileBone extends RawBone {
     });
   }
 
-  static uploadFile(file: File, uploadData: UploadUrlResponse) {
+  static uploadFile(file: File, uploadData: UploadUrlResponse, mainInstance: SlBone) {
 
     return new Promise((resolve, reject) => {
       fetch(uploadData["uploadUrl"], {
@@ -242,7 +251,7 @@ export class FileBone extends RawBone {
 
   }
 
-  static addFile(uploadData: UploadUrlResponse) {
+  static addFile(uploadData: UploadUrlResponse, mainInstance: SlBone) {
 
 
     return new Promise((resolve, reject) => {
@@ -250,9 +259,9 @@ export class FileBone extends RawBone {
       currentUpload["key"] = uploadData["uploadKey"];
       currentUpload["node"] = undefined;
       currentUpload["skelType"] = "leaf";
-      getSkey().then(skey => {
+      getSkey(mainInstance.apiUrl).then(skey => {
         currentUpload["skey"] = skey;
-        fetch(`${apiurl}/json/file/add`, {
+        fetch(`${mainInstance.apiUrl}/json/file/add`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

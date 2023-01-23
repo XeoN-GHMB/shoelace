@@ -23,6 +23,7 @@ export class RecordBone extends RawBone {
 
       }
       const newBoneName = `${boneName}.${_boneName}`;
+      _boneStructure["readonly"] = this.boneStructure["readonly"]//override readonly that all child bones are readonle too
       const bone: object = new BoneEditRenderer(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).getBone();
       const tmp: HTMLElement = new bone(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).edit(true, this.depth + 1);
       tmp.dataset.fromRecord = "true";

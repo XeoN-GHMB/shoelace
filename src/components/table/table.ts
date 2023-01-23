@@ -476,11 +476,12 @@ export default class SlTable extends ShoelaceElement {
     const element = this.tableInstance.rowManager.getElement();
     const self = this;
     this.tableInstance.on("scrollVertical", function (top, dir) {
-
+    console.log("scroll")
       var diff;
       diff = element.scrollHeight - element.clientHeight - top;
       if (top > diff && self.tableReady && self.dataCursor !== null) {
         self.tableReady = false;
+        console.log("emit")
         self.emit("table-fetchData");//TODo rename event
       }
 

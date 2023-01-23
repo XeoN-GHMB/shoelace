@@ -15,10 +15,13 @@ import {RawBone} from "./rawBone";
 import type {FileSkelValues} from "../interfaces";
 import type {AstNode, Editor} from "tinymce";
 
+import textBoneStyle from "../styles/textBone.styles";
 
 export class TextBone extends RawBone {
   getEditor(value: any, boneName: string, lang: string | null = null): HTMLElement {
     const ele = document.createElement("div");
+    ele.dataset["name"] = boneName;
+    ele.dataset["textbone"] = "true";
     //IMport scripts
     let _ = theme;
     _ = model;
@@ -29,7 +32,6 @@ export class TextBone extends RawBone {
 
 
     const self = this;
-
     setTimeout(() => {
       tinymce.init({
         target: ele,
@@ -38,16 +40,17 @@ export class TextBone extends RawBone {
         relative_urls: false,
         skin: false,
         content_css: false,
+        content_style: textBoneStyle.cssText,
 
-        toolbar: 'undo redo | blocks | bold italic backcolor | '
+        toolbar: 'undo redo | blocks | bold italic underline backcolor | '
           + 'alignleft aligncenter alignright alignjustify | '
           + 'table code',
 
         plugins: ["table", "code"],
-        formats: {bold: {inline: 'span', 'classes': 'viur-txt-bold'}}, // TODO add classes
+        formats: self.getFormats(), // TODO add classes
         valid_elements: self.getValidTagString(),
         valid_classes: {"*": self.boneStructure["validHtml"]["validClasses"].join(" ")},
-
+        readonly: self.boneStructure["readonly"],
         //images_upload_handler: self.uploadHandler,
 
         setup: function (editor) {
@@ -63,8 +66,10 @@ export class TextBone extends RawBone {
             })
           })
           editor.on('init', () => {
-
-            editor.setContent(value);
+            if (value) {
+              editor.setContent(value);
+            }
+            self.mainInstance.textboneCache[boneName] = editor;
           });
           editor.on('Change', (e) => {
             createPath(self.mainInstance.internboneValue, boneName, editor.getContent());
@@ -146,11 +151,11 @@ export class TextBone extends RawBone {
   uploadHandler(blobInfo, progress) {
     //Todo error handling
     return new Promise((resolve, reject) => {
-      FileBone.getUploadUrl(blobInfo.blob()).then(uploadData => {
+      FileBone.getUploadUrl(blobInfo.blob(),this.mainInstance).then(uploadData => {
 
         FileBone.uploadFile(blobInfo.blob(), uploadData).then(resp => {
 
-          FileBone.addFile(uploadData).then((fileData: FileSkelValues) => {
+          FileBone.addFile(uploadData,this.mainInstance).then((fileData: FileSkelValues) => {
             console.log(fileData)
             resolve(fileData["values"]["downloadUrl"])
 
@@ -158,6 +163,20 @@ export class TextBone extends RawBone {
         })
       })
     })
+  }
+
+  getFormats() {
+    const obj = {};
+    const formats = ["bold", "italic", "underline"];
+    for (const f of formats) {
+      obj[f] = {inline: 'span', 'classes': `viur-txt-${f}`}
+    }
+    const aligns = ["alignleft", "aligncenter","alignright"];
+    for (const align of aligns) {
+      obj[align] = {selector : 'p,h1,h2,h3,h4,h5,h6,td,th,div,ul,ol,li,table,img', classes: `viur-txt-${align}`}
+    }
+    console.log("obj", obj)
+    return obj;
   }
 
 }

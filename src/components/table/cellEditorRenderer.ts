@@ -1,6 +1,5 @@
 // @ts-nocheck
-const apiurl = "http://localhost:8080";
-
+import SlBone from "../bone/bone";
 
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, editParams: any): any {
   const boneStructure = editParams[0];
@@ -144,92 +143,31 @@ function updateRelationalBone(searchBox, cell, success) {
 }
 
 /////////////////HELPER FUNCTRIONS/////////////////
-function getSkey() {
+function getSkey(apiUrl: string) {
   return new Promise((resolve, reject) => {
-    fetch(`${apiurl}/json/skey`).then(response => response.json()).then((skey) => {
+    fetch(`${apiUrl}/json/skey`).then(response => response.json()).then((skey) => {
       resolve(skey)
     })
 
   })
 }
 
-export function updateData(formData: FormData, skelKey: string, tableInstance: any) {
+export function updateData(formData: FormData, skelKey: string, tableInstance: SlBone) {
   if (tableInstance.module === null) {
     throw "No Module provided"
   }
 
   return new Promise((resolve, reject) => {
-    getSkey().then((skey: string) => {
+    getSkey(tableInstance).then((skey: string) => {
 
       formData.append("key", skelKey)
       formData.append("skey", skey)
 
 
-      fetch(`${apiurl}/json/${tableInstance.module}/edit`, {
+      fetch(`${tableInstance.apiUrl}/json/${tableInstance.module}/edit`, {
         method: 'POST',
         body: formData
       }).then(resp => resp.json().then(data => resolve(data)))
-    });
-  });
-}
-
-/////////////////FILEBONE FUNCTRIONS/////////////////
-
-function getUploadUrl(file: File) {
-  return new Promise((resolve, reject) => {
-    getSkey().then(skey => {
-
-      const data: object = {
-        "fileName": file.name,
-        "mimeType": file.type,
-        "size": file.size,
-        "skey": skey,
-      }
-      fetch(`${apiurl}/json/file/getUploadURL`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams(data).toString()
-      }).then(response => response.json()).then((data) => resolve(data))
-    })
-  });
-}
-
-function uploadFile(file, uploadData) {
-
-  return new Promise((resolve, reject) => {
-    fetch(uploadData["values"]["uploadUrl"], {
-      method: "POST",
-      body: file,
-      mode: "no-cors",
-
-    }).then(response => {
-      resolve(response)
-    })
-  })
-
-}
-
-function addFile(uploadData, keyinput, inputSpan, file) {
-
-  const currentUpload: any = {}
-  return new Promise((resolve, reject) => {
-    currentUpload["key"] = uploadData["values"]["uploadKey"];
-    currentUpload["node"] = undefined;
-    currentUpload["skelType"] = "leaf";
-    getSkey().then(skey => {
-      currentUpload["skey"] = skey;
-      fetch(`${apiurl}/json/file/add`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        mode: "no-cors",
-        body: new URLSearchParams(currentUpload).toString(),
-      }).then(response => response.json()).then((data) => {
-        resolve(data);
-      });
     });
   });
 }
