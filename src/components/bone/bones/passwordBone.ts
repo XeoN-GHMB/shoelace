@@ -51,13 +51,16 @@ export class PasswordBone extends RawBone {
         if (this.second_passwordBone.value.length > 0) {
           const element: SlDetails = this.mainInstance.bone.querySelector(`[data-name="${boneName}_errorcontainer"]`);
           let hasError = false;
+          if (element !== null) {
+            element.querySelector(".error-msg").innerText=""
+          }
           if (this.first_passwordBone.value !== this.second_passwordBone.value) {
             //this.first_passwordBone.value.setCustomValidity("Please Fill");
 
             if (element !== null) {
               element.style.display = "";
               element.open = true;
-              element.querySelector(".error-msg").innerText += translate({path: "error.password"});
+              element.querySelector(".error-msg").innerText += translate({path: "error.password.notMatch"});
             }
             hasError = true;
 
@@ -124,37 +127,37 @@ export class PasswordBone extends RawBone {
       this.boneStructure["test_threshold"] = 3;
     }
     if (this.boneStructure["contain_uppercase"] === undefined) { // for older core versions
-      this.boneStructure["contain_uppercase"] = true;
+      this.boneStructure["contain_uppercase"] = `(?=.*[A-Z])`;
     }
     if (this.boneStructure["contain_lowercase"] === undefined) { // for older core versions
-      this.boneStructure["contain_lowercase"] = true;
+      this.boneStructure["contain_lowercase"] = `(?=.*[a-z])`;
     }
     if (this.boneStructure["contain_number"] === undefined) { // for older core versions
-      this.boneStructure["contain_number"] = true;
+      this.boneStructure["contain_number"] = `(?=.*\d)`;
     }
     if (this.boneStructure["contain_special_char"] === undefined) { // for older core versions
-      this.boneStructure["contain_special_char"] = true;
+      this.boneStructure["contain_special_char"] = `(?=.*\W)`;
     }
 
 
-    if (this.boneStructure["contain_uppercase"] && !new RegExp(`(?=.*[A-Z])`).test(password)) {
+    if (this.boneStructure["contain_uppercase"] && !new RegExp(this.boneStructure["contain_uppercase"]).test(password)) {
       errorMessages.push(translate("error.password.no_uppercase"));
     } else {
       passedTests += 1;
     }
-    if (this.boneStructure["contain_lowercase"] && !new RegExp(`(?=.*[a-z])`).test(password)) {
+    if (this.boneStructure["contain_lowercase"] && !new RegExp(this.boneStructure["contain_lowercase"]).test(password)) {
       errorMessages.push(translate("error.password.no_lowercase"));
 
     } else {
       passedTests += 1;
     }
 
-    if (this.boneStructure["contain_number"] && !new RegExp(`(?=.*[0-9])`).test(password)) {
+    if (this.boneStructure["contain_number"] && !new RegExp(this.boneStructure["contain_number"]).test(password)) {
       errorMessages.push(translate("error.password.no_numbers"))
     } else {
       passedTests += 1;
     }
-    if (this.boneStructure["contain_special_char"] && !new RegExp(`(?=.*[-+_!@#$%^&*., ?])`).test(password)) {
+    if (this.boneStructure["contain_special_char"] && !new RegExp(this.boneStructure["contain_special_char"]).test(password)) {
       errorMessages.push(translate("error.password.no_special_chars"))
     } else {
       passedTests += 1;
