@@ -9,6 +9,7 @@ export default {
     undo: "Änderung Rückgänig machen",
     lat: "Latitude",
     lng: "Longitude",
+    noentry: "Kein Eintrag hinzugefügt"
   },
   names: {
     lat: "Latitude",

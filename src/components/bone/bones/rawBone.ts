@@ -247,8 +247,9 @@ export class RawBone {
 
           addIcon.setAttribute("name", "plus");
           addButton.appendChild(addIcon);
+          addButton.innerHTML  += translate("actions.add");
           addButton.setAttribute("variant", "success");
-          addButton.setAttribute("outline", "");
+          //addButton.setAttribute("outline", "");
           addButton.classList.add("add-button");
           addButton.variant = "success";
           addButton.title = translate("actions.add");
@@ -259,6 +260,11 @@ export class RawBone {
             this.idx[lang] += 1;
           });
           languageWrapper.appendChild(multipleWrapper);
+
+          const placeholder = document.createElement("sl-input");
+          placeholder.classList.add("multiple-placeholder");
+          placeholder.setAttribute("filled", "");
+          placeholder.setAttribute("placeholder", translate("actions.noentry"));
 
           const clearButton = document.createElement("sl-button");
 
@@ -296,9 +302,10 @@ export class RawBone {
           const buttonWrap = document.createElement("div");
           buttonWrap.classList.add("bone-inner-button-wrap")
 
-          buttonWrap.appendChild(addButton);
-          buttonWrap.appendChild(undoButton);
           buttonWrap.appendChild(clearButton);
+          buttonWrap.appendChild(placeholder);
+          buttonWrap.appendChild(undoButton);
+          buttonWrap.appendChild(addButton);
           if (!this.boneStructure["readonly"]) {
             tab_panel.appendChild(buttonWrap)
           }
@@ -341,8 +348,9 @@ export class RawBone {
 
         addIcon.setAttribute("name", "plus")
         addButton.appendChild(addIcon);
+        addButton.innerHTML  += translate("actions.add");
         addButton.setAttribute("variant", "success")
-        addButton.setAttribute("outline", "")
+        //addButton.setAttribute("outline", "")
         addButton.classList.add("add-button")
         addButton.variant = "success"
         addButton.title = translate("actions.add");
@@ -359,6 +367,12 @@ export class RawBone {
 
 
         });
+
+        const placeholder = document.createElement("sl-input");
+        placeholder.classList.add("multiple-placeholder");
+        placeholder.setAttribute("filled", "");
+        placeholder.setAttribute("placeholder", translate("actions.noentry"));
+
 
         const innerWrap = document.createElement("div");
         innerWrap.classList.add("bone-inner-wrap")
@@ -399,9 +413,10 @@ export class RawBone {
         const buttonWrap = document.createElement("div");
         buttonWrap.classList.add("bone-inner-button-wrap")
 
-        buttonWrap.appendChild(addButton);
-        buttonWrap.appendChild(undoButton);
         buttonWrap.appendChild(clearButton);
+        buttonWrap.appendChild(placeholder);
+        buttonWrap.appendChild(undoButton);
+        buttonWrap.appendChild(addButton);
         innerWrap.appendChild(buttonWrap)
 
 
@@ -528,7 +543,8 @@ export class RawBone {
     inputWrapper.dataset.boneName = newboneName;
 
     let deleteButton;
-    let draggable
+    let draggable;
+    let draggableIcon;
     const inputElement: HTMLElement = this.getEditor(value, newboneName, lang);
     inputElement.dataset.boneName = newboneName;
     inputElement.dataset.lang = lang;
@@ -579,8 +595,10 @@ export class RawBone {
 
       });
 
-      draggable = document.createElement("sl-icon")
-      draggable.name = "draggable";
+      draggable = document.createElement("div");
+      draggableIcon = document.createElement("sl-icon");
+      draggableIcon.name = "draggable";
+      draggable.appendChild(draggableIcon);
       draggable.classList.add("drag-button");
       draggable.addEventListener("mousedown", (e) => {
 
