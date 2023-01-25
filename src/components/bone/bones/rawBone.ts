@@ -58,7 +58,7 @@ export class RawBone {
 
 
       return html`
-        <sl-tab-group>
+        <sl-tab-group class="language-tab-group view" placement="bottom">
           ${this.getTabs()}
           ${this.getTabPannels(formater)}
         </sl-tab-group>`;

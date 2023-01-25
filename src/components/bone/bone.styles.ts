@@ -187,6 +187,10 @@ export default css`
     border: none;
   }
 
+  .language-tab-group.view::part(body){
+    padding: var(--sl-spacing-x-small);
+  }
+
   .language-tab-group::part(base){
     border: none;
   }
@@ -205,7 +209,16 @@ export default css`
   }
 
   .language-tab-group sl-tab::part(base){
-    padding: .7em;
+    padding: var(--sl-spacing-x-small);
+  }
+
+  .language-tab-group sl-tab-panel::part(base){
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
   }
 
   .language-wrapper .multi-input sl-input:first-child::part(base),
