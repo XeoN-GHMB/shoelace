@@ -212,7 +212,7 @@ export default css`
     padding: var(--sl-spacing-x-small);
   }
 
-  .language-tab-group sl-tab-panel::part(base){
+  .language-tab-group.view sl-tab-panel[aria-hidden="false"]::part(base){
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
