@@ -11,7 +11,7 @@ export default css`
   .bone-wrapper{
     display: grid;
     grid-template-columns: 230px 1fr;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
 
   .bone-wrapper sl-input,
@@ -77,7 +77,6 @@ export default css`
 
   .bone-wrapper .upload-button::part(base),
   .bone-wrapper .clear-button::part(base),
-  .bone-wrapper .add-button::part(base),
   .bone-wrapper .undo-button::part(base){
     aspect-ratio: 1;
   }
@@ -108,11 +107,26 @@ export default css`
 
   .bone-inner-button-wrap .clear-button,
   .bone-inner-button-wrap .undo-button{
-    margin-left: var(--sl-spacing-small);
+    margin-right: var(--sl-spacing-small);
   }
 
   .bone-inner-button-wrap .add-button{
-    flex: 1;
+    margin-left: auto;
+  }
+
+  .bone-inner-button-wrap .add-button sl-icon{
+    margin-right: var(--sl-spacing-small);
+  }
+
+  .bone-inner-button-wrap .multiple-placeholder{
+    pointer-events: none;
+    margin-right: var(--sl-spacing-small);
+  }
+
+  .bone-inner-button-wrap .multiple-placeholder::part(base){
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border: 1px solid var(--sl-color-neutral-200);
   }
 
   .bone-type-record .bone-inner-wrap{
@@ -153,11 +167,8 @@ export default css`
     height: var(--sl-input-height-medium);
     width: var(--sl-input-height-medium);
     cursor: move;
-  }
-
-  .drag-button::part(base){
-    width: 50%;
-    height: 50%;
+    padding: var(--sl-spacing-small);
+    flex: 0 0 var(--sl-input-height-medium) !important;
   }
 
   .is-dragged{
@@ -195,10 +206,6 @@ export default css`
 
   .language-tab-group sl-tab::part(base){
     padding: .7em;
-  }
-
-  .language-wrapper .multi-input{
-      margin-bottom: 0;
   }
 
   .language-wrapper .multi-input sl-input:first-child::part(base),

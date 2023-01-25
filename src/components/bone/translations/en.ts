@@ -7,6 +7,7 @@ export default {
     select: "Select",
     close: "Close",
     undo: "Undo",
+    noentry: "No entries added yet"
   },
   names: {
     lat: "Latitude",
