@@ -52,7 +52,9 @@ export default css`
   }
 
   .checkbox__input {
-    position: absolute;
+    width: 0;
+    height: 0;
+    appearance: none;
     opacity: 0;
     padding: 0;
     margin: 0;
