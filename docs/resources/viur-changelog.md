@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.1
+- Tables are now horizontal Scrollable
+
 ## 0.5.0
 Initial release
 
