@@ -234,24 +234,6 @@ export default class SlTree extends ShoelaceElement {
     return nodes
   }
 
-  private getFocusableItems() {
-    const items = this.getAllTreeItems();
-    const collapsedItems = new Set();
-
-    return items.filter(item => {
-      // Exclude disabled elements
-      if (item.disabled) return false;
-
-      // Exclude those whose parent is collapsed or loading
-      const parent: SlTreeItem | null | undefined = item.parentElement?.closest('[role=treeitem]');
-      if (parent && (!parent.expanded || parent.loading || collapsedItems.has(parent))) {
-        collapsedItems.add(item);
-      }
-
-      return !collapsedItems.has(item);
-    });
-  }
-
   private focusItem(item?: SlTreeItem | null) {
     item?.focus();
   }
