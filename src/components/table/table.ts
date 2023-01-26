@@ -81,8 +81,7 @@ export default class SlTable extends ShoelaceElement {
 
   /** Override table config Object */
   @property({type: Object, attribute: false}) tableConfig: Object = {
-    responsiveLayout: "hide",
-    layout: "fitColumns",
+    layout: "fitDataStretch",
     reactiveData: true,
     popupContainer: true
   };
@@ -108,7 +107,8 @@ export default class SlTable extends ShoelaceElement {
 
   @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode"])
   optionUpdate() {
-    console.log("start")
+    console.log("start",this.tableInstance)
+
     //only rebuild table if structure changed
     if (this.mode === "list") {
       if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
@@ -139,7 +139,7 @@ export default class SlTable extends ShoelaceElement {
       TabulatorFull.registerModule(CustomControllElements);
       //TabulatorFull.registerModule(CustomCell);
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
-
+console.log(this.tableInstance)
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
         if (this.mode === "list") {
