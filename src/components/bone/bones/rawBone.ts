@@ -241,13 +241,14 @@ export class RawBone {
           }
           this.idx[lang] = idx;
           multipleWrapper.classList.add("multiple-wrapper");
+          multipleWrapper.dataset.multiplebone=`${this.boneName}.${lang}`
 
           const addButton = document.createElement("sl-button");
           const addIcon = document.createElement("sl-icon");
 
           addIcon.setAttribute("name", "plus");
           addButton.appendChild(addIcon);
-          addButton.innerHTML  += translate("actions.add");
+          addButton.innerHTML += translate("actions.add");
           addButton.setAttribute("variant", "success");
           //addButton.setAttribute("outline", "");
           addButton.classList.add("add-button");
@@ -255,9 +256,14 @@ export class RawBone {
           addButton.title = translate("actions.add");
 
           addButton.addEventListener("click", () => {
-            multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
-            multipleWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
+            const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.boneName}.${lang}']`);
+            mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
+            mulWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
             this.idx[lang] += 1;
+            const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${this.boneName}.${lang}']`);
+            clearButton.style.display = "";
+            console.log(this.idx)
+
           });
           languageWrapper.appendChild(multipleWrapper);
 
@@ -270,7 +276,6 @@ export class RawBone {
 
           clearButton.addEventListener("click", () => {
             this.clearMultipleWrapper(lang)
-
           });
           clearButton.id = "clearButton"
           clearButton.variant = "danger";
@@ -281,6 +286,12 @@ export class RawBone {
           clearButton.appendChild(xicon);
           clearButton.variant = "danger";
           clearButton.title = translate("actions.deleteAll");
+          clearButton.dataset.name = `clearBtn.${this.boneName}.${lang}`
+          if(this.idx[lang]===0)
+          {
+            clearButton.style.display="none"
+
+          }
 
           //Undo Button
           const undoButton = document.createElement("sl-button");
@@ -306,12 +317,12 @@ export class RawBone {
           buttonWrap.appendChild(placeholder);
           buttonWrap.appendChild(undoButton);
           buttonWrap.appendChild(addButton);
-          if (!this.boneStructure["readonly"]) {
-            tab_panel.appendChild(buttonWrap)
-          }
 
 
           tab_panel.appendChild(languageWrapper);
+          if (!this.boneStructure["readonly"]) {
+            tab_panel.appendChild(buttonWrap)
+          }
           this.addScroll();
           this.addMouseMove();
           this.addMouseUp();
@@ -348,7 +359,7 @@ export class RawBone {
 
         addIcon.setAttribute("name", "plus")
         addButton.appendChild(addIcon);
-        addButton.innerHTML  += translate("actions.add");
+        addButton.innerHTML += translate("actions.add");
         addButton.setAttribute("variant", "success")
         //addButton.setAttribute("outline", "")
         addButton.classList.add("add-button")
@@ -364,7 +375,8 @@ export class RawBone {
           mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, this.idx));
           mulWrapper.appendChild(this.addErrorContainer(null, this.idx));
           this.idx += 1;
-
+          const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${this.boneName}']`);
+          clearButton.style.display = "";
 
         });
 
@@ -385,10 +397,15 @@ export class RawBone {
         clearIcon.setAttribute("name", "x")
         clearButton.appendChild(clearIcon);
         clearButton.setAttribute("variant", "danger")
-        clearButton.setAttribute("outline", "")
-        clearButton.classList.add("clear-button")
+        clearButton.setAttribute("outline", "");
+        clearButton.classList.add("clear-button");
         clearButton.title = translate("actions.deleteAll");
         clearButton.disabled = this.boneStructure["readonly"];
+        if (this.idx === 0) {
+          clearButton.style.display = "none"
+        }
+
+        clearButton.dataset.name = `clearBtn.${this.boneName}`
         clearButton.addEventListener("click", () => {
           this.clearMultipleWrapper()
         });
