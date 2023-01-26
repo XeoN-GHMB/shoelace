@@ -1,6 +1,6 @@
 import { esbuildPlugin } from '@web/dev-server-esbuild';
-import { playwrightLauncher } from '@web/test-runner-playwright';
 import { globbySync } from 'globby';
+import { playwrightLauncher } from '@web/test-runner-playwright';
 
 export default {
   rootDir: '.',
@@ -8,6 +8,12 @@ export default {
   concurrentBrowsers: 2,
   browserStartTimeout: 100000,
   nodeResolve: true,
+  testFramework: {
+    config: {
+      timeout: 3000,
+      retries: 1
+    }
+  },
   plugins: [
     esbuildPlugin({
       ts: true,
@@ -23,6 +29,7 @@ export default {
     <html lang="en-US">
       <head></head>
       <body>
+        <link rel="stylesheet" href="dist/themes/light.css">
         <script type="module" src="dist/shoelace.js"></script>
         <script type="module" src="${testFramework}"></script>
       </body>
