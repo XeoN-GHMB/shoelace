@@ -7,6 +7,7 @@ export default createComponent({
   elementClass: Component,
   react: React,
   events: {
-    onSlChange: 'sl-change'
+    onSlChange: 'sl-change',
+    onSlHover: 'sl-hover'
   }
 });

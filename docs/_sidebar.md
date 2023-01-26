@@ -20,6 +20,7 @@
   - [Accessibility](/resources/accessibility)
   - [Contributing](/resources/contributing)
   - [Changelog](/resources/changelog)
+  - [ViUR Changelog](/resources/viur-changelog)
 
 - Components
 
@@ -77,20 +78,8 @@
   - [Back To Top](/components/back-to-top)
   - [Map](/components/map)
   - [Page Btn](/components/page-btn)
-  <!-- - [Gallery](/components/gallery)-->
   - [Scroll](/components/scroll)
-  <!-- - [Collapse](/components/collapse)-->
-  <!-- - [Steps](/components/steps)-->
-  <!-- - [Transfer](/components/transfer)-->
-  <!--- [Table](/components/table)-->
   - [Org Tree](/components/org-tree)
-  <!--- [Date Panel](/components/date-panel)-->
-  <!--- [Date](/components/date)-->
-  <!--- [Row](/components/row)-->
-  <!--- [Layout](/components/layout)-->
-  <!--- [Splitter](/components/splitter)-->
-  <!--- [TreeTable](/components/treeTable)-->
-  <!--- [EditTable](/components/tableEdit)-->
   - [Table](/components/table)
   - [Table Wrapper](/components/table-wrapper)
   - [Bone](/components/bone)
@@ -120,6 +109,7 @@
   - [Border Radius](/tokens/border-radius)
   - [Transition](/tokens/transition)
   - [Z-index](/tokens/z-index)
+  - [More](/tokens/more)
 
 - Tutorials
 
