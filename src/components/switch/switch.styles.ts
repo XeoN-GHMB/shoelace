@@ -11,7 +11,7 @@ export default css`
 
   :host([size='small']) {
     --height: var(--sl-toggle-size-small);
-    --thumb-size: calc(var(--sl-toggle-size-small) - 0.1rem);
+    --thumb-size: calc(var(--sl-toggle-size-small) - 2px);
     --width: calc(var(--height) * 2);
 
     font-size: var(--sl-input-font-size-small);
@@ -19,7 +19,7 @@ export default css`
 
   :host([size='medium']) {
     --height: var(--sl-toggle-size-medium);
-    --thumb-size: calc(var(--sl-toggle-size-medium) - 0.1rem);
+    --thumb-size: calc(var(--sl-toggle-size-medium) - 2px);
     --width: calc(var(--height) * 2);
 
     font-size: var(--sl-input-font-size-medium);
@@ -27,7 +27,7 @@ export default css`
 
   :host([size='large']) {
     --height: var(--sl-toggle-size-large);
-    --thumb-size: calc(var(--sl-toggle-size-large) - 0.1rem);
+    --thumb-size: calc(var(--sl-toggle-size-large) - 2px);
     --width: calc(var(--height) * 2);
 
     font-size: var(--sl-input-font-size-large);

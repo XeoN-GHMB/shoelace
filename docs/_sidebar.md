@@ -20,6 +20,7 @@
   - [Accessibility](/resources/accessibility)
   - [Contributing](/resources/contributing)
   - [Changelog](/resources/changelog)
+  - [ViUR Changelog](/resources/viur-changelog)
 
 - Components
 
