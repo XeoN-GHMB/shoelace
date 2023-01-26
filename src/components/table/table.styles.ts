@@ -57,9 +57,17 @@ export default css`
     -webkit-user-select: none;
     -o-user-select: none;
   }
-
   .tabulator .tabulator-header.tabulator-header-hidden {
-    display: none;
+      display: none;
+    }
+
+  .tabulator .tabulator-header .tabulator-header-contents {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tabulator .tabulator-header .tabulator-header-contents .tabulator-headers {
+    display: inline-block;
   }
 
   .tabulator .tabulator-header .tabulator-col {
