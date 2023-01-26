@@ -67,19 +67,18 @@ export default css`
   }
 
   .tabulator .tabulator-header .tabulator-header-contents .tabulator-headers {
-    display: inline-block;
+    display: inline-flex;
   }
 
   .tabulator .tabulator-header .tabulator-col {
-    display: inline-block;
+    display: inline-flex;
     position: relative;
     box-sizing: border-box;
-    border-right: 1px solid #ddd;
-    background: #F9FAFB;
+    flex-direction: column;
+    justify-content: flex-start;
     text-align: left;
     vertical-align: bottom;
     overflow: hidden;
-    transition: background ease.3s;
   }
 
   .tabulator .tabulator-header .tabulator-col.tabulator-moving {
@@ -178,7 +177,7 @@ export default css`
   }
 
   .tabulator .tabulator-header .tabulator-col.tabulator-sortable .tabulator-col-title {
-    padding-right: 25px;
+    padding-right: 70px;
   }
 
   .tabulator .tabulator-header .tabulator-col.tabulator-sortable:hover {
@@ -1201,6 +1200,15 @@ export default css`
     font-style: none;
     font-weight: bold;
     text-transform: none;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
   }
 
   .tabulator .tabulator-header .tabulator-col {
