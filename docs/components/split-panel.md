@@ -753,4 +753,58 @@ const App = () => (
 );
 ```
 
+### Minimizer
+
+Enabled the minimizer button to toggle the primary panel.
+
+```html preview
+<sl-split-panel minimize>
+  <div
+    slot="start"
+    style="height: 200px; background: var(--sl-color-neutral-50); display: flex; align-items: center; justify-content: center;"
+  >
+    Start
+  </div>
+  <div
+    slot="end"
+    style="height: 200px; background: var(--sl-color-neutral-50); display: flex; align-items: center; justify-content: center;"
+  >
+    End
+  </div>
+</sl-split-panel>
+```
+
+```jsx react
+import { SlSplitPanel } from '@shoelace-style/shoelace/dist/react';
+
+const App = () => (
+  <SlSplitPanel>
+    <div
+      slot="start"
+      style={{
+        height: '200px',
+        background: 'var(--sl-color-neutral-50)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      Start
+    </div>
+    <div
+      slot="end"
+      style={{
+        height: '200px',
+        background: 'var(--sl-color-neutral-50)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+    >
+      End
+    </div>
+  </SlSplitPanel>
+);
+```
+
 [component-metadata:sl-split-panel]

@@ -20,6 +20,7 @@ export default css`
 
   .divider {
     flex: 0 0 var(--divider-width);
+    height:100%;
     display: flex;
     position: relative;
     align-items: center;
@@ -77,5 +78,26 @@ export default css`
     .divider {
       outline: solid 1px transparent;
     }
+  }
+  .toggler{
+
+    position:absolute;
+    left:50%;
+    translate:-50%;
+    z-index:10;
+  }
+
+  .toggler sl-icon{
+    color: var(--sl-color-neutral-500);
+  }
+
+  :host([vertical]) .toggler{
+    left:50%;
+    top:50%;
+    translate:-50% -50%;
+  }
+
+  .divider-wrap{
+    position: relative;
   }
 `;

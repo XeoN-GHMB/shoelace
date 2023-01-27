@@ -25,6 +25,7 @@ import type { CSSResultGroup } from 'lit';
  * @csspart end - The end panel.
  * @csspart panel - Targets both the start and end panels.
  * @csspart divider - The divider that separates the start and end panels.
+ * @csspart minimize - The minimize sl-button.
  *
  * @cssproperty [--divider-width=4px] - The width of the visible divider.
  * @cssproperty [--divider-hit-area=12px] - The invisible region around the divider where dragging can occur. This is
@@ -40,6 +41,8 @@ export default class SlSplitPanel extends ShoelaceElement {
   private readonly localize = new LocalizeController(this);
   private resizeObserver: ResizeObserver;
   private size: number;
+
+  private lastPosition: number;
 
   @query('.divider') divider: HTMLElement;
 
@@ -73,6 +76,9 @@ export default class SlSplitPanel extends ShoelaceElement {
 
   /** How close the divider must be to a snap point until snapping occurs. */
   @property({ type: Number, attribute: 'snap-threshold' }) snapThreshold = 12;
+
+  /** Disables the minimizer Button */
+  @property({ type: Boolean, reflect: true }) minimize = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -147,8 +153,8 @@ export default class SlSplitPanel extends ShoelaceElement {
             }
           });
         }
-
         this.position = clamp(this.pixelsToPercentage(newPositionInPixels), 0, 100);
+        this.lastPosition = 0
       },
       initialEvent: event
     });
@@ -212,6 +218,16 @@ export default class SlSplitPanel extends ShoelaceElement {
     this.detectSize();
   }
 
+  private handleMinimize(event:Event){
+    if (this.lastPosition){
+      this.position=this.lastPosition;
+      this.lastPosition = 0
+    }else{
+      this.lastPosition = this.position;
+      this.position = 0;
+    }
+  }
+
   render() {
     const gridTemplate = this.vertical ? 'gridTemplateRows' : 'gridTemplateColumns';
     const gridTemplateAlt = this.vertical ? 'gridTemplateColumns' : 'gridTemplateRows';
@@ -246,20 +262,42 @@ export default class SlSplitPanel extends ShoelaceElement {
     // Unset the alt grid template property
     this.style[gridTemplateAlt] = '';
 
+    let chevron = this.position===0?"chevron-right":"chevron-left"
+    if (this.primary === 'end'){
+      chevron = this.position===0?"chevron-left":"chevron-right"
+    }else if (this.vertical){
+      chevron = this.position===0?"chevron-down":"chevron-up"
+      if (this.primary === 'end') {
+        chevron = this.position === 0 ? "chevron-up" : "chevron-down"
+      }
+    }
+
     return html`
       <slot name="start" part="panel start" class="start"></slot>
+      <div class="divider-wrap">
 
-      <slot
-        name="divider"
-        part="divider"
-        class="divider"
-        tabindex=${ifDefined(this.disabled ? undefined : '0')}
-        role="separator"
-        aria-label=${this.localize.term('resize')}
-        @keydown=${this.handleKeyDown}
-        @mousedown=${this.handleDrag}
-        @touchstart=${this.handleDrag}
-      ></slot>
+        ${this.minimize?html`
+          <sl-button part="minimize"
+                     class="toggler"
+                     circle
+                     size="small"
+                     disabled="${ifDefined(this.disabled ? true : undefined)}"
+                     @click="${this.handleMinimize}">
+            <sl-icon name="${chevron}" sprite></sl-icon>
+          </sl-button>
+        `:''}
+        <slot
+          name="divider"
+          part="divider"
+          class="divider"
+          tabindex=${ifDefined(this.disabled ? undefined : '0')}
+          role="separator"
+          aria-label=${this.localize.term('resize')}
+          @keydown=${this.handleKeyDown}
+          @mousedown=${this.handleDrag}
+          @touchstart=${this.handleDrag}
+        ></slot>
+        </div>
 
       <slot name="end" part="panel end" class="end"></slot>
     `;
