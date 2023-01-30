@@ -474,7 +474,7 @@ export class RawBone {
 
         createPath(obj, newboneName, null, true);
         const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
-        if(getPath(obj, path).length===0)//clear last element
+        if (getPath(obj, path).length === 0)//clear last element
         {
           this.clearMultipleWrapper(lang)
           return;
@@ -769,14 +769,29 @@ export class RawBone {
     const path = lang === null ? this.boneName : `${this.boneName}.${lang}`;
     const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
 
-    const obj = this.mainInstance.previousBoneValues[path].pop();
-    const element = this.createMultipleWrapper(obj, lang)[0];
+    const previousBoneValue: any = this.mainInstance.previousBoneValues[path].pop();
+    const [element, idx] = this.createMultipleWrapper(previousBoneValue, lang);
     mulWrapper.replaceWith(element);
     this.mainInstance.internboneValue = this.reWriteBoneValue();
     const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
     if (this.mainInstance.previousBoneValues[path].length === 0) {
       undoButton.style.display = "none";
     }
+    if (lang !== null) {
+      if (this.idx === null) {
+        this.idx = {};
+      }
+      this.idx[lang] = idx;
+    } else {
+      this.idx = idx;
+    }
+    if (idx > 0) {
+      const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${path}']`);
+      clearButton.style.display = "";
+      const placeholder: SlInput = this.mainInstance.bone.querySelector(`[data-name='placeholder.${path}']`);
+      placeholder.style.display = "none";
+    }
+
 
   }
 

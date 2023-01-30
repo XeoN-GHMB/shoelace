@@ -103,29 +103,25 @@ export default class SlTable extends ShoelaceElement {
   tableReady: Boolean = false;
   previousStructure: any = null;
   _editabletable: boolean = this.editabletable;
-  expandDepth = 0
+  expandDepth = 0;
+  visibleColumns = [];
 
   @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode"])
   optionUpdate() {
-    console.log("start",this.tableInstance)
 
     //only rebuild table if structure changed
     if (this.mode === "list") {
       if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
-        console.log("out list")
         return;
       }
     } else if (this.mode === "hierarchy") {
       if (this.nodes === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
-        console.log("out hierarchy")
         return;
       }
     }
 
-
     this._editabletable = this.editabletable;
     if (this.previousStructure !== this.structure) {
-      console.log("in struct")
       this.previousStructure = this.structure
 
       this.buildStructure();
@@ -139,7 +135,7 @@ export default class SlTable extends ShoelaceElement {
       TabulatorFull.registerModule(CustomControllElements);
       //TabulatorFull.registerModule(CustomCell);
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
-console.log(this.tableInstance)
+
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
         if (this.mode === "list") {
@@ -295,11 +291,16 @@ console.log(this.tableInstance)
 
     let currentstructure = {}
     let columns = []
-    for (let itemName in this.structure) {
+    for (const itemName in this.structure) {
 
-      let item = this.structure[itemName]
-      if (Object.keys(item).includes("visible") && !item["visible"]) {
+      const item:object = this.structure[itemName];
+      if (Object.keys(item).includes("visible") && !item["visible"] && this.visibleColumns.indexOf(itemName)===-1 ) {
         continue
+      }
+      if(this.visibleColumns.indexOf(item)===-1)
+      {
+        this.visibleColumns.push(item)
+        item["visible"]=true;
       }
       if (itemName === "sortindex") {
         this.moveablerows = true;
@@ -596,12 +597,10 @@ console.log(this.tableInstance)
     const element = this.tableInstance.rowManager.getElement();
     const self = this;
     this.tableInstance.on("scrollVertical", function (top, dir) {
-    console.log("scroll")
       var diff;
       diff = element.scrollHeight - element.clientHeight - top;
       if (top > diff && self.tableReady && self.dataCursor !== null) {
         self.tableReady = false;
-        console.log("emit")
         self.emit("table-fetchData");//TODo rename event
       }
 
@@ -634,6 +633,17 @@ console.log(this.tableInstance)
       return []
     }
     return childs
+  }
+
+  setVisibleColumns(value)
+  {
+    this.visibleColumns=value;
+    this.buildStructure();
+    this.updateConfig();
+  }
+  getVisibleColumns()
+  {
+    return this.visibleColumns;
   }
 
   render() {
