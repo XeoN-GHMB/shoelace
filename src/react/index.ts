@@ -1,9 +1,9 @@
 export { default as SlAlert } from './alert';
 export { default as SlAnimatedImage } from './animated-image';
 export { default as SlAnimation } from './animation';
-export { default as SlAvatar } from './avatar';
-export { default as SlBadge } from './badge';
 export { default as SlBackToTop } from './back-to-top';
+export { default as SlBadge } from './badge';
+export { default as SlAvatar } from './avatar';
 export { default as SlBone } from './bone';
 export { default as SlBreadcrumb } from './breadcrumb';
 export { default as SlBreadcrumbItem } from './breadcrumb-item';
@@ -67,5 +67,5 @@ export { default as SlTag } from './tag';
 export { default as SlTextarea } from './textarea';
 export { default as SlTooltip } from './tooltip';
 export { default as SlTree } from './tree';
-export { default as SlVisuallyHidden } from './visually-hidden';
 export { default as SlTreeItem } from './tree-item';
+export { default as SlVisuallyHidden } from './visually-hidden';

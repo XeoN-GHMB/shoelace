@@ -218,7 +218,7 @@ export default class SlSplitPanel extends ShoelaceElement {
     this.detectSize();
   }
 
-  private handleMinimize(event:Event){
+  private handleMinimize(){
     if (this.lastPosition){
       this.position=this.lastPosition;
       this.lastPosition = 0
@@ -267,9 +267,10 @@ export default class SlSplitPanel extends ShoelaceElement {
       chevron = this.position===0?"chevron-left":"chevron-right"
     }else if (this.vertical){
       chevron = this.position===0?"chevron-down":"chevron-up"
+      /* #fixme (this will never be executed ) @ak ?
       if (this.primary === 'end') {
         chevron = this.position === 0 ? "chevron-up" : "chevron-down"
-      }
+      }*/
     }
 
     return html`
