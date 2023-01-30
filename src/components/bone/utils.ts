@@ -232,7 +232,6 @@ export function escapeString(value: BoneValue): string | string[] {
 
 
 export function getSkey(apiUrl:string) {
-  console.log("get skey",`${apiUrl}/json/skey`)
   return new Promise<string>((resolve, reject) => {
 
     fetch(`${apiUrl}/json/skey`).then(response => response.json()).then((skey: string) => {
@@ -257,7 +256,6 @@ function _translate({path="", lang = "en", values = {}}): string {
 //Proxy function for translate
 export  function translate(...args)
 {
-  console.log(args)
   if(args.length===1)
   {
     return _translate({path:args[0]})

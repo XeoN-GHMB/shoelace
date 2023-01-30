@@ -243,28 +243,13 @@ export class RawBone {
           multipleWrapper.classList.add("multiple-wrapper");
           multipleWrapper.dataset.multiplebone = `${this.boneName}.${lang}`
 
-          const addButton = this.getaddButton();
+          const addButton = this.getaddButton(lang);
 
 
-          addButton.addEventListener("click", () => {
-            const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.boneName}.${lang}']`);
-            mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
-            mulWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
-            this.idx[lang] += 1;
-            const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${this.boneName}.${lang}']`);
-            clearButton.style.display = "";
-            console.log(this.idx)
-
-          });
           languageWrapper.appendChild(multipleWrapper);
 
-          const placeholder = document.createElement("sl-input");
-          placeholder.classList.add("multiple-placeholder");
-          placeholder.setAttribute("filled", "");
-          placeholder.setAttribute("placeholder", translate("actions.noentry"));
 
           const clearButton = this.getclearButton(lang)
-
 
           //Undo Button
           const undoButton = this.getundoButton(lang)
@@ -273,7 +258,7 @@ export class RawBone {
           buttonWrap.classList.add("bone-inner-button-wrap")
 
           buttonWrap.appendChild(clearButton);
-          buttonWrap.appendChild(placeholder);
+          buttonWrap.appendChild(this.getplaceHolder(lang));
           buttonWrap.appendChild(undoButton);
           buttonWrap.appendChild(addButton);
 
@@ -318,21 +303,6 @@ export class RawBone {
 
         const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
         this.idx = idx;
-        addButton.addEventListener("click", () => {
-          const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.boneName}']`);
-          mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, this.idx));
-          mulWrapper.appendChild(this.addErrorContainer(null, this.idx));
-          this.idx += 1;
-          const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${this.boneName}']`);
-          clearButton.style.display = "";
-
-        });
-
-        const placeholder = document.createElement("sl-input");
-        placeholder.classList.add("multiple-placeholder");
-        placeholder.setAttribute("filled", "");
-        placeholder.setAttribute("placeholder", translate("actions.noentry"));
-
 
         const innerWrap = document.createElement("div");
         innerWrap.classList.add("bone-inner-wrap")
@@ -347,7 +317,7 @@ export class RawBone {
         buttonWrap.classList.add("bone-inner-button-wrap")
 
         buttonWrap.appendChild(clearButton);
-        buttonWrap.appendChild(placeholder);
+        buttonWrap.appendChild(this.getplaceHolder());
         buttonWrap.appendChild(undoButton);
         buttonWrap.appendChild(addButton);
         innerWrap.appendChild(buttonWrap)
@@ -501,10 +471,14 @@ export class RawBone {
         this.saveState(lang);
         this.mainInstance.internboneValue = this.reWriteBoneValue();
         const obj: object = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
-        console.log(obj, newboneName)
+
         createPath(obj, newboneName, null, true);
         const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
-
+        if(getPath(obj, path).length===0)//clear last element
+        {
+          this.clearMultipleWrapper(lang)
+          return;
+        }
         if (mulWrapper !== null) {
 
           const [element, idx] = this.createMultipleWrapper(getPath(obj, path), lang);
@@ -813,18 +787,24 @@ export class RawBone {
     mulWrapper.innerHTML = "";//Clear Wrapper;
     this.mainInstance.internboneValue = this.reWriteBoneValue();
 
-    const undoButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
+    const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
+    const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${path}']`);
+    const placeholder: SlInput = this.mainInstance.bone.querySelector(`[data-name='placeholder.${path}']`);
+
 
     undoButton.style.display = "";
-    if (lang == null) {
+    clearButton.style.display = "none";
+    placeholder.style.display = "";
+    if (lang === null) {
       this.idx = 0;
     } else {
       this.idx[lang] = 0;
     }
 
+
   }
 
-  getaddButton() {
+  getaddButton(lang: string | null = null) {
     const addButton = document.createElement("sl-button");
     const addIcon = document.createElement("sl-icon");
 
@@ -836,6 +816,25 @@ export class RawBone {
     addButton.variant = "success";
     addButton.title = translate("actions.add");
     addButton.disabled = this.boneStructure["readonly"];
+    const name = lang === null ? `${this.boneName}` : `${this.boneName}.${lang}`;
+    addButton.addEventListener("click", () => {
+      const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${name}']`);
+      if (lang !== null) {
+        mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
+        mulWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
+        this.idx[lang] += 1;
+      } else {
+        mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, this.idx));
+        mulWrapper.appendChild(this.addErrorContainer(null, this.idx));
+        this.idx += 1;
+      }
+
+      const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${name}']`);
+      clearButton.style.display = "";
+      const placeholder: SlInput = this.mainInstance.bone.querySelector(`[data-name='placeholder.${name}']`);
+      placeholder.style.display = "none";
+
+    });
     return addButton
   }
 
@@ -855,7 +854,7 @@ export class RawBone {
     clearButton.appendChild(xicon);
     clearButton.variant = "danger";
     clearButton.title = translate("actions.deleteAll");
-    clearButton.dataset.name=lang === null ? `clearBtn.${this.boneName}` : `clearBtn.${this.boneName}.${lang}`;
+    clearButton.dataset.name = lang === null ? `clearBtn.${this.boneName}` : `clearBtn.${this.boneName}.${lang}`;
     if (lang !== null) {
 
       if (this.idx[lang] === 0) {
@@ -868,7 +867,7 @@ export class RawBone {
 
       }
     }
-
+    return clearButton
 
   }
 
@@ -888,6 +887,25 @@ export class RawBone {
     });
     undoButton.dataset.name = `undoBtn.${this.boneName}`
     undoButton.style.display = "none";
+    return undoButton;
+  }
+
+  getplaceHolder(lang: string | null = null) {
+    const placeholder = document.createElement("sl-input")
+    placeholder.classList.add("multiple-placeholder");
+    placeholder.setAttribute("filled", "");
+    placeholder.setAttribute("placeholder", translate("actions.noentry"));
+    placeholder.dataset.name = lang === null ? `placeholder.${this.boneName}` : `placeholder.${this.boneName}.${lang}`;
+    if (lang !== null) {
+      if (this.idx[lang] !== 0) {
+        placeholder.style.display = "none";
+      }
+    } else {
+      if (this.idx !== 0) {
+        placeholder.style.display = "none";
+      }
+    }
+    return placeholder;
   }
 
 }
