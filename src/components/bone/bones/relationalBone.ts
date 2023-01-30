@@ -7,6 +7,7 @@ import type SlTable from "../../table/table";
 import type {BoneStructure} from "../interfaces";
 import {SkelValues} from "../interfaces";
 import fa from "../../../translations/fa";
+import SlInput from "../../input/input";
 
 export class RelationalBone extends RawBone {
 
@@ -15,8 +16,7 @@ export class RelationalBone extends RawBone {
   getEditor(value: any, boneName: string, lang: string | null = null): HTMLElement {
     //return this.getSearchbar(value, boneName);
     this.lang = lang;
-    if(this.mainInstance.inVi)
-    {
+    if (this.mainInstance.inVi) {
       return this.getSelect(value, boneName);
     }
     if (this.boneStructure["params"]["widget"] === "search") //TODO Better name ?
@@ -141,12 +141,15 @@ export class RelationalBone extends RawBone {
     const selectButton = document.createElement("sl-button");
     const selectIcon = document.createElement("sl-icon");
 
+    showInput.dataset.boneName = `showinput-${boneName}`;
+    console.log(showInput.dataset.boneName)
     inputWrapper.classList.add("relBone-wrap")
     inputWrapper.dataset.boneName = boneName;
 
     //Shadow input
     shadowInput.hidden = true;
     shadowInput.name = boneName;
+    shadowInput.dataset.boneName = `shoadowinput-${boneName}`;
     shadowInput.value = value;
 
     showInput.disabled = true;
@@ -167,18 +170,26 @@ export class RelationalBone extends RawBone {
     selectButton.setAttribute("outline", "")
     selectButton.classList.add("add-button")
     selectButton.addEventListener("click", () => {
-      if (this.mainInstance.inVi && false)
-      {
-         this.mainInstance.openVISelect();
-      }
-      else
-      {
+      if (this.mainInstance.inVi && false) {
+        this.mainInstance.openVISelect(boneName);
+      } else {
         this.getDialog(inputWrapper, shadowInput, showInput);
       }
 
 
+    })
+    /*
+    const testbtn = document.createElement("sl-button")
+    testbtn.title = "test me"
+    testbtn.textContent = "test me"
+    testbtn.addEventListener("click", () => {
+      const self = this;
+      fetch(`${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/list?limit=5`).then(resp => resp.json().then((respdata) => {
+        self.addRelation(respdata["skellist"], boneName);
+      }));
 
     })
+    inputWrapper.appendChild(testbtn);*/
 
 
     inputWrapper.dataset.name = `relational-${boneName}`;
@@ -309,15 +320,55 @@ export class RelationalBone extends RawBone {
     document.body.appendChild(dialog);
   }
 
-  addRelation(skel:Array<SkelValues>|SkelValues)
-  {
-    if(Array.isArray(skel))
-    {
+  addRelation(skel: Array<SkelValues> | SkelValues, boneName: string) {
+    const shadowInput: SlInput = this.mainInstance.bone.querySelector(`[data-bone-name='shoadowinput-${boneName}']`);
+    const showInput: SlInput = this.mainInstance.bone.querySelector(`[data-bone-name='showinput-${boneName}']`);
+    if (Array.isArray(skel)) {
+      const path = this.lang === null ? this.boneName : `${this.boneName}.${this.lang}`;
 
-    }
-    else
-    {
+      const skeldata = skel[0];
+      shadowInput.value = skeldata["key"];
+      this.mainInstance.relationalCache[skeldata["key"]] = {dest: skeldata};
 
+      let boneValues = this.reWriteBoneValue();
+      boneValues = getPath(boneValues, path);
+      for (const index in skel) {
+        if (parseInt(index) === 0)//skip the firstElement
+        {
+          continue;
+        }
+
+        const entry = skel[index];
+        const key = entry["key"];
+        this.mainInstance.relationalCache[key] = {dest: entry};
+        boneValues.push(key);
+      }
+      const obj = {}
+      createPath(obj, path, boneValues)
+
+
+      const mulWrapper: HTMLElement = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
+
+
+      if (mulWrapper !== null) {
+        const [element, index] = this.createMultipleWrapper(getPath(obj, path), this.lang);
+        mulWrapper.replaceWith(element);
+        this.mainInstance.internboneValue = this.reWriteBoneValue();
+        this.mainInstance.handleChange();
+      }
+    } else {
+
+      shadowInput.value = skel["key"];
+      if (this.boneStructure["format"]) {
+        showInput.placeholder = formatstring({"dest": skel}, this.boneStructure);
+      } else {
+        showInput.placeholder = skel["key"]
+
+      }
+
+
+      this.mainInstance.internboneValue = this.reWriteBoneValue();
+      this.mainInstance.handleChange();
     }
   }
 

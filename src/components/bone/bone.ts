@@ -230,8 +230,6 @@ export default class SlBone extends ShoelaceElement {
       formData: this.toFormData(),
       type: type
     }
-    console.log(this.toFormValue())
-    console.log( this.toFormData())
     this.handleInit(options)
 
     emit(this, 'sl-boneChange', {
@@ -258,13 +256,13 @@ export default class SlBone extends ShoelaceElement {
     }
   }
 
-  openVISelect()//open special vi select for reletionalbones
+  openVISelect(boneName)//open special vi select for reletionalbones
   {
-      emit(this, 'sl-bone-relational-select');
+      emit(this, 'sl-bone-relational-select',{detail:{"boneName":boneName}});
   }
-  addRelation(skel:Array<SkelValues>|SkelValues)
+  addRelation(skel:Array<SkelValues>|SkelValues,boneName:string)
   {
-    this.bone.addRelation(skel)
+    this.bone.addRelation(skel,boneName)
   }
 
 
