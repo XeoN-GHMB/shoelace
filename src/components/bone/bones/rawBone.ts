@@ -241,19 +241,10 @@ export class RawBone {
           }
           this.idx[lang] = idx;
           multipleWrapper.classList.add("multiple-wrapper");
-          multipleWrapper.dataset.multiplebone=`${this.boneName}.${lang}`
+          multipleWrapper.dataset.multiplebone = `${this.boneName}.${lang}`
 
-          const addButton = document.createElement("sl-button");
-          const addIcon = document.createElement("sl-icon");
+          const addButton = this.getaddButton();
 
-          addIcon.setAttribute("name", "plus");
-          addButton.appendChild(addIcon);
-          addButton.innerHTML += translate("actions.add");
-          addButton.setAttribute("variant", "success");
-          //addButton.setAttribute("outline", "");
-          addButton.classList.add("add-button");
-          addButton.variant = "success";
-          addButton.title = translate("actions.add");
 
           addButton.addEventListener("click", () => {
             const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.boneName}.${lang}']`);
@@ -272,43 +263,11 @@ export class RawBone {
           placeholder.setAttribute("filled", "");
           placeholder.setAttribute("placeholder", translate("actions.noentry"));
 
-          const clearButton = document.createElement("sl-button");
+          const clearButton = this.getclearButton(lang)
 
-          clearButton.addEventListener("click", () => {
-            this.clearMultipleWrapper(lang)
-          });
-          clearButton.id = "clearButton"
-          clearButton.variant = "danger";
-          clearButton.setAttribute("outline", "");
-          const xicon: SlIcon = document.createElement("sl-icon");
-          xicon.name = "x";
-          xicon.slot = "suffix";
-          clearButton.appendChild(xicon);
-          clearButton.variant = "danger";
-          clearButton.title = translate("actions.deleteAll");
-          clearButton.dataset.name = `clearBtn.${this.boneName}.${lang}`
-          if(this.idx[lang]===0)
-          {
-            clearButton.style.display="none"
-
-          }
 
           //Undo Button
-          const undoButton = document.createElement("sl-button");
-          const undoIcon = document.createElement("sl-icon");
-
-          undoIcon.setAttribute("name", "arrow-counterclockwise");
-          undoButton.appendChild(undoIcon);
-          undoButton.setAttribute("outline", "");
-          undoButton.classList.add("undo-button");
-          undoButton.variant = "neutral";
-          undoButton.title = translate("actions.undo");
-
-          undoButton.addEventListener("click", () => {
-            this.undo(lang)
-          });
-          undoButton.dataset.name = `undoBtn.${this.boneName}.${lang}`
-          undoButton.style.display = "none";
+          const undoButton = this.getundoButton(lang)
 
           const buttonWrap = document.createElement("div");
           buttonWrap.classList.add("bone-inner-button-wrap")
@@ -354,18 +313,7 @@ export class RawBone {
         if (this.boneValue === null) {
           this.boneValue = []
         }
-        const addButton = document.createElement("sl-button");
-        const addIcon = document.createElement("sl-icon");
-
-        addIcon.setAttribute("name", "plus")
-        addButton.appendChild(addIcon);
-        addButton.innerHTML += translate("actions.add");
-        addButton.setAttribute("variant", "success")
-        //addButton.setAttribute("outline", "")
-        addButton.classList.add("add-button")
-        addButton.variant = "success"
-        addButton.title = translate("actions.add");
-        addButton.disabled = this.boneStructure["readonly"];
+        const addButton = this.getaddButton();
 
 
         const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue);
@@ -391,41 +339,9 @@ export class RawBone {
 
         innerWrap.appendChild(multipleWrapper)
 
-        const clearButton = document.createElement("sl-button");
-        const clearIcon = document.createElement("sl-icon");
-
-        clearIcon.setAttribute("name", "x")
-        clearButton.appendChild(clearIcon);
-        clearButton.setAttribute("variant", "danger")
-        clearButton.setAttribute("outline", "");
-        clearButton.classList.add("clear-button");
-        clearButton.title = translate("actions.deleteAll");
-        clearButton.disabled = this.boneStructure["readonly"];
-        if (this.idx === 0) {
-          clearButton.style.display = "none"
-        }
-
-        clearButton.dataset.name = `clearBtn.${this.boneName}`
-        clearButton.addEventListener("click", () => {
-          this.clearMultipleWrapper()
-        });
-
+        const clearButton = this.getclearButton();
         //Undo Button
-        const undoButton = document.createElement("sl-button");
-        const undoIcon = document.createElement("sl-icon");
-
-        undoIcon.setAttribute("name", "arrow-counterclockwise");
-        undoButton.appendChild(undoIcon);
-        undoButton.setAttribute("outline", "");
-        undoButton.classList.add("undo-button");
-        undoButton.variant = "neutral";
-        undoButton.title = translate("actions.undo");
-        undoButton.addEventListener("click", () => {
-          this.undo()
-
-        });
-        undoButton.dataset.name = `undoBtn.${this.boneName}`
-        undoButton.style.display = "none";
+        const undoButton = this.getundoButton()
 
         const buttonWrap = document.createElement("div");
         buttonWrap.classList.add("bone-inner-button-wrap")
@@ -906,6 +822,72 @@ export class RawBone {
       this.idx[lang] = 0;
     }
 
+  }
+
+  getaddButton() {
+    const addButton = document.createElement("sl-button");
+    const addIcon = document.createElement("sl-icon");
+
+    addIcon.setAttribute("name", "plus");
+    addButton.appendChild(addIcon);
+    addButton.innerHTML += translate("actions.add");
+    addButton.setAttribute("variant", "success");
+    addButton.classList.add("add-button");
+    addButton.variant = "success";
+    addButton.title = translate("actions.add");
+    addButton.disabled = this.boneStructure["readonly"];
+    return addButton
+  }
+
+  getclearButton(lang: string | null = null) {
+
+    const clearButton = document.createElement("sl-button");
+
+    clearButton.addEventListener("click", () => {
+      this.clearMultipleWrapper(lang)
+    });
+    clearButton.id = "clearButton"
+    clearButton.variant = "danger";
+    clearButton.setAttribute("outline", "");
+    const xicon: SlIcon = document.createElement("sl-icon");
+    xicon.name = "x";
+    xicon.slot = "suffix";
+    clearButton.appendChild(xicon);
+    clearButton.variant = "danger";
+    clearButton.title = translate("actions.deleteAll");
+    clearButton.dataset.name=lang === null ? `clearBtn.${this.boneName}` : `clearBtn.${this.boneName}.${lang}`;
+    if (lang !== null) {
+
+      if (this.idx[lang] === 0) {
+        clearButton.style.display = "none"
+
+      }
+    } else {
+      if (this.idx === 0) {
+        clearButton.style.display = "none"
+
+      }
+    }
+
+
+  }
+
+  getundoButton(lang: string | null = null) {
+    const undoButton: SlButton = document.createElement("sl-button");
+    const undoIcon: SlIcon = document.createElement("sl-icon");
+
+    undoIcon.setAttribute("name", "arrow-counterclockwise");
+    undoButton.appendChild(undoIcon);
+    undoButton.setAttribute("outline", "");
+    undoButton.classList.add("undo-button");
+    undoButton.variant = "neutral";
+    undoButton.title = translate("actions.undo");
+    undoButton.addEventListener("click", () => {
+      this.undo(lang)
+
+    });
+    undoButton.dataset.name = `undoBtn.${this.boneName}`
+    undoButton.style.display = "none";
   }
 
 }
