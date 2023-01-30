@@ -5,6 +5,8 @@ import type SlCombobox from "../../combobox/combobox";
 import type SlIconButton from "../../icon-button/icon-button";
 import type SlTable from "../../table/table";
 import type {BoneStructure} from "../interfaces";
+import {SkelValues} from "../interfaces";
+import fa from "../../../translations/fa";
 
 export class RelationalBone extends RawBone {
 
@@ -13,6 +15,10 @@ export class RelationalBone extends RawBone {
   getEditor(value: any, boneName: string, lang: string | null = null): HTMLElement {
     //return this.getSearchbar(value, boneName);
     this.lang = lang;
+    if(this.mainInstance.inVi)
+    {
+      return this.getSelect(value, boneName);
+    }
     if (this.boneStructure["params"]["widget"] === "search") //TODO Better name ?
     {
       return this.getSearchbar(value, boneName);
@@ -161,7 +167,17 @@ export class RelationalBone extends RawBone {
     selectButton.setAttribute("outline", "")
     selectButton.classList.add("add-button")
     selectButton.addEventListener("click", () => {
-      this.getDialog(inputWrapper, shadowInput, showInput);
+      if (this.mainInstance.inVi && false)
+      {
+         this.mainInstance.openVISelect();
+      }
+      else
+      {
+        this.getDialog(inputWrapper, shadowInput, showInput);
+      }
+
+
+
     })
 
 
@@ -291,6 +307,18 @@ export class RelationalBone extends RawBone {
     dialog.appendChild(table);
 
     document.body.appendChild(dialog);
+  }
+
+  addRelation(skel:Array<SkelValues>|SkelValues)
+  {
+    if(Array.isArray(skel))
+    {
+
+    }
+    else
+    {
+
+    }
   }
 
 }

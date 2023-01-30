@@ -10,6 +10,7 @@ import {BoneViewRenderer} from "./boneViewRenderer";
 import type SlDetails from "../details/details";
 import type {BoneValue} from "./bones/rawBone";
 import type {BoneError, BoneStructure} from "./interfaces";
+import {SkelValues} from "./interfaces";
 
 
 /**
@@ -62,6 +63,8 @@ export default class SlBone extends ShoelaceElement {
   @property() errors: BoneError[];
 
   @property({type: Boolean, attribute: false}) inTable = false;
+
+  @property({type: Boolean, attribute: false}) inVi = false;
 
   @property({type: Boolean, reflect: true}) disabled = false;
 
@@ -118,6 +121,10 @@ export default class SlBone extends ShoelaceElement {
       for (const [k, v] of Object.entries(data)) {
         if (v) {
           formData.append(k, v.toString());
+        }
+        else
+        {
+           formData.append(k, "");//We set it to nothing
         }
 
       }
@@ -223,6 +230,8 @@ export default class SlBone extends ShoelaceElement {
       formData: this.toFormData(),
       type: type
     }
+    console.log(this.toFormValue())
+    console.log( this.toFormData())
     this.handleInit(options)
 
     emit(this, 'sl-boneChange', {
@@ -248,6 +257,16 @@ export default class SlBone extends ShoelaceElement {
       });
     }
   }
+
+  openVISelect()//open special vi select for reletionalbones
+  {
+      emit(this, 'sl-bone-relational-select');
+  }
+  addRelation(skel:Array<SkelValues>|SkelValues)
+  {
+    this.bone.addRelation(skel)
+  }
+
 
   @watchProps(["errors"])
   handleError() {

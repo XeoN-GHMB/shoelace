@@ -474,9 +474,13 @@ export class RawBone {
 
         createPath(obj, newboneName, null, true);
         const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
+
         if (getPath(obj, path).length === 0)//clear last element
         {
+
           this.clearMultipleWrapper(lang)
+          this.mainInstance.internboneValue = {[this.boneName]: [""]};// set the bone value to emtpy sting to delete it in the backend
+          this.mainInstance.handleChange("deleteEntry");
           return;
         }
         if (mulWrapper !== null) {
@@ -800,12 +804,12 @@ export class RawBone {
     const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
     this.saveState(lang);
     mulWrapper.innerHTML = "";//Clear Wrapper;
-    this.mainInstance.internboneValue = this.reWriteBoneValue();
+
 
     const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
     const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${path}']`);
     const placeholder: SlInput = this.mainInstance.bone.querySelector(`[data-name='placeholder.${path}']`);
-
+    this.mainInstance.internboneValue = {[this.boneName]: [""]};// set the bone value to emtpy sting to delete it in the backend
 
     undoButton.style.display = "";
     clearButton.style.display = "none";

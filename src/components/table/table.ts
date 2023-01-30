@@ -97,6 +97,7 @@ export default class SlTable extends ShoelaceElement {
 
   //hierarchy part
   @property({type: Object, attribute: false}) nodes: Object;
+  @property({type: Boolean, attribute: false}) inVi = false;
 
 
   tableInstance: any;

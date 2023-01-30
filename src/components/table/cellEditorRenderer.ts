@@ -18,6 +18,8 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
   bone.renderType = "edit";
   bone.rendersaveButton = "true";
   bone.inTable = true;
+  bone.inVi = tableInstance.inVi;
+
   bone.addEventListener("sl-boneChange", async (boneChangeEvent) => {
 
     const skelKey = cell._cell.row.data.key;
