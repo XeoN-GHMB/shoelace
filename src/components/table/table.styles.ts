@@ -112,6 +112,7 @@ export default css`
   }
 
   .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+    display: flex;
     box-sizing: border-box;
     width: 100%;
     white-space: nowrap;
@@ -1572,6 +1573,10 @@ export default css`
 
   .tabulator-row.tabulator-tree-level-9{
     background-color: #C8C8C8;
+  }
+
+  sl-checkbox[aria-label="Select Row"]{
+    margin: 0 auto;
   }
 
   sl-checkbox[aria-label="Select Row"]::part(label){

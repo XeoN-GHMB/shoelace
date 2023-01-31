@@ -374,8 +374,8 @@ export default class SlTable extends ShoelaceElement {
         let selectColumn = {
           formatter: this.slRowSelection,
           resizable: false,
-          width: 47,
-          minWidth: 47,
+          width: 35,
+          minWidth: 35,
           titleFormatter: this.slRowSelection,
           hozAlign: "center",
           headerSort: false,
