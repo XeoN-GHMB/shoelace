@@ -176,7 +176,13 @@ export class RawBone {
     }
 
     wrapper.classList.add(`bone-type-${this.boneStructure["type"]}`)
-    wrapper.classList.add("bone-wrapper")
+    // Check if bone is rendered in table and render in small compact view
+    if (this.mainInstance.inTable) {
+      wrapper.classList.add("bone-table-wrapper")
+    } else {
+      wrapper.classList.add("bone-wrapper")
+    }
+
     wrapper.dataset.boneWrapper = "true";
     wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     wrapper.dataset.boneName = this.boneName;
@@ -342,6 +348,8 @@ export class RawBone {
     if (!fromRecord) {
       if (this.mainInstance.rendersaveButton) {
         const saveButton = document.createElement("sl-button");
+        saveButton.classList.add("save-button");
+        saveButton.variant = "success";
         saveButton.innerText = "Save";
         saveButton.addEventListener("click", () => {
           this.mainInstance.handleChange("fromSave");
@@ -865,6 +873,7 @@ export class RawBone {
       this.clearMultipleWrapper(lang)
     });
     clearButton.id = "clearButton"
+    clearButton.classList.add("clear-button");
     clearButton.variant = "danger";
     clearButton.setAttribute("outline", "");
     const xicon: SlIcon = document.createElement("sl-icon");

@@ -1,6 +1,6 @@
 import {css} from 'lit';
 import componentStyles from '../../styles/component.styles';
-
+//language=CSS
 export default css`
   ${componentStyles}
 
@@ -156,6 +156,10 @@ export default css`
     flex: 1;
   }
 
+  .multi-input sl-input{
+    flex: 1;
+  }
+
   .multi-input .clear-button{
     margin-left: var(--sl-spacing-small);
   }
@@ -197,6 +201,8 @@ export default css`
 
   .language-tab-group::part(body){
     overflow-x: hidden;
+    border-bottom: var(--sl-color-neutral-200) 2px solid;
+    margin-bottom: -2px;
   }
 
   .language-tab-group::part(nav){
@@ -532,4 +538,65 @@ export default css`
   .log-log {
     font-family: monospace;
   }
+
+  /*
+     * Render edit-view in table
+  */
+
+  .bone-table-wrapper{
+    display: flex;
+    flex-direction: column;
+    padding: var(--sl-spacing-x-small);
+    width: 100%;
+  }
+
+  .bone-table-wrapper sl-button::part(base){
+    font-size: var(--sl-button-font-size-small);
+    height: var(--sl-input-height-small);
+    line-height: calc(var(--sl-input-height-small) - var(--sl-input-border-width));
+    border-radius: var(--sl-input-border-radius-small);
+  }
+
+  .bone-table-wrapper sl-input::part(base){
+    font-size: var(--sl-button-font-size-small);
+    height: var(--sl-input-height-small);
+    line-height: calc(var(--sl-input-height-small) - var(--sl-input-border-width));
+    border-radius: var(--sl-input-border-radius-small);
+  }
+
+  .bone-table-wrapper sl-input::part(input){
+    height: calc(var(--sl-input-height-small) - var(--sl-input-border-width));
+    padding: 0 var(--sl-input-spacing-small);
+  }
+
+  .bone-table-wrapper .drag-button{
+    height: calc(var(--sl-input-height-small) - var(--sl-input-border-width));
+    padding: 0 var(--sl-input-spacing-small);
+  }
+
+  .bone-table-wrapper .upload-button::part(base),
+  .bone-table-wrapper .clear-button::part(base),
+  .bone-table-wrapper .undo-button::part(base){
+    aspect-ratio: 1;
+  }
+
+  .bone-table-wrapper .save-button{
+    margin-top: var(--sl-spacing-medium);
+  }
+
+  .bone-table-wrapper .language-tab-group::part(base){
+    margin-bottom: -10px;
+  }
+
+  .bone-table-wrapper .language-tab-group::part(body){
+    padding-bottom: var(--sl-spacing-medium);
+  }
+
+  .bone-table-wrapper .tox{
+    max-height: 190px;
+  }
+
+
+
+
 `;

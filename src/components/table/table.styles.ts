@@ -628,6 +628,7 @@ export default css`
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 6;
+    width: 100%;
   }
 
   .tabulator-row .tabulator-cell.tabulator-editing {
