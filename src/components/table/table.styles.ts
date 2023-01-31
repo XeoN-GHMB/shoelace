@@ -79,6 +79,8 @@ export default css`
     text-align: left;
     vertical-align: bottom;
     overflow: hidden;
+    border-right: none;
+    background-color: var(--table-head-background);
   }
 
   .tabulator .tabulator-header .tabulator-col.tabulator-moving {
@@ -1211,11 +1213,6 @@ export default css`
     -o-user-select: none;
   }
 
-  .tabulator .tabulator-header .tabulator-col {
-    border-right: none;
-    background-color: var(--table-head-background);
-  }
-
   .tabulator .tabulator-header .tabulator-col .tabulator-col-content {
     padding: 0.6em 0.4em;
   }
@@ -1575,6 +1572,10 @@ export default css`
 
   .tabulator-row.tabulator-tree-level-9{
     background-color: #C8C8C8;
+  }
+
+  sl-checkbox[aria-label="Select Row"]::part(label){
+    display: none;
   }
 
 `;
