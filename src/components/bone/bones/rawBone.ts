@@ -164,13 +164,13 @@ export class RawBone {
       wrapper = document.createElement("div");
 
     } else {
-      wrapper = document.createElement("form");
-
+      wrapper = document.createElement("div"); //todo can be a div or must be a form
+      /*
       wrapper.addEventListener("submit", (e: Event) => {
 
         e.preventDefault()
         return false;
-      })
+      })*/
 
 
     }

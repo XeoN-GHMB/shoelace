@@ -71,6 +71,9 @@ export class BoneEditRenderer {
           cls = FileBone;
         }
         break;
+      case "file": //for type === file
+        cls = FileBone;
+        break;
       case "select":
         cls = SelectBone;
         break;

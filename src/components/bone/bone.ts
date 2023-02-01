@@ -2,7 +2,7 @@
 import {html} from "lit";
 import {customElement, property} from 'lit/decorators.js';
 import {emit} from '../../internal/event';
-import ShoelaceElement from "../../internal/shoelace-element";
+import ShoelaceElement, {ShoelaceFormControl} from "../../internal/shoelace-element";
 import {watchProps} from "../../internal/watchProps";
 import styles from './bone.styles';
 import {BoneEditRenderer} from "./boneEditRenderer";
@@ -11,6 +11,7 @@ import type SlDetails from "../details/details";
 import type {BoneValue} from "./bones/rawBone";
 import type {BoneError, BoneStructure} from "./interfaces";
 import {SkelValues} from "./interfaces";
+import {FormControlController} from "../../internal/form";
 
 
 /**
@@ -30,8 +31,9 @@ import {SkelValues} from "./interfaces";
  * @cssproperty --example - An example CSS custom property.
  */
 @customElement('sl-bone')
-export default class SlBone extends ShoelaceElement {
+export default class SlBone extends ShoelaceElement implements ShoelaceFormControl {
 
+  private readonly formControlController = new FormControlController(this, {value: this.getBoneValueforFormData});
 
   static styles = styles;
   bone: HTMLFormElement;
@@ -70,10 +72,16 @@ export default class SlBone extends ShoelaceElement {
 
 
   @property({type: String, reflect: true}) apiUrl = window.location.origin;
+  @property({type: String, reflect: true}) type = "";
+  @property({type: String, reflect: true}) name = null;
 
   /** Gets boneValue */
   get getBoneValue(): any {
     return this.internboneValue[this.boneName];
+  }
+
+  getBoneValueforFormData(args:SlBone): any {
+    return args.getBoneValue;
   }
 
 
@@ -121,10 +129,8 @@ export default class SlBone extends ShoelaceElement {
       for (const [k, v] of Object.entries(data)) {
         if (v) {
           formData.append(k, v.toString());
-        }
-        else
-        {
-           formData.append(k, "");//We set it to nothing
+        } else {
+          formData.append(k, "");//We set it to nothing
         }
 
       }
@@ -134,11 +140,16 @@ export default class SlBone extends ShoelaceElement {
   }
 
 
-  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled"])
+  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type"])
   optionUpdate() {
-    if(this.apiUrl.startsWith("http://localhost:"))//set apiurl for local devserver
+    //this.formControlController.setValidity(true);
+    if (this.type !== "") {
+      console.log("we got a type we try to set the bone without 'boneStructure'")
+      this.loadDefaultBoneStructure();
+    }
+    if (this.apiUrl.startsWith("http://localhost:"))//set apiurl for local devserver
     {
-      this.apiUrl="http://localhost:8080"
+      this.apiUrl = "http://localhost:8080"
     }
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};
@@ -231,7 +242,8 @@ export default class SlBone extends ShoelaceElement {
       type: type
     }
     this.handleInit(options)
-
+    this.formControlController.updateValidity();
+    console.log("changhe")
     emit(this, 'sl-boneChange', {
       detail: options
     });
@@ -240,14 +252,14 @@ export default class SlBone extends ShoelaceElement {
   handleInit(options) {
     if (!this.initFired) {
       if (options === undefined) {
-         options = {
+        options = {
           boneValue: this.getBoneValue,
           boneName: this.boneName,
           formValue: this.toFormValue(),
           formData: this.toFormData(),
         }
       }
-      options["type"]="init";
+      options["type"] = "init";
       console.log("init fire")
       this.initFired = true;
       emit(this, 'sl-boneInit', {
@@ -258,11 +270,11 @@ export default class SlBone extends ShoelaceElement {
 
   openVISelect(boneName)//open special vi select for reletionalbones
   {
-      emit(this, 'sl-bone-relational-select',{detail:{"boneName":boneName}});
+    emit(this, 'sl-bone-relational-select', {detail: {"boneName": boneName}});
   }
-  addRelation(skel:Array<SkelValues>|SkelValues,boneName:string)
-  {
-    this.bone.addRelation(skel,boneName)
+
+  addRelation(skel: Array<SkelValues> | SkelValues, boneName: string) {
+    this.bone.addRelation(skel, boneName)
   }
 
 
@@ -300,6 +312,31 @@ export default class SlBone extends ShoelaceElement {
     }
 
 
+  }
+
+  loadDefaultBoneStructure() {
+    /**
+     * this mehtod load default bone structure when no one is provided
+     */
+    if (this.name === null || this.name === undefined) {
+      throw "no name provided";
+    }
+    this.boneName = this.name
+    this.boneStructure = {
+      descr: "",
+      type: this.type,
+      required: false,
+      visible: true,
+      readonly: false,
+      unique: false,
+      languages: null,
+      emptyValue: null,
+      multiple: false,
+    }
+  }
+
+  checkValidity() { // for form
+    return true;
   }
 
   render() {
