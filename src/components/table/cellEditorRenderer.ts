@@ -52,6 +52,8 @@ export function boneEditor(cell: any, onRendered: any, success: any, cancel: any
 
 
   })
+
+
   return bone;
 
 

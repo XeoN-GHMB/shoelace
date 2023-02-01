@@ -16,7 +16,6 @@ import {CustomControllElements} from "./modules/tabulator_control_element";
 import {CustomEditModule} from "./modules/tabulator_edit";
 
 
-
 /**
  * @since 2.0
  * @status experimental
@@ -82,7 +81,7 @@ export default class SlTable extends ShoelaceElement {
 
   /** Override table config Object */
   @property({type: Object, attribute: false}) tableConfig: Object = {
-    layout: "fitDataStretch",
+    layout: "fitData",
     reactiveData: true,
     popupContainer: true
   };
@@ -96,6 +95,8 @@ export default class SlTable extends ShoelaceElement {
 
   @property({type: String, attribute: false}) mode: String = "list";
 
+  @property({type: Object | Boolean, attribute: false}) customColumns = false
+
   //hierarchy part
   @property({type: Object, attribute: false}) nodes: Object;
   @property({type: Boolean, attribute: false}) inVi = false;
@@ -108,7 +109,7 @@ export default class SlTable extends ShoelaceElement {
   expandDepth = 0;
   visibleColumns = [];
 
-  @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode"])
+  @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode", "customColumns"])
   optionUpdate() {
 
     //only rebuild table if structure changed
@@ -123,7 +124,7 @@ export default class SlTable extends ShoelaceElement {
     }
 
     this._editabletable = this.editabletable;
-    if (this.previousStructure !== this.structure) {
+    if (this.previousStructure !== this.structure || this.customColumns) {
       this.previousStructure = this.structure
 
       this.buildStructure();
@@ -135,7 +136,7 @@ export default class SlTable extends ShoelaceElement {
       TabulatorFull.registerModule(CustomMoveRowsModule);
       TabulatorFull.registerModule(CustomReactiveDataModule);
       TabulatorFull.registerModule(CustomControllElements);
-         TabulatorFull.registerModule(CustomEditModule);
+      TabulatorFull.registerModule(CustomEditModule);
 
 
       //TabulatorFull.registerModule(CustomCell);
@@ -298,14 +299,13 @@ export default class SlTable extends ShoelaceElement {
     let columns = []
     for (const itemName in this.structure) {
 
-      const item:object = this.structure[itemName];
-      if (Object.keys(item).includes("visible") && !item["visible"] && this.visibleColumns.indexOf(itemName)===-1 ) {
+      const item: object = this.structure[itemName];
+      if (Object.keys(item).includes("visible") && !item["visible"] && this.visibleColumns.indexOf(itemName) === -1) {
         continue
       }
-      if(this.visibleColumns.indexOf(item)===-1)
-      {
+      if (this.visibleColumns.indexOf(item) === -1) {
         this.visibleColumns.push(item)
-        item["visible"]=true;
+        item["visible"] = true;
       }
       if (itemName === "sortindex") {
         this.moveablerows = true;
@@ -318,15 +318,34 @@ export default class SlTable extends ShoelaceElement {
       //Fixme inefficient
       columns.push({
         title: title, field: itemName,
-        formatterParams: [item,this], formatter: boneFormatter,
+        formatterParams: [item, this], formatter: boneFormatter,
         variableHeight: true,
         editorParams: [item, this], editor: boneEditor,
         editable: this.editCheck,
-        name:itemName,
+        name: itemName,
 
       })
 
 
+    }
+    if (this.customColumns) {
+      /**
+     this.customColumns must have a specific format like
+     [{ name:'column name',
+        title:'column title',
+        formater://somekind of a function the return value is shown in cell
+     }]
+     */
+
+      for (const column of this.customColumns) {
+
+        columns.push({
+          title: column["title"],
+          formatter: column["formatter"],
+          variableHeight: true,
+          name: column["name"],
+        })
+      }
     }
 
 
@@ -638,23 +657,22 @@ export default class SlTable extends ShoelaceElement {
     return childs
   }
 
-  setVisibleColumns(value)
-  {
-    this.visibleColumns=value;
+  setVisibleColumns(value) {
+    this.visibleColumns = value;
     this.buildStructure();
     this.updateConfig();
   }
-  getVisibleColumns()
-  {
+
+  getVisibleColumns() {
     return this.visibleColumns;
   }
 
   render() {
     return html`
-        <div id="shadowtable" style="display: none" part="base" class="striped celled tabulator-${this.mode}">
+      <div id="shadowtable" style="display: none" part="base" class="striped celled tabulator-${this.mode}">
 
-        </div>
-        <slot @slotchange="${this.prebuildTable}"></slot>
+      </div>
+      <slot @slotchange="${this.prebuildTable}"></slot>
 
     `;
   }
