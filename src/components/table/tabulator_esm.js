@@ -7568,6 +7568,7 @@ class Edit$1 extends Module{
 	///////// Table Functions /////////
 	///////////////////////////////////
 	updateCellClass(cell){
+
 		if(this.allowEdit(cell)) {
 			cell.getElement().classList.add("tabulator-editable");
 		}
@@ -7900,7 +7901,9 @@ class Edit$1 extends Module{
 
 	//return a formatted value for a cell
 	bindEditor(cell){
+    console.log("call other bind")
 		if(cell.column.modules.edit){
+
 			var self = this,
 			element = cell.getElement(true);
 
@@ -7908,6 +7911,7 @@ class Edit$1 extends Module{
 			element.setAttribute("tabindex", 0);
 
 			element.addEventListener("click", function(e){
+        console.log("try bind editor click")
 				if(!element.classList.contains("tabulator-editing")){
 					element.focus({preventScroll: true});
 				}
@@ -7922,6 +7926,7 @@ class Edit$1 extends Module{
 			});
 
 			element.addEventListener("focus", function(e){
+        console.log("try bind editor focus",!self.recursionBlock)
 				if(!self.recursionBlock){
 					self.edit(cell, e, false);
 				}
@@ -8003,7 +8008,6 @@ class Edit$1 extends Module{
 					break;
 			}
 		}
-
 		return check;
 	}
 

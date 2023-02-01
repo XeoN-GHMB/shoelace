@@ -2,6 +2,7 @@
 import SlBone from "../bone/bone";
 
 export function boneEditor(cell: any, onRendered: any, success: any, cancel: any, editParams: any): any {
+  console.log("render editor")
   const boneStructure = editParams[0];
   const tableInstance = editParams[1];
 

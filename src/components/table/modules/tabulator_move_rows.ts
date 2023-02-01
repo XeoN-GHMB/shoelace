@@ -12,7 +12,7 @@ class CustomMoveRowsModule extends MoveRowsModule {
   }
 
   startMove(e, row: Row) {
-    console.log("has childs", row.getComponent().getTreeChildren().length)
+
     if (row.getComponent().getTreeChildren().length > 0 && row.getComponent().isTreeExpanded()) {
       console.log("treeCollapse")
       row.getComponent().treeCollapse();

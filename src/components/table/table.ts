@@ -13,7 +13,8 @@ import {TabulatorFull, RowComponent} from './tabulator_esm.js';
 import {CustomMoveRowsModule} from './modules/tabulator_move_rows';
 import {CustomReactiveDataModule} from "./modules/tabulator_removeTreeChildRow";
 import {CustomControllElements} from "./modules/tabulator_control_element";
-import {CustomCell} from "./modules/tabulator_cell";
+import {CustomEditModule} from "./modules/tabulator_edit";
+
 
 
 /**
@@ -134,6 +135,9 @@ export default class SlTable extends ShoelaceElement {
       TabulatorFull.registerModule(CustomMoveRowsModule);
       TabulatorFull.registerModule(CustomReactiveDataModule);
       TabulatorFull.registerModule(CustomControllElements);
+         TabulatorFull.registerModule(CustomEditModule);
+
+
       //TabulatorFull.registerModule(CustomCell);
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
 
@@ -339,9 +343,7 @@ export default class SlTable extends ShoelaceElement {
   }
 
   editCheck(cell) {
-    let isEditable = this.params[1]._editabletable;
-
-    return isEditable;
+    return this.params[1]._editabletable;
   }
 
 
