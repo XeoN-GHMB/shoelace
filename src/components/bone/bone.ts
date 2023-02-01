@@ -21,10 +21,11 @@ import {FormControlController} from "../../internal/form";
  *
  * @dependency sl-example
  *
- * @event sl-event-name - Emitted as an example.
+ * @event sl-bone-change - Emitted when the bonevalues is change.
+ * @event sl-bone-init - Emitted when the bonevalues is set or change the first time.
+ * @event sl-bone-relational-select - If `inVi` is `true` we fire this event on relation selection.
  *
  * @slot - The default slot.
- * @slot example - An example slot.
  *
  * @csspart base - The component's internal wrapper.
  *
@@ -44,14 +45,14 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   jsonboneCache: Record<string, object> = {};
   previousBoneValues: Record<string, BoneValue[]> = {};
   initFired = false;
-  /** set boneStructure */
+  /** If we have a boneStructure we can set it */
   @property({type: Object, attribute: false}) boneStructure: any;
 
   /** set boneValue */
-  @property({type: Object, attribute: false}) boneValue: any;
+  @property({type: String, reflect: true}) boneValue: any;
 
-  /** set boneValue */
-  @property({type: Object, attribute: false}) boneName: string;
+  /** set the boneName */
+  @property({type: String, reflect: true}) boneName: string;
 
   /** set renderType */
   @property({type: String, reflect: true}) renderType = "view";
@@ -59,20 +60,24 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   /** set renderLabel */
   @property({type: Boolean, reflect: true}) renderLabel = false;
 
-  /** set rendersaveButton */
+  /** If true we render the Save Button in the edit view rendersaveButton */
   @property({type: Boolean, reflect: true}) rendersaveButton = false;
   /** set boneError */
   @property() errors: BoneError[];
-
+  /** If true the Bone will be rendered in the table format*/
   @property({type: Boolean, attribute: false}) inTable = false;
-
+  /** If true the relational bone fire an event for the VI*/
   @property({type: Boolean, attribute: false}) inVi = false;
-
+  /** Can be set to true if the bone should be readonly*/
   @property({type: Boolean, reflect: true}) disabled = false;
 
-
+  /** The url for uploading files and update bone values if we are in a table*/
   @property({type: String, reflect: true}) apiUrl = window.location.origin;
+  //if we don't have a bone structure we can provide a bone over other parameter
+
+  /** If we have no `boneStructure` we can set the name for a html form*/
   @property({type: String, reflect: true}) type = "";
+  /** If we have no `boneStructure` we can set the type to render the right bone ('file' renders a fileBone) */
   @property({type: String, reflect: true}) name = null;
 
   /** Gets boneValue */
@@ -80,8 +85,8 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     return this.internboneValue[this.boneName];
   }
 
-  getBoneValueforFormData(args:SlBone): any {
-    return args.getBoneValue;
+  getBoneValueforFormData(boneInstance: SlBone): any {
+    return boneInstance.toFormData().getAll(boneInstance.boneName);
   }
 
 
@@ -145,6 +150,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     //this.formControlController.setValidity(true);
     if (this.type !== "") {
       console.log("we got a type we try to set the bone without 'boneStructure'")
+      console.log(this.boneValue)
       this.loadDefaultBoneStructure();
     }
     if (this.apiUrl.startsWith("http://localhost:"))//set apiurl for local devserver
@@ -153,6 +159,13 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     }
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};
+    if (this.type !== "") {
+
+      console.log(this.internboneValue, "??>?")
+      console.log(this.boneName)
+      console.log(this.boneValue)
+    }
+
     if (this.boneStructure === null || this.boneStructure === undefined) {
       return;
     }
@@ -243,8 +256,8 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     }
     this.handleInit(options)
     this.formControlController.updateValidity();
-    console.log("changhe")
-    emit(this, 'sl-boneChange', {
+
+    emit(this, 'sl-bone-change', {
       detail: options
     });
   }
@@ -260,9 +273,9 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
         }
       }
       options["type"] = "init";
-      console.log("init fire")
+
       this.initFired = true;
-      emit(this, 'sl-boneInit', {
+      emit(this, 'sl-bone-init', {
         detail: options
       });
     }
@@ -331,7 +344,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       unique: false,
       languages: null,
       emptyValue: null,
-      multiple: false,
+      multiple: true,
     }
   }
 

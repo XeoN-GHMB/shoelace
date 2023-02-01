@@ -371,6 +371,10 @@ export class RawBone {
     multipleWrapper.dataset.multiplebone = path;
 
     let idx = 0;
+    if(value===undefined || value===null)
+    {
+      value=[];
+    }
     for (const [i, tmpValue] of value.entries()) {
 
       multipleWrapper.appendChild(this.addInput(tmpValue, lang, i));

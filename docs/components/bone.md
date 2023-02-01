@@ -4,126 +4,63 @@
 
 Bone Elements
 
+
+## Bone
+(with boneStructure / renderType='view')
 ```html preview
-
-```
-
-## Raw Bone
-
-```html preview
-<sl-bone id="raw"></sl-bone>
-<sl-bone id="raw_multiple"></sl-bone>
-<sl-bone id="raw_language"></sl-bone>
-<sl-bone id="raw_multiple_language"></sl-bone>
-
-<sl-details summary="Filled">
-    <sl-bone id="raw_filled"></sl-bone>
-    <sl-bone id="raw_multiple_filled"></sl-bone>
-    <sl-bone id="raw_language_filled"></sl-bone>
-    <sl-bone id="raw_multiple_language_filled"></sl-bone>
-</sl-details>
-
-<sl-details summary="Readonly">
-<sl-bone id="raw_readonly"></sl-bone>
-<sl-bone id="raw_multiple_readonly"></sl-bone>
-<sl-bone id="raw_language_readonly"></sl-bone>
-<sl-bone id="raw_multiple_language_readonly"></sl-bone>
-</sl-details>
-
-<sl-details summary="Readonly Filled">
-    <sl-bone id="raw_readonly_filled"></sl-bone>
-    <sl-bone id="raw_multiple_readonly_filled"></sl-bone>
-    <sl-bone id="raw_language_readonly_filled"></sl-bone>
-    <sl-bone id="raw_multiple_language_readonly_filled"></sl-bone>
-</sl-details>
-<style>
-sl-details{
-    margin-bottom:20px;
-}
-</style>
-
+<sl-bone id="testbone"></sl-bone>
 <script>
-
-for(let i of ["raw",
-              "raw_multiple",
-              "raw_language",
-              "raw_multiple_language",
-              "raw_readonly",
-              "raw_filled",
-              "raw_multiple_filled",
-              "raw_language_filled",
-              "raw_multiple_language_filled",
-              "raw_readonly",
-              "raw_multiple_readonly",
-              "raw_language_readonly",
-              "raw_multiple_language_readonly",
-              "raw_readonly_filled",
-              "raw_multiple_readonly_filled",
-              "raw_language_readonly_filled",
-              "raw_multiple_language_readonly_filled",
-  ]){
-    let bone = document.querySelector("#"+i)
-    bone.renderType = "edit"
-    bone.renderLabel = true
-    bone.boneName = "bone_"+i
-
-    
-    let type = i
-    let mult = false
-    let readonly = false
-    let language = null
-    if (i.includes("_multiple")){
-        mult = true
-    }
-    
-    if (i.includes("_readonly")){
-        readonly = true
-    }
-    
-    if (i.includes("_language")){
-        language = ["de","en"]
-    }
-    bonevalue = null
-    if (i.includes("_filled")){
-        if (i.includes("_language")){
-            if (i.includes("_multiple")){
-                bonevalue = {
-                    "de":["testvalue_de_1","testvalue_de_2"],
-                    "en":["testvalue_en_1","testvalue_en_2"]
-                }
-            }else{
-                bonevalue = {"de":"testvalue_de","en":"testvalue_en"}
-            } 
-        }else{
-            if (i.includes("_multiple")){
-                bonevalue = ["testvalue_1","testvalue_2"]
-            }else{
-                bonevalue = "testvalue"
-            }
-        }
-    }
-    
-    
+    const bone = document.querySelector("#testbone") 
     bone.boneStructure={
     "visible":true, 
-    "type":type,
-    "multiple":mult, 
-    "readonly":readonly,
-    "descr":i+"-bone", 
-    "languages":language,
+    "type":"raw",
+    "multiple":false, 
+    "readonly":false,
+    "descr":"TestBonename", 
+    "languages":null,
     "emptyValue":null
-    
     }
-    bone.boneValue = bonevalue
-    
-}
+    bone.boneValue="Test"
 </script>
 ```
 
 
-### First Example
-
+(with boneStructure / renderType='edit')
 ```html preview
+<sl-bone id="testbone-edit" renderType='edit' ></sl-bone>
+
+<sl-bone id="testbone-edit-label" renderType='edit' renderLabel></sl-bone>
+
+<sl-bone id="testbone-edit-save" renderType='edit' rendersaveButton></sl-bone>
+
+
+<script>
+    const bone = document.querySelector("#testbone-edit");
+    const bone_label = document.querySelector("#testbone-edit-label");
+    const bone_save = document.querySelector("#testbone-edit-save");
+    
+    const structure = {
+    "visible":true, 
+    "type":"raw",
+    "multiple":false, 
+    "readonly":false,
+    "descr":"TestBonename", 
+    "languages":null,
+    "emptyValue":null}
+    
+    bone.boneStructure=structure
+    bone_label.boneStructure=structure
+    bone_save.boneStructure=structure
+    
+    bone.boneValue="Test"
+    bone_label.boneValue="Test"
+    bone_save.boneValue="Test"
+</script>
+```
+(without boneStructure / renderType='view')
+```html preview
+
+ <sl-bone renderType="view" type="raw" name="testme" renderLabel boneValue="TestValue"></sl-bone>
 
 ```
 [component-metadata:sl-bone]
