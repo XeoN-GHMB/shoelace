@@ -7,6 +7,8 @@ export default createComponent({
   elementClass: Component,
   react: React,
   events: {
-    onSlEventName: 'sl-event-name'
+    onSlBoneChange: 'sl-bone-change',
+    onSlBoneInit: 'sl-bone-init',
+    onSlBoneRelationalSelect: 'sl-bone-relational-select'
   }
 });

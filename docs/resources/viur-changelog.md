@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.2
+- Splitpanels now can have a minimizer
+- Relational Bones can now have a external chooser
+- Table fields can now set by method
+
 ## 0.5.1
 - Tables are now horizontal Scrollable
 
