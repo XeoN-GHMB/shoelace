@@ -170,7 +170,7 @@ export class RelationalBone extends RawBone {
     selectButton.setAttribute("outline", "")
     selectButton.classList.add("add-button")
     selectButton.addEventListener("click", () => {
-      if (this.mainInstance.inVi && false) {
+      if (this.mainInstance.inVi) {
         this.mainInstance.openVISelect(boneName);
       } else {
         this.getDialog(inputWrapper, shadowInput, showInput);
