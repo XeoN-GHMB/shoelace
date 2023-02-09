@@ -76,7 +76,7 @@ export class SelectBone extends RawBone {
 
     inputSelect.multiple = this.boneStructure["multiple"];
     for (const option of this.boneStructure["values"]) {
-      const optionElement = document.createElement("sl-menu-item");
+      const optionElement = document.createElement("sl-option");
       optionElement.value = option[0];
       optionElement.innerText = option[1];
       inputSelect.appendChild(optionElement);
