@@ -12,6 +12,7 @@ import type {BoneValue} from "./bones/rawBone";
 import type {BoneError, BoneStructure} from "./interfaces";
 import {SkelValues} from "./interfaces";
 import {FormControlController} from "../../internal/form";
+import {RawBone} from "./bones/rawBone";
 
 
 /**
@@ -37,7 +38,8 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   private readonly formControlController = new FormControlController(this, {value: this.getBoneValueforFormData});
 
   static styles = styles;
-  bone: HTMLFormElement;
+  bone: Object;
+  boneInstance:any;
   initBoneValue: any;
   internboneValue: Record<string, BoneValue>;
   relationalCache: Record<string, object> = {};
@@ -177,6 +179,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     if (this.renderType === "view") {
 
       const boneViewer = new BoneViewRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
+      this.boneInstance = boneViewer;
       this.bone = boneViewer.boneFormatter();
     }
     if (this.renderType === "edit") {
@@ -185,6 +188,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       }
 
       const boneEditor = new BoneEditRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
+      this.boneInstance = boneEditor;
       this.bone = boneEditor.getEditor();
 
     }
@@ -287,7 +291,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   }
 
   addRelation(skel: Array<SkelValues> | SkelValues, boneName: string) {
-    this.bone.addRelation(skel, boneName)
+    this.boneInstance.boneInstance.addRelation(skel, boneName)
   }
 
 

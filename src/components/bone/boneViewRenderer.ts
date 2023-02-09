@@ -61,6 +61,7 @@ export class BoneViewRenderer {
   boneValue: any;
   boneName: string;
   mainInstance: any;
+  boneInstance:any;
 
   constructor(boneName: any, boneValue: any, boneStructure: object, mainInstance: SlBone) {
     this.boneStructure = boneStructure;
@@ -71,7 +72,8 @@ export class BoneViewRenderer {
 
   boneFormatter() {
     const cls: object = this.getBone()
-    return new cls(this.boneName, this.boneValue, this.boneStructure, this.mainInstance).view()
+    this.boneInstance = new cls(this.boneName, this.boneValue, this.boneStructure, this.mainInstance)
+    return this.boneInstance.view()
 
   }
 

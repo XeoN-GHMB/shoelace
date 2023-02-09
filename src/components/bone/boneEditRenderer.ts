@@ -27,6 +27,7 @@ export class BoneEditRenderer {
   mainInstance: SlBone;
   depth = 0;
   boneStructure: BoneStructure;
+  boneInstance:any;
 
 
   constructor(boneName: any, boneValue: any, boneStructure: BoneStructure, mainInstance: SlBone) {
@@ -38,8 +39,8 @@ export class BoneEditRenderer {
 
   getEditor() {
     const cls: object = this.getBone()
-    return new cls(this.boneName, this.boneValue, this.boneStructure, this.mainInstance).edit()
-
+    this.boneInstance = new cls(this.boneName, this.boneValue, this.boneStructure, this.mainInstance)
+    return this.boneInstance.edit()
   }
 
   getBone(): object {
