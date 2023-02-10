@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.4
+- fix for select bones
+- fix for setting relations on relationalbones
+
 ## 0.5.3
 - Table bugfix
 
