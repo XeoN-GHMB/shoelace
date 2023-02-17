@@ -32,16 +32,6 @@ export default class SlMenu extends ShoelaceElement {
     this.setAttribute('role', 'menu');
   }
 
-  getAllItems() {
-    return [...this.defaultSlot.assignedElements({ flatten: true })].filter((el: HTMLElement) => {
-      if (el.inert || !this.isMenuItem(el)) {
-        return false;
-      }
-
-      return true;
-    }) as SlMenuItem[];
-  }
-
   private handleClick(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const item = target.closest('sl-menu-item');
