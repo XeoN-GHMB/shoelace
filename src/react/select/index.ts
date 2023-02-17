@@ -15,6 +15,7 @@ export default createComponent({
     onSlShow: 'sl-show',
     onSlAfterShow: 'sl-after-show',
     onSlHide: 'sl-hide',
-    onSlAfterHide: 'sl-after-hide'
+    onSlAfterHide: 'sl-after-hide',
+    onSlInvalid: 'sl-invalid'
   }
 });

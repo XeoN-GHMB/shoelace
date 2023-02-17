@@ -128,6 +128,16 @@ export default class SlMenu extends ShoelaceElement {
     );
   }
 
+  /** @internal Gets all slotted menu items, ignoring dividers, headers, and other elements. */
+  getAllItems() {
+    return [...this.defaultSlot.assignedElements({ flatten: true })].filter((el: HTMLElement) => {
+      if (el.inert || !this.isMenuItem(el)) {
+        return false;
+      }
+      return true;
+    }) as SlMenuItem[];
+  }
+
   /**
    * @internal Gets the current menu item, which is the menu item that has `tabindex="0"` within the roving tab index.
    * The menu item may or may not have focus, but for keyboard interaction purposes it's considered the "active" item.

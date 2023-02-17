@@ -8,6 +8,7 @@ export default createComponent({
   react: React,
   events: {
     onSlChange: 'sl-change',
-    onSlInput: 'sl-input'
+    onSlInput: 'sl-input',
+    onSlInvalid: 'sl-invalid'
   }
 });

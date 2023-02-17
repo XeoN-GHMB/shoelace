@@ -51,7 +51,7 @@ export default css`
     border-style: dashed !important; /**fixme**/
   }
 
-  /* When disabled, prevent mouse events from bubbling up */
+  /* When disabled, prevent mouse events from bubbling up from children */
   .button--disabled * {
     pointer-events: none;
   }

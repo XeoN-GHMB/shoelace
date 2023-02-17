@@ -47,6 +47,7 @@ const isFirefox = isChromium ? false : navigator.userAgent.includes('Firefox');
  * @event sl-clear - Emitted when the clear button is activated.
  * @event sl-focus - Emitted when the control gains focus.
  * @event sl-input - Emitted when the control receives input.
+ * @event sl-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
  *
  * @csspart form-control - The form control that wraps the label, input, and help text.
  * @csspart form-control-label - The label's wrapper.
@@ -63,7 +64,9 @@ const isFirefox = isChromium ? false : navigator.userAgent.includes('Firefox');
 export default class SlInput extends ShoelaceElement implements ShoelaceFormControl {
   static styles: CSSResultGroup = styles;
 
-  private readonly formControlController = new FormControlController(this);
+  private readonly formControlController = new FormControlController(this, {
+    assumeInteractionOn: ['sl-blur', 'sl-input']
+  });
   private readonly hasSlotController = new HasSlotController(this, 'help-text', 'label');
   private readonly localize = new LocalizeController(this);
 
@@ -219,6 +222,16 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
     this.value = this.input.value;
   }
 
+  /** Gets the validity state object */
+  get validity() {
+    return this.input.validity;
+  }
+
+  /** Gets the validation message */
+  get validationMessage() {
+    return this.input.validationMessage;
+  }
+
   firstUpdated() {
     this.formControlController.updateValidity();
   }
@@ -254,8 +267,9 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
     this.emit('sl-input');
   }
 
-  private handleInvalid() {
+  private handleInvalid(event: Event) {
     this.formControlController.setValidity(false);
+    this.formControlController.emitInvalidEvent(event);
   }
 
   private handleKeyDown(event: KeyboardEvent) {
@@ -364,7 +378,7 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
     }
   }
 
-  /** Checks for validity but does not show the browser's validation message. */
+  /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
   checkValidity() {
     return this.input.checkValidity();
   }

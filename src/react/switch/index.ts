@@ -10,6 +10,7 @@ export default createComponent({
     onSlBlur: 'sl-blur',
     onSlChange: 'sl-change',
     onSlInput: 'sl-input',
-    onSlFocus: 'sl-focus'
+    onSlFocus: 'sl-focus',
+    onSlInvalid: 'sl-invalid'
   }
 });

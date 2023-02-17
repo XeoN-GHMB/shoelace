@@ -11,6 +11,7 @@ export default createComponent({
     onSlChange: 'sl-change',
     onSlClear: 'sl-clear',
     onSlFocus: 'sl-focus',
-    onSlInput: 'sl-input'
+    onSlInput: 'sl-input',
+    onSlInvalid: 'sl-invalid'
   }
 });

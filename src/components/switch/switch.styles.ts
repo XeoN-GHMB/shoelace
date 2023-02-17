@@ -34,6 +34,7 @@ export default css`
   }
 
   .switch {
+    position: relative;
     display: inline-flex;
     align-items: center;
     font-family: var(--sl-input-font-family);
@@ -148,5 +149,17 @@ export default css`
     line-height: var(--height);
     margin-inline-start: 0.5em;
     user-select: none;
+  }
+  
+  :host([required]) .switch__label::after {
+    content: var(--sl-input-required-content);
+    margin-inline-start: var(--sl-input-required-content-offset);
+  }
+
+  @media (forced-colors: active) {
+    .switch.switch--checked:not(.switch--disabled) .switch__control:hover .switch__thumb,
+    .switch--checked .switch__control .switch__thumb {
+      background-color: ButtonText;
+    }
   }
 `;

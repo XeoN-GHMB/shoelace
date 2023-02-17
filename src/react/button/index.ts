@@ -8,6 +8,7 @@ export default createComponent({
   react: React,
   events: {
     onSlBlur: 'sl-blur',
-    onSlFocus: 'sl-focus'
+    onSlFocus: 'sl-focus',
+    onSlInvalid: 'sl-invalid'
   }
 });

@@ -7,7 +7,10 @@ export default createComponent({
   elementClass: Component,
   react: React,
   events: {
+    onSlBlur: 'sl-blur',
     onSlChange: 'sl-change',
-    onSlInput: 'sl-input'
+    onSlFocus: 'sl-focus',
+    onSlInput: 'sl-input',
+    onSlInvalid: 'sl-invalid'
   }
 });

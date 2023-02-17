@@ -27,6 +27,7 @@ import type { ShoelaceFormControl } from '../../internal/shoelace-element';
  * @event sl-change - Emitted when the checked state changes.
  * @event sl-focus - Emitted when the checkbox gains focus.
  * @event sl-input - Emitted when the checkbox receives input.
+ * @event sl-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
  *
  * @csspart base - The component's base wrapper.
  * @csspart control - The square container that wraps the checkbox's checked state.
@@ -86,6 +87,16 @@ export default class SlCheckbox extends ShoelaceElement implements ShoelaceFormC
   /** Makes the checkbox a required field. */
   @property({ type: Boolean, reflect: true }) required = false;
 
+  /** Gets the validity state object */
+  get validity() {
+    return this.input.validity;
+  }
+
+  /** Gets the validation message */
+  get validationMessage() {
+    return this.input.validationMessage;
+  }
+
   firstUpdated() {
     this.formControlController.updateValidity();
   }
@@ -103,6 +114,11 @@ export default class SlCheckbox extends ShoelaceElement implements ShoelaceFormC
 
   private handleInput() {
     this.emit('sl-input');
+  }
+
+  private handleInvalid(event: Event) {
+    this.formControlController.setValidity(false);
+    this.formControlController.emitInvalidEvent(event);
   }
 
   private handleFocus() {
@@ -138,12 +154,12 @@ export default class SlCheckbox extends ShoelaceElement implements ShoelaceFormC
     this.input.blur();
   }
 
-  /** Checks for validity but does not show a validation message. Returns true when valid and false when invalid. */
+  /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
   checkValidity() {
     return this.input.checkValidity();
   }
 
-  /** Checks for validity and shows a validation message if the control is invalid. */
+  /** Checks for validity and shows the browser's validation message if the control is invalid. */
   reportValidity() {
     return this.input.reportValidity();
   }
@@ -158,6 +174,11 @@ export default class SlCheckbox extends ShoelaceElement implements ShoelaceFormC
   }
 
   render() {
+    //
+    // NOTE: we use a <div> around the label slot because of this Chrome bug.
+    //
+    // https://bugs.chromium.org/p/chromium/issues/detail?id=1413733
+    //
     return html`
       <label
         part="base"
@@ -185,6 +206,7 @@ export default class SlCheckbox extends ShoelaceElement implements ShoelaceFormC
           aria-checked=${this.checked ? 'true' : 'false'}
           @click=${this.handleClick}
           @input=${this.handleInput}
+          @invalid=${this.handleInvalid}
           @blur=${this.handleBlur}
           @focus=${this.handleFocus}
         />
@@ -210,7 +232,9 @@ export default class SlCheckbox extends ShoelaceElement implements ShoelaceFormC
             : ''}
         </span>
 
-        <slot part="label" class="checkbox__label"></slot>
+        <div part="label" class="checkbox__label">
+          <slot></slot>
+        </div>
       </label>
     `;
   }
