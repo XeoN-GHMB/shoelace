@@ -14,6 +14,7 @@ import {CustomMoveRowsModule} from './modules/tabulator_move_rows';
 import {CustomReactiveDataModule} from "./modules/tabulator_removeTreeChildRow";
 import {CustomControllElements} from "./modules/tabulator_control_element";
 import {CustomEditModule} from "./modules/tabulator_edit";
+import option from "../../react/option";
 
 
 /**
@@ -91,8 +92,6 @@ export default class SlTable extends ShoelaceElement {
   /** disable editable Table*/
   @property({type: Boolean, attribute: false}) editabletable: Boolean = false;
 
-  @property({type: String, attribute: false}) dataCursor: String = null;
-
   @property({type: String, attribute: false}) mode: String = "list";
 
   @property({type: Object | Boolean, attribute: false}) customColumns = false
@@ -104,14 +103,15 @@ export default class SlTable extends ShoelaceElement {
 
   tableInstance: any;
   tableReady: Boolean = false;
+  inScrollEvent: Boolean = false;
   previousStructure: any = null;
   _editabletable: boolean = this.editabletable;
   expandDepth = 0;
   visibleColumns = [];
 
+
   @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode", "customColumns"])
   optionUpdate() {
-
     //only rebuild table if structure changed
     if (this.mode === "list") {
       if (this.skellist === undefined || this.structure === undefined || Object.keys(this.structure).length === 0) {
@@ -228,12 +228,14 @@ export default class SlTable extends ShoelaceElement {
 
     }
     //update Data only if tableReady
-    if (this.tableReady) {
+    if (this.tableReady || this.inScrollEvent) {
+
+      this.inScrollEvent= false;
       if (this.mode === "list") {
         console.log("set data ")
-        this.tableInstance.setData(this.skellist)
+        this.tableInstance.replaceData(this.skellist)
       } else if (this.mode === "hierarchy") {
-        this.tableInstance.setData(this.nodes)
+        this.tableInstance.replaceData(this.nodes)
       }
 
 
@@ -242,11 +244,12 @@ export default class SlTable extends ShoelaceElement {
   }
 
   addData(data) {
+
     if (!this.tableInstance) {
       return 0;
     }
     if (this.tableReady) {
-      this.tableInstance.addData(data)
+      this.tableInstance.updateOrAddData(data)
 
     }
   }
@@ -621,8 +624,9 @@ export default class SlTable extends ShoelaceElement {
     this.tableInstance.on("scrollVertical", function (top, dir) {
       var diff;
       diff = element.scrollHeight - element.clientHeight - top;
-      if (top > diff && self.tableReady && self.dataCursor !== null) {
-        self.tableReady = false;
+      if (top > diff && !self.inScrollEvent) {
+
+        self.inScrollEvent = true;
         self.emit("table-fetchData");//TODo rename event
       }
 

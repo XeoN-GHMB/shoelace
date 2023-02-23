@@ -259,7 +259,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       type: type
     }
     this.handleInit(options)
-    this.formControlController.updateValidity();
+    //this.formControlController.updateValidity();
 
     emit(this, 'sl-bone-change', {
       detail: options

@@ -25507,6 +25507,7 @@ class Tabulator {
 
 	//update table data
 	updateOrAddData(data){
+    console.log("asd13")
 		var rows = [],
 		responses = 0;
 
