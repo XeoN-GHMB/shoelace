@@ -4,8 +4,7 @@ import {EditModule} from "../tabulator_esm";
 class CustomEditModule extends EditModule {
 //return a formatted value for a cell
   bindEditor(cell) {
-    if (cell.column.modules.edit) {
-
+    if (cell.column.modules.edit && cell.table.options.editabletable ) {
       var self = this,
         element = cell.getElement(true);
 
