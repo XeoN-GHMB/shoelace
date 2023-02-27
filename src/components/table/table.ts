@@ -403,9 +403,6 @@ export default class SlTable extends ShoelaceElement {
           titleFormatter: this.slRowSelection,
           hozAlign: "center",
           headerSort: false,
-          cellClick: function (e, cell) {
-            cell.getRow().toggleSelect();
-          }
         }
 
         if (!Object.keys(this.tableConfig).includes("columns") || this.tableConfig["columns"].length === 0) {
@@ -413,6 +410,7 @@ export default class SlTable extends ShoelaceElement {
         } else {
           this.tableConfig["columns"] = [selectColumn, ...this.tableConfig["columns"]]
         }
+
         this.tableConfig["selectable"] = this.rowselect;
       }
       if (this.mode === "hierarchy") {
@@ -612,7 +610,10 @@ export default class SlTable extends ShoelaceElement {
   }
 
   postBuildTable() {
+    console.log("rowSelectionChanged inti",this)
+
     this.tableInstance.on("rowSelectionChanged", (data: any, rows: any) => {
+      console.log("here rowSelectionChanged")
       this.emit('sl-selectionChanged', {detail: {data: data, row: rows}})
     })
     this.tableInstance.on("cellDblClick", (date: any, cell: any) => {
