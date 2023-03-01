@@ -83,6 +83,7 @@
   - [Table](/components/table)
   - [Table Wrapper](/components/table-wrapper)
   - [Bone](/components/bone)
+  - [Python](/components/python)
   <!--plop:component-->
   
 - Utilities
