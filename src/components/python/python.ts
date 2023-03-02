@@ -5,7 +5,7 @@ import {watch} from '../../internal/watch';
 import {LocalizeController} from '../../utilities/localize';
 import styles from './python.styles';
 import type {CSSResultGroup} from 'lit';
-import {usePython} from "usepython";
+import {usePython} from "./usepython";
 
 /**
  * @summary Short summary of the component's intended use.
