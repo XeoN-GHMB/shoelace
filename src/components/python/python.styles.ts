@@ -7,4 +7,7 @@ export default css`
   :host {
     display: block;
   }
+  .output-wrapper{
+  border: 1px solid #ccc;
+  }
 `;
