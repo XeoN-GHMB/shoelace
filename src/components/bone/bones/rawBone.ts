@@ -326,9 +326,8 @@ export class RawBone {
         buttonWrap.appendChild(this.getplaceHolder());
         buttonWrap.appendChild(undoButton);
         buttonWrap.appendChild(addButton);
-        innerWrap.appendChild(buttonWrap)
-
-
+        innerWrap.appendChild(buttonWrap);
+        innerWrap.appendChild(this.addErrorContainer());// default error container if no input in in mul wrapper
         wrapper.appendChild(innerWrap);
 
 

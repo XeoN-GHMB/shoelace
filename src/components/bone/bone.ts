@@ -35,7 +35,7 @@ import {RawBone} from "./bones/rawBone";
 @customElement('sl-bone')
 export default class SlBone extends ShoelaceElement implements ShoelaceFormControl {
 
-  private readonly formControlController = new FormControlController(this, {value: this.getBoneValueforFormData});
+  //private readonly formControlController = new FormControlController(this, {value: this.getBoneValueforFormData});
 
   static styles = styles;
   bone: Object;
@@ -161,12 +161,6 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     }
     this.initBoneValue = this.boneValue;
     this.internboneValue = {[this.boneName]: this.boneValue};
-    if (this.type !== "") {
-
-      console.log(this.internboneValue, "??>?")
-      console.log(this.boneName)
-      console.log(this.boneValue)
-    }
 
     if (this.boneStructure === null || this.boneStructure === undefined) {
       return;
@@ -184,6 +178,10 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     }
     if (this.renderType === "edit") {
       if (this.boneValue !== undefined && this.boneValue !== null) {
+        this.handleInit()
+      }
+      else if(this.boneStructure["required"])
+      {
         this.handleInit()
       }
 
@@ -305,7 +303,6 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     if (this.errors === undefined || this.errors === null) {
       return;
     }
-
     this.bone.querySelectorAll(".error-container").forEach((element: HTMLElement) => {
       if (this.errors.length === 0) {
         element.style.display = "none";
@@ -317,7 +314,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       if (this.boneName === error["fieldPath"][0])
         if (error["severity"] > 1) {
           const element: SlDetails = this.bone.querySelector(`[data-name="${error["fieldPath"].join(".")}_errorcontainer"]`);
-
+          console.log("handle errror ? ",element,error)
           if (element !== null) {
             element.style.display = "";
             element.open = true;
