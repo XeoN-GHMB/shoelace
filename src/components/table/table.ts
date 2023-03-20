@@ -82,7 +82,7 @@ export default class SlTable extends ShoelaceElement {
 
   /** Override table config Object */
   @property({type: Object, attribute: false}) tableConfig: Object = {
-    layout: "fitData",
+    layout:"fitColumns",
     reactiveData: true,
     popupContainer: true
   };
@@ -145,7 +145,8 @@ export default class SlTable extends ShoelaceElement {
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
         if (this.mode === "list") {
-          console.log("set data ")
+          console.log("set data len=",this.skellist.length)
+
           this.tableInstance.setData(this.skellist)
         } else if (this.mode === "hierarchy") {
           this.tableInstance.setData(this.nodes)
@@ -232,7 +233,7 @@ export default class SlTable extends ShoelaceElement {
 
       this.inScrollEvent= false;
       if (this.mode === "list") {
-        console.log("set data ")
+        console.log("set data len=",this.skellist.length)
         this.tableInstance.replaceData(this.skellist)
       } else if (this.mode === "hierarchy") {
         this.tableInstance.replaceData(this.nodes)
