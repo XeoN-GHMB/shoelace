@@ -1,7 +1,7 @@
 export { default as SlAlert } from './alert';
+export { default as SlAvatar } from './avatar';
 export { default as SlAnimatedImage } from './animated-image';
 export { default as SlAnimation } from './animation';
-export { default as SlAvatar } from './avatar';
 export { default as SlBackToTop } from './back-to-top';
 export { default as SlBadge } from './badge';
 export { default as SlBone } from './bone';
@@ -10,6 +10,8 @@ export { default as SlBreadcrumbItem } from './breadcrumb-item';
 export { default as SlButton } from './button';
 export { default as SlButtonGroup } from './button-group';
 export { default as SlCard } from './card';
+export { default as SlCarousel } from './carousel';
+export { default as SlCarouselItem } from './carousel-item';
 export { default as SlCheckbox } from './checkbox';
 export { default as SlColorPicker } from './color-picker';
 export { default as SlCombobox } from './combobox';

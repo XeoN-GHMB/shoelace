@@ -381,6 +381,7 @@ export default class SlScroll extends ShoelaceElement {
     return this._yDispatchMethod;
   }
   private _emitEvent(eventName: string, obj?: {}) {
+    //@ts-ignore
     this.emit(`sl-${eventName}`, {
       detail: {
         ...obj,
