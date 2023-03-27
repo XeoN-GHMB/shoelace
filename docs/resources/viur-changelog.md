@@ -1,4 +1,9 @@
 # Changelog
+## 0.5.5
+- updated tabulator to v5.4.4
+- fix for table selection
+- fixes for table component
+- removed slider. Please use the carousel component
 
 ## 0.5.4
 - fix for select bones
