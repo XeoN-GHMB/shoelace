@@ -52,7 +52,7 @@ export class RawBone {
 
   view(formater: () => BoneValue = formatstring) {
     if (this.boneValue === null) {
-      return "-";
+      return html`<div part="bonevalue">-</div>`;
     }
     if (this.boneStructure["languages"] !== null) {
 
@@ -75,16 +75,13 @@ export class RawBone {
         this.boneValue[index] = formater(this.boneValue[index], this.boneStructure, null);
       }
       return html`${this.boneValue.map((val: any) => [
-        html`${val}<br>`
+        html`<div part="bonevalue">${val}</div><br>`
       ])}`
 
 
     }
 
-    if (this.boneStructure["type"].startsWith("text")) {
-      return html`${unsafeHTML(this.boneValue)}`;
-    }
-    return formater(this.boneValue, this.boneStructure)
+    return html`<div part="bonevalue">${formater(this.boneValue, this.boneStructure)}</div>`
   }
 
 
@@ -109,7 +106,7 @@ export class RawBone {
             this.boneValue[lang] = [this.boneValue[lang]];
           }
           tabpanels.push(html`
-            <sl-tab-panel name="${lang}"> ${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}
+            <sl-tab-panel name="${lang}"> ${this.boneValue[lang].map((val: any) => [html`<div part="bonevalue">${val}</div><br>`])}
             </sl-tab-panel>`);
         }
       } else {
@@ -117,10 +114,10 @@ export class RawBone {
         for (const lang of this.boneStructure["languages"]) {
           if (this.boneValue[lang] === null) {
             tabpanels.push(html`
-              <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
+              <sl-tab-panel name="${lang}"><div part="bonevalue">-</div></sl-tab-panel>`);
           } else {
             tabpanels.push(html`
-              <sl-tab-panel name="${lang}">${this.boneValue[lang].toString()}</sl-tab-panel>`);
+              <sl-tab-panel name="${lang}"><div part="bonevalue">${this.boneValue[lang].toString()}</div></sl-tab-panel>`);
           }
 
         }
@@ -133,17 +130,17 @@ export class RawBone {
 
 
           tabpanels.push(html`
-            <sl-tab-panel name="${lang}">${this.boneValue[lang].map((val: any) => [html`${val}<br>`])}</sl-tab-panel>`);
+            <sl-tab-panel name="${lang}">${this.boneValue[lang].map((val: any) => [html`<div part="bonevalue">${val}</div><br>`])}</sl-tab-panel>`);
         }
       } else {
 
         for (const lang of this.boneStructure["languages"]) {
           if (this.boneValue[lang] === null) {
             tabpanels.push(html`
-              <sl-tab-panel name="${lang}">-</sl-tab-panel>`);
+              <sl-tab-panel name="${lang}"><div part="bonevalue">-</div></sl-tab-panel>`);
           } else {
             tabpanels.push(html`
-              <sl-tab-panel name="${lang}">${formater(this.boneValue, this.boneStructure, lang)}</sl-tab-panel>`);
+              <sl-tab-panel name="${lang}"><div part="bonevalue">${formater(this.boneValue, this.boneStructure, lang)}</div></sl-tab-panel>`);
           }
 
         }
