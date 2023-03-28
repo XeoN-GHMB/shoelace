@@ -8,18 +8,17 @@ export default css`
     --table-head-background: var(--sl-color-primary-500);
     --table-head-color: var(--sl-color-neutral-100);
 
-    --table-head-background-hover: var(--sl-color-primary-700);
+    --table-head-background-hover: rgba(0, 0, 0, .2);
     --table-head-color-hover: #fff;
-
-    --table-row-color-even: var(--sl-color-neutral-100);
-    --table-row-color-hover: var(--sl-color-neutral-300);
-
+    --table-row-color-hover: rgba(0, 0, 0, .2);
+    --table-row-color-selected: rgba(0, 0, 0, .2);
+    --table-border-color: var(--sl-color-neutral-400);
+    --table-checkbox-color: var(--sl-color-primary-500);
   }
 
   .tabulator {
     position: relative;
     border: 1px solid var(--sl-color-neutral-400);
-    background-color: #FFFFFF;
     font-size: 14px;
     text-align: left;
     overflow: hidden;
@@ -46,8 +45,6 @@ export default css`
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    border-bottom: 1px solid #999;
-    background-color: #F9FAFB;
     color: var(--sl-color-neutral-800);
     font-weight: bold;
     white-space: nowrap;
@@ -57,6 +54,7 @@ export default css`
     -webkit-user-select: none;
     -o-user-select: none;
   }
+
   .tabulator .tabulator-header.tabulator-header-hidden {
       display: none;
     }
@@ -81,6 +79,10 @@ export default css`
     overflow: hidden;
     border-right: none;
     background-color: var(--table-head-background);
+  }
+
+  .tabulator .tabulator-header .tabulator-col:hover .tabulator-col-sorter{
+    opacity: 1 !important;
   }
 
   .tabulator .tabulator-header .tabulator-col.tabulator-moving {
@@ -140,6 +142,8 @@ export default css`
     top: 0;
     bottom: 0;
     right: 4px;
+    opacity: 0;
+    transition: all ease .3s;
   }
 
   .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-sorter .tabulator-arrow {
@@ -270,10 +274,6 @@ export default css`
     overflow: hidden;
   }
 
-  .tabulator .tabulator-header .tabulator-calcs-holder .tabulator-row {
-    background: white !important;
-  }
-
   .tabulator .tabulator-header .tabulator-calcs-holder .tabulator-row .tabulator-col-resize-handle {
     display: none;
   }
@@ -292,6 +292,25 @@ export default css`
     white-space: nowrap;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .tabulator .tabulator-tableholder::-webkit-scrollbar-track {
+      background-color: transparent;
+  }
+
+  .tabulator .tabulator-tableholder::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+      background-color: transparent;
+  }
+
+  .tabulator .tabulator-tableholder::-webkit-scrollbar-thumb {
+      background-color: var(--sl-scrollbar-color);
+      border-radius: 3px;
+  }
+
+  .tabulator .tabulator-tableholder::-webkit-scrollbar-button {
+      height: 6px;
   }
 
   .tabulator .tabulator-tableholder:focus {
@@ -327,6 +346,7 @@ export default css`
     white-space: nowrap;
     overflow: visible;
     color: #333;
+    min-width: 100%;
   }
 
   .tabulator .tabulator-tableholder .tabulator-table .tabulator-row.tabulator-calcs {
@@ -504,13 +524,12 @@ export default css`
     position: relative;
     box-sizing: border-box;
     min-height: 22px;
-    background-color: #fff;
-    border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+    border-bottom: 1px solid var(--table-border-color);
     transition: background-color ease .3s;
   }
 
   .tabulator-row.tabulator-row-even {
-    background-color: #EFEFEF;
+    background-color: rgb(0, 0, 0, .1);
   }
 
   .tabulator-row.tabulator-selectable:hover {
@@ -609,7 +628,8 @@ export default css`
 
   .tabulator-row .tabulator-cell {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    justify-content: center;
     position: relative;
     box-sizing: border-box;
     padding: 4px;
@@ -619,9 +639,16 @@ export default css`
     text-overflow: ellipsis;
     min-height: 36px;
     height: auto !important;
+    color: var(--sl-foreground-color);
   }
 
   .tabulator-row .tabulator-cell sl-bone{
+    flex: 1;
+    display: flex;
+  }
+
+  .tabulator-row .tabulator-cell sl-bone::part(base){
+    flex: 1;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
@@ -630,6 +657,18 @@ export default css`
     -webkit-line-clamp: 6;
     width: 100%;
   }
+
+  .tabulator-row .tabulator-cell sl-bone p{
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 6;
+    width: 100%;
+  }
+
 
   .tabulator-row .tabulator-cell.tabulator-editing {
     border: 1px solid #1D68CD;
@@ -856,7 +895,8 @@ export default css`
     position: absolute;
     display: inline-block;
     box-sizing: border-box;
-    background: #fff;
+    background-color: var(--sl-background-color) !important;
+    color: var(--sl-foreground-color);
     border: 1px solid #ddd;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
     font-size: 14px;
@@ -892,7 +932,7 @@ export default css`
 
   .tabulator-menu .tabulator-menu-item:not(.tabulator-menu-item-disabled):hover {
     cursor: pointer;
-    background: #EFEFEF;
+    background-color: var(--sl-hover-color) !important;
   }
 
   .tabulator-menu .tabulator-menu-item.tabulator-menu-item-submenu {
@@ -915,7 +955,7 @@ export default css`
   }
 
   .tabulator-menu .tabulator-menu-separator {
-    border-top: 1px solid #ddd;
+    border-top: var(--table-border-color);
   }
 
   .tabulator-edit-list {
@@ -1197,7 +1237,7 @@ export default css`
 
   .tabulator .tabulator-header {
     border-right: none;
-    border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+    border-bottom: 1px solid var(--table-border-color);
     background-color: var(--table-head-background);
     box-shadow: none;
     color: var(--table-head-color);
@@ -1334,10 +1374,6 @@ export default css`
     color: rgba(0, 0, 0, 0.2);
   }
 
-  .tabulator-list.striped .tabulator-row:nth-child(even) {
-    background-color: var(--table-row-color-even);
-  }
-
   .tabulator.celled {
     border: 1px solid rgba(34, 36, 38, 0.15);
   }
@@ -1412,12 +1448,12 @@ export default css`
   }
 
   .tabulator-row.tabulator-selected {
-    background-color: var(--sl-color-primary-50) !important;
+    background-color: var(--table-row-color-selected) !important;
     font-weight: 600;
   }
 
   .tabulator-row.tabulator-selected:hover {
-    background-color: var(--sl-color-primary-50) !important;
+    background-color: var(--table-row-color-selected) !important;
     cursor: pointer;
   }
 
@@ -1449,10 +1485,6 @@ export default css`
 
   .tabulator-row .tabulator-cell .tabulator-responsive-collapse-toggle {
     color: #fff;
-  }
-
-  .tabulator-row.tabulator-group {
-    background: #fafafa;
   }
 
   .tabulator-row.tabulator-group span {
@@ -1536,44 +1568,41 @@ export default css`
     background-color: var(--sl-color-primary-50);
   }
 
-  .tabulator-row.tabulator-tree-level-0{
-    background-color: #fff;
+  sl-checkbox::part(label){
+    color: var(--sl-foreground-color);
   }
 
-  .tabulator-row.tabulator-tree-level-1{
-    background-color: #f8f8f8;
+  sl-checkbox::part(control){
+    background-color: var(--sl-background-color);
+    border: 1px solid var(--table-border-color);
   }
 
-  .tabulator-row.tabulator-tree-level-2{
-    background-color: #F0F0F0;
+  sl-checkbox::part(control--checked){
+    background-color: var(--table-checkbox-color);
+    border: 1px solid var(--table-checkbox-color);
   }
 
-  .tabulator-row.tabulator-tree-level-3{
-    background-color: #E8E8E8;
+  sl-checkbox::part(control--indeterminate){
+    background-color: var(--table-checkbox-color);
+    border: 1px solid var(--table-checkbox-color);
   }
 
-  .tabulator-row.tabulator-tree-level-4{
-    background-color: #E0E0E0;
+  sl-checkbox::part(checked-icon){
+    width: 0px;
+    position: relative;
   }
 
-  .tabulator-row.tabulator-tree-level-5{
-    background-color: #DCDCDC;
-  }
-
-  .tabulator-row.tabulator-tree-level-6{
-    background-color: #D8D8D8;
-  }
-
-  .tabulator-row.tabulator-tree-level-7{
-    background-color: #D3D3D3;
-  }
-
-  .tabulator-row.tabulator-tree-level-8{
-    background-color: #D0D0D0;
-  }
-
-  .tabulator-row.tabulator-tree-level-9{
-    background-color: #C8C8C8;
+  sl-checkbox::part(checked-icon)::after{
+    content: '';
+    position: absolute;
+    display: inline-block;
+    transform: rotate(45deg);
+    height: calc((var(--toggle-size) / 6) * 3);
+    width: calc((var(--toggle-size) / 12) * 3);
+    margin-left: calc(-0.19 * var(--toggle-size));
+    margin-top: calc(0.08 * var(--toggle-size));
+    border-bottom: 2px solid #fff;
+    border-right: 2px solid #fff;
   }
 
   sl-checkbox[aria-label="Select Row"]{
