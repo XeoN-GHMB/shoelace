@@ -76,6 +76,7 @@ export default class SlOrgTree extends ShoelaceElement {
       const node = event.target as SlOrgNode;
       const eventType = `sl-org-tree-${event.type.replace('sl-', '')}`;
       console.log(eventType);
+      //@ts-ignore
       this.emit(eventType, {
         detail: {
           node: node,

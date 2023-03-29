@@ -282,21 +282,16 @@ export default css`
     display: none;
   }
 
-  /* Button Group classse*/
-  :host(.sl-button-group__button--inner) .input {
-    border-radius: 0;
-  }
-
-  :host(.sl-button-group__button--first:not(.sl-button-group__button--last)) .input {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+  /* Hide the built-in number spinner */
+  .input--no-spin-buttons input[type='number']::-webkit-outer-spin-button,
+  .input--no-spin-buttons input[type='number']::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    display: none;
   }
 
   :host(.sl-button-group__button--last:not(.sl-button-group__button--first)) .input {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
-
-
-
+  
 `;
