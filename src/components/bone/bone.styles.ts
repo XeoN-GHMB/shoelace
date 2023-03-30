@@ -276,15 +276,6 @@ export default css`
     opacity: .4;
   }
 
-  .language-tab-group.view sl-tab-panel[aria-hidden="false"]::part(base){
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: normal;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 6;
-  }
-
   .language-wrapper .multi-input sl-input:first-child::part(base),
    .language-wrapper .multi-input sl-select:first-child::part(control){
     border-top-left-radius: 0;
