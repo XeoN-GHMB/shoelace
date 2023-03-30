@@ -32,6 +32,7 @@ export default class SlRouterLink extends ShoelaceElement {
     return getRouterByName(this.routerName);
   }
   private goToLink(event: Event) {
+    //@ts-ignore
     let linkEvent = this.emit('sl-router-link-before', {
       cancelable: true
     });

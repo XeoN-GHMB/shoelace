@@ -32,6 +32,8 @@
   - [Button](/components/button)
   - [Button Group](/components/button-group)
   - [Card](/components/card)
+  - [Carousel](/components/carousel)
+  - [Carousel Item](/components/carousel-item)
   - [Checkbox](/components/checkbox)
   - [Color Picker](/components/color-picker)
   - [Details](/components/details)
@@ -73,7 +75,7 @@
 - Extension
 
   - [Combobox](/components/combobox)
-  - [Slider](/components/slider)
+  <!-- - [Slider](/components/slider) -->
   - [Details Group](/components/details-group)
   - [Back To Top](/components/back-to-top)
   - [Map](/components/map)

@@ -99,6 +99,7 @@ export default class SlOrgNode extends ShoelaceElement {
   }
 
   protected _emitEvent(eventName: string, options?: CustomEventInit) {
+    //@ts-ignore
     return this.emit(eventName, { detail: { nodeData: this.nodeData, ...options } });
   }
   private onToogleNode(event: Event) {

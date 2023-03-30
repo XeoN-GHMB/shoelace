@@ -3,7 +3,7 @@ import type { IconLibrary } from './library';
 
 const library: IconLibrary = {
   name: 'default',
-  resolver: name => `${getBasePath()}/assets/icons/${name}.svg`,
+  resolver: name => getBasePath(`/assets/icons/${name}.svg`),
   mutator: svg => {
     svg.setAttribute('fill', 'currentColor');
     //svg.setAttribute('stroke', 'currentColor');

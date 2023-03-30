@@ -133,6 +133,7 @@ export default class SlPageBtn extends ShoelaceElement {
       }
       this._eventDispose2 = onEvent(baseDiv, 'sl-input,sl-select[part=show-size-change]', 'sl-change', (event: Event) => {
         let el = (event as any).delegateTarget as HTMLElement;
+        //@ts-ignore
         const beforeEvent = this.emit('sl-page-before-change');
         if (!beforeEvent.defaultPrevented) {
           if (el.matches('sl-select[part=show-size-change]')) {
@@ -150,6 +151,7 @@ export default class SlPageBtn extends ShoelaceElement {
             (el as any).value = value;
             this.value = value;
           }
+          //@ts-ignore
           this.emit('sl-page-change', {
             detail: { value: this.value }
           });
@@ -184,6 +186,7 @@ export default class SlPageBtn extends ShoelaceElement {
     this.goToPage(result);
   }
   goToPage(pageNo: number) {
+    //@ts-ignore
     const event = this.emit('sl-page-before-change');
     if (!event.defaultPrevented) {
       if (!isNaN(pageNo)) {
@@ -194,6 +197,7 @@ export default class SlPageBtn extends ShoelaceElement {
           tempValue = this.pageCount;
         }
         this.value = tempValue;
+        //@ts-ignore
         this.emit('sl-page-change', {
           detail: { value: this.value }
         });

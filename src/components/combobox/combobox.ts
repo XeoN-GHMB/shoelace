@@ -169,6 +169,7 @@ export default class SlCombobox extends ShoelaceElement {
   };
 
   onItemSelected(item: SlMenuItem) {
+    //@ts-ignore
     const event = this.emit('sl-item-select', {
       detail: {item},
       cancelable: true,

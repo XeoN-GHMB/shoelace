@@ -2,6 +2,8 @@
 
 [component-header:sl-slider]
 
+DEPRECATED please use carousel component
+
 This Slider component uses internally the [Glider.js](https://nickpiscitelli.github.io/Glider.js) library. 
 
 ```html preview

@@ -4,6 +4,13 @@ import componentStyles from '../../styles/component.styles';
 export default css`
   ${componentStyles}
 
+
+  :host {
+    --input-border-color: var(--sl-color-neutral-400);
+    --label-background-color: var(--sl-color-neutral-100);
+    --hover-color: rgba(0, 0, 0, .2);
+  }
+
   :host {
     display: block;
   }
@@ -27,16 +34,58 @@ export default css`
     font-size: var(--sl-input-font-size-medium);
     min-height: var(--sl-input-height-medium);
     padding: 0.4em 0.7em;
-    background-color: var(--sl-color-neutral-100);
-    border: 1px solid var(--sl-color-neutral-200);
+    color: var(--sl-foreground-color);
+    background-color: var(--label-background-color);
+    border: 1px solid var(--label-background-color);
+    border: none;
     border-top-left-radius: var(--sl-input-border-radius-medium);
     border-bottom-left-radius: var(--sl-input-border-radius-medium);
     gap: 10px;
   }
 
+  sl-input[disabled]::part(base){
+    opacity: .7;
+    border-style: dashed;
+  }
+
   sl-input::part(base),
-  sl-select::part(control){
+  sl-select::part(control),
+  sl-select::part(combobox){
     box-shadow: none !important;
+    background-color: transparent;
+    border: 1px solid var(--input-border-color);
+    color: var(--sl-foreground-color);
+  }
+
+  sl-select::part(display-input){
+    color: var(--sl-foreground-color);
+  }
+
+  sl-select::part(listbox){
+    background-color: var(--sl-background-color);
+    color: var(--sl-foreground-color);
+  }
+
+  sl-option::part(base){
+    background-color: transparent;
+    color: var(--sl-foreground-color);
+  }
+
+  sl-option:hover::part(base){
+    background-color: var(--hover-color);
+  }
+
+  .bone-type-select sl-select::part(combobox) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  sl-input::part(input){
+    color: var(--sl-foreground-color);
+  }
+
+  sl-input::part(input)::placeholder{
+    color: var(--sl-foreground-color);
   }
 
   .bone-name + sl-input::part(base),
@@ -126,7 +175,7 @@ export default css`
   .bone-inner-button-wrap .multiple-placeholder::part(base){
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    border: 1px solid var(--sl-color-neutral-200);
+    border: 1px solid var(--input-border-color);
   }
 
   .bone-type-record .bone-inner-wrap{
@@ -164,6 +213,10 @@ export default css`
     margin-left: var(--sl-spacing-small);
   }
 
+  .multi-input .add-button::part(base){
+   aspect-ratio: 1;
+  }
+
   .drag-button{
     display: flex;
     justify-content: center;
@@ -188,25 +241,25 @@ export default css`
 
   .language-tab-group{
     flex: 1;
+    height: 100%;
     border: none;
-  }
-
-  .language-tab-group.view::part(body){
-    padding: var(--sl-spacing-x-small);
+    --indicator-color: var(--sl-foreground-color);
+    --track-color: transparent;
   }
 
   .language-tab-group::part(base){
     border: none;
+    height: 100%;
   }
 
   .language-tab-group::part(body){
     overflow-x: hidden;
-    border-bottom: var(--sl-color-neutral-200) 2px solid;
-    margin-bottom: -2px;
+    padding: 0 0 10px 0;
   }
 
   .language-tab-group::part(nav){
     align-self: flex-start;
+    margin-top: auto;
   }
 
   .language-tab-group sl-tab-panel::part(base){
@@ -215,7 +268,12 @@ export default css`
   }
 
   .language-tab-group sl-tab::part(base){
-    padding: var(--sl-spacing-x-small);
+    padding: calc(var(--sl-spacing-x-small) / 2) var(--sl-spacing-x-small) 0 var(--sl-spacing-x-small);
+    color: var(--sl-foreground-color);
+  }
+
+  .language-tab-group sl-tab[aria-selected="false"]::part(base){
+    opacity: .4;
   }
 
   .language-tab-group.view sl-tab-panel[aria-hidden="false"]::part(base){
@@ -285,6 +343,11 @@ export default css`
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+  }
+
+  .relBone-wrap[data-multiple="false"] sl-input::part(base){
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
   }
 
   .relBone-wrap .add-button{

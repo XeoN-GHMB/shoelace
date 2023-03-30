@@ -227,11 +227,13 @@ export default class SlRouter extends ShoelaceElement {
         }
       });
       this.afterRouter ? this.afterRouter({ item: item, data: this.routerData }, this.lastRouterItem ? { item: this.lastRouterItem, data: this.lastRouterData } : undefined) : undefined;
+      //@ts-ignore
       this.emit(SlRouter.HASH_EVENT_AFTER);
     });
   }
 
   protected routerChangeHanlder = () => {
+    //@ts-ignore
     const event = this.emit(SlRouter.HASH_EVENT_BEFORE, {
       cancelable: true,
       detail: {
@@ -240,6 +242,7 @@ export default class SlRouter extends ShoelaceElement {
       }
     });
     if (event.defaultPrevented) {
+      //@ts-ignore
       this.emit('hash-prevented');
       return;
     }
@@ -259,6 +262,7 @@ export default class SlRouter extends ShoelaceElement {
           })
         : this.excuteRouterComponenent(matchItems, pattern);
     } else {
+      //@ts-ignore
       this.emit('not-found');
     }
   };
