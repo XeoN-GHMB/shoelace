@@ -32,7 +32,7 @@ export class DateBone extends RawBone {
       dateBone.type = "datetime-local"
       if(value!==null && value !==undefined)
       {
-        dateBone.value = value.split('+')[0]
+        dateBone.value = value.split('+')[0];
       }
 
     } else {

@@ -14,13 +14,13 @@ Bone Elements
     bone.boneStructure={
     "visible":true, 
     "type":"raw",
-    "multiple":false, 
+    "multiple":true, 
     "readonly":false,
     "descr":"TestBonename", 
-    "languages":null,
+    "languages":["de","en"],
     "emptyValue":null
     }
-    bone.boneValue="Test"
+    bone.boneValue={"de":["123","123"],"en":["123saden"]}
 </script>
 ```
 

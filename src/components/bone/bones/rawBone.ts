@@ -75,7 +75,7 @@ export class RawBone {
         this.boneValue[index] = formater(this.boneValue[index], this.boneStructure, null);
       }
       return html`${this.boneValue.map((val: any) => [
-        html`<div part="bonevalue">${val}</div><br>`
+        html`<div part="bonevalue">${val}</div>`
       ])}`
 
 
@@ -106,7 +106,7 @@ export class RawBone {
             this.boneValue[lang] = [this.boneValue[lang]];
           }
           tabpanels.push(html`
-            <sl-tab-panel name="${lang}"> ${this.boneValue[lang].map((val: any) => [html`<div part="bonevalue">${val}</div><br>`])}
+            <sl-tab-panel name="${lang}"> ${this.boneValue[lang].map((val: any) => [html`<div part="bonevalue">${val}</div>`])}
             </sl-tab-panel>`);
         }
       } else {
@@ -130,7 +130,7 @@ export class RawBone {
 
 
           tabpanels.push(html`
-            <sl-tab-panel name="${lang}">${this.boneValue[lang].map((val: any) => [html`<div part="bonevalue">${val}</div><br>`])}</sl-tab-panel>`);
+            <sl-tab-panel name="${lang}">${this.boneValue[lang].map((val: any) => [html`<div part="bonevalue">${val}</div>`])}</sl-tab-panel>`);
         }
       } else {
 
