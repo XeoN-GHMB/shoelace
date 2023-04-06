@@ -577,7 +577,7 @@ export default class SlSelect extends ShoelaceElement implements ShoelaceFormCon
       this.setCurrentOption(this.selectedOptions[0] || this.getFirstOption());
 
       // Show
-      this.emit('sl-show');
+      this.emit('sl-show',{bubbles:false});
       this.addOpenListeners();
 
       await stopAnimations(this);
@@ -597,10 +597,10 @@ export default class SlSelect extends ShoelaceElement implements ShoelaceFormCon
         scrollIntoView(this.currentOption, this.listbox, 'vertical', 'auto');
       }
 
-      this.emit('sl-after-show');
+      this.emit('sl-after-show', {bubbles:false});
     } else {
       // Hide
-      this.emit('sl-hide');
+      this.emit('sl-hide',{bubbles:false});
       this.removeOpenListeners();
 
       await stopAnimations(this);
@@ -609,7 +609,7 @@ export default class SlSelect extends ShoelaceElement implements ShoelaceFormCon
       this.listbox.hidden = true;
       this.popup.active = false;
 
-      this.emit('sl-after-hide');
+      this.emit('sl-after-hide',{bubbles:false});
     }
   }
 

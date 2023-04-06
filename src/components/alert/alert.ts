@@ -93,7 +93,7 @@ export default class SlAlert extends ShoelaceElement {
   async handleOpenChange() {
     if (this.open) {
       // Show
-      this.emit('sl-show');
+      this.emit('sl-show', {bubbles:false});
 
       if (this.duration < Infinity) {
         this.restartAutoHide();
@@ -104,10 +104,10 @@ export default class SlAlert extends ShoelaceElement {
       const { keyframes, options } = getAnimation(this, 'alert.show', { dir: this.localize.dir() });
       await animateTo(this.base, keyframes, options);
 
-      this.emit('sl-after-show');
+      this.emit('sl-after-show',{bubbles:false});
     } else {
       // Hide
-      this.emit('sl-hide');
+      this.emit('sl-hide',{bubbles:false});
 
       clearTimeout(this.autoHideTimeout);
 
@@ -116,7 +116,7 @@ export default class SlAlert extends ShoelaceElement {
       await animateTo(this.base, keyframes, options);
       this.base.hidden = true;
 
-      this.emit('sl-after-hide');
+      this.emit('sl-after-hide',{bubbles:false});
     }
   }
 

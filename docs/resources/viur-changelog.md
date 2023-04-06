@@ -1,4 +1,10 @@
 # Changelog
+
+## 0.5.6
+- fix: `sl-hide`, `sl-show`, `sl-after-show`, `sl-after-hide` events dont bubble anymore
+- fix: added Bonevalue Wrapper
+- feat: preparing Darkmode
+
 ## 0.5.5
 - updated tabulator to v5.4.4
 - fix for table selection

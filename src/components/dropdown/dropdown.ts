@@ -361,7 +361,7 @@ export default class SlDropdown extends ShoelaceElement {
 
     if (this.open) {
       // Show
-      this.emit('sl-show');
+      this.emit('sl-show',{bubbles:false});
       this.addOpenListeners();
 
       await stopAnimations(this);
@@ -370,10 +370,10 @@ export default class SlDropdown extends ShoelaceElement {
       const { keyframes, options } = getAnimation(this, 'dropdown.show', { dir: this.localize.dir() });
       await animateTo(this.popup.popup, keyframes, options);
 
-      this.emit('sl-after-show');
+      this.emit('sl-after-show',{bubbles:false});
     } else {
       // Hide
-      this.emit('sl-hide');
+      this.emit('sl-hide',{bubbles:false});
       this.removeOpenListeners();
 
       await stopAnimations(this);
@@ -382,7 +382,7 @@ export default class SlDropdown extends ShoelaceElement {
       this.panel.hidden = true;
       this.popup.active = false;
 
-      this.emit('sl-after-hide');
+      this.emit('sl-after-hide',{bubbles:false});
     }
   }
 

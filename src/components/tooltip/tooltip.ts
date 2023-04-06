@@ -196,7 +196,7 @@ export default class SlTooltip extends ShoelaceElement {
       }
 
       // Show
-      this.emit('sl-show');
+      this.emit('sl-show',{bubbles:false});
 
       await stopAnimations(this.body);
       this.body.hidden = false;
@@ -204,10 +204,10 @@ export default class SlTooltip extends ShoelaceElement {
       const { keyframes, options } = getAnimation(this, 'tooltip.show', { dir: this.localize.dir() });
       await animateTo(this.popup.popup, keyframes, options);
 
-      this.emit('sl-after-show');
+      this.emit('sl-after-show',{bubbles:false});
     } else {
       // Hide
-      this.emit('sl-hide');
+      this.emit('sl-hide',{bubbles:false});
 
       await stopAnimations(this.body);
       const { keyframes, options } = getAnimation(this, 'tooltip.hide', { dir: this.localize.dir() });
@@ -215,7 +215,7 @@ export default class SlTooltip extends ShoelaceElement {
       this.popup.active = false;
       this.body.hidden = true;
 
-      this.emit('sl-after-hide');
+      this.emit('sl-after-hide',{bubbles:false});
     }
   }
 

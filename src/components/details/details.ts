@@ -122,7 +122,7 @@ export default class SlDetails extends ShoelaceElement {
   async handleOpenChange() {
     if (this.open) {
       // Show
-      const slShow = this.emit('sl-show', { cancelable: true });
+      const slShow = this.emit('sl-show', { cancelable: true, bubbles:false });
       if (slShow.defaultPrevented) {
         this.open = false;
         return;
@@ -135,10 +135,10 @@ export default class SlDetails extends ShoelaceElement {
       await animateTo(this.body, shimKeyframesHeightAuto(keyframes, this.body.scrollHeight), options);
       this.body.style.height = 'auto';
 
-      this.emit('sl-after-show');
+      this.emit('sl-after-show', {bubbles:false});
     } else {
       // Hide
-      const slHide = this.emit('sl-hide', { cancelable: true });
+      const slHide = this.emit('sl-hide', { cancelable: true, bubbles:false });
       if (slHide.defaultPrevented) {
         this.open = true;
         return;
@@ -151,7 +151,7 @@ export default class SlDetails extends ShoelaceElement {
       this.body.hidden = true;
       this.body.style.height = 'auto';
 
-      this.emit('sl-after-hide');
+      this.emit('sl-after-hide', {bubbles:false});
     }
   }
 

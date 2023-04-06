@@ -147,7 +147,7 @@ export default class SlDialog extends ShoelaceElement {
   async handleOpenChange() {
     if (this.open) {
       // Show
-      this.emit('sl-show');
+      this.emit('sl-show',{bubbles:false});
       this.addOpenListeners();
       this.originalTrigger = document.activeElement as HTMLElement;
       this.modal.activate();
@@ -194,10 +194,10 @@ export default class SlDialog extends ShoelaceElement {
         animateTo(this.overlay, overlayAnimation.keyframes, overlayAnimation.options)
       ]);
 
-      this.emit('sl-after-show');
+      this.emit('sl-after-show',{bubbles:false});
     } else {
       // Hide
-      this.emit('sl-hide');
+      this.emit('sl-hide',{bubbles:false});
       this.removeOpenListeners();
       this.modal.deactivate();
 
@@ -231,7 +231,7 @@ export default class SlDialog extends ShoelaceElement {
         setTimeout(() => trigger.focus());
       }
 
-      this.emit('sl-after-hide');
+      this.emit('sl-after-hide',{bubbles:false});
     }
   }
 
