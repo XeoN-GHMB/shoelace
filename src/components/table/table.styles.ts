@@ -662,13 +662,21 @@ export default css`
     flex-direction: column;
   }
 
-  .tabulator-row .tabulator-cell sl-bone::part(bonevalue){
+  .tabulator-row .tabulator-cell sl-bone[type="text"]::part(bonevalue){
     display: -webkit-box;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: normal;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 6;
+    width: 100%;
+  }
+
+  .tabulator-row .tabulator-cell sl-bone:not([type="text"])::part(bonevalue){
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     width: 100%;
   }
 
