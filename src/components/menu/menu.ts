@@ -44,7 +44,7 @@ export default class SlMenu extends ShoelaceElement {
       item.checked = !item.checked;
     }
 
-    this.emit('sl-select', { detail: { item } });
+    this.emit('sl-select', { detail: { item }, bubbles:false });
   }
 
   private handleKeyDown(event: KeyboardEvent) {

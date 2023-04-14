@@ -56,7 +56,7 @@ If you want to load the light or dark theme based on the user's `prefers-color-s
   rel="stylesheet"
   media="(prefers-color-scheme:dark)"
   href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/dist/themes/dark.css"
-  onload="document.documentElement.classList.add('sl-theme-dark');"
+  onload="document.documentElement.classList.add('sl-theme-viur_dark');"
 />
 ```
 

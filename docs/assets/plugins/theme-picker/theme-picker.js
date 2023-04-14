@@ -13,7 +13,7 @@
         if (theme === 'auto') {
           return window.matchMedia('(prefers-color-scheme: dark)').matches;
         }
-        return theme === 'dark';
+        return theme === 'viur_dark';
       }
 
       function setTheme(newTheme) {
@@ -32,11 +32,11 @@
         document.body.appendChild(noTransitions);
         requestAnimationFrame(() => {
           if (theme === 'viur') {
-            document.documentElement.classList.remove('sl-theme-dark');
+            document.documentElement.classList.remove('sl-theme-viur_dark');
             document.documentElement.classList.add('sl-theme-viur');
           } else {
             document.documentElement.classList.remove('sl-theme-viur');
-            document.documentElement.classList.toggle('sl-theme-dark', isDark());
+            document.documentElement.classList.toggle('sl-theme-viur_dark', isDark());
           }
 
           requestAnimationFrame(() => document.body.removeChild(noTransitions));
@@ -54,9 +54,8 @@
         </sl-button>
         <sl-menu>
           <sl-menu-label>Toggle <kbd>\\</kbd></sl-menu-label>
-          <sl-menu-item type="checkbox" value="light">Light</sl-menu-item>
-          <sl-menu-item type="checkbox" value="dark">Dark</sl-menu-item>
-          <sl-menu-item type="checkbox" value="viur">ViUR</sl-menu-item>
+          <sl-menu-item type="checkbox" value="viur">Light</sl-menu-item>
+          <sl-menu-item type="checkbox" value="viur_dark">Dark</sl-menu-item>
           <sl-divider></sl-divider>
           <sl-menu-item type="checkbox" value="auto">Auto</sl-menu-item>
         </sl-menu>
@@ -76,7 +75,7 @@
         if (event.key === '\\' && !event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()))) {
           event.preventDefault();
 
-          setTheme(isDark() ? 'light' : 'dark');
+          setTheme(isDark() ? 'viur' : 'viur_dark');
           show();
         }
       });

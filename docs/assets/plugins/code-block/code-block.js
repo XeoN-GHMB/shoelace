@@ -348,7 +348,7 @@
         tags: ['shoelace', 'web components'],
         editors,
         head: `<meta name="viewport" content="width=device-width">`,
-        html_classes: `sl-theme-${isDark ? 'dark' : 'light'}`,
+        html_classes: `sl-theme-${isDark ? 'viur_dark' : 'viur'}`,
         css_external: ``,
         js_external: ``,
         js_module: true,

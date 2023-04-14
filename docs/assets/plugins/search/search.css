@@ -116,6 +116,13 @@ body.site-search-visible {
   color: var(--sl-color-neutral-1000);
 }
 
+.sl-theme-viur_dark .site-search__results li[aria-selected='true'] a,
+.sl-theme-viur_dark .site-search__results li[aria-selected='true'] a small,
+.sl-theme-viur_dark .site-search__results li[aria-selected='true'] a sl-icon {
+  background-color: var(--sl-color-primary-400);
+  color: var(--sl-color-neutral-1000);
+}
+
 .site-search__results h3 {
   font-weight: var(--sl-font-weight-semibold);
   margin: 0;

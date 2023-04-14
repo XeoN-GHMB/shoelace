@@ -12,21 +12,30 @@ import stripComments from 'strip-css-comments';
 import {execSync} from "child_process";
 
 // build viur theme
-let ccode = execSync(`lessc src/ignite/shoelace.less`);
-ccode+= "\n/* _utility.css */\n/* _tables.css */";
-let filespaths = globbySync('./node_modules/tinymce/skins/content/default/**/*.min.css');
-for (const path of filespaths)
-{
-  ccode+= `\n${fs.readFileSync(path,{encoding:"utf-8"})}`;
-}
-filespaths = globbySync('./node_modules/tinymce/skins/ui/oxide/**/*.min.css');
-for (const path of filespaths)
-{
-  ccode+= `\n${fs.readFileSync(path,{encoding:"utf-8"})}`;
-}
+async function build_viur_theme(name='viur'){
+  let ccode = execSync(`lessc src/ignite/shoelace.less`);
+  if (name === "viur_dark"){
+    ccode = execSync(`lessc src/ignite/dark_shoelace.less`);
+  }
+
+  ccode+= "\n/* _utility.css */\n/* _tables.css */";
+  let filespaths = globbySync('./node_modules/tinymce/skins/content/default/**/*.min.css');
+  for (const path of filespaths)
+  {
+    ccode+= `\n${fs.readFileSync(path,{encoding:"utf-8"})}`;
+  }
+  filespaths = globbySync('./node_modules/tinymce/skins/ui/oxide/**/*.min.css');
+  for (const path of filespaths)
+  {
+    ccode+= `\n${fs.readFileSync(path,{encoding:"utf-8"})}`;
+  }
 
 
-await fs.writeFileSync("./src/themes/viur.css", ccode,'utf8' );
+  await fs.writeFileSync(`./src/themes/${name}.css`, ccode,'utf8' );
+}
+build_viur_theme()
+build_viur_theme("viur_dark")
+
 
 
 const { outdir } = commandLineArgs({ name: 'outdir', type: String });

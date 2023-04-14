@@ -32,7 +32,7 @@
         // Toggle the dark mode class without transitions
         document.body.appendChild(noTransitions);
         requestAnimationFrame(() => {
-          document.documentElement.classList.toggle('sl-theme-dark', isDark());
+          document.documentElement.classList.toggle('sl-theme-viur_dark', isDark());
           requestAnimationFrame(() => document.body.removeChild(noTransitions));
         });
       }
