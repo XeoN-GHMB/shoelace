@@ -175,6 +175,10 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       const boneViewer = new BoneViewRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
       this.boneInstance = boneViewer;
       this.bone = boneViewer.boneFormatter();
+      if (this.type === "" && this.boneStructure["type"]) {
+        this.type = this.boneStructure["type"]
+      }
+
     }
     if (this.renderType === "edit") {
       if (this.boneValue !== undefined && this.boneValue !== null) {
@@ -188,6 +192,10 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       const boneEditor = new BoneEditRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
       this.boneInstance = boneEditor;
       this.bone = boneEditor.getEditor();
+      if (this.type === "" && this.boneStructure["type"]) {
+        this.type = this.boneStructure["type"]
+      }
+
 
     }
 
