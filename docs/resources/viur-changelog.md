@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.7
+- feat: removed default styling vom Docs
+- feat: added viur dark mode
+
 ## 0.5.6
 - fix: `sl-hide`, `sl-show`, `sl-after-show`, `sl-after-hide` events dont bubble anymore
 - fix: added Bonevalue Wrapper
