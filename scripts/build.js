@@ -164,14 +164,8 @@ fs.mkdirSync(outdir, { recursive: true });
         .rebuild()
         .then(() => {
           // Rebuild stylesheets when a theme file changes
-          if (/^src\/themes/.test(filename)) {
-            execSync(`node scripts/make-themes.js --outdir "${outdir}"`, { stdio: 'inherit' });
-          }
-        })
-        .then(() => {
-          // Rebuild stylesheets when a theme file changes
           if (/^src\/ignite/.test(filename)) {
-            execSync(`node scripts/make-ignite.js --outdir "${outdir}"`, { stdio: 'inherit' });
+            execSync(`node scripts/make-themes.js --outdir "${outdir}"`, { stdio: 'inherit' });
           }
         })
         .then(() => {

@@ -34,7 +34,7 @@ export default css`
     font-size: var(--sl-input-font-size-medium);
     min-height: var(--sl-input-height-medium);
     padding: 0.4em 0.7em;
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
     background-color: var(--label-background-color);
     border: 1px solid var(--label-background-color);
     border: none;
@@ -54,21 +54,21 @@ export default css`
     box-shadow: none !important;
     background-color: transparent;
     border: 1px solid var(--input-border-color);
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
   }
 
   sl-select::part(display-input){
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
   }
 
   sl-select::part(listbox){
-    background-color: var(--sl-background-color);
-    color: var(--sl-foreground-color);
+    background-color: var(--sl-color-neutral-50);
+    color: var(--sl-color-neutral-900);
   }
 
   sl-option::part(base){
     background-color: transparent;
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
   }
 
   sl-option:hover::part(base){
@@ -81,11 +81,11 @@ export default css`
   }
 
   sl-input::part(input){
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
   }
 
   sl-input::part(input)::placeholder{
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
   }
 
   .bone-name + sl-input::part(base),
@@ -243,7 +243,7 @@ export default css`
     flex: 1;
     height: 100%;
     border: none;
-    --indicator-color: var(--sl-foreground-color);
+    --indicator-color: var(--sl-color-neutral-900);
     --track-color: transparent;
   }
 
@@ -269,7 +269,7 @@ export default css`
 
   .language-tab-group sl-tab::part(base){
     padding: calc(var(--sl-spacing-x-small) / 2) var(--sl-spacing-x-small) 0 var(--sl-spacing-x-small);
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
   }
 
   .language-tab-group sl-tab[aria-selected="false"]::part(base){
@@ -478,7 +478,7 @@ export default css`
   .tox{box-shadow:none;box-sizing:content-box;color:#222f3e;cursor:auto;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;font-size:16px;font-style:normal;font-weight:400;line-height:normal;-webkit-tap-highlight-color:transparent;text-decoration:none;text-shadow:none;text-transform:none;vertical-align:initial;white-space:normal}.tox :not(svg):not(rect){box-sizing:inherit;color:inherit;cursor:inherit;direction:inherit;font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit;line-height:inherit;-webkit-tap-highlight-color:inherit;text-align:inherit;text-decoration:inherit;text-shadow:inherit;text-transform:inherit;vertical-align:inherit;white-space:inherit}.tox :not(svg):not(rect){background:0 0;border:0;box-shadow:none;float:none;height:auto;margin:0;max-width:none;outline:0;padding:0;position:static;width:auto}.tox:not([dir=rtl]){direction:ltr;text-align:left}.tox[dir=rtl]{direction:rtl;text-align:right}
   .tox-tinymce{
     background-color: transparent;
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
     border:1px solid var(--input-border-color);
     border-radius: var(--sl-input-border-radius-medium);
     border-top-left-radius: 0;box-shadow:none;
@@ -519,14 +519,14 @@ export default css`
 .tox .tox-tbtn--enabled{
   background: transparent !important;
   background-color: transparent !important;
-  color: var(--sl-foreground-color) !important;
+  color: var(--sl-color-neutral-900) !important;
 }
 
 .tox .tox-tbtn svg,
 .tox .tox-statusbar__branding svg,
 .tox .tox-swatches__picker-btn svg,
 .tox .tox-collection__item-caret svg{
-  fill: var(--sl-foreground-color) !important;
+  fill: var(--sl-color-neutral-900) !important;
 }
 
 .tox .tox-statusbar a, .tox .tox-statusbar__path-item, .tox .tox-statusbar__wordcount,
@@ -534,7 +534,7 @@ export default css`
 .tox-insert-table-picker__label,
 .tox .tox-dialog__body,
 .tox .tox-button--naked{
-  color: var(--sl-foreground-color) !important;
+  color: var(--sl-color-neutral-900) !important;
 }
 
 .tox .tox-tbtn:hover,
@@ -542,31 +542,31 @@ export default css`
 .tox .tox-tbtn--select{
   background: transparent !important;
   background-color: transparent;
-  color: var(--sl-foreground-color) !important;
-  border: 1px solid var(--sl-foreground-color);
+  color: var(--sl-color-neutral-900) !important;
+  border: 1px solid var(--sl-color-neutral-900);
   box-shadow: none !important;
 }
 
 .tox-toolbar__overflow{
-  background-color: var(--sl-background-color) !important;
-  border: 1px solid var(--sl-foreground-color) !important;
+  background-color: var(--sl-color-neutral-50) !important;
+  border: 1px solid var(--sl-color-neutral-900) !important;
 }
 
 .tox-menu,
 .tox .tox-dialog{
-  background-color: var(--sl-background-color) !important;
-  color: var(--sl-foreground-color) !important;
-  border: 1px solid var(--sl-foreground-color) !important;
+  background-color: var(--sl-color-neutral-50) !important;
+  color: var(--sl-color-neutral-900) !important;
+  border: 1px solid var(--sl-color-neutral-900) !important;
 }
 
 .tox-dialog__header,
 .tox-dialog__footer{
   background-color: transparent !important;
-  color: var(--sl-foreground-color) !important;
+  color: var(--sl-color-neutral-900) !important;
 }
 
 .tox-dialog-wrap__backdrop{
-  background-color: var(--sl-background-color) !important;
+  background-color: var(--sl-color-neutral-50) !important;
   opacity: .5;
 }
 
@@ -582,7 +582,7 @@ export default css`
 .tox .tox-collection--list .tox-collection__item--active{
   background: transparent !important;
   background-color: transparent !important;
-  border: 1px solid var(--sl-foreground-color) !important;
+  border: 1px solid var(--sl-color-neutral-900) !important;
 }
 
 .tox .tox-collection--list .tox-collection__item{
@@ -763,11 +763,11 @@ export default css`
 sl-select::part(tag__base){
   background-color: transparent;
   border: 1px solid var(--input-border-color);
-  color: var(--sl-foreground-color);
+  color: var(--sl-color-neutral-900);
 }
 
 sl-select::part(tag__remove-button){
-  color: var(--sl-foreground-color);
+  color: var(--sl-color-neutral-900);
 }
 
 

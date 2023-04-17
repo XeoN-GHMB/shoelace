@@ -641,7 +641,7 @@ export default css`
     text-overflow: ellipsis;
     min-height: 36px;
     height: auto !important;
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
     border-right: 1px solid var(--table-border-color);
     padding: var(--sl-spacing-x-small);
     vertical-align: middle;
@@ -905,8 +905,8 @@ export default css`
     position: absolute;
     display: inline-block;
     box-sizing: border-box;
-    background-color: var(--sl-background-color) !important;
-    color: var(--sl-foreground-color);
+    background-color: var(--sl-color-neutral-50) !important;
+    color: var(--sl-color-neutral-900);
     border: 1px solid #ddd;
     box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
     font-size: 14px;
@@ -1569,11 +1569,11 @@ export default css`
   }
 
   sl-checkbox::part(label){
-    color: var(--sl-foreground-color);
+    color: var(--sl-color-neutral-900);
   }
 
   sl-checkbox::part(control){
-    background-color: var(--sl-background-color);
+    background-color: var(--sl-color-neutral-50);
     border: 1px solid var(--table-border-color);
   }
 
