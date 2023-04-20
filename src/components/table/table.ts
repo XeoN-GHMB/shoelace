@@ -82,7 +82,7 @@ export default class SlTable extends ShoelaceElement {
 
   /** Override table config Object */
   @property({type: Object, attribute: false}) tableConfig: Object = {
-    layout:"fitColumns",
+    layout:"fitData",
     reactiveData: true,
     popupContainer: true
   };
