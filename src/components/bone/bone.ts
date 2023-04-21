@@ -149,6 +149,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
   @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type"])
   optionUpdate() {
+    console.log("create bone")
     //this.formControlController.setValidity(true);
     if (this.type !== "") {
       console.log("we got a type we try to set the bone without 'boneStructure'")

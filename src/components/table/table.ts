@@ -9,7 +9,7 @@ import styles from './table.styles';
 import {boneFormatter} from "./cellRenderer.ts";
 import {boneEditor, updateData} from "./cellEditorRenderer.ts";
 //@ts-ignore
-import {TabulatorFull, RowComponent} from './tabulator_esm.js';
+import {RowComponent, TabulatorFull} from './tabulator_esm.js';
 import {CustomMoveRowsModule} from './modules/tabulator_move_rows';
 import {CustomReactiveDataModule} from "./modules/tabulator_removeTreeChildRow";
 import {CustomControllElements} from "./modules/tabulator_control_element";
@@ -82,7 +82,7 @@ export default class SlTable extends ShoelaceElement {
 
   /** Override table config Object */
   @property({type: Object, attribute: false}) tableConfig: Object = {
-    layout:"fitData",
+    layout: "fitData",
     reactiveData: true,
     popupContainer: true
   };
@@ -99,9 +99,11 @@ export default class SlTable extends ShoelaceElement {
   //hierarchy part
   @property({type: Object, attribute: false}) nodes: Object;
   @property({type: Boolean, attribute: false}) inVi = false;
+  /** If true all data is loaded*/
+  @property({type: Boolean, attribute: false}) loaded = false;
 
 
-  tableInstance: any;
+  tableInstance: any = null;
   tableReady: Boolean = false;
   inScrollEvent: Boolean = false;
   previousStructure: any = null;
@@ -109,8 +111,36 @@ export default class SlTable extends ShoelaceElement {
   expandDepth = 0;
   visibleColumns = [];
 
+  @watchProps(["skellist"])
+  skellistChanged() {
 
-  @watchProps(['structure', 'skellist', "editabletable", "nodes", "mode", "customColumns"])
+    if (this.tableInstance !== null) {
+
+      if (this.tableReady || this.inScrollEvent) {
+
+        this.inScrollEvent = false;
+        if (this.mode === "list") {
+          console.log("set data len=", this.skellist.length)
+          this.addData(this.skellist)
+        }
+      }
+    } else {
+      this.optionUpdate();
+
+    }
+  }
+
+  @watchProps(['nodes'])
+  nodesChanged() {
+    this.tableInstance.replaceData(this.nodes)
+  }
+
+  @watchProps(['structure'])
+  structureChanged() {
+    this.optionUpdate();
+  }
+
+  @watchProps(["editabletable", "mode", "customColumns"])
   optionUpdate() {
     //only rebuild table if structure changed
     if (this.mode === "list") {
@@ -140,12 +170,13 @@ export default class SlTable extends ShoelaceElement {
 
 
       //TabulatorFull.registerModule(CustomCell);
+      this.tableConfig["renderHorizontal"]="virtual";
       this.tableInstance = new TabulatorFull(this.shadowtable, this.tableConfig)
 
       this.tableInstance.on("tableBuilt", () => {
         this.postBuildTable()
         if (this.mode === "list") {
-          console.log("set data len=",this.skellist.length)
+          console.log("set data len=", this.skellist.length)
 
           this.tableInstance.setData(this.skellist)
         } else if (this.mode === "hierarchy") {
@@ -229,18 +260,7 @@ export default class SlTable extends ShoelaceElement {
 
     }
     //update Data only if tableReady
-    if (this.tableReady || this.inScrollEvent) {
 
-      this.inScrollEvent= false;
-      if (this.mode === "list") {
-        console.log("set data len=",this.skellist.length)
-        this.tableInstance.replaceData(this.skellist)
-      } else if (this.mode === "hierarchy") {
-        this.tableInstance.replaceData(this.nodes)
-      }
-
-
-    }
     return 1
   }
 
@@ -250,9 +270,42 @@ export default class SlTable extends ShoelaceElement {
       return 0;
     }
     if (this.tableReady) {
-      this.tableInstance.updateOrAddData(data)
+      console.log("len", data.length)
+      var rows = [];
+
+      this.tableInstance.initGuard();
+
+      return new Promise((resolve, reject) => {
+        this.tableInstance.dataLoader.blockActiveLoad();
+
+        if (typeof data === "string") {
+          data = JSON.parse(data);
+        }
+
+        if (data && data.length > 0) {
+          data.forEach((item) => {
+            const row = this.tableInstance.rowManager.findRow(item[this.tableInstance.options.index]);
+            if (!row) {
+
+              rows.push(item);
+            }
+          });
+        } else {
+          console.warn("Update Error - No data provided");
+          reject("Update Error - No data provided");
+        }
+        this.tableInstance.rowManager.addRows(rows)
+          .then((newRows) => {
+
+            if (newRows) {
+              resolve(newRows);
+            }
+          });
+      });
+
 
     }
+
   }
 
   getSelectedRows() {
@@ -334,12 +387,12 @@ export default class SlTable extends ShoelaceElement {
     }
     if (this.customColumns) {
       /**
-     this.customColumns must have a specific format like
-     [{ name:'column name',
+       this.customColumns must have a specific format like
+       [{ name:'column name',
         title:'column title',
         formater://somekind of a function the return value is shown in cell
      }]
-     */
+       */
 
       for (const column of this.customColumns) {
 
@@ -611,7 +664,7 @@ export default class SlTable extends ShoelaceElement {
   }
 
   postBuildTable() {
-    console.log("rowSelectionChanged inti",this)
+    console.log("rowSelectionChanged inti", this)
 
     this.tableInstance.on("rowSelectionChanged", (data: any, rows: any) => {
       console.log("here rowSelectionChanged")
@@ -624,6 +677,10 @@ export default class SlTable extends ShoelaceElement {
     const element = this.tableInstance.rowManager.getElement();
     const self = this;
     this.tableInstance.on("scrollVertical", function (top, dir) {
+      if (self.loaded) {
+        console.log("noting to load")
+        return;
+      }
       var diff;
       diff = element.scrollHeight - element.clientHeight - top;
       if (top > diff && !self.inScrollEvent) {
