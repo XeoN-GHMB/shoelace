@@ -305,7 +305,7 @@ export default css`
   }
 
   .tabulator .tabulator-tableholder::-webkit-scrollbar-thumb {
-      background-color: var(--sl-scrollbar-color);
+      background-color: var(--sl-color-neutral-500) !important;
       border-radius: 3px;
   }
 

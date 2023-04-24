@@ -526,6 +526,10 @@ as well as a set of mixins to process Ignite styling to fit the demands of Shoel
   --sl-z-index-dropdown: 300;
   --sl-z-index-tooltip: 600;
   --sl-z-index-toast: 700;
+  --sl-foreground-color: var(--sl-color-neutral-0);
+  --sl-background-color: var(--sl-color-neutral-1000);
+  --sl-hover-color: var(--sl-color-primary-500);
+  --sl-scrollbar-color: var(--sl-color-neutral-300);
 }
 
 /* _utility.css */

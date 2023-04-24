@@ -14,7 +14,7 @@ import {CustomMoveRowsModule} from './modules/tabulator_move_rows';
 import {CustomReactiveDataModule} from "./modules/tabulator_removeTreeChildRow";
 import {CustomControllElements} from "./modules/tabulator_control_element";
 import {CustomEditModule} from "./modules/tabulator_edit";
-import option from "../../react/option";
+
 
 
 /**
@@ -66,7 +66,7 @@ export default class SlTable extends ShoelaceElement {
   @property({type: Boolean, reflect: true}) moveablerows: Boolean = false;
 
   /** are rows have a index ?*/
-  @property({type: Boolean, reflect: true}) rowindexes: Boolean = false;
+  @property({type: Boolean, reflect: true}) rowindexes: Boolean = true;
 
   /** are rows selectable?*/
   @property({type: Boolean | Number, reflect: true}) rowselect: Boolean | Number = false;
@@ -84,7 +84,7 @@ export default class SlTable extends ShoelaceElement {
   @property({type: Object, attribute: false}) tableConfig: Object = {
     layout: "fitData",
     reactiveData: true,
-    popupContainer: true
+    popupContainer: true,
   };
   /** set a module for requests to the server */
   @property({type: String, attribute: false}) module: String = null;
@@ -118,10 +118,10 @@ export default class SlTable extends ShoelaceElement {
 
       if (this.tableReady || this.inScrollEvent) {
 
-        this.inScrollEvent = false;
+
         if (this.mode === "list") {
           console.log("set data len=", this.skellist.length)
-          this.addData(this.skellist)
+          this.addData(this.skellist).then(()=>{  this.inScrollEvent = false;})
         }
       }
     } else {
@@ -265,8 +265,11 @@ export default class SlTable extends ShoelaceElement {
   }
 
   addData(data) {
+    return new Promise((resolve,reject)=>{
+
 
     if (!this.tableInstance) {
+      resolve();
       return 0;
     }
     if (this.tableReady) {
@@ -275,25 +278,22 @@ export default class SlTable extends ShoelaceElement {
 
       this.tableInstance.initGuard();
 
-      return new Promise((resolve, reject) => {
+
         this.tableInstance.dataLoader.blockActiveLoad();
 
         if (typeof data === "string") {
           data = JSON.parse(data);
         }
 
-        if (data && data.length > 0) {
-          data.forEach((item) => {
-            const row = this.tableInstance.rowManager.findRow(item[this.tableInstance.options.index]);
-            if (!row) {
+      if (data && data.length > 0) {
+        for (let i = this.tableInstance.rowManager.rows.length; i < data.length; i++) {
+          rows.push(data[i]);
 
-              rows.push(item);
-            }
-          });
-        } else {
-          console.warn("Update Error - No data provided");
-          reject("Update Error - No data provided");
         }
+      } else {
+        console.warn("Update Error - No data provided");
+        reject("Update Error - No data provided");
+      }
         this.tableInstance.rowManager.addRows(rows)
           .then((newRows) => {
 
@@ -301,11 +301,11 @@ export default class SlTable extends ShoelaceElement {
               resolve(newRows);
             }
           });
-      });
+
 
 
     }
-
+    });
   }
 
   getSelectedRows() {
@@ -677,16 +677,34 @@ export default class SlTable extends ShoelaceElement {
     const element = this.tableInstance.rowManager.getElement();
     const self = this;
     this.tableInstance.on("scrollVertical", function (top, dir) {
+
       if (self.loaded) {
         console.log("noting to load")
         return;
       }
-      var diff;
-      diff = element.scrollHeight - element.clientHeight - top;
-      if (top > diff && !self.inScrollEvent) {
+
+      const diff = self.tableInstance.rowManager.element.scrollHeight- self.tableInstance.rowManager.element.clientHeight-100;
+
+
+
+      if (top >  diff && !self.inScrollEvent) {
 
         self.inScrollEvent = true;
-        self.emit("table-fetchData");//TODo rename event
+         self.emit("table-fetchData");//TODo rename event
+        console.log("fetch new data");
+
+      }
+return;
+     var margin = self.tableInstance.rowManager.element.clientHeight * 2;
+      console.log("margin",margin)
+      console.log("clientHeight",self.tableInstance.rowManager.element.clientHeight )
+      console.log("scrollHeight",self.tableInstance.rowManager.element.scrollHeight )
+      if (self.tableInstance.rowManager.element.scrollHeight <= (self.tableInstance.rowManager.element.clientHeight + margin)) {
+
+        setTimeout(() => {
+          self.emit("table-fetchData");//TODo rename event
+        });
+
       }
 
 
