@@ -172,9 +172,10 @@ export class FileBone extends RawBone {
 
 
     })
+
     if (value !== null && value !== "") { //Fixme why ==""
       try {
-        fileNameInput.value = this.mainInstance.relationalCache[value]["dest"]["name"];
+        fileNameInput.value = this.mainInstance.relationalCache[key]["dest"]["name"];
       } catch (e) {
         console.log("erorr in file value", value);
       }
