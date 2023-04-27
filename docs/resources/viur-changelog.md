@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.8
+- fix: table
+- fix: filebone
+
 ## 0.5.7
 - feat: removed default styling vom Docs
 - feat: added viur dark mode
