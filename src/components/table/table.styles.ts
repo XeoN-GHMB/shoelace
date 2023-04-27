@@ -528,6 +528,8 @@ export default css`
     min-height: 22px;
     border-bottom: 1px solid var(--table-border-color);
     transition: background-color ease .3s;
+    transition-delay: 200ms;
+    transition-property: background-color;
   }
 
   .tabulator-row.tabulator-row-even {
