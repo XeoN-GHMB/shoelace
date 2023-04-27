@@ -93,8 +93,10 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
 
   toFormValue() {
+    const self=this;
     function rewriteData(val: any, key: string | null = null): any[] {
-      const ret = []
+      const ret = [];
+
       if (Array.isArray(val)) {
         if (Object.values(val).filter(c => c === Object(c)).length > 0) {
           for (const [i, v] of val.entries()) {
@@ -118,15 +120,32 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
           val = ""
         }
         if (key !== null) {
-          ret.push({[key]: val})
+          if(self.boneStructure["type"].startsWith("relational"))
+          {
+            if(key.includes("dest"))
+            {
+               if(key.includes("key") && !key.includes("dlkey"))
+               {
+                 console.log("key",key)
+                  ret.push({[key.replace(".dest.key","")]: val})
+               }
+            }
+            else // rel part
+            {
+
+               ret.push({[key]: val})
+            }
+          }
+          else
+          {
+             ret.push({[key]: val})
+          }
         }
       }
       return ret
     }
+   return rewriteData(this.internboneValue[this.boneName], this.boneName).flat(10);
 
-    let value = rewriteData(this.internboneValue[this.boneName], this.boneName)
-    value = value.flat(10)
-    return value;
   }
 
   toFormData() {
@@ -161,6 +180,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       this.apiUrl = "http://localhost:8080"
     }
     this.initBoneValue = this.boneValue;
+
     this.internboneValue = {[this.boneName]: this.boneValue};
 
     if (this.boneStructure === null || this.boneStructure === undefined) {
@@ -182,6 +202,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
     }
     if (this.renderType === "edit") {
+
       if (this.boneValue !== undefined && this.boneValue !== null) {
         this.handleInit()
       }
