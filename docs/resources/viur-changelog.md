@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.9
+- fix: filebone
+
 ## 0.5.8
 - fix: table
 - fix: filebone
