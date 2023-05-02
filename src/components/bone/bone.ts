@@ -39,7 +39,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
   static styles = styles;
   bone: Object;
-  boneInstance:any;
+  boneInstance: any;
   initBoneValue: any;
   internboneValue: Record<string, BoneValue>;
   relationalCache: Record<string, object> = {};
@@ -93,7 +93,8 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
 
   toFormValue() {
-    const self=this;
+    const self = this;
+
     function rewriteData(val: any, key: string | null = null): any[] {
       const ret = [];
 
@@ -120,31 +121,26 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
           val = ""
         }
         if (key !== null) {
-          if(self.boneStructure["type"].startsWith("relational"))
-          {
-            if(key.includes("dest"))
-            {
-               if(key.includes("key") && !key.includes("dlkey"))
-               {
-                 console.log("key",key)
-                  ret.push({[key.replace(".dest.key","")]: val})
-               }
-            }
-            else // rel part
+          if (self.boneStructure["type"].startsWith("relational")) {
+            if (key.includes("dest")) {
+              if (key.includes("key") && !key.includes("dlkey")) {
+                console.log("key", key)
+                ret.push({[key.replace(".dest.key", "")]: val})
+              }
+            } else // rel part
             {
 
-               ret.push({[key]: val})
+              ret.push({[key]: val})
             }
-          }
-          else
-          {
-             ret.push({[key]: val})
+          } else {
+            ret.push({[key]: val})
           }
         }
       }
       return ret
     }
-   return rewriteData(this.internboneValue[this.boneName], this.boneName).flat(10);
+
+    return rewriteData(this.internboneValue[this.boneName], this.boneName).flat(10);
 
   }
 
@@ -205,9 +201,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
       if (this.boneValue !== undefined && this.boneValue !== null) {
         this.handleInit()
-      }
-      else if(this.boneStructure["required"])
-      {
+      } else if (this.boneStructure["required"]) {
         this.handleInit()
       }
 
@@ -344,7 +338,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       if (this.boneName === error["fieldPath"][0])
         if (error["severity"] > 1) {
           const element: SlDetails = this.bone.querySelector(`[data-name="${error["fieldPath"].join(".")}_errorcontainer"]`);
-          console.log("handle errror ? ",element,error)
+          console.log("handle errror ? ", element, error)
           if (element !== null) {
             element.style.display = "";
             element.open = true;

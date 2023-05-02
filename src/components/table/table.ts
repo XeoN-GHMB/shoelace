@@ -66,7 +66,7 @@ export default class SlTable extends ShoelaceElement {
   @property({type: Boolean, reflect: true}) moveablerows: Boolean = false;
 
   /** are rows have a index ?*/
-  @property({type: Boolean, reflect: true}) rowindexes: Boolean = true;
+  @property({type: Boolean, reflect: true}) rowindexes: Boolean = false;
 
   /** are rows selectable?*/
   @property({type: Boolean | Number, reflect: true}) rowselect: Boolean | Number = false;
@@ -132,7 +132,9 @@ export default class SlTable extends ShoelaceElement {
 
   @watchProps(['nodes'])
   nodesChanged() {
+    if (this.tableInstance !== null) {
     this.tableInstance.replaceData(this.nodes)
+    }
   }
 
   @watchProps(['structure'])
