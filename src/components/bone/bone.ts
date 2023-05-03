@@ -72,6 +72,8 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   @property({type: Boolean, attribute: false}) inVi = false;
   /** Can be set to true if the bone should be readonly*/
   @property({type: Boolean, reflect: true}) disabled = false;
+   /** If true the change handler call on with type init and edit on start if a value is given*/
+  @property({type: Boolean, reflect: true}) changeAlways = false;
 
   /** The url for uploading files and update bone values if we are in a table*/
   @property({type: String, reflect: true}) apiUrl = window.location.origin;
@@ -160,7 +162,17 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
     return formData
   }
-
+  @watchProps(['changeAlways'])
+  changeAlwaysUpdate() {
+    if(this.changeAlways && this.renderType === "edit")
+    {
+       if (this.boneValue !== undefined && this.boneValue !== null) {
+        this.handleChange();
+      } else if (this.boneStructure["required"]) {
+        this.handleChange();
+      }
+    }
+  }
 
   @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type"])
   optionUpdate() {
@@ -200,9 +212,17 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     if (this.renderType === "edit") {
 
       if (this.boneValue !== undefined && this.boneValue !== null) {
-        this.handleInit()
+        this.handleInit();
       } else if (this.boneStructure["required"]) {
-        this.handleInit()
+        this.handleInit();
+      }
+      if(this.changeAlways)
+      {
+        if (this.boneValue !== undefined && this.boneValue !== null) {
+          this.handleChange();
+        } else if (this.boneStructure["required"]) {
+          this.handleChange();
+        }
       }
 
       const boneEditor = new BoneEditRenderer(this.boneName, this.internboneValue[this.boneName], this.boneStructure, this);
