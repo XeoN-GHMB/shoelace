@@ -287,17 +287,21 @@ export default class SlSplitPanel extends ShoelaceElement {
             <sl-icon name="${chevron}" sprite></sl-icon>
           </sl-button>
         `:''}
-        <slot
-          name="divider"
-          part="divider"
-          class="divider"
-          tabindex=${ifDefined(this.disabled ? undefined : '0')}
-          role="separator"
-          aria-label=${this.localize.term('resize')}
-          @keydown=${this.handleKeyDown}
-          @mousedown=${this.handleDrag}
-          @touchstart=${this.handleDrag}
-        ></slot>
+        <div
+        part="divider"
+        class="divider"
+        tabindex=${ifDefined(this.disabled ? undefined : '0')}
+        role="separator"
+        aria-valuenow=${this.position}
+        aria-valuemin="0"
+        aria-valuemax="100"
+        aria-label=${this.localize.term('resize')}
+        @keydown=${this.handleKeyDown}
+        @mousedown=${this.handleDrag}
+        @touchstart=${this.handleDrag}
+      >
+        <slot name="divider"></slot>
+      </div>
         </div>
 
       <slot name="end" part="panel end" class="end"></slot>

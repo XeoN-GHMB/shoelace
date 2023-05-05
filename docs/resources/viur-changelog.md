@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.10
+- feat: bones can have a force update attribute
+
 ## 0.5.9
 - fix: filebone
 

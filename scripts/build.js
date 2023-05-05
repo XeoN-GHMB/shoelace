@@ -7,7 +7,6 @@ import esbuild from 'esbuild';
 import fs from 'fs';
 import getPort, { portNumbers } from 'get-port';
 import { globby } from 'globby';
-import open from 'open';
 import copy from 'recursive-copy';
 
 const { bundle, copydir, dir, serve, types } = commandLineArgs([
@@ -116,7 +115,6 @@ fs.mkdirSync(outdir, { recursive: true });
     deleteSync('docs/dist');
 
     const browserSyncConfig = {
-      open: false,
       startPath: '/',
       port,
       logLevel: 'silent',
@@ -153,7 +151,6 @@ fs.mkdirSync(outdir, { recursive: true });
     bs.init(browserSyncConfig, () => {
       const url = `http://localhost:${port}`;
       console.log(chalk.cyan(`Launched the Shoelace dev server at ${url} 🥾\n`));
-      open(url);
     });
 
     // Rebuild and reload when source files change
