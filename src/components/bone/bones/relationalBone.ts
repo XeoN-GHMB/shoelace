@@ -8,6 +8,7 @@ import type {BoneStructure} from "../interfaces";
 import {SkelValues} from "../interfaces";
 import fa from "../../../translations/fa";
 import SlInput from "../../input/input";
+import {BoneEditRenderer} from "../boneEditRenderer";
 
 export class RelationalBone extends RawBone {
 
@@ -197,6 +198,33 @@ export class RelationalBone extends RawBone {
     inputWrapper.appendChild(showInput);
     if (!this.boneStructure["readonly"]) {
       inputWrapper.appendChild(selectButton);
+    }
+
+    // Check for using
+    if(this.boneStructure["using"]!==null)
+    {
+      const usingWrapper = document.createElement("div");
+      usingWrapper.classList.add("record-wrapper");
+
+      usingWrapper.dataset.boneName = boneName;
+      usingWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
+      usingWrapper.dataset.depth = this.depth.toString();
+      for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
+
+        let recordBoneValue: any = null;
+        if (value !== null && value !== undefined) {
+          recordBoneValue = value[_boneName];
+
+        }
+        const newBoneName = `${boneName}.${_boneName}`;
+        _boneStructure["readonly"] = this.boneStructure["readonly"]//override readonly that all child bones are readonle too
+        const bone: object = new BoneEditRenderer(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).getBone();
+        const tmp: HTMLElement = new bone(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).edit(true, this.depth + 1);
+        tmp.dataset.fromRecord = "true";
+
+        usingWrapper.appendChild(tmp);
+      }
+      inputWrapper.appendChild(usingWrapper);
     }
 
 

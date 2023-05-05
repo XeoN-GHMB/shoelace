@@ -6,6 +6,12 @@ Bone Elements
 
 
 ## Bone
+
+```html preview
+<sl-bone fromjinja="true" bonename="name" bonestructure='{"descr": "E-Mail", "type": "str.email", "required": true, "params": {}, "visible": true, "readonly": false, "unique": 1, "languages": null, "emptyvalue": "", "indexed": true, "multiple": false, "maxlength": 254, "sortindex": 4}' bonevalue="ag@mausbrand.de"></sl-bone>
+<sl-bone rendertype="edit" fromjinja="true" bonename="name" bonestructure='{"descr": "E-Mail", "type": "str.email", "required": true, "params": {}, "visible": true, "readonly": false, "unique": 1, "languages": null, "emptyvalue": "", "indexed": true, "multiple": false, "maxlength": 254, "sortindex": 4}' bonevalue="ag@mausbrand.de"></sl-bone>
+```
+<!--
 (with boneStructure / renderType='view')
 ```html preview
 <sl-bone id="testbone"></sl-bone>
@@ -64,3 +70,4 @@ Bone Elements
 
 ```
 [component-metadata:sl-bone]
+-->

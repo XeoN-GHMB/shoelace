@@ -48,7 +48,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   previousBoneValues: Record<string, BoneValue[]> = {};
   initFired = false;
   /** If we have a boneStructure we can set it */
-  @property({type: Object, attribute: false}) boneStructure: any;
+  @property({type: String, reflect: true}) boneStructure: any;
 
   /** set boneValue */
   @property({type: String, reflect: true}) boneValue: any;
@@ -83,6 +83,8 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   @property({type: String, reflect: true}) type = "";
   /** If we have no `boneStructure` we can set the type to render the right bone ('file' renders a fileBone) */
   @property({type: String, reflect: true}) name = null;
+
+  @property({type: Boolean, reflect: true}) fromjinja = false;
 
   /** Gets boneValue */
   get getBoneValue(): any {
@@ -174,10 +176,15 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     }
   }
 
-  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type"])
+  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type","fromjinja"])
   optionUpdate() {
-    console.log("create bone")
+
+
     //this.formControlController.setValidity(true);
+    if(this.fromjinja)
+    {
+      this.boneStructure=JSON.parse(this.boneStructure)
+    }
     if (this.type !== "") {
       console.log("we got a type we try to set the bone without 'boneStructure'")
       console.log(this.boneValue)
@@ -241,7 +248,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   convertboneStructure(boneStructure: BoneStructure) {
     const isRelational = boneStructure["type"].startsWith("relational")
     const isRecord = boneStructure["type"].startsWith("record")
-    if (isRecord) {
+    if (isRecord || isRelational) {
       const newboneStructure = {}
       if (Array.isArray(boneStructure["using"])) {
         for (let i = 0; i < boneStructure["using"].length; i++) {
