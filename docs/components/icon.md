@@ -68,7 +68,7 @@ Icons inherit their color from the current text color. Thus, you can set the `co
   <sl-icon name="exclamation-triangle"></sl-icon>
   <sl-icon name="archive"></sl-icon>
   <sl-icon name="battery-charging"></sl-icon>
-  <sl-icon name="bell"></sl-icon>
+  <sl-icon name="bell" sprite></sl-icon>
 </div>
 <div style="color: #9013fe;">
   <sl-icon name="clock"></sl-icon>

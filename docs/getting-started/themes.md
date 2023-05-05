@@ -24,9 +24,9 @@ All selectors must be scoped to the theme's class to ensure interoperability wit
 To activate a theme, import it and apply the theme's class to the `<html>` element. This example imports and activates the built-in dark theme.
 
 ```html
-<html class="sl-theme-dark">
+<html class="sl-theme-viur_dark">
   <head>
-    <link rel="stylesheet" href="path/to/shoelace/dist/themes/dark.css" />
+    <link rel="stylesheet" href="path/to/shoelace/dist/themes/viur_dark.css" />
   </head>
 
   <body>
@@ -44,12 +44,12 @@ You can activate themes on various containers throughout the page. This example 
 ```html
 <html>
   <head>
-    <link rel="stylesheet" href="path/to/shoelace/dist/themes/light.css" />
-    <link rel="stylesheet" href="path/to/shoelace/dist/themes/dark.css" />
+    <link rel="stylesheet" href="path/to/shoelace/dist/themes/viur.css" />
+    <link rel="stylesheet" href="path/to/shoelace/dist/themes/viur_dark.css" />
   </head>
 
   <body>
-    <nav class="sl-theme-dark">
+    <nav class="sl-theme-viur_dark">
       <!-- dark-themed sidebar -->
     </nav>
 
@@ -120,10 +120,10 @@ To install the dark theme, add the following to the `<head>` section of your pag
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/dist/themes/dark.css">
 ```
 
-To activate the theme, apply the `sl-theme-dark` class to the `<html>` element.
+To activate the theme, apply the `sl-theme-viur_dark` class to the `<html>` element.
 
 ```html
-<html class="sl-theme-dark">
+<html class="sl-theme-viur_dark">
   ...
 </html>
 ```

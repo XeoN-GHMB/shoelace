@@ -4,6 +4,7 @@ import { watch } from '../../internal/watch';
 import ShoelaceElement from '../../internal/shoelace-element';
 import styles from './icon.styles';
 import type { CSSResultGroup } from 'lit';
+import { html } from 'lit';
 
 const CACHEABLE_ERROR = Symbol();
 const RETRYABLE_ERROR = Symbol();

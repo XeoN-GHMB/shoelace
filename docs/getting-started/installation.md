@@ -16,8 +16,8 @@ While convenient, autoloading may lead to a [Flash of Undefined Custom Elements]
 
 <!-- prettier-ignore -->
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/dist/themes/light.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/dist/shoelace-autoloader.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/dist/themes/viur.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/dist/shoelace-autoloader.js"></script>
 ```
 
 </sl-tab-panel>
@@ -27,8 +27,8 @@ While convenient, autoloading may lead to a [Flash of Undefined Custom Elements]
 The traditional CDN loader registers all Shoelace elements up front. Note that, if you're only using a handful of components, it will be much more efficient to stick with the autoloader. However, you can also [cherry pick](#cherry-picking) components if you want to load specific ones up front.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/dist/themes/light.css" />
-<script type="module" src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/dist/shoelace.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/dist/themes/viur.css" />
+<script type="module" src="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/dist/shoelace.js"></script>
 ```
 
 </sl-tab-panel>
@@ -39,7 +39,7 @@ The traditional CDN loader registers all Shoelace elements up front. Note that, 
 The code above will load the light theme. If you want to use the [dark theme](/getting-started/themes#dark-theme) instead, update the stylesheet as shown below and add `<html class="sl-theme-dark">` to your page.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/dist/themes/dark.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/dist/themes/viur_dark.css" />
 ```
 
 ### Light & Dark Theme
@@ -50,12 +50,12 @@ If you want to load the light or dark theme based on the user's `prefers-color-s
 <link
   rel="stylesheet"
   media="(prefers-color-scheme:light)"
-  href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/dist/themes/light.css"
+  href="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/dist/themes/viur.css"
 />
 <link
   rel="stylesheet"
   media="(prefers-color-scheme:dark)"
-  href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@%VERSION%/dist/themes/dark.css"
+  href="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/dist/themes/viur_dark.css"
   onload="document.documentElement.classList.add('sl-theme-viur_dark');"
 />
 ```
@@ -67,7 +67,7 @@ Now you can [start using Shoelace!](/getting-started/usage)
 If you don't want to use the CDN, you can install Shoelace locally with the following command.
 
 ```bash
-npm install @shoelace-style/shoelace
+npm install @viur/viur-shoelace
 ```
 
 It's up to you to make the source files available to your app. One way to do this is to create a route in your app called `/shoelace` that serves static files from `node_modules/@shoelace-style/shoelace`.
@@ -75,7 +75,7 @@ It's up to you to make the source files available to your app. One way to do thi
 Once you've done that, add the following tags to your page. Make sure to update `href` and `src` so they point to the route you created.
 
 ```html
-<link rel="stylesheet" href="/shoelace/dist/themes/light.css" />
+<link rel="stylesheet" href="/shoelace/dist/themes/viur.css" />
 <script type="module" src="/shoelace/dist/shoelace.js"></script>
 ```
 
@@ -96,7 +96,7 @@ However, if you're [cherry picking](#cherry-picking) or [bundling](#bundling) Sh
 <!-- Option 2: the setBasePath() method -->
 <script src="bundle.js"></script>
 <script type="module">
-  import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+  import { setBasePath } from '@viur/viur-shoelace/dist/utilities/base-path.js';
   setBasePath('/path/to/shoelace/dist');
 </script>
 ```
@@ -110,10 +110,10 @@ Cherry picking can be done from [the CDN](#cdn-installation-easiest) or your [lo
 Here's an example that loads only the button component. Again, if you're not using a module resolver, you'll need to adjust the path to point to the folder Shoelace is in.
 
 ```html
-<link rel="stylesheet" href="/path/to/shoelace/dist/themes/light.css" />
+<link rel="stylesheet" href="/path/to/shoelace/dist/themes/viur.css" />
 
 <script type="module" data-shoelace="/path/to/shoelace/dist">
-  import '@shoelace-style/shoelace/dist/components/button/button.js';
+  import '@viur/viur-shoelace/dist/components/button/button.js';
 
   // <sl-button> is ready to use!
 </script>
@@ -143,12 +143,12 @@ Now it's time to configure your bundler. Configurations vary for each tool, but 
 Once your bundler is configured, you'll be able to import Shoelace components and utilities.
 
 ```js
-import '@shoelace-style/shoelace/dist/themes/light.css';
-import '@shoelace-style/shoelace/dist/components/button/button.js';
-import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-import '@shoelace-style/shoelace/dist/components/input/input.js';
-import '@shoelace-style/shoelace/dist/components/rating/rating.js';
-import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+import '@viur/viur-shoelace/dist/themes/viur.css';
+import '@viur/viur-shoelace/dist/components/button/button.js';
+import '@viur/viur-shoelace/dist/components/icon/icon.js';
+import '@viur/viur-shoelace/dist/components/input/input.js';
+import '@viur/viur-shoelace/dist/components/rating/rating.js';
+import { setBasePath } from '@viur/viur-shoelace/dist/utilities/base-path.js';
 
 // Set the base path to the folder you copied Shoelace's assets to
 setBasePath('/path/to/shoelace/dist');
@@ -156,4 +156,4 @@ setBasePath('/path/to/shoelace/dist');
 // <sl-button>, <sl-icon>, <sl-input>, and <sl-rating> are ready to use!
 ```
 
-!> Component modules include side effects for registration purposes. Because of this, importing directly from `@shoelace-style/shoelace` may result in a larger bundle size than necessary. For optimal tree shaking, always cherry pick, i.e. import components and utilities from their respective files, as shown above.
+!> Component modules include side effects for registration purposes. Because of this, importing directly from `@viur/viur-shoelace` may result in a larger bundle size than necessary. For optimal tree shaking, always cherry pick, i.e. import components and utilities from their respective files, as shown above.

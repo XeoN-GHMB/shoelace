@@ -200,7 +200,7 @@ Use the `prefix` and `suffix` slots to add icons.
   </sl-radio-button>
 
   <sl-radio-button value="2">
-    <sl-icon slot="suffix" name="bag"></sl-icon>
+    <sl-icon slot="suffix" name="person"></sl-icon>
     Option 2
   </sl-radio-button>
 
@@ -243,23 +243,23 @@ You can omit button labels and use icons instead. Make sure to set a `label` att
 ```html preview
 <sl-radio-group label="Select an option" name="a" value="neutral">
   <sl-radio-button value="angry">
-    <sl-icon name="emoji-angry" label="Angry"></sl-icon>
+    <sl-icon name="arrow-left" label="Angry"></sl-icon>
   </sl-radio-button>
 
   <sl-radio-button value="sad">
-    <sl-icon name="emoji-frown" label="Sad"></sl-icon>
+    <sl-icon name="chevron-left" label="Sad"></sl-icon>
   </sl-radio-button>
 
   <sl-radio-button value="neutral">
-    <sl-icon name="emoji-neutral" label="Neutral"></sl-icon>
+    <sl-icon name="arrow-repeat" label="Neutral"></sl-icon>
   </sl-radio-button>
 
   <sl-radio-button value="happy">
-    <sl-icon name="emoji-smile" label="Happy"></sl-icon>
+    <sl-icon name="chevron-right" label="Happy"></sl-icon>
   </sl-radio-button>
 
   <sl-radio-button value="laughing">
-    <sl-icon name="emoji-laughing" label="Laughing"></sl-icon>
+    <sl-icon name="arrow-right" label="Laughing"></sl-icon>
   </sl-radio-button>
 </sl-radio-group>
 ```

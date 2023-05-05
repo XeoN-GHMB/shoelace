@@ -194,7 +194,7 @@ Shoelace ships with a file called `vscode.html-custom-data.json` that can be use
 
 ```js
 {
-  "html.customData": ["./node_modules/@shoelace-style/shoelace/dist/vscode.html-custom-data.json"]
+  "html.customData": ["./node_modules/@viur/viur-shoelace/dist/vscode.html-custom-data.json"]
 }
 ```
 
