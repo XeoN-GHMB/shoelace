@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.11
+- chore: updated some docs
+- fix: icons now working again
+
 ## 0.5.10
 - feat: bones can have a force update attribute
 
