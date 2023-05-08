@@ -210,6 +210,9 @@ export class RelationalBone extends RawBone {
     // Check for using
     if(hasUsing)
     {
+      const outerWrapper = document.createElement("div");
+      outerWrapper.classList.add("bone-inner-wrap");
+
       const usingWrapper = document.createElement("div");
       usingWrapper.classList.add("record-wrapper");
 
@@ -233,7 +236,9 @@ export class RelationalBone extends RawBone {
 
         usingWrapper.appendChild(tmp);
       }
-      inputWrapper.appendChild(usingWrapper);
+      outerWrapper.appendChild(inputWrapper);
+      outerWrapper.appendChild(usingWrapper);
+      return outerWrapper;
     }
 
 

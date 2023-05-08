@@ -147,6 +147,19 @@ export default css`
     flex: 1;
   }
 
+  .bone-inner-wrap .bone-wrapper{
+    margin-bottom: 10px;
+  }
+
+  .bone-inner-wrap .bone-wrapper:last-child{
+    margin-bottom: 0;
+  }
+
+  .bone-inner-wrap .multiple-placeholder::part(base){
+    border-top-left-radius: var(--sl-input-border-radius-medium) !important;
+    border-bottom-left-radius: var(--sl-input-border-radius-medium) !important;
+  }
+
   .bone-inner-button-wrap{
     display: flex;
     flex-direction: row;
@@ -178,17 +191,17 @@ export default css`
     border: 1px solid var(--input-border-color);
   }
 
-  .bone-type-record .bone-inner-wrap{
+  .bone-type-using .bone-inner-wrap{
     border-top: 1px solid var(--sl-color-neutral-200);
     padding-top: var(--sl-spacing-small);
     grid-column: span 2;
   }
 
-  .bone-type-record > .bone-inner-wrap > .multiple-wrapper > .multi-input{
+  .bone-type-using > .bone-inner-wrap > .multiple-wrapper > .multi-input{
     border-bottom: 1px solid var(--sl-color-neutral-200);
   }
 
-  .bone-type-record > .bone-name{
+  .bone-type-using > .bone-name{
     border-bottom: none;
     border-top-right-radius: var(--sl-input-border-radius-medium);
     border-bottom-left-radius: 0;
@@ -343,6 +356,10 @@ export default css`
 
   .relBone-wrap .add-button{
     margin-left: var(--sl-spacing-small);
+  }
+
+  .relBone-wrap + .record-wrapper{
+    margin-top: 10px;
   }
 
   .color-bone::part(trigger){

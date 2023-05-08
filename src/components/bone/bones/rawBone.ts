@@ -172,7 +172,11 @@ export class RawBone {
 
     }
 
-    wrapper.classList.add(`bone-type-${this.boneStructure["type"]}`)
+    wrapper.classList.add(`bone-type-${this.boneStructure["type"].split(".", 1)}`)
+
+    if (this.boneStructure["using"] !== null && this.boneStructure["using"] !== undefined) {
+      wrapper.classList.add(`bone-type-using`);
+    }
     // Check if bone is rendered in table and render in small compact view
     if (this.mainInstance.inTable) {
       wrapper.classList.add("bone-table-wrapper")
