@@ -134,7 +134,7 @@ export class RelationalBone extends RawBone {
         value = key;
       }
     }
-
+    const hasUsing = this.boneStructure["using"]!==null;
 
     const inputWrapper = document.createElement("div");
     const shadowInput = document.createElement("sl-input");
@@ -149,7 +149,14 @@ export class RelationalBone extends RawBone {
 
     //Shadow input
     shadowInput.hidden = true;
-    shadowInput.name = boneName;
+    if(hasUsing)
+    {
+       shadowInput.name = `${boneName}.key`;
+    }
+    else
+    {
+        shadowInput.name = boneName;
+    }
     shadowInput.dataset.boneName = `shoadowinput-${boneName}`;
     shadowInput.value = value;
 
@@ -201,7 +208,7 @@ export class RelationalBone extends RawBone {
     }
 
     // Check for using
-    if(this.boneStructure["using"]!==null)
+    if(hasUsing)
     {
       const usingWrapper = document.createElement("div");
       usingWrapper.classList.add("record-wrapper");
@@ -209,11 +216,13 @@ export class RelationalBone extends RawBone {
       usingWrapper.dataset.boneName = boneName;
       usingWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
       usingWrapper.dataset.depth = this.depth.toString();
+      const relValue = this.mainInstance.relationalCache[value]["rel"];
       for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
 
         let recordBoneValue: any = null;
-        if (value !== null && value !== undefined) {
-          recordBoneValue = value[_boneName];
+        if (relValue !== null && relValue !== undefined) {
+
+          recordBoneValue = relValue[_boneName];
 
         }
         const newBoneName = `${boneName}.${_boneName}`;

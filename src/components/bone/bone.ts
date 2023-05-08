@@ -11,8 +11,6 @@ import type SlDetails from "../details/details";
 import type {BoneValue} from "./bones/rawBone";
 import type {BoneError, BoneStructure} from "./interfaces";
 import {SkelValues} from "./interfaces";
-import {FormControlController} from "../../internal/form";
-import {RawBone} from "./bones/rawBone";
 
 
 /**
@@ -72,7 +70,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   @property({type: Boolean, attribute: false}) inVi = false;
   /** Can be set to true if the bone should be readonly*/
   @property({type: Boolean, reflect: true}) disabled = false;
-   /** If true the change handler call on with type init and edit on start if a value is given*/
+  /** If true the change handler call on with type init and edit on start if a value is given*/
   @property({type: Boolean, reflect: true}) changeAllways = false;
 
   /** The url for uploading files and update bone values if we are in a table*/
@@ -164,11 +162,11 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
     return formData
   }
+
   @watchProps(['changeAllways'])
   changeAllwaysUpdate() {
-    if(this.changeAllways && this.renderType === "edit")
-    {
-       if (this.boneValue !== undefined && this.boneValue !== null) {
+    if (this.changeAllways && this.renderType === "edit") {
+      if (this.boneValue !== undefined && this.boneValue !== null) {
         this.handleChange();
       } else if (this.boneStructure["required"]) {
         this.handleChange();
@@ -176,14 +174,13 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     }
   }
 
-  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type","fromjinja"])
+  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type", "fromjinja"])
   optionUpdate() {
 
 
     //this.formControlController.setValidity(true);
-    if(this.fromjinja)
-    {
-      this.boneStructure=JSON.parse(this.boneStructure)
+    if (this.fromjinja) {
+      this.boneStructure = JSON.parse(this.boneStructure)
     }
     if (this.type !== "") {
       console.log("we got a type we try to set the bone without 'boneStructure'")
@@ -223,8 +220,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       } else if (this.boneStructure["required"]) {
         this.handleInit();
       }
-      if(this.changeAllways)
-      {
+      if (this.changeAllways) {
         if (this.boneValue !== undefined && this.boneValue !== null) {
           this.handleChange();
         } else if (this.boneStructure["required"]) {
@@ -260,14 +256,16 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
         }
         boneStructure["using"] = newboneStructure;
       }
-
-      for (const [key, value] of Object.entries(boneStructure["using"])) {
-        const isRelational = value["type"].startsWith("relational")
-        const isRecord = value["type"].startsWith("record")
-        if (isRelational || isRecord) {
-          boneStructure["using"][key] = this.convertboneStructure(value);
+      if (boneStructure["using"] !== null) {
+        for (const [key, value] of Object.entries(boneStructure["using"])) {
+          const isRelational = value["type"].startsWith("relational")
+          const isRecord = value["type"].startsWith("record")
+          if (isRelational || isRecord) {
+            boneStructure["using"][key] = this.convertboneStructure(value);
+          }
         }
       }
+
     }
 
     if (isRelational) {

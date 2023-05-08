@@ -728,12 +728,16 @@ export class RawBone {
 
   reWriteBoneValue(): Record<string, BoneValue> {
     const obj = {};
+
     this.mainInstance.bone.querySelectorAll("sl-input,sl-select").forEach((inputElement: SlInput | SlSelect) => {
-      if (inputElement.name !== undefined && inputElement.value !== undefined) {
+      if (inputElement.name !== undefined && inputElement.value !== undefined && !inputElement.disabled) {
+         console.log(inputElement,inputElement.name,inputElement.value,inputElement.disabled)
         createPath(obj, inputElement.name, inputElement.value);
       }
 
     });
+
+
     this.mainInstance.bone.querySelectorAll("sl-switch").forEach((inputElement: SlSwitch) => {
       if (inputElement.name !== undefined) {
         createPath(obj, inputElement.name, inputElement.checked);
