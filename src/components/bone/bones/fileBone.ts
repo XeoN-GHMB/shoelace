@@ -147,11 +147,11 @@ export class FileBone extends RawBone {
         boneValues_array = boneValues_array.concat(fileKeys);
         const obj = {};
         createPath(obj, path, boneValues_array);
-        const mulWrapper: HTMLElement | null = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
+        const multipleWrapper: HTMLElement | null = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
 
-        if (mulWrapper !== null) {
+        if (multipleWrapper !== null) {
           const element = this.createMultipleWrapper(getPath(obj, path), lang)[0];
-          mulWrapper.replaceWith(element);
+          multipleWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange();
         }

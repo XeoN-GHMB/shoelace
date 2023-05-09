@@ -453,8 +453,11 @@ export class RawBone {
     const inputWrapper: HTMLDivElement = document.createElement("div");
     const newboneName = this.generateboneName(lang, index);
     const path = lang === null ? this.boneName : `${this.boneName}.${lang}`;
+    if(this.boneStructure["multiple"])
+    {
+       inputWrapper.classList.add("multi-input");
+    }
 
-    inputWrapper.classList.add("multi-input");
     inputWrapper.dataset.boneName = newboneName;
 
     let deleteButton;
@@ -485,7 +488,7 @@ export class RawBone {
         const obj: object = JSON.parse(JSON.stringify(this.mainInstance.internboneValue));
 
         createPath(obj, newboneName, null, true);
-        const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
+        const multipleWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
 
         if (getPath(obj, path).length === 0)//clear last element
         {
@@ -495,7 +498,7 @@ export class RawBone {
           this.mainInstance.handleChange("deleteEntry");
           return;
         }
-        if (mulWrapper !== null) {
+        if (multipleWrapper !== null) {
 
           const [element, idx] = this.createMultipleWrapper(getPath(obj, path), lang);
           if (lang) {
@@ -507,7 +510,7 @@ export class RawBone {
             this.idx = idx;
           }
 
-          mulWrapper.replaceWith(element);
+          multipleWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange("deleteEntry");
         }
@@ -653,10 +656,10 @@ export class RawBone {
           this.mainInstance.internboneValue = obj;
           this.mainInstance.handleChange();
 
-          const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.movePath}']`);
-          if (mulWrapper !== null) {
+          const multipleWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${this.movePath}']`);
+          if (multipleWrapper !== null) {
             const element = this.createMultipleWrapper(getPath(obj, this.movePath), this.moveLang)[0]
-            mulWrapper.replaceWith(element);
+            multipleWrapper.replaceWith(element);
             this.absolutePostionSet = false;
 
           }
@@ -787,11 +790,11 @@ export class RawBone {
 
   undo(lang: string | null = null) {
     const path = lang === null ? this.boneName : `${this.boneName}.${lang}`;
-    const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
+    const multipleWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
 
     const previousBoneValue: any = this.mainInstance.previousBoneValues[path].pop();
     const [element, idx] = this.createMultipleWrapper(previousBoneValue, lang);
-    mulWrapper.replaceWith(element);
+    multipleWrapper.replaceWith(element);
     this.mainInstance.internboneValue = this.reWriteBoneValue();
     const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
     if (this.mainInstance.previousBoneValues[path].length === 0) {
@@ -817,9 +820,9 @@ export class RawBone {
 
   clearMultipleWrapper(lang: string | null = null) {
     const path = lang === null ? this.boneName : `${this.boneName}.${lang}`
-    const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
+    const multipleWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${path}']`);
     this.saveState(lang);
-    mulWrapper.innerHTML = "";//Clear Wrapper;
+    multipleWrapper.innerHTML = "";//Clear Wrapper;
 
 
     const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
@@ -855,14 +858,14 @@ export class RawBone {
     addButton.disabled = this.boneStructure["readonly"];
     const name = lang === null ? `${this.boneName}` : `${this.boneName}.${lang}`;
     addButton.addEventListener("click", () => {
-      const mulWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${name}']`);
+      const multipleWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${name}']`);
       if (lang !== null) {
-        mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
-        mulWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
+        multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
+        multipleWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
         this.idx[lang] += 1;
       } else {
-        mulWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, this.idx));
-        mulWrapper.appendChild(this.addErrorContainer(null, this.idx));
+        multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, this.idx));
+        multipleWrapper.appendChild(this.addErrorContainer(null, this.idx));
         this.idx += 1;
       }
 

@@ -144,7 +144,7 @@ export class RelationalBone extends RawBone {
 
     showInput.dataset.boneName = `showinput-${boneName}`;
     console.log(showInput.dataset.boneName)
-    inputWrapper.classList.add("relBone-wrap")
+    inputWrapper.classList.add("relBone-wrap");
     inputWrapper.dataset.boneName = boneName;
 
     //Shadow input
@@ -330,12 +330,12 @@ export class RelationalBone extends RawBone {
         createPath(obj, path, boneValues)
 
 
-        const mulWrapper: HTMLElement = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
+        const multipleWrapper: HTMLElement = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
 
 
-        if (mulWrapper !== null) {
+        if (multipleWrapper !== null) {
           const [element, index] = this.createMultipleWrapper(getPath(obj, path), this.lang);
-          mulWrapper.replaceWith(element);
+          multipleWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
           this.mainInstance.handleChange();
         }
@@ -389,12 +389,12 @@ export class RelationalBone extends RawBone {
       createPath(obj, path, boneValues)
 
 
-      const mulWrapper: HTMLElement = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
+      const multipleWrapper: HTMLElement = this.mainInstance.bone.querySelector(`[data-multiplebone="${path}"]`);
 
 
-      if (mulWrapper !== null) {
+      if (multipleWrapper !== null) {
         const [element, index] = this.createMultipleWrapper(getPath(obj, path), this.lang);
-        mulWrapper.replaceWith(element);
+        multipleWrapper.replaceWith(element);
         this.mainInstance.internboneValue = this.reWriteBoneValue();
         this.mainInstance.handleChange();
       }
