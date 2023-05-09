@@ -218,7 +218,7 @@ export class FileBone extends RawBone {
 
         const data: Record<string, string> = {
           "fileName": file.name,
-          "mimeType": file.type,
+          "mimeType": file.type || "application/octet-stream",
           "size": file.size.toString(),
           "skey": skey,
         }

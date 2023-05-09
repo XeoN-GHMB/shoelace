@@ -6,6 +6,7 @@ export class ColorBone extends RawBone {
   //Todo how to show ?
   getEditor(value: string, boneName: string, lang: string | null = null): HTMLElement {
     const inputElement: SlColorPicker = document.createElement("sl-color-picker");
+    console.log(inputElement)
     //Todo this write always ??
     inputElement.addEventListener("sl-change", () => {
       this.mainInstance.internboneValue = this.reWriteBoneValue();
@@ -16,7 +17,11 @@ export class ColorBone extends RawBone {
     if (this.boneStructure["readonly"] || this.mainInstance.disabled) {
       inputElement.disabled = true;
     }
-    inputElement.value = value;
+    if (value === null || value === undefined) {
+      inputElement.value = this.boneStructure["emptyValue"];
+    } else {
+      inputElement.value = value;
+    }
     inputElement.classList.add("color-bone");
 
     return inputElement;

@@ -219,7 +219,13 @@ export class RelationalBone extends RawBone {
       usingWrapper.dataset.boneName = boneName;
       usingWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
       usingWrapper.dataset.depth = this.depth.toString();
-      const relValue = this.mainInstance.relationalCache[value]["rel"];
+      let relValue = null;
+      if(this.mainInstance.relationalCache[value]!==undefined && this.mainInstance.relationalCache[value]!==null)
+      {
+         relValue = this.mainInstance.relationalCache[value]["rel"];
+      }
+
+
       for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
 
         let recordBoneValue: any = null;
@@ -229,7 +235,7 @@ export class RelationalBone extends RawBone {
 
         }
         const newBoneName = `${boneName}.${_boneName}`;
-        _boneStructure["readonly"] = this.boneStructure["readonly"]//override readonly that all child bones are readonle too
+        _boneStructure["readonly"] = this.boneStructure["readonly"]//override readonly that all child bones are readonly too
         const bone: object = new BoneEditRenderer(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).getBone();
         const tmp: HTMLElement = new bone(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).edit(true, this.depth + 1);
         tmp.dataset.fromRecord = "true";
