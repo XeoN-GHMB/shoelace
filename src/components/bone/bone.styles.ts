@@ -41,6 +41,7 @@ export default css`
     border-top-left-radius: var(--sl-input-border-radius-medium);
     border-bottom-left-radius: var(--sl-input-border-radius-medium);
     gap: 10px;
+        word-break: break-word;
   }
 
   sl-input[disabled]::part(base){
@@ -167,6 +168,18 @@ export default css`
     flex: 1;
   }
 
+  .bone-type-relational .add-button::part(base){
+    aspect-ratio: 1;
+  }
+
+  .multi-input .add-button::part(base){
+    padding-left: 0;
+  }
+
+  .multi-input .add-button::part(label){
+    display: none;
+  }
+
   .bone-inner-button-wrap .clear-button,
   .bone-inner-button-wrap .undo-button{
     margin-right: var(--sl-spacing-small);
@@ -174,10 +187,6 @@ export default css`
 
   .bone-inner-button-wrap .add-button{
     margin-left: auto;
-  }
-
-  .bone-inner-button-wrap .add-button sl-icon{
-    margin-right: var(--sl-spacing-small);
   }
 
   .bone-inner-button-wrap .multiple-placeholder{
@@ -198,7 +207,9 @@ export default css`
   }
 
   .bone-type-using > .bone-inner-wrap > .multiple-wrapper > .multi-input{
-    border-bottom: 1px solid var(--sl-color-neutral-200);
+    padding-bottom: var(--sl-spacing-medium);
+    border-bottom: 1px solid var(--sl-color-neutral-300);
+    margin-bottom: var(--sl-spacing-medium);
   }
 
   .bone-type-using > .bone-name{
@@ -374,6 +385,18 @@ export default css`
     border-top: 1px solid var(--sl-color-neutral-200);
   }
 
+  .bone-type-password sl-input:first-child::part(base){
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .bone-type-password sl-input:last-child::part(base){
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-top: none;
+  }
+
   .spatial-wrapper{
     display: flex;
     flex-direction: row;
@@ -429,6 +452,23 @@ export default css`
       border-top-right-radius: 0;
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
+    }
+
+    .bone-type-password sl-input:first-child::part(base){
+      border-top-right-radius: 0;
+    }
+
+    .bone-type-using .bone-inner-wrap {
+        padding: 10px;
+        border: 1px solid var(--sl-color-neutral-300);
+        border-top: none;
+        border-bottom-left-radius: var(--sl-input-border-radius-medium);
+        border-bottom-right-radius: var(--sl-input-border-radius-medium);
+    }
+
+    .bone-type-select sl-select::part(combobox){
+      border-top-right-radius: 0;
+      border-bottom-left-radius: var(--sl-input-border-radius-medium);
     }
 
     .error-container::part(base){

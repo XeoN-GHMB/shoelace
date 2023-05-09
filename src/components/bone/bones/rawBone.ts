@@ -844,9 +844,11 @@ export class RawBone {
     const addIcon = document.createElement("sl-icon");
 
     addIcon.setAttribute("name", "plus");
+    addIcon.setAttribute("slot", "prefix");
     addButton.appendChild(addIcon);
     addButton.innerHTML += translate("actions.add");
     addButton.setAttribute("variant", "success");
+    addButton.setAttribute("outline", "");
     addButton.classList.add("add-button");
     addButton.variant = "success";
     addButton.title = translate("actions.add");
