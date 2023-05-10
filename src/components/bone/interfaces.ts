@@ -16,7 +16,7 @@ export interface BoneStructure {
   readonly: boolean;
   unique: boolean;
   languages: string[];
-  emptyValue: BoneValue;
+  emptyvalue: BoneValue;
   multiple: boolean;
   //Optional Fields
 
@@ -35,23 +35,23 @@ export interface BoneStructure {
 
   //numeric
   precision: number;
-  min: number;
-  max: number;
+  minAmount: number;
+  maxAmount: number;
 
   //text
-  validHtml: ValidHtml;
+  valid_html: valid_html;
 
   //file
-  validMimeTypes: string[];
+  valid_mime_types: string[];
 
   //spatial
-  boundsLng: [number, number];
-  boundsLat: [number, number];
+  boundslng: [number, number];
+  boundslat: [number, number];
 
 
 }
 
-interface ValidHtml {
+interface valid_html {
   validTags: string[];
   validAttrs: Record<string, string[]>;
   validStyles: string[];

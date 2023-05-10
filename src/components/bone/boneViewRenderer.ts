@@ -27,7 +27,7 @@ export class BoneViewRenderer {
     readonly: boolean;
     unique: boolean;
     languages: string[];
-    emptyValue: any;
+    emptyvalue: any;
     multiple: boolean;
     //Optional Fields
 
@@ -46,14 +46,14 @@ export class BoneViewRenderer {
 
     //numeric
     precision: number;
-    min: number;
-    max: number;
+    minAmount: number;
+    maxAmount: number;
 
     //text
-    validHtml: string[];
+    valid_html: string[];
 
     //file
-    validMimeTypes: string[];
+    valid_mime_types: string[];
 
     //spatial
 

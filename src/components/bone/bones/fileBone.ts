@@ -81,9 +81,9 @@ export class FileBone extends RawBone {
     shadowFile.type = "file";
     let filter: string;
 
-    if (this.boneStructure["validMimeTypes"] !== null && this.boneStructure["validMimeTypes"] !== undefined) {
-      if (this.boneStructure["validMimeTypes"].indexOf("*") === -1) {
-        filter = this.boneStructure["validMimeTypes"].join(",")
+    if (this.boneStructure["valid_mime_types"] !== null && this.boneStructure["valid_mime_types"] !== undefined) {
+      if (this.boneStructure["valid_mime_types"].indexOf("*") === -1) {
+        filter = this.boneStructure["valid_mime_types"].join(",")
       } else {
         filter = "*";
       }

@@ -394,7 +394,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
       readonly: false,
       unique: false,
       languages: null,
-      emptyValue: null,
+      emptyvalue: null,
       multiple: true,
     }
   }

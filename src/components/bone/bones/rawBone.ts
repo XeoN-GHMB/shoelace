@@ -403,7 +403,7 @@ export class RawBone {
     }
 
     if (value === null || value === undefined) {
-      inputElement.value = this.boneStructure["emptyValue"];
+      inputElement.value = this.boneStructure["emptyvalue"];
     } else {
       inputElement.value = value;
     }
@@ -860,11 +860,11 @@ export class RawBone {
     addButton.addEventListener("click", () => {
       const multipleWrapper = this.mainInstance.bone.querySelector(`[data-multiplebone='${name}']`);
       if (lang !== null) {
-        multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], lang, this.idx[lang]));
+        multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyvalue"], lang, this.idx[lang]));
         multipleWrapper.appendChild(this.addErrorContainer(lang, this.idx[lang]));
         this.idx[lang] += 1;
       } else {
-        multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyValue"], null, this.idx));
+        multipleWrapper.appendChild(this.addInput(this.boneStructure["emptyvalue"], null, this.idx));
         multipleWrapper.appendChild(this.addErrorContainer(null, this.idx));
         this.idx += 1;
       }

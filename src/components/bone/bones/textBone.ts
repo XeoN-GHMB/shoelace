@@ -20,7 +20,7 @@ import textBoneStyle from "../styles/textBone.styles";
 export class TextBone extends RawBone {
   getEditor(value: any, boneName: string, lang: string | null = null): HTMLElement {
     //We render a textarea if we have no valid html
-    if (this.boneStructure["validHtml"] === null) {
+    if (this.boneStructure["valid_html"] === null) {
       const ele = document.createElement("textarea");
       ele.dataset["name"] = boneName;
       ele.dataset["textbone"] = "true";
@@ -53,8 +53,8 @@ export class TextBone extends RawBone {
     const self = this;
     let valid_classes = {};
     let toolbar = "undo redo";
-    if (this.boneStructure["validHtml"] !== null) {
-      valid_classes = {"*": self.boneStructure["validHtml"]["validClasses"].join(" ")};
+    if (this.boneStructure["valid_html"] !== null) {
+      valid_classes = {"*": self.boneStructure["valid_html"]["validClasses"].join(" ")};
       toolbar = 'undo redo | blocks | bold italic underline backcolor | '
         + 'alignleft aligncenter alignright alignjustify | '
         + 'table code'
@@ -116,14 +116,14 @@ export class TextBone extends RawBone {
   getValidTagString(): string {
     let s = "";
     //todo class for  all ??
-    for (const tag of this.boneStructure["validHtml"]["validTags"]) {
-      if (this.boneStructure["validHtml"]["validAttrs"][tag] === undefined) {
-        this.boneStructure["validHtml"]["validAttrs"][tag] = ["class"];
+    for (const tag of this.boneStructure["valid_html"]["validTags"]) {
+      if (this.boneStructure["valid_html"]["validAttrs"][tag] === undefined) {
+        this.boneStructure["valid_html"]["validAttrs"][tag] = ["class"];
       } else {
-        this.boneStructure["validHtml"]["validAttrs"][tag].push("class")
+        this.boneStructure["valid_html"]["validAttrs"][tag].push("class")
       }
 
-      s += `${tag}[${this.boneStructure["validHtml"]["validAttrs"][tag].join("|")}],`;
+      s += `${tag}[${this.boneStructure["valid_html"]["validAttrs"][tag].join("|")}],`;
 
     }
 

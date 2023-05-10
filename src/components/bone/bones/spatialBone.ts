@@ -25,8 +25,8 @@ export class SpatialBone extends RawBone {
     latInput.placeholder = translate("names.lat");
     latInput.classList.add("lat-input");
 
-    latInput.min = this.boneStructure["boundsLat"][0];
-    latInput.max = this.boneStructure["boundsLat"][1];
+    latInput.min = this.boneStructure["boundslat"][0];
+    latInput.max = this.boneStructure["boundslat"][1];
     latInput.step = "any";
     spatialWrapper.appendChild(latInput);
 

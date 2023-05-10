@@ -18,7 +18,7 @@ export class ColorBone extends RawBone {
       inputElement.disabled = true;
     }
     if (value === null || value === undefined) {
-      inputElement.value = this.boneStructure["emptyValue"];
+      inputElement.value = this.boneStructure["emptyvalue"];
     } else {
       inputElement.value = value;
     }
