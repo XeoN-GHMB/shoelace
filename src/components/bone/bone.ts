@@ -180,7 +180,8 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
 
     //this.formControlController.setValidity(true);
     if (this.fromjinja) {
-      this.boneStructure = JSON.parse(this.boneStructure)
+      this.boneStructure = JSON.parse(this.boneStructure);
+      this.name = this.boneName;
     }
     if (this.type !== "") {
       console.log("we got a type we try to set the bone without 'boneStructure'")
