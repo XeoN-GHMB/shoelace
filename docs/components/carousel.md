@@ -506,13 +506,15 @@ const App = () => {
 The `slides-per-view` attribute makes it possible to display multiple slides at a time. You can also use the `slides-per-move` attribute to advance more than once slide at a time, if desired.
 
 ```html preview
-<sl-carousel navigation pagination slides-per-page="2" slides-per-move="2">
+<sl-carousel navigation pagination slides-per-page="3" slides-per-move="3">
   <sl-carousel-item style="background: var(--sl-color-red-200);">Slide 1</sl-carousel-item>
   <sl-carousel-item style="background: var(--sl-color-orange-200);">Slide 2</sl-carousel-item>
   <sl-carousel-item style="background: var(--sl-color-yellow-200);">Slide 3</sl-carousel-item>
   <sl-carousel-item style="background: var(--sl-color-green-200);">Slide 4</sl-carousel-item>
   <sl-carousel-item style="background: var(--sl-color-blue-200);">Slide 5</sl-carousel-item>
   <sl-carousel-item style="background: var(--sl-color-violet-200);">Slide 6</sl-carousel-item>
+  <sl-carousel-item style="background: var(--sl-color-violet-200);">Slide 7</sl-carousel-item>
+
 </sl-carousel>
 ```
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.5.12
+- fix: carousel multipages per view now works as expected
+- feat: bones now can have a jinja flag
+- feat: relations now can have a using skel
+- feat: add multiple values fo bones by pressing enter
+- feat: filebone mimetype fallback
+- feat: more bone styling
+- feat: textbone now can be a normal textarea
+
 ## 0.5.11
 - chore: updated some docs
 - fix: icons now working again

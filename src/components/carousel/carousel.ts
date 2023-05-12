@@ -141,7 +141,11 @@ export default class SlCarousel extends ShoelaceElement {
   }
 
   private getCurrentPage() {
-    return Math.floor(this.activeSlide / this.slidesPerPage);
+    return Math.ceil(this.activeSlide / this.slidesPerPage);
+  }
+
+  private getShadowSlideCount(){
+    return this.slidesPerPage - (this.getSlides().length % this.slidesPerPage);
   }
 
   private getSlides({ excludeClones = true }: { excludeClones?: boolean } = {}) {
@@ -394,6 +398,12 @@ export default class SlCarousel extends ShoelaceElement {
           @scrollend=${this.handleScrollEnd}
         >
           <slot></slot>
+          ${map(range(this.getShadowSlideCount()), index => {
+            return html`
+            <sl-carousel-item class="shadow-slide"></sl-carousel-item>
+            `;
+          })}
+            
         </div>
 
         ${this.navigation
