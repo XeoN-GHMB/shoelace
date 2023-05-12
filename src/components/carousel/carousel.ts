@@ -398,7 +398,7 @@ export default class SlCarousel extends ShoelaceElement {
           @scrollend=${this.handleScrollEnd}
         >
           <slot></slot>
-          ${map(range(this.getShadowSlideCount()), index => {
+          ${map(range(this.getShadowSlideCount()), () => {
             return html`
             <sl-carousel-item class="shadow-slide"></sl-carousel-item>
             `;
