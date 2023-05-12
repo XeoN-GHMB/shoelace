@@ -85,8 +85,9 @@ export default css`
     color: var(--sl-color-neutral-900);
   }
 
-  sl-input::part(input)::placeholder{
-    color: var(--sl-color-neutral-900);
+  sl-input::part(input)::placeholder,
+  sl-textarea::part(textarea)::placeholder {
+    color: var(--sl-color-neutral-400);
   }
 
   .bone-name + sl-input::part(base),
