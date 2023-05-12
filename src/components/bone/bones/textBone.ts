@@ -51,14 +51,6 @@ export class TextBone extends RawBone {
 
 
     const self = this;
-    let valid_classes = {};
-    let toolbar = "undo redo";
-    if (this.boneStructure["valid_html"] !== null) {
-      valid_classes = {"*": self.boneStructure["valid_html"]["validClasses"].join(" ")};
-      toolbar = 'undo redo | blocks | bold italic underline backcolor | '
-        + 'alignleft aligncenter alignright alignjustify | '
-        + 'table code'
-    }
 
 
     setTimeout(() => {
@@ -70,11 +62,13 @@ export class TextBone extends RawBone {
         skin: false,
         content_css: false,
         content_style: textBoneStyle.cssText,
-        toolbar: toolbar,
+        toolbar: 'undo redo | blocks | bold italic underline backcolor | '
+        + 'alignleft aligncenter alignright alignjustify | '
+        + 'table code',
         plugins: ["table", "code"],
         formats: self.getFormats(), // TODO add classes
         valid_elements: self.getValidTagString(),
-        valid_classes: valid_classes,
+        valid_classes:   valid_classes = {"*": self.boneStructure["valid_html"]["validClasses"].join(" ")},
         readonly: self.boneStructure["readonly"],
         //images_upload_handler: self.uploadHandler,
 
