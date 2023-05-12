@@ -394,7 +394,10 @@ export class RawBone {
   getEditor(value: BoneValue, boneName: string, lang: string | null = null) {
 
     const inputElement: SlInput = document.createElement("sl-input");
-
+    if(this.boneStructure["descr"]!==null && this.boneStructure["descr"] !==undefined )
+    {
+        inputElement.placeholder = this.boneStructure["descr"];
+    }
     inputElement.dataset.boneName = boneName;
     inputElement.name = boneName;
 
@@ -467,7 +470,7 @@ export class RawBone {
     inputElement.dataset.boneName = newboneName;
     inputElement.dataset.lang = lang;
     inputElement.dataset.multiple = this.boneStructure["multiple"];
-    inputElement.placeholder = this.boneStructure["descr"];
+
 
     if (this.boneStructure["multiple"]) {
 

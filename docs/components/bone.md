@@ -38,6 +38,7 @@ Edit:
 <sl-bone id="testbone-edit" renderType='edit' ></sl-bone>
 
 <sl-bone id="testbone-edit-label" renderType='edit' renderLabel></sl-bone>
+<sl-bone id="testbone-edit-label-multi" renderType='edit' renderLabel></sl-bone>
 
 <sl-bone id="testbone-edit-save" renderType='edit' rendersaveButton></sl-bone>
 
@@ -54,14 +55,14 @@ Edit:
     "readonly":false,
     "descr":"TestBonename", 
     "languages":null,
-    "emptyValue":null}
+    "emptyvalue":""}
     
     bone.boneStructure=structure
     bone_label.boneStructure=structure
     bone_save.boneStructure=structure
     
-    bone.boneValue="Test"
-    bone_label.boneValue="Test"
+    //bone.boneValue="Test"
+    //bone_label.boneValue="Test"
     bone_save.boneValue="Test"
 </script>
 ```
