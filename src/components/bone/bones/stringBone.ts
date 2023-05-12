@@ -5,7 +5,6 @@ import type SlInput from "../../input/input";
 export class StringBone extends RawBone {
   getEditor(value: string, boneName: string, lang: string | null = null): HTMLElement {
     const stringBone: SlInput = super.getEditor(value, boneName, lang);
-
     stringBone.addEventListener("keypress", (keypress_event) => {
 
       if (keypress_event.key !== "Enter") return;
