@@ -360,7 +360,13 @@ export class RawBone {
 
     }
 
+    wrapper = this.postProcessBone(wrapper)
+
     return wrapper;
+  }
+
+  postProcessBone(wrapper){
+    return wrapper
   }
 
   createMultipleWrapper(value: any, lang: string | null = null): [HTMLElement, number] {

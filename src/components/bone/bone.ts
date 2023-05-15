@@ -163,6 +163,13 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     return formData
   }
 
+  getRenderer(){
+    if (this.inVi) {
+      return "vi"
+    }
+    return "json"
+  }
+
   @watchProps(['changeAllways'])
   changeAllwaysUpdate() {
     if (this.changeAllways && this.renderType === "edit") {

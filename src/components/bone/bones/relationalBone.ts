@@ -65,7 +65,7 @@ export class RelationalBone extends RawBone {
       searchBox.placeholder = formatstring(this.mainInstance.relationalCache[value], this.boneStructure, null, true);
     }
 
-    const url = `${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/list?search={q}`;
+    const url = `${this.mainInstance.apiUrl}/${this.mainInstance.getRenderer()}/${this.boneStructure["module"]}/list?search={q}`;
 
 
     //searchBox.style.width = "100%";
@@ -100,7 +100,7 @@ export class RelationalBone extends RawBone {
 
     searchBox.addEventListener("sl-item-select", async (e: CustomEvent) => {
       shadowInput.value = e.detail.item.value;
-      await fetch(`${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/view/${e.detail.item.value}`)
+      await fetch(`${this.mainInstance.apiUrl}/${this.mainInstance.getRenderer()}/${this.boneStructure["module"]}/view/${e.detail.item.value}`)
         .then(response => response.json())
         .then((data) => {
           this.mainInstance.relationalCache[e.detail.item.value] = {dest: data["values"]}
@@ -192,7 +192,7 @@ export class RelationalBone extends RawBone {
     testbtn.textContent = "test me"
     testbtn.addEventListener("click", () => {
       const self = this;
-      fetch(`${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/list?limit=5`).then(resp => resp.json().then((respdata) => {
+      fetch(`${this.mainInstance.apiUrl}/${this.mainInstance.getRenderer()}/${this.boneStructure["module"]}/list?limit=5`).then(resp => resp.json().then((respdata) => {
         self.addRelation(respdata["skellist"], boneName);
       }));
 
@@ -265,7 +265,7 @@ export class RelationalBone extends RawBone {
 
     table.height = "300px"; // todo auto  height ?
     table.rowindexes = true;
-    fetch(`${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/list`).then(resp => resp.json().then((respdata) => {
+    fetch(`${this.mainInstance.apiUrl}/${this.mainInstance.getRenderer()}/${this.boneStructure["module"]}/list`).then(resp => resp.json().then((respdata) => {
 
       const structure: BoneStructure = {}
       for (const item of respdata["structure"]) {
@@ -279,7 +279,7 @@ export class RelationalBone extends RawBone {
 
     }))
     table.addEventListener("table-fetchData", () => {
-      fetch(`${this.mainInstance.apiUrl}/json/${this.boneStructure["module"]}/list?cursor=${table.dataCursor}`).then(resp => resp.json().then((respdata) => {
+      fetch(`${this.mainInstance.apiUrl}/${this.mainInstance.getRenderer()}/${this.boneStructure["module"]}/list?cursor=${table.dataCursor}`).then(resp => resp.json().then((respdata) => {
         table.tableReady = true;
         table.addData(respdata["skellist"]);
         table.dataCursor = respdata["cursor"];

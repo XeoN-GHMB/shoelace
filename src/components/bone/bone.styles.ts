@@ -1,5 +1,6 @@
 import {css} from 'lit';
 import componentStyles from '../../styles/component.styles';
+
 //language=CSS
 export default css`
   ${componentStyles}
@@ -191,7 +192,6 @@ export default css`
   }
 
   .bone-inner-button-wrap .multiple-placeholder{
-    pointer-events: none;
     margin-right: var(--sl-spacing-small);
   }
 
@@ -828,5 +828,21 @@ sl-select::part(tag__remove-button){
   color: var(--sl-color-neutral-900);
 }
 
+.fileupload-dropzone{
+  border:1px solid var(--sl-color-info-500);
+}
+.fileupload-dropzone:before{
+    position: absolute;
+    content: "Hier hinziehen zum Hochladen";
+    display: flex;
+    place-content: center;
+    align-items: center;
+    flex-flow: row nowrap;
+    width: calc(100% - 264px);
+    padding: 0.5rem;
+    background-color: var(--sl-color-info-100);
+    z-index: 1;
+    pointer-events: none;
+}
 
 `;
