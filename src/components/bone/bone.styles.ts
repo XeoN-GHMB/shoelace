@@ -830,6 +830,7 @@ sl-select::part(tag__remove-button){
 
 .fileupload-dropzone{
   border:1px solid var(--sl-color-info-500);
+  position:relative
 }
 .fileupload-dropzone:before{
     position: absolute;
@@ -838,11 +839,13 @@ sl-select::part(tag__remove-button){
     place-content: center;
     align-items: center;
     flex-flow: row nowrap;
-    width: calc(100% - 264px);
+    width: 100%;
+    height:100%;
     padding: 0.5rem;
     background-color: var(--sl-color-info-100);
     z-index: 1;
     pointer-events: none;
+    opacity:0.7;
 }
 
 `;

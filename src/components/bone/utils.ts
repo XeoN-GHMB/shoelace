@@ -234,7 +234,7 @@ export function escapeString(value: BoneValue): string | string[] {
 export function getSkey(apiUrl:string) {
   return new Promise<string>((resolve, reject) => {
 
-    fetch(`${apiUrl}/json/skey`).then(response => response.json()).then((skey: string) => {
+    fetch(`${apiUrl}/vi/skey`).then(response => response.json()).then((skey: string) => {
       resolve(skey)
     }).catch((reason) => {
       reject(reason)
