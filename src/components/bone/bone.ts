@@ -82,7 +82,7 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
   /** If we have no `boneStructure` we can set the type to render the right bone ('file' renders a fileBone) */
   @property({type: String, reflect: true}) name = null;
 
-  @property({type: Boolean, reflect: true}) fromjinja = false;
+  @property({type: Boolean, reflect: true}) fromjson = false;
 
   /** Gets boneValue */
   get getBoneValue(): any {
@@ -181,13 +181,14 @@ export default class SlBone extends ShoelaceElement implements ShoelaceFormContr
     }
   }
 
-  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type", "fromjinja"])
+  @watchProps(['boneStructure', 'boneValue', "renderType", "disabled", "type", "fromjson"])
   optionUpdate() {
 
 
     //this.formControlController.setValidity(true);
-    if (this.fromjinja) {
+    if (this.fromjson) {
       this.boneStructure = JSON.parse(this.boneStructure);
+      this.boneValue = JSON.parse(this.boneValue)["value"];
       this.name = this.boneName;
     }
     if (this.type !== "") {
