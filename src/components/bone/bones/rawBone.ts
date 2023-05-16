@@ -538,6 +538,7 @@ export class RawBone {
       draggable.addEventListener("mousedown", (e) => {
 
         if (!this.absolutePostionSet) {
+          console.log("here ? ")
           this.absolutePostionSet = true;
 
           for (const _input: Array<HTMLElement, Array<number, number>> of this.inputsAbsolutePostions) {
@@ -697,7 +698,7 @@ export class RawBone {
         if (this.mainInstance.inTable) {
           this.moveElement.style.top = `${(e.pageY - (this.startHeight / 2) - this.mainInstance.getBoundingClientRect().top).toString()}px`;//in of table
         } else {
-          this.moveElement.style.top = `${(e.pageY - (this.startHeight / 2)).toString()}px`;//out of table
+          this.moveElement.style.top = `${(e.layerY - (this.startHeight / 2)).toString()}px`;//out of table
         }
 
         //this.moveElement.style.top = yPos  + "px";
