@@ -63,11 +63,10 @@ export class FileBone extends RawBone {
     const shadowKey = document.createElement("sl-input");
     const fileNameInput = document.createElement("sl-input");
     const uploadButton = document.createElement("sl-button");
+    const uploadIcon = document.createElement("sl-icon");
+    const progressBar = document.createElement("sl-progress-bar");
     const clearUploadButton = document.createElement("sl-button");
     const clearUploadIcon = document.createElement("sl-icon");
-    const uploadIcon = document.createElement("sl-icon");
-
-    const progressBar = document.createElement("sl-progress-bar");
 
     fileNameInput.dataset.name = "entrylabel"
     shadowKey.dataset.name = "entrykey"
@@ -83,20 +82,24 @@ export class FileBone extends RawBone {
     uploadButton.addEventListener("click", () => {
       shadowFile.click();
     })
+    console.log(this.boneStructure["multiple"])
+    if(!this.boneStructure["multiple"]) {
 
-    clearUploadButton.setAttribute("variant", "danger");
-    clearUploadButton.setAttribute("outline", "");
-    clearUploadIcon.setAttribute("name", "trash");
-    clearUploadIcon.disabled = this.boneStructure["readonly"];
-    clearUploadButton.classList.add("upload-button");
-    clearUploadButton.appendChild(clearUploadIcon);
-    clearUploadButton.addEventListener("click", () => {
-      shadowFile.value=""
-      fileNameInput.value=""
-      shadowKey.value = ""
-      this.mainInstance.internboneValue = this.reWriteBoneValue();
-      this.mainInstance.handleChange();
-    })
+      clearUploadButton.setAttribute("variant", "danger");
+      clearUploadButton.setAttribute("outline", "");
+      clearUploadIcon.setAttribute("name", "x");
+      clearUploadIcon.disabled = this.boneStructure["readonly"];
+      clearUploadButton.classList.add("upload-button");
+      clearUploadButton.appendChild(clearUploadIcon);
+      clearUploadButton.addEventListener("click", () => {
+        this.saveState(lang);
+        shadowFile.value = ""
+        fileNameInput.value = ""
+        shadowKey.value = ""
+        this.mainInstance.internboneValue = this.reWriteBoneValue();
+        this.mainInstance.handleChange();
+      })
+    }
 
 
     shadowFile.type = "file";
@@ -161,9 +164,12 @@ export class FileBone extends RawBone {
     fileContainer.appendChild(fileNameInput);
     fileContainer.appendChild(progressBar);
 
+
     fileContainer.appendChild(uploadButton);
-    fileContainer.appendChild(clearUploadButton);
-    if(!this.boneStructure["readonly"]){
+    if(!this.boneStructure["multiple"]) {
+      fileContainer.appendChild(clearUploadButton);
+    }
+    if(!this.boneStructure["readonly"] && !this.boneStructure["multiple"]){
       fileContainer.addEventListener("dragover",(e)=>{
         e.preventDefault()
         fileContainer.classList.add("fileupload-dropzone")
@@ -173,8 +179,6 @@ export class FileBone extends RawBone {
         fileContainer.classList.remove("fileupload-dropzone")
         e.preventDefault()
         let fileInfos =e.dataTransfer.files
-        console.log(path)
-      console.log(lang)
         await this.handleFileEvent(fileInfos, path, lang, fileNameInput, shadowKey, progressBar);
       })
 
