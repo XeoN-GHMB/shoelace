@@ -943,7 +943,7 @@ export class RawBone {
     placeholder.classList.add("multiple-placeholder");
     placeholder.setAttribute("filled", "");
     placeholder.setAttribute("placeholder", translate("actions.noentry"));
-    placeholder.disabled = this.boneStructure["readonly"];
+    placeholder.disabled = true;
     placeholder.dataset.name = lang === null ? `placeholder.${this.boneName}` : `placeholder.${this.boneName}.${lang}`;
     if (lang !== null) {
       if (this.idx[lang] !== 0) {
