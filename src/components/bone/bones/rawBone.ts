@@ -239,12 +239,7 @@ export class RawBone {
               this.boneValue[lang] = []
             }
           }
-          // Lang and Mul
-          if (this.boneValue === null) continue;
-          if (this.boneValue[lang] === undefined) continue;
-          if (this.boneValue[lang] === null) continue;
-
-          const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue[lang], lang);
+          const [multipleWrapper, idx] = this.createMultipleWrapper(this.boneValue?.[lang], lang);
           if (this.idx === null) {
             this.idx = {};
           }
@@ -271,9 +266,7 @@ export class RawBone {
           buttonWrap.appendChild(undoButton);
           buttonWrap.appendChild(clearButton);
 
-          if (!this.boneStructure["readonly"]) {
-            tab_panel.appendChild(buttonWrap)
-          }
+          tab_panel.appendChild(buttonWrap)
 
           tab_panel.appendChild(languageWrapper);
 
