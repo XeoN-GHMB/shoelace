@@ -13,8 +13,12 @@ export class StringBone extends RawBone {
       const childs = multipleWrapper.querySelectorAll("sl-input");
 
       if (stringBone === childs[childs.length-1]) {
+        const elem = this.addInput(null, lang)
+        multipleWrapper.appendChild(elem);
+        elem.getElementsByTagName("sl-input")[0].updateComplete.then(() => {
+          elem.getElementsByTagName("sl-input")[0].focus()
+        })
 
-        multipleWrapper.appendChild(this.addInput(null, lang));
       }
     });
 
