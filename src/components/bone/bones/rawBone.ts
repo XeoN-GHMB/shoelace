@@ -187,8 +187,10 @@ export class RawBone {
     wrapper.dataset.boneWrapper = "true";
     wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     wrapper.dataset.boneName = this.boneName;
+
+    let boneNameLabel = null
     if (this.mainInstance.renderLabel) {
-      const boneNameLabel = document.createElement("div");
+      boneNameLabel = document.createElement("div");
       boneNameLabel.innerText = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
       boneNameLabel.classList.add("bone-name")
       if (this.boneStructure["params"]?.["tooltip"]) {
@@ -209,7 +211,7 @@ export class RawBone {
     }
 
     if (this.boneStructure["languages"] !== null) {
-
+      boneNameLabel.style.marginBottom = "40px"
 
       const tabGroup = document.createElement("sl-tab-group");
       tabGroup.setAttribute("placement", "bottom");
@@ -264,16 +266,17 @@ export class RawBone {
           const buttonWrap = document.createElement("div");
           buttonWrap.classList.add("bone-inner-button-wrap")
 
-          buttonWrap.appendChild(clearButton);
+          buttonWrap.appendChild(addButton);
           buttonWrap.appendChild(this.getplaceHolder(lang));
           buttonWrap.appendChild(undoButton);
-          buttonWrap.appendChild(addButton);
+          buttonWrap.appendChild(clearButton);
 
-
-          tab_panel.appendChild(languageWrapper);
           if (!this.boneStructure["readonly"]) {
             tab_panel.appendChild(buttonWrap)
           }
+
+          tab_panel.appendChild(languageWrapper);
+
           this.addScroll();
           this.addMouseMove();
           this.addMouseUp();
@@ -314,8 +317,6 @@ export class RawBone {
         const innerWrap = document.createElement("div");
         innerWrap.classList.add("bone-inner-wrap")
 
-        innerWrap.appendChild(multipleWrapper)
-
         const clearButton = this.getclearButton();
         //Undo Button
         const undoButton = this.getundoButton()
@@ -323,11 +324,14 @@ export class RawBone {
         const buttonWrap = document.createElement("div");
         buttonWrap.classList.add("bone-inner-button-wrap")
 
-        buttonWrap.appendChild(clearButton);
+        buttonWrap.appendChild(addButton);
         buttonWrap.appendChild(this.getplaceHolder());
         buttonWrap.appendChild(undoButton);
-        buttonWrap.appendChild(addButton);
+        buttonWrap.appendChild(clearButton);
+
+
         innerWrap.appendChild(buttonWrap);
+        innerWrap.appendChild(multipleWrapper);
         innerWrap.appendChild(this.addErrorContainer());// default error container if no input in in mul wrapper
         wrapper.appendChild(innerWrap);
 
@@ -821,7 +825,7 @@ export class RawBone {
       const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${path}']`);
       clearButton.style.display = "";
       const placeholder: SlInput = this.mainInstance.bone.querySelector(`[data-name='placeholder.${path}']`);
-      placeholder.style.display = "none";
+      placeholder.style.visibility = "hidden";
     }
 
 
@@ -833,7 +837,7 @@ export class RawBone {
     this.saveState(lang);
     multipleWrapper.innerHTML = "";//Clear Wrapper;
 
-
+    console.log(`undoBtn.${path}`)
     const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
     const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${path}']`);
     const placeholder: SlInput = this.mainInstance.bone.querySelector(`[data-name='placeholder.${path}']`);
@@ -841,7 +845,7 @@ export class RawBone {
 
     undoButton.style.display = "";
     clearButton.style.display = "none";
-    placeholder.style.display = "";
+    placeholder.style.visibility = "visible";
     if (lang === null) {
       this.idx = 0;
     } else {
@@ -858,7 +862,7 @@ export class RawBone {
     addIcon.setAttribute("name", "plus");
     addIcon.setAttribute("slot", "prefix");
     addButton.appendChild(addIcon);
-    addButton.innerHTML += translate("actions.add");
+    //addButton.innerHTML += translate("actions.add");
     addButton.setAttribute("variant", "success");
     addButton.setAttribute("outline", "");
     addButton.classList.add("add-button");
@@ -881,7 +885,7 @@ export class RawBone {
       const clearButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='clearBtn.${name}']`);
       clearButton.style.display = "";
       const placeholder: SlInput = this.mainInstance.bone.querySelector(`[data-name='placeholder.${name}']`);
-      placeholder.style.display = "none";
+      placeholder.style.visibility = "hidden";
 
     });
     return addButton
@@ -935,7 +939,7 @@ export class RawBone {
       this.undo(lang)
 
     });
-    undoButton.dataset.name = `undoBtn.${this.boneName}`
+    undoButton.dataset.name = lang === null ? `undoBtn.${this.boneName}` : `undoBtn.${this.boneName}.${lang}`;
     undoButton.style.display = "none";
     return undoButton;
   }
@@ -945,14 +949,15 @@ export class RawBone {
     placeholder.classList.add("multiple-placeholder");
     placeholder.setAttribute("filled", "");
     placeholder.setAttribute("placeholder", translate("actions.noentry"));
+    placeholder.disabled = this.boneStructure["readonly"];
     placeholder.dataset.name = lang === null ? `placeholder.${this.boneName}` : `placeholder.${this.boneName}.${lang}`;
     if (lang !== null) {
       if (this.idx[lang] !== 0) {
-        placeholder.style.display = "none";
+        placeholder.style.visibility = "hidden";
       }
     } else {
       if (this.idx !== 0) {
-        placeholder.style.display = "none";
+        placeholder.style.visibility = "hidden";
       }
     }
     return placeholder;

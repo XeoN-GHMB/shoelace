@@ -122,9 +122,13 @@ export default css`
     cursor: pointer;
   }
 
-  .file-container .upload-button,
-  .file-container .clear-button{
-    margin-left: var(--sl-spacing-small);;
+  /*.file-container .upload-button,*/
+  /*.file-container .clear-button{*/
+  /*  margin-left: var(--sl-spacing-small);;*/
+ /* }*/
+  
+  .bone-inner-space{
+      width:100%;
   }
 
   .bone-wrapper .upload-button::part(base),
@@ -168,6 +172,8 @@ export default css`
     flex-direction: row;
     justify-content: flex-end;
     flex: 1;
+    gap: var(--sl-spacing-small);
+    margin-bottom: var(--sl-spacing-small);
   }
 
   .bone-type-relational .add-button::part(base){
@@ -181,19 +187,19 @@ export default css`
   .multi-input .add-button::part(label){
     display: none;
   }
+    
+  /*.bone-inner-button-wrap .clear-button,*/
+  /*.bone-inner-button-wrap .undo-button{*/
+  /*  margin-right: var(--sl-spacing-small);*/
+  /*}*/
+  
+  /*.bone-inner-button-wrap .add-button{*/
+  /*  margin-left: auto;*/
+  /*}*/
 
-  .bone-inner-button-wrap .clear-button,
-  .bone-inner-button-wrap .undo-button{
-    margin-right: var(--sl-spacing-small);
-  }
-
-  .bone-inner-button-wrap .add-button{
-    margin-left: auto;
-  }
-
-  .bone-inner-button-wrap .multiple-placeholder{
-    margin-right: var(--sl-spacing-small);
-  }
+  /*.bone-inner-button-wrap .multiple-placeholder{*/
+  /*  margin-right: var(--sl-spacing-small);*/
+  /*}*/
 
   .bone-inner-button-wrap .multiple-placeholder::part(base){
     border-top-left-radius: 0;

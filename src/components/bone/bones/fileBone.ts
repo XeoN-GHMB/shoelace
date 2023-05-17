@@ -88,7 +88,7 @@ export class FileBone extends RawBone {
       clearUploadButton.setAttribute("variant", "danger");
       clearUploadButton.setAttribute("outline", "");
       clearUploadIcon.setAttribute("name", "x");
-      clearUploadIcon.disabled = this.boneStructure["readonly"];
+      clearUploadButton.disabled = this.boneStructure["readonly"];
       clearUploadButton.classList.add("upload-button");
       clearUploadButton.appendChild(clearUploadIcon);
       clearUploadButton.addEventListener("click", () => {
