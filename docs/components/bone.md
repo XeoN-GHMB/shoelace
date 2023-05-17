@@ -8,10 +8,10 @@ Bone Elements
 ## Bone
 
 ```html preview
-<sl-bone fromjinja="true" bonename="name" bonestructure='{"descr": "E-Mail", "type": "str.email", "required": true, "params": {}, "visible": true, "readonly": false, "unique": 1, "languages": null, "emptyvalue": "", "indexed": true, "multiple": false, "maxlength": 254, "sortindex": 4}' bonevalue="foo@bar.com"></sl-bone>
+<sl-bone fromjson="true" bonename="name" bonestructure='{"descr": "E-Mail", "type": "str.email", "required": true, "params": {}, "visible": true, "readonly": false, "unique": 1, "languages": null, "emptyvalue": "", "indexed": true, "multiple": false, "maxlength": 254, "sortindex": 4}' bonevalue='{"value": "foo@bar.com"}'></sl-bone>
 <br>
 Edit:
-<sl-bone rendertype="edit" fromjinja="true" bonename="name" bonestructure='{"descr": "E-Mail", "type": "str.email", "required": true, "params": {}, "visible": true, "readonly": false, "unique": 1, "languages": null, "emptyvalue": "", "indexed": true, "multiple": false, "maxlength": 254, "sortindex": 4}' bonevalue="foo@bar.com"></sl-bone>
+<sl-bone rendertype="edit" fromjson="true" bonename="name" bonestructure='{"descr": "E-Mail", "type": "str.email", "required": true, "params": {}, "visible": true, "readonly": false, "unique": 1, "languages": null, "emptyvalue": "", "indexed": true, "multiple": false, "maxlength": 254, "sortindex": 4}' bonevalue='{"value": "foo@bar.com"}'></sl-bone>
 ```
 
 (with boneStructure / renderType='view')
