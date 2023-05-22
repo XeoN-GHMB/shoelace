@@ -212,11 +212,11 @@ export class FileBone extends RawBone {
       usingWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
       usingWrapper.dataset.depth = this.depth.toString();
       let relValue = null;
-      if(this.mainInstance.relationalCache[value]!==undefined && this.mainInstance.relationalCache[value]!==null)
+      if(this.mainInstance.relationalCache[key]!==undefined && this.mainInstance.relationalCache[key]!==null)
       {
-         relValue = this.mainInstance.relationalCache[value]["rel"];
+         relValue = this.mainInstance.relationalCache[key]["rel"];
       }
-
+      console.log(this.mainInstance.relationalCache)
 
       for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
 

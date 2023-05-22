@@ -1,4 +1,6 @@
 # Changelog
+## 0.5.15
+- fix: filebone now loads using data correctly
 
 ## 0.5.14
 - fix: filebone now supports using skels
