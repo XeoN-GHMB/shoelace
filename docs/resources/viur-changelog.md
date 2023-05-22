@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.13
+- fix: filebone changes
+- fix: some multiple and language improvements
+
 ## 0.5.12
 - fix: carousel multipages per view now works as expected
 - feat: bones now can have a jinja flag
