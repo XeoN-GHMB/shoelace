@@ -184,6 +184,7 @@ export class RawBone {
       wrapper.classList.add("bone-wrapper")
     }
 
+    wrapper.setAttribute("part", "base");
     wrapper.dataset.boneWrapper = "true";
     wrapper.dataset.multiple = this.boneStructure["multiple"].toString();
     wrapper.dataset.boneName = this.boneName;
@@ -192,7 +193,8 @@ export class RawBone {
     if (this.mainInstance.renderLabel) {
       boneNameLabel = document.createElement("div");
       boneNameLabel.innerText = this.boneStructure["descr"].length > 0 ? this.boneStructure["descr"] : this.boneName;
-      boneNameLabel.classList.add("bone-name")
+      boneNameLabel.classList.add("bone-name");
+      boneNameLabel.setAttribute("part", "label");
       if (this.boneStructure["params"]?.["tooltip"]) {
         const tooltip: SlTooltip = document.createElement("sl-tooltip");
         const avatar: SlAvatar = document.createElement("sl-avatar");
@@ -309,6 +311,7 @@ export class RawBone {
 
         const innerWrap = document.createElement("div");
         innerWrap.classList.add("bone-inner-wrap")
+        innerWrap.setAttribute("part", "content");
 
         const clearButton = this.getclearButton();
         //Undo Button
