@@ -501,7 +501,7 @@ export class RawBone {
 
           this.clearMultipleWrapper(lang)
           this.mainInstance.internboneValue = {[this.boneName]: [""]};// set the bone value to emtpy sting to delete it in the backend
-          this.mainInstance.handleChange("deleteEntry");
+          this.mainInstance.handleChange();
           return;
         }
         if (multipleWrapper !== null) {
@@ -518,10 +518,15 @@ export class RawBone {
 
           multipleWrapper.replaceWith(element);
           this.mainInstance.internboneValue = this.reWriteBoneValue();
-          this.mainInstance.handleChange("deleteEntry");
+          this.mainInstance.handleChange();
         }
         const undoButton: SlButton = this.mainInstance.bone.querySelector(`[data-name='undoBtn.${path}']`);
         undoButton.style.display = "";
+        console.log("XXXX")
+
+        this.mainInstance.internboneValue = this.reWriteBoneValue();
+        console.log(this.mainInstance.internboneValue)
+        this.mainInstance.handleChange();
 
         //this.mainInstance.boneValue = obj[this.mainInstance.boneName];
 
