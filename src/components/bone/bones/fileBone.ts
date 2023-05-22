@@ -8,6 +8,7 @@ import type {TemplateResult} from "lit";
 import SlBone from "../bone";
 import SlButton from "../../button/button";
 import SlInput from "../../input/input";
+import {BoneEditRenderer} from "../boneEditRenderer";
 
 export class FileBone extends RawBone {
 
@@ -50,6 +51,8 @@ export class FileBone extends RawBone {
         key = value["dest"]["key"];
         this.mainInstance.relationalCache[key] = value;
 
+      } else if ("key" in value){
+        key = value["key"];
       }
     } else {
       key = value;
@@ -58,6 +61,8 @@ export class FileBone extends RawBone {
     const fileContainer = document.createElement("div");
     fileContainer.classList.add("file-container")
     fileContainer.dataset.boneName = boneName;
+
+    const hasUsing = this.boneStructure["using"]!==null;
 
     const shadowFile = document.createElement("input");
     const shadowKey = document.createElement("sl-input");
@@ -82,7 +87,7 @@ export class FileBone extends RawBone {
     uploadButton.addEventListener("click", () => {
       shadowFile.click();
     })
-    console.log(this.boneStructure["multiple"])
+
     if(!this.boneStructure["multiple"]) {
 
       clearUploadButton.setAttribute("variant", "danger");
@@ -120,7 +125,15 @@ export class FileBone extends RawBone {
     shadowFile.hidden = true;
 
     shadowKey.hidden = true;
-    shadowKey.name = boneName;
+    if(hasUsing)
+    {
+      shadowKey.name = `${boneName}.key`;
+    }
+    else
+    {
+      shadowKey.name = boneName;
+    }
+
     if (value !== null && value !== undefined) {
       shadowKey.value = key.toString();
     }
@@ -152,7 +165,7 @@ export class FileBone extends RawBone {
       try {
         fileNameInput.value = this.mainInstance.relationalCache[key]["dest"]["name"];
       } catch (e) {
-        console.log("erorr in file value", value);
+        console.log("error in file value", value);
       }
 
     }
@@ -186,6 +199,46 @@ export class FileBone extends RawBone {
         fileContainer.classList.remove("fileupload-dropzone")
       })
     }
+
+    if(hasUsing)
+    {
+      const outerWrapper = document.createElement("div");
+      outerWrapper.classList.add("bone-inner-wrap");
+
+      const usingWrapper = document.createElement("div");
+      usingWrapper.classList.add("record-wrapper");
+
+      usingWrapper.dataset.boneName = boneName;
+      usingWrapper.dataset.multiple = this.boneStructure["multiple"].toString();
+      usingWrapper.dataset.depth = this.depth.toString();
+      let relValue = null;
+      if(this.mainInstance.relationalCache[value]!==undefined && this.mainInstance.relationalCache[value]!==null)
+      {
+         relValue = this.mainInstance.relationalCache[value]["rel"];
+      }
+
+
+      for (const [_boneName, _boneStructure] of Object.entries(this.boneStructure["using"])) {
+
+        let recordBoneValue: any = null;
+        if (relValue !== null && relValue !== undefined) {
+
+          recordBoneValue = relValue[_boneName];
+
+        }
+        const newBoneName = `${boneName}.${_boneName}`;
+        _boneStructure["readonly"] = this.boneStructure["readonly"]//override readonly that all child bones are readonly too
+        const bone: object = new BoneEditRenderer(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).getBone();
+        const tmp: HTMLElement = new bone(newBoneName, recordBoneValue, _boneStructure, this.mainInstance).edit(true, this.depth + 1);
+        tmp.dataset.fromRecord = "true";
+
+        usingWrapper.appendChild(tmp);
+      }
+      outerWrapper.appendChild(fileContainer);
+      outerWrapper.appendChild(usingWrapper);
+      return outerWrapper;
+    }
+
 
     return fileContainer;
   }
@@ -228,6 +281,7 @@ export class FileBone extends RawBone {
         progressBar.textContent = `${progressBar.value}%`;
 
         const fileData: FileSkelValues = await this.fileUpload(fileInfos[i])
+
         this.mainInstance.relationalCache[fileData["key"]] = {"dest": fileData}
 
         if (!this.boneStructure["multiple"]) {

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.5.14
+- fix: filebone now supports using skels
+
 ## 0.5.13
 - fix: filebone changes
 - fix: some multiple and language improvements
