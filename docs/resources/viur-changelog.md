@@ -1,4 +1,7 @@
 # Changelog
+## 0.5.16
+- fix: table max height 
+
 ## 0.5.15
 - fix: filebone now loads using data correctly
 

@@ -526,6 +526,7 @@ export default css`
     position: relative;
     box-sizing: border-box;
     min-height: 22px;
+    max-height: 200px;
     border-bottom: 1px solid var(--table-border-color);
     transition: background-color ease .3s;
     transition-delay: 200ms;
