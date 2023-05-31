@@ -1,4 +1,7 @@
 # Changelog
+## 0.5.17
+- fix: multiple entries now removeable again
+
 ## 0.5.16
 - fix: table max height 
 
