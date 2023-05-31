@@ -264,6 +264,7 @@ export default class SlCombobox extends ShoelaceElement {
       >
         <sl-input
           part="input"
+          exportparts="base:input__base, prefix:input__prefix, input:input__input, suffix:input__suffix"
           slot="trigger"
           type="text"
           role="combobox"

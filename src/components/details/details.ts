@@ -207,13 +207,13 @@ export default class SlDetails extends ShoelaceElement {
           </span>
 
           <slot name="summary" part="summary" class="details__summary">${this.summary}</slot>
-          
+
           <span part="suffix" class="details-item__suffix">
             <slot name="suffix">
               <sl-icon v-if="suffix" name="${this.suffix}" library="${this.suffixLibrary}"></sl-icon>
             </slot>
           </span>
-          
+
           <span part="summary-icon" class="details__summary-icon">
             <slot name="summary-icon">
               <slot name="expand-icon">
@@ -223,11 +223,11 @@ export default class SlDetails extends ShoelaceElement {
                 <sl-icon library="system" name=${isRtl ? 'chevron-left' : 'chevron-right'}></sl-icon>
               </slot>
             </slot>
-            
+
           </span>
         </div>
 
-        <div class="details__body" role="region" aria-labelledby="header">
+        <div class="details__body" part="body" role="region" aria-labelledby="header">
           <slot part="content" id="content" class="details__content"></slot>
         </div>
       </div>
