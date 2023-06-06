@@ -85,6 +85,7 @@
   - [Table](/components/table)
   - [Table Wrapper](/components/table-wrapper)
   - [Bone](/components/bone)
+  - [Filter Checkbox](/components/filter-checkbox)
   <!--plop:component-->
   
 - Utilities

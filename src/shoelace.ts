@@ -72,6 +72,7 @@ export { default as SlTable } from './components/table/table';
 export { default as SlTableWrapper } from './components/table-wrapper/table-wrapper';
 export { default as SlBone } from './components/bone/bone';
 export { default as SlOption } from './components/option/option';
+export { default as SlFilterCheckbox } from './components/filter-checkbox/filter-checkbox';
 /* plop:component */
 
 // Utilities
