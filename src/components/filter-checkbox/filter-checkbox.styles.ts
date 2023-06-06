@@ -13,6 +13,7 @@ export default css`
     align-items: center;
     justify-content: flex-start;
     background-color: #dddddd;
+    position: relative;
     gap: 2px;
     padding: 2px 3px;
   }
@@ -39,8 +40,6 @@ export default css`
     display: flex;
     padding: 1rem;
     flex-direction: column;
-    height: min-content;
-
-    width: min-content;
+    z-index: 9999;
   }
 `;

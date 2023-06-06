@@ -53,17 +53,19 @@ export default class SlFilterCheckbox extends ShoelaceElement {
   }
 
   render() {
-    return html`<div>
-      <sl-popup id="menu" placement="bottom-end"
-        ><div class="menu">
-          <p>TEST</p>
-          <p>TEST</p>
-          <p>TEST</p>
-          <p>TEST</p>
-        </div></sl-popup
-      >
-      <sl-checkbox></sl-checkbox><sl-icon name="chevron-down" @click="${this.handleClick}"></sl-icon>
-    </div> `;
+    return html`
+      <section>
+        <div>
+          <sl-checkbox id="filter-checkbox"></sl-checkbox>
+          <sl-icon name="chevron-down" @click="${this.handleClick}"></sl-icon>
+        </div>
+        <sl-popup id="menu" placement="bottom-end">
+          <div class="menu">
+            <slot name="menu"></slot>
+          </div>
+        </sl-popup>
+      </section>
+    `;
   }
 }
 

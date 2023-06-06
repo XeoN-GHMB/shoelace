@@ -5,7 +5,14 @@
 A description of the component goes here.
 
 ```html preview
-<sl-filter-checkbox></sl-filter-checkbox>
+<sl-filter-checkbox>
+  <div slot="menu">
+    <p>TEST</p>
+    <p>TEST</p>
+    <p>TEST</p>
+    <p>TEST</p>
+  </div>
+</sl-filter-checkbox>
 ```
 
 ## Examples
