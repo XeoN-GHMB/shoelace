@@ -11,8 +11,7 @@ export default css`
   div {
     display: inline-flex;
     align-items: center;
-    width: fit-content;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: #dddddd;
     gap: 2px;
     padding: 2px 3px;
@@ -34,5 +33,14 @@ export default css`
     color: gray;
     font-size: 12px;
     font-weight: 900;
+  }
+
+  .menu {
+    display: flex;
+    padding: 1rem;
+    flex-direction: column;
+    height: min-content;
+
+    width: min-content;
   }
 `;

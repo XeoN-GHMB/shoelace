@@ -1,6 +1,7 @@
 import '../checkbox/checkbox';
 import '../icon/icon';
-import { customElement, property } from 'lit/decorators.js';
+import '../popup/popup';
+import { customElement, property, query } from 'lit/decorators.js';
 import { html } from 'lit';
 import { LocalizeController } from '../../utilities/localize';
 import { watch } from '../../internal/watch';
@@ -31,9 +32,13 @@ export default class SlFilterCheckbox extends ShoelaceElement {
   static styles: CSSResultGroup = styles;
 
   private readonly localize = new LocalizeController(this);
+  private showMenu = false;
 
   /** An example attribute. */
   @property() attr = 'example';
+
+  @query('#menu')
+  _popup;
 
   @watch('someProperty')
   doSomething() {
@@ -41,8 +46,24 @@ export default class SlFilterCheckbox extends ShoelaceElement {
     this.emit('sl-event-name');
   }
 
+  handleClick() {
+    console.log(this._popup);
+    this.showMenu = !this.showMenu;
+    this._popup.active = this.showMenu;
+  }
+
   render() {
-    return html`<div><sl-checkbox></sl-checkbox><sl-icon name="chevron-down"></sl-icon></div>`;
+    return html`<div>
+      <sl-popup id="menu" placement="bottom-end"
+        ><div class="menu">
+          <p>TEST</p>
+          <p>TEST</p>
+          <p>TEST</p>
+          <p>TEST</p>
+        </div></sl-popup
+      >
+      <sl-checkbox></sl-checkbox><sl-icon name="chevron-down" @click="${this.handleClick}"></sl-icon>
+    </div> `;
   }
 }
 
