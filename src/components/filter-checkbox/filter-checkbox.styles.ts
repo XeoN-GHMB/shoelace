@@ -36,10 +36,7 @@ export default css`
     font-weight: 900;
   }
 
-  .menu {
-    display: flex;
-    padding: 1rem;
-    flex-direction: column;
+  sl-popup::part(popup) {
     z-index: 9999;
   }
 `;
