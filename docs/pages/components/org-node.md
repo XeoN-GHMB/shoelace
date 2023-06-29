@@ -7,7 +7,7 @@ layout: component
 
 A description of the component goes here.
 
-```html preview
+```html:preview
 <sl-org-node></sl-org-node>
 ```
 

@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
 <sl-card class="card-overview">
   <img
     slot="image"
@@ -91,7 +91,7 @@ const App = () => (
 
 Basic cards aren't very exciting, but they can display any content you want them to.
 
-```html preview
+```html:preview
 <sl-card class="card-basic">
   This is just a basic card. No image, no header, and no footer. Just your content.
 </sl-card>
@@ -127,7 +127,7 @@ const App = () => (
 
 Headers can be used to display titles and more.
 
-```html preview
+```html:preview
 <sl-card class="card-header">
   <div slot="header">
     Header Title
@@ -200,7 +200,7 @@ const App = () => (
 
 Footers can be used to display actions, summaries, or other relevant content.
 
-```html preview
+```html:preview
 <sl-card class="card-footer">
   This card has a footer. You can put all sorts of things in it!
 
@@ -259,7 +259,7 @@ const App = () => (
 
 Cards accept an `image` slot. The image is displayed atop the card and stretches to fit.
 
-```html preview
+```html:preview
 <sl-card class="card-image">
   <img
     slot="image"
@@ -305,7 +305,7 @@ const App = () => (
 
 Cards can use horizontal parameter to place the image on the left side.
 
-```html preview
+```html:preview
 <sl-card horizontal>
   <img
     slot="image"
@@ -324,7 +324,7 @@ Cards can use horizontal parameter to place the image on the left side.
 Cards accept an `selectable` and `selected` property. The card then can be selected and used to build complex 'visual checkboxes'.
 The `selectable` enables the selection/checked logic and `selected` is the reflective state property. 
 
-```html preview
+```html:preview
 <div style="display:flex; gap:20px">
   <div style="display:flex;flex-direction:column">
     <sl-card id="cardItem" class="card-image" selectable selected>

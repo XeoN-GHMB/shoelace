@@ -7,7 +7,7 @@ layout: component
 
 A wrapper around the details component to simulate a group or "accordion" where only one is shown at a time
 
-```html preview
+```html:preview
 <sl-details-group>
   <sl-details summary="First" open>
     <sl-icon slot="prefix" name="plus"></sl-icon>

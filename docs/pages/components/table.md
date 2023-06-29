@@ -7,7 +7,7 @@ layout: component
 
 Create an interactive Table widget, from an existing table or use the properties skellist and structure.
 
-```html preview
+```html:preview
 <sl-table id="exampletable" moveablecolumns moveablerows rowselect>
   <table>
     <thead>
@@ -60,7 +60,7 @@ table1.addEventListener("sl-selectionChanged",(event)=>{
 ## Examples
 
 The Property skellist ist reactive and can be modified on runtime.
-```html preview
+```html:preview
 <sl-button id="addentry">add Entry</sl-button>
 <sl-button id="cleartable">clear Table</sl-button>
 <sl-button id="loadtable">load default</sl-button>
@@ -96,7 +96,7 @@ document.querySelector("#loadtable").addEventListener("click",(event)=>{
 
 ### First Example
 By setting the table height the table will use a virutal dom to support large datasets.
-```html preview
+```html:preview
 <sl-input id="search" placeholder="search"></sl-input>
 
 <sl-table id="exampletable3" height="500px" sort="name">

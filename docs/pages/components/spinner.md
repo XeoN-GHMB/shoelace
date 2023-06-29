@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
 <sl-spinner></sl-spinner>
 ```
 {% raw %}
@@ -23,7 +23,7 @@ const App = () => (
 
 Spinners are sized based on the current font size. To change their size, set the `font-size` property on the spinner itself or on a parent element as shown below.
 
-```html preview
+```html:preview
 <sl-spinner></sl-spinner>
 <sl-spinner style="font-size: 2rem;"></sl-spinner>
 <sl-spinner style="font-size: 3rem;"></sl-spinner>
@@ -45,7 +45,7 @@ const App = () => (
 
 The spinner's colors can be changed by setting the `--indicator-color`
 
-```html preview
+```html:preview
 <sl-spinner style="font-size: 3rem; --indicator-color: deeppink"></sl-spinner>
 ```
 {% raw %}
@@ -66,7 +66,7 @@ const App = () => (
 
 The spinner's speed can be changed by setting the `--speed`
 
-```html preview
+```html:preview
 <sl-spinner style="font-size: 2rem; --speed: .5s"></sl-spinner>
 ```
 {% raw %}

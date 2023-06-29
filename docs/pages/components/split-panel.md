@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
 <sl-split-panel>
   <div
     slot="start"
@@ -61,7 +61,7 @@ const App = () => (
 
 To set the initial position, use the `position` attribute. If no position is provided, it will default to 50% of the available space.
 
-```html preview
+```html:preview
 <sl-split-panel position="75">
   <div
     slot="start"
@@ -82,7 +82,7 @@ To set the initial position, use the `position` attribute. If no position is pro
 
 To set the initial position in pixels instead of a percentage, use the `position-in-pixels` attribute.
 
-```html preview
+```html:preview
 <sl-split-panel position-in-pixels="150">
   <div
     slot="start"
@@ -136,7 +136,7 @@ const App = () => (
 
 Add the `vertical` attribute to render the split panel in a vertical orientation where the start and end panels are stacked. You also need to set a height when using the vertical orientation.
 
-```html preview
+```html:preview
 <sl-split-panel vertical style="height: 400px;">
   <div
     slot="start"
@@ -190,7 +190,7 @@ const App = () => (
 
 To snap panels at specific positions while dragging, add the `snap` attribute with one or more space-separated values. Values must be in pixels or percentages. For example, to snap the panel at `100px` and `50%`, use `snap="100px 50%"`. You can also customize how close the divider must be before snapping with the `snap-threshold` attribute.
 
-```html preview
+```html:preview
 <div class="split-panel-snapping">
   <sl-split-panel snap="100px 50%">
     <div
@@ -308,7 +308,7 @@ const App = () => (
 
 Add the `disabled` attribute to prevent the divider from being repositioned.
 
-```html preview
+```html:preview
 <sl-split-panel disabled>
   <div
     slot="start"
@@ -364,7 +364,7 @@ By default, both panels will grow or shrink proportionally when the host element
 
 Try resizing the example below with each option and notice how the panels respond.
 
-```html preview
+```html:preview
 <div class="split-panel-primary">
   <sl-split-panel>
     <div
@@ -454,7 +454,7 @@ To set a minimum or maximum size of the primary panel, use the `--min` and `--ma
 
 This examples demonstrates how you can ensure both panels are at least 150px using `--min`, `--max`, and the `calc()` function.
 
-```html preview
+```html:preview
 <sl-split-panel style="--min: 150px; --max: calc(100% - 150px);">
   <div
     slot="start"
@@ -508,7 +508,7 @@ const App = () => (
 
 Create complex layouts that can be repositioned independently by nesting split panels.
 
-```html preview
+```html:preview
 <sl-split-panel>
   <div
     slot="start"
@@ -588,7 +588,7 @@ const App = () => (
 
 You can target the `divider` part to apply CSS properties to the divider. To add a custom handle, slot an icon into the `divider` slot. When customizing the divider, make sure to think about focus styles for keyboard users.
 
-```html preview
+```html:preview
 <sl-split-panel style="--divider-width: 20px;">
   <sl-icon slot="divider" name="grip-vertical"></sl-icon>
   <div
@@ -642,7 +642,7 @@ const App = () => (
 {% endraw %}
 Here's a more elaborate example that changes the divider's color and width and adds a styled handle.
 
-```html preview
+```html:preview
 <div class="split-panel-divider">
   <sl-split-panel>
     <sl-icon slot="divider" name="grip-vertical"></sl-icon>
@@ -760,7 +760,7 @@ const App = () => (
 
 Enabled the minimizer button to toggle the primary panel.
 
-```html preview
+```html:preview
 <sl-split-panel minimize>
   <div
     slot="start"

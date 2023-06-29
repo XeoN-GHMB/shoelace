@@ -105,7 +105,7 @@ const App = () => (
 
 The size of [Radios](/components/radio) and [Radio Buttons](/components/radio-buttons) will be determined by the Radio Group's `size` attribute.
 
-```html preview
+```html:preview
 <sl-radio-group label="Select an option" size="medium" value="medium" class="radio-group-size">
   <sl-radio value="small">Small</sl-radio>
   <sl-radio value="medium">Medium</sl-radio>

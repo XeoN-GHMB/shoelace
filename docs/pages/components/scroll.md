@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 {% raw %}
-```html preview
+```html:preview
 <sl-scroll style='width:50%;height:300px;border:1px solid #f2f2f2;'  id="sl-scrollDIV"></sl-scroll>
 <script>
     var sl=document.querySelector('#sl-scrollDIV');

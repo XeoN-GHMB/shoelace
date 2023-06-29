@@ -7,7 +7,7 @@ layout: component
 
 <!-- cspell:dictionaries lorem-ipsum -->
 
-```html preview
+```html:preview
 <sl-details prefix="puzzle" summary="Toggle Me">
 
   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
@@ -34,7 +34,7 @@ const App = () => (
 
 Use the `disable` attribute to prevent the details from expanding.
 
-```html preview
+```html:preview
 <sl-details summary="Disabled" disabled>
   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna
   aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
@@ -56,7 +56,7 @@ const App = () => (
 
 Use the `expand-icon` and `collapse-icon` slots to change the expand and collapse icons, respectively. To disable the animation, override the `rotate` property on the `summary-icon` part as shown below.
 
-```html preview
+```html:preview
 <sl-details summary="Toggle Me" class="custom-icons">
   <sl-icon name="plus" slot="expand-icon"></sl-icon>
   <sl-icon name="minus" slot="collapse-icon"></sl-icon>

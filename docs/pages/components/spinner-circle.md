@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
 <sl-spinner-circle></sl-spinner-circle>
 ```
 
@@ -21,7 +21,7 @@ const App = () => <SlSpinnerCircle />;
 
 Spinners are sized based on the current font size. To change their size, set the `font-size` property on the spinner itself or on a parent element as shown below.
 
-```html preview
+```html:preview
 <sl-spinne-circle></sl-spinner-circle>
 <sl-spinner-circle style="font-size: 2rem;"></sl-spinner-circle>
 <sl-spinner-circle style="font-size: 3rem;"></sl-spinner-circle>
@@ -45,7 +45,7 @@ const App = () => (
 
 The width of the spinner's track can be changed by setting the `--track-width` custom property.
 
-```html preview
+```html:preview
 <sl-spinner-circle style="font-size: 50px; --track-width: 10px;"></sl-spinner-circle>
 ```
 {% raw %}
@@ -66,7 +66,7 @@ const App = () => (
 
 The spinner's colors can be changed by setting the `--indicator-color` and `--track-color` custom properties.
 
-```html preview
+```html:preview
 <sl-spinner-circle style="font-size: 3rem; --indicator-color: deeppink; --track-color: pink;"></sl-spinner-circle>
 ```
 {% raw %}

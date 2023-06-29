@@ -87,7 +87,7 @@ const App = () => (
 
 Add the `size` attribute to the [Radio Group](/components/radio-group) to change the radios' size.
 
-```html preview
+```html:preview
 <sl-radio-group size="small" value="1">
   <sl-radio value="1">Small 1</sl-radio>
   <sl-radio value="2">Small 2</sl-radio>

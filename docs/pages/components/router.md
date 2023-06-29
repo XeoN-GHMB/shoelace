@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
  <iframe src='assets/examples/routerIframe.html' style='width:100%;height:300px;'></iframe>
 ```
 

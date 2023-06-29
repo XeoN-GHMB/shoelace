@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
 <style> sl-ripple{
     margin:0 0.5em;
 } </style>

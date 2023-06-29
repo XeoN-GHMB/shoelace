@@ -78,8 +78,9 @@
 //
 (() => {
   function toggleTheme() {
-    const isDark = !document.documentElement.classList.contains('sl-theme-dark');
-    document.documentElement.classList.toggle('sl-theme-dark', isDark);
+    const isDark = !document.documentElement.classList.contains('sl-theme-viur_dark');
+    document.documentElement.classList.toggle('sl-theme-viur_dark', isDark);
+    document.documentElement.classList.toggle('sl-theme-viur', !isDark);
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
   }
 

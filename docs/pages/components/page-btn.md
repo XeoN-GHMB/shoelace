@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
 <sl-page-btn id='page-btn-DIV' total='2120' page-size='20' value='1'></sl-page-btn>
 <script >
    let pageBtn=document.querySelector('#page-btn-DIV');

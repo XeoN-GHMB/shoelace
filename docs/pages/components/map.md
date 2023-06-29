@@ -7,7 +7,7 @@ layout: component
 
 A Map Component based on the open source library leaflet
 
-```html preview
+```html:preview
 <sl-map apikey="pk.eyJ1IjoieGVvbjIwMDMiLCJhIjoiY2t3a2N2dHA3MXF3bzJvcG1lNzFhbjYwZCJ9.AAh_q4VGHEbVHwZOi_xK5Q" ></sl-map>
 ```
 

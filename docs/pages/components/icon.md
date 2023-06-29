@@ -35,7 +35,9 @@ To use this icons, set the `library` to `bootstrap`.
 <sl-icon library="bootstrap" name="heart"></sl-icon>
 ```
 
-?> Depending on how you're loading Shoelace, you may need to copy icon assets and/or [set the base path](getting-started/installation#setting-the-base-path) so Shoelace knows where to load them from. Otherwise, icons may not appear and you'll see 404 Not Found errors in the dev console.
+:::tip
+Depending on how you're loading Shoelace, you may need to copy icon assets and/or [set the base path](getting-started/installation#setting-the-base-path) so Shoelace knows where to load them from. Otherwise, icons may not appear and you'll see 404 Not Found errors in the dev console.
+:::
 
 ## Default Icons
 
@@ -66,7 +68,7 @@ All available icons in the `default` icon library are shown below. Click or tap 
 
 Icons inherit their color from the current text color. Thus, you can set the `color` property on the `<sl-icon>` element or an ancestor to change the color.
 
-```html preview
+```html:preview
 <div style="color: #4a90e2;">
   <sl-icon name="exclamation-triangle"></sl-icon>
   <sl-icon name="archive"></sl-icon>
@@ -134,7 +136,7 @@ const App = () => (
 
 Icons are sized relative to the current font size. To change their size, set the `font-size` property on the icon itself or on a parent element as shown below.
 
-```html preview
+```html:preview
 <div style="font-size: 32px;">
   <sl-icon name="exclamation-triangle"></sl-icon>
   <sl-icon name="archive"></sl-icon>
@@ -187,7 +189,7 @@ const App = () => (
 
 For non-decorative icons, use the `label` attribute to announce it to assistive devices.
 
-```html preview
+```html:preview
 <sl-icon name="star-fill" label="Add to favorites"></sl-icon>
 ```
 
@@ -201,7 +203,7 @@ const App = () => <SlIcon name="star-fill" label="Add to favorites" />;
 
 Custom icons can be loaded individually with the `src` attribute. Only SVGs on a local or CORS-enabled endpoint are supported. If you're using more than one custom icon, it might make sense to register a [custom icon library](#icon-libraries).
 
-```html preview
+```html:preview
 <sl-icon src="assets/images/shoe.svg" style="font-size: 8rem;"></sl-icon>
 ```
 
@@ -254,7 +256,7 @@ This will register the [Boxicons](https://boxicons.com/) library using the jsDel
 
 Icons in this library are licensed under the [Creative Commons 4.0 License](https://github.com/atisawd/boxicons#license).
 
-```html preview
+```html:preview
 <script type="module">
   var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';
@@ -301,7 +303,7 @@ This will register the [Lucide](https://lucide.dev/) icon library using the jsDe
 
 Icons in this library are licensed under the [MIT License](https://github.com/lucide-icons/lucide/blob/master/LICENSE).
 
-```html preview
+```html:preview
 <div style="font-size: 24px;">
   <sl-icon library="lucide" name="feather"></sl-icon>
   <sl-icon library="lucide" name="pie-chart"></sl-icon>
@@ -329,7 +331,7 @@ This will register the [Font Awesome Free](https://fontawesome.com/) library usi
 
 Icons in this library are licensed under the [Font Awesome Free License](https://github.com/FortAwesome/Font-Awesome/blob/master/LICENSE.txt). Some of the icons that appear on the Font Awesome website require a license and are therefore not available in the CDN.
 
-```html preview
+```html:preview
 <script type="module">
   var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';
@@ -378,7 +380,7 @@ This will register the [Heroicons](https://heroicons.com/) library using the jsD
 
 Icons in this library are licensed under the [MIT License](https://github.com/tailwindlabs/heroicons/blob/master/LICENSE).
 
-```html preview
+```html:preview
 <script type="module">
  var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';
@@ -406,7 +408,7 @@ This will register the [Iconoir](https://iconoir.com/) library using the jsDeliv
 
 Icons in this library are licensed under the [MIT License](https://github.com/lucaburgio/iconoir/blob/master/LICENSE).
 
-```html preview
+```html:preview
 <script type="module">
  var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';
@@ -433,7 +435,7 @@ This will register the [Ionicons](https://ionicons.com/) library using the jsDel
 
 Icons in this library are licensed under the [MIT License](https://github.com/ionic-team/ionicons/blob/master/LICENSE).
 
-```html preview
+```html:preview
 <script type="module">
   var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';
@@ -481,7 +483,7 @@ This will register the [Jam Icons](https://jam-icons.com/) library using the jsD
 
 Icons in this library are licensed under the [MIT License](https://github.com/michaelampr/jam/blob/master/LICENSE).
 
-```html preview
+```html:preview
 <script type="module">
   var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';
@@ -517,7 +519,7 @@ This will register the [Material Icons](https://material.io/resources/icons/?sty
 
 Icons in this library are licensed under the [Apache 2.0 License](https://github.com/google/material-design-icons/blob/master/LICENSE).
 
-```html preview
+```html:preview
 <script type="module">
   var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';
@@ -563,7 +565,7 @@ This will register the [Remix Icon](https://remixicon.com/) library using the js
 
 Icons in this library are licensed under the [Apache 2.0 License](https://github.com/Remix-Design/RemixIcon/blob/master/License).
 
-```html preview
+```html:preview
 <script type="module">
   var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';
@@ -603,7 +605,7 @@ This will register the [Tabler Icons](https://tabler-icons.io/) library using th
 
 Icons in this library are licensed under the [MIT License](https://github.com/tabler/tabler-icons/blob/master/LICENSE).
 
-```html preview
+```html:preview
 <script type="module">
   import { registerIconLibrary } from '/dist/utilities/icon-library.js';
 
@@ -635,7 +637,7 @@ This will register the [Unicons](https://iconscout.com/unicons) library using th
 
 Icons in this library are licensed under the [Apache 2.0 License](https://github.com/Iconscout/unicons/blob/master/LICENSE). Some of the icons that appear on the Unicons website, particularly many of the solid variations, require a license and are therefore not available in the CDN.
 
-```html preview
+```html:preview
 <script type="module">
   var host=window.location.host;
   var url=(host=='suyouwanggang.github.io'?'/shoelace/':'')+ '/dist/utilities/icon-library.js';

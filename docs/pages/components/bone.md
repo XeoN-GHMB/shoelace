@@ -7,7 +7,7 @@ layout: component
 
 Bone Elements
 
-```html preview
+```html:preview
 <sl-bone fromjson="true" bonename="name" bonestructure='{"descr": "E-Mail", "type": "str.email", "required": true, "params": {}, "visible": true, "readonly": false, "unique": 1, "languages": null, "emptyvalue": "", "indexed": true, "multiple": false, "maxlength": 254, "sortindex": 4}' bonevalue='{"value": "foo@bar.com"}'></sl-bone>
 <br>
 Edit:
@@ -15,7 +15,7 @@ Edit:
 ```
 
 (with boneStructure / renderType='view')
-```html preview
+```html:preview
 <sl-bone id="testbone"></sl-bone>
 <script>
     const bone = document.querySelector("#testbone") 
@@ -34,7 +34,7 @@ Edit:
 
 
 (with boneStructure / renderType='edit')
-```html preview
+```html:preview
 <sl-bone id="testbone-edit" renderType='edit' ></sl-bone>
 
 <sl-bone id="testbone-edit-label" renderType='edit' renderLabel></sl-bone>
@@ -67,7 +67,7 @@ Edit:
 </script>
 ```
 (without boneStructure / renderType='view')
-```html preview
+```html:preview
 
  <sl-bone renderType="view" type="raw" name="testme" renderLabel boneValue="TestValue"></sl-bone>
 

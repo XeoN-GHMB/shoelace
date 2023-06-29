@@ -7,7 +7,7 @@ layout: component
 
 Tab groups make use of [tabs](/components/tab) and [tab panels](/components/tab-panel). Each tab must be slotted into the `nav` slot and its `panel` must refer to a tab panel of the same name.
 
-```html preview
+```html:preview
 <sl-tab-group>
   <sl-tab slot="nav" panel="general">General</sl-tab>
   <sl-tab slot="nav" panel="custom">Custom</sl-tab>
@@ -53,7 +53,7 @@ const App = () => (
 
 Tabs can be shown on the bottom by setting `placement` to `bottom`.
 
-```html preview
+```html:preview
 <sl-tab-group placement="bottom">
   <sl-tab slot="nav" panel="general">General</sl-tab>
   <sl-tab slot="nav" panel="custom">Custom</sl-tab>
@@ -97,7 +97,7 @@ const App = () => (
 
 Tabs can be shown on the starting side by setting `placement` to `start`.
 
-```html preview
+```html:preview
 <sl-tab-group placement="start">
   <sl-tab slot="nav" panel="general">General</sl-tab>
   <sl-tab slot="nav" panel="custom">Custom</sl-tab>
@@ -141,7 +141,7 @@ const App = () => (
 
 Tabs can be shown on the ending side by setting `placement` to `end`.
 
-```html preview
+```html:preview
 <sl-tab-group placement="end">
   <sl-tab slot="nav" panel="general">General</sl-tab>
   <sl-tab slot="nav" panel="custom">Custom</sl-tab>
@@ -185,7 +185,7 @@ const App = () => (
 
 Add the `closable` attribute to a tab to show a close button. This example shows how you can dynamically remove tabs from the DOM when the close button is activated.
 
-```html preview
+```html:preview
 <sl-tab-group class="tabs-closable">
   <sl-tab slot="nav" panel="general">General</sl-tab>
   <sl-tab slot="nav" panel="closable-1" closable>Closable 1</sl-tab>
@@ -263,7 +263,7 @@ const App = () => {
 
 When there are more tabs than horizontal space allows, the nav will be scrollable.
 
-```html preview
+```html:preview
 <sl-tab-group>
   <sl-tab slot="nav" panel="tab-1">Tab 1</sl-tab>
   <sl-tab slot="nav" panel="tab-2">Tab 2</sl-tab>
@@ -403,7 +403,7 @@ const App = () => (
 
 When focused, keyboard users can press <kbd>Left</kbd> or <kbd>Right</kbd> to select the desired tab. By default, the corresponding tab panel will be shown immediately (automatic activation). You can change this behavior by setting `activation="manual"` which will require the user to press <kbd>Space</kbd> or <kbd>Enter</kbd> before showing the tab panel (manual activation).
 
-```html preview
+```html:preview
 <sl-tab-group activation="manual">
   <sl-tab slot="nav" panel="general">General</sl-tab>
   <sl-tab slot="nav" panel="custom">Custom</sl-tab>
@@ -447,7 +447,7 @@ const App = () => (
 
 Use the `variant` attribute to activate the "flap" style
 
-```html preview
+```html:preview
 <sl-tab-group variant="flap">
   <sl-tab slot="nav" panel="general">General</sl-tab>
   <sl-tab slot="nav" panel="custom">Custom</sl-tab>

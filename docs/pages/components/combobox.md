@@ -7,7 +7,7 @@ layout: component
 
 The `sl-combobox` component provides suggestions while users type into the search field. This is very useful when you need to quickly find and select an item from a list of values.
 
-```html preview
+```html:preview
 <sl-combobox
   clearable
 >
@@ -37,7 +37,7 @@ The `sl-combobox` component provides suggestions while users type into the searc
 
 You can define a remote source to retrieve a list of data.
 
-```html preview
+```html:preview
 <sl-combobox
   class="combobox-remote"
   clearable>
@@ -66,7 +66,7 @@ You can define a remote source to retrieve a list of data.
 
 The `sl-combobox` component also works with local data.
 
-```html preview
+```html:preview
 <sl-combobox
   clearable>
 </sl-combobox>

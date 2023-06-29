@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
 <sl-carousel pagination navigation mouse-dragging loop>
   <sl-carousel-item>
     <img
@@ -87,7 +87,7 @@ const App = () => (
 
 Use the `pagination` attribute to show the total number of slides and the current slide as a set of interactive dots.
 
-```html preview
+```html:preview
 <sl-carousel pagination>
   <sl-carousel-item>
     <img
@@ -165,7 +165,7 @@ const App = () => (
 
 Use the `navigation` attribute to show previous and next buttons.
 
-```html preview
+```html:preview
 <sl-carousel navigation>
   <sl-carousel-item>
     <img
@@ -243,7 +243,7 @@ const App = () => (
 
 By default, the carousel will not advanced beyond the first and last slides. You can change this behavior and force the carousel to "wrap" with the `loop` attribute.
 
-```html preview
+```html:preview
 <sl-carousel loop navigation pagination>
   <sl-carousel-item>
     <img
@@ -321,7 +321,7 @@ const App = () => (
 
 The carousel will automatically advance when the `autoplay` attribute is used. To change how long a slide is shown before advancing, set `autoplay-interval` to the desired number of milliseconds. For best results, use the `loop` attribute when autoplay is enabled. Note that autoplay will pause while the user interacts with the carousel.
 
-```html preview
+```html:preview
 <sl-carousel autoplay loop pagination>
   <sl-carousel-item>
     <img
@@ -401,7 +401,7 @@ The carousel uses [scroll snap](https://developer.mozilla.org/en-US/docs/Web/CSS
 
 This example is best demonstrated using a mouse. Try clicking and dragging the slide to move it. Then toggle the switch and try again.
 
-```html preview
+```html:preview
 <div class="mouse-dragging">
   <sl-carousel pagination>
     <sl-carousel-item>
@@ -508,7 +508,7 @@ const App = () => {
 
 The `slides-per-view` attribute makes it possible to display multiple slides at a time. You can also use the `slides-per-move` attribute to advance more than once slide at a time, if desired.
 
-```html preview
+```html:preview
 <sl-carousel navigation pagination slides-per-page="3" slides-per-move="3">
   <sl-carousel-item style="background: var(--sl-color-red-200);">Slide 1</sl-carousel-item>
   <sl-carousel-item style="background: var(--sl-color-orange-200);">Slide 2</sl-carousel-item>
@@ -542,7 +542,7 @@ const App = () => (
 
 The content of the carousel can be changed by adding or removing carousel items. The carousel will update itself automatically.
 
-```html preview
+```html:preview
 <sl-carousel class="dynamic-carousel" pagination navigation>
   <sl-carousel-item style="background: var(--sl-color-red-200)">Slide 1</sl-carousel-item>
   <sl-carousel-item style="background: var(--sl-color-orange-200)">Slide 2</sl-carousel-item>
@@ -675,7 +675,7 @@ const App = () => {
 
 Setting the `orientation` attribute to `vertical` will render the carousel in a vertical layout. If the content of your slides vary in height, you will need to set amn explicit `height` or `max-height` on the carousel using CSS.
 
-```html preview
+```html:preview
 <sl-carousel class="vertical" pagination orientation="vertical">
   <sl-carousel-item>
     <img
@@ -793,7 +793,7 @@ const App = () => (
 
 Use the `--aspect-ratio` custom property to customize the size of the carousel's viewport.
 
-```html preview
+```html:preview
 <sl-carousel class="aspect-ratio" navigation pagination style="--aspect-ratio: 3/2;">
   <sl-carousel-item>
     <img
@@ -916,7 +916,7 @@ const App = () => {
 
 Use the `--scroll-hint` custom property to add inline padding in horizontal carousels and block padding in vertical carousels. This will make the closest slides slightly visible, hinting that there are more items in the carousel.
 
-```html preview
+```html:preview
 <sl-carousel class="scroll-hint" pagination style="--scroll-hint: 10%;">
   <sl-carousel-item>
     <img
@@ -1001,7 +1001,7 @@ const App = () => (
 
 The carousel has a robust API that makes it possible to extend and customize. This example syncs the active slide with a set of thumbnails, effectively creating a gallery-style carousel.
 
-```html preview
+```html:preview
 <sl-carousel class="carousel-thumbnails" navigation loop>
   <sl-carousel-item>
     <img

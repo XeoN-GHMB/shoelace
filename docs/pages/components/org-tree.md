@@ -7,7 +7,7 @@ layout: component
 
 Organizational Chart..
 
-```html preview
+```html:preview
 <div style='overflow:auto'>
     <sl-org-tree id="tree" ></sl-org-tree>
 </div>

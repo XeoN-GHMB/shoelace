@@ -7,7 +7,7 @@ layout: component
 
 Table Wrapper can be used to extend a simple Table with interactive functions
 
-```html preview
+```html:preview
 <sl-table-wrapper searchable sortable>
 <table>
   <thead>

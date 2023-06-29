@@ -5,7 +5,7 @@ meta:
 layout: component
 ---
 
-```html preview
+```html:preview
 <sl-color-picker label="Select a color"></sl-color-picker>
 ```
 
@@ -15,7 +15,9 @@ import { SlColorPicker } from '@shoelace-style/shoelace/dist/react';
 const App = () => <SlColorPicker label="Select a color" />;
 ```
 
-?> This component works with standard `<form>` elements. Please refer to the section on [form controls](/getting-started/form-controls) to learn more about form submission and client-side validation.
+:::tip
+This component works with standard `<form>` elements. Please refer to the section on [form controls](/getting-started/form-controls) to learn more about form submission and client-side validation.
+:::
 
 ## Examples
 
@@ -23,7 +25,7 @@ const App = () => <SlColorPicker label="Select a color" />;
 
 Use the `value` attribute to set an initial value for the color picker.
 
-```html preview
+```html:preview
 <sl-color-picker value="#4a90e2" label="Select a color"></sl-color-picker>
 ```
 
@@ -37,7 +39,7 @@ const App = () => <SlColorPicker value="#4a90e2" label="Select a color" />;
 
 Use the `opacity` attribute to enable the opacity slider. When this is enabled, the value will be displayed as HEXA, RGBA, HSLA, or HSVA based on `format`.
 
-```html preview
+```html:preview
 <sl-color-picker opacity label="Select a color"></sl-color-picker>
 ```
 
@@ -53,7 +55,7 @@ Set the color picker's format with the `format` attribute. Valid options include
 
 To prevent users from toggling the format themselves, add the `no-format-toggle` attribute.
 
-```html preview
+```html:preview
 <sl-color-picker format="hex" value="#4a90e2" label="Select a color"></sl-color-picker>
 <sl-color-picker format="rgb" value="rgb(80, 227, 194)" label="Select a color"></sl-color-picker>
 <sl-color-picker format="hsl" value="hsl(290, 87%, 47%)" label="Select a color"></sl-color-picker>
@@ -77,7 +79,7 @@ const App = () => (
 
 Use the `swatches` attribute to add convenient presets to the color picker. Any format the color picker can parse is acceptable (including CSS color names), but each value must be separated by a semicolon (`;`). Alternatively, you can pass an array of color values to this property using JavaScript.
 
-```html preview
+```html:preview
 <sl-color-picker
   label="Select a color"
   swatches="
@@ -105,7 +107,7 @@ const App = () => (
 
 Use the `size` attribute to change the color picker's trigger size.
 
-```html preview
+```html:preview
 <sl-color-picker size="small" label="Select a color"></sl-color-picker>
 <sl-color-picker size="medium" label="Select a color"></sl-color-picker>
 <sl-color-picker size="large" label="Select a color"></sl-color-picker>
@@ -127,7 +129,7 @@ const App = () => (
 
 The color picker can be rendered inline instead of in a dropdown using the `inline` attribute.
 
-```html preview
+```html:preview
 <sl-color-picker inline label="Select a color"></sl-color-picker>
 ```
 

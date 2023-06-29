@@ -7,7 +7,7 @@ layout: component
 
 A description of the component goes here.
 
-```html preview
+```html:preview
 <div id="scroller" style="overflow-y:scroll;height:200px">
   <div style="height:1000px"> scroll down...</div>
   <sl-back-to-top target="#scroller"></sl-back-to-top>
@@ -17,7 +17,7 @@ A description of the component goes here.
 ## Examples
 
 ### Custom Button
-```html preview
+```html:preview
 <div id="scroller2" style="overflow-y:scroll;height:200px">
   <div style="height:1000px"> scroll down...</div>
   <sl-back-to-top target="#scroller2">
@@ -27,7 +27,7 @@ A description of the component goes here.
 ```
 
 ### Static Position
-```html preview
+```html:preview
 <div id="scroller3" style="overflow-y:scroll;height:200px">
   <div style="height:1000px"> scroll down...</div>
   <sl-back-to-top target="#scroller3" style="position:absolute;bottom:35px;right:85px"></sl-back-to-top>
@@ -35,7 +35,7 @@ A description of the component goes here.
 ```
 
 ### Static Positon and hide on Top
-```html preview
+```html:preview
 <style>
   .toTopButton{
     position:absolute;
