@@ -1,6 +1,6 @@
 import { css } from 'lit';
-import componentStyles from '../../styles/component.styles';
-import formControlStyles from '../../styles/form-control.styles';
+import componentStyles from '../../styles/component.styles.js';
+import formControlStyles from '../../styles/form-control.styles.js';
 //language=CSS
 
 export default css`
@@ -293,5 +293,5 @@ export default css`
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
-  
+
 `;

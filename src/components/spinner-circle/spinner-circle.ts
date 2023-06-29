@@ -1,8 +1,8 @@
 import { html } from 'lit';
 import ShoelaceElement from '../../internal/shoelace-element';
 import { customElement } from 'lit/decorators.js';
-import { LocalizeController } from '../../utilities/localize';
-import styles from './spinner-circle.styles';
+import { LocalizeController } from '../../utilities/localize.js';
+import styles from './spinner-circle.styles.js';
 import type { CSSResultGroup } from 'lit';
 
 /**

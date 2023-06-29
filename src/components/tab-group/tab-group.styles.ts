@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import componentStyles from '../../styles/component.styles';
+import componentStyles from '../../styles/component.styles.js';
 //language=CSS
 
 export default css`
@@ -14,7 +14,7 @@ export default css`
 
     display: block;
   }
-  
+
   .tab-group {
     display: flex;
     border-radius: 0;
@@ -235,14 +235,14 @@ export default css`
   }
 
   /* flap styling */
-  
+
   .tab-group--variant-flap{
     --track-width:0;
   }
   .tab-group--variant-flap .tab-group__nav{
     background-color: var(--tab-flap-background-color);
   }
-  
+
   .tab-group--variant-flap .tab-group__nav ::slotted(sl-tab[active]){
     background-color: var(--tab-flap-color);
   }

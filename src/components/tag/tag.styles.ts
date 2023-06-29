@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import componentStyles from '../../styles/component.styles';
+import componentStyles from '../../styles/component.styles.js';
 //language=CSS
 
 export default css`
@@ -84,7 +84,7 @@ export default css`
     border-color: var(--sl-color-secondary-200);
     color: var(--sl-color-secondary-800);
   }
-  
+
   .tag--danger:active > sl-icon-button {
     color: var(--sl-color-danger-600);
   }

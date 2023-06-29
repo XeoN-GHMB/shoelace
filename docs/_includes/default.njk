@@ -46,8 +46,8 @@
       (() => {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const theme = localStorage.getItem('theme');
-        document.documentElement.classList.toggle('sl-theme-viur_dark', theme === 'dark' || (!theme && prefersDark));
-        document.documentElement.classList.toggle('sl-theme-viur', theme !== 'dark' || (!theme && prefersDark));
+        document.documentElement.classList.toggle('sl-theme-viur_dark', theme === 'dark' || (theme === 'auto' && prefersDark));
+        document.documentElement.classList.toggle('sl-theme-viur', theme !== 'dark' || (theme === 'auto' && prefersDark));
       })();
     </script>
 
@@ -84,16 +84,19 @@
         <sl-icon library="bootstrap" name="twitter"></sl-icon>
       </a>
 
-      {# Theme toggle #}
-      <button
-        id="theme-toggle"
-        type="button"
-        aria-label="Toggle light and dark theme"
-        title="Toggle theme (press backslash)"
-      >
-        <sl-icon class="only-light" name="sun"></sl-icon>
-        <sl-icon class="only-dark" name="moon"></sl-icon>
-      </button>
+      {# Theme selector #}
+      <sl-dropdown id="theme-selector" placement="bottom-end">
+        <sl-button slot="trigger" size="small" variant="text" caret title="Press \ to toggle">
+          <sl-icon class="only-light" name="sun"></sl-icon>
+          <sl-icon class="only-dark" name="moon"></sl-icon>
+        </sl-button>
+        <sl-menu>
+          <sl-menu-item type="checkbox" value="viur">Light</sl-menu-item>
+          <sl-menu-item type="checkbox" value="viur_dark">Dark</sl-menu-item>
+          <sl-divider></sl-divider>
+          <sl-menu-item type="checkbox" value="auto">System</sl-menu-item>
+        </sl-menu>
+      </sl-dropdown>
     </div>
 
     <aside id="sidebar" data-preserve-scroll>

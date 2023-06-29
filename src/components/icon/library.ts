@@ -1,8 +1,8 @@
-import defaultLibrary from './library.default';
-import systemLibrary from './library.system';
+import defaultLibrary from './library.default.js';
+import systemLibrary from './library.system.js';
 
-import type SlIcon from '../icon/icon';
-import bootstrapLibrary from './library.bootstrap';
+import type SlIcon from '../icon/icon.js';
+import bootstrapLibrary from './library.bootstrap.js';
 
 export type IconLibraryResolver = (name: string) => string;
 export type IconLibraryMutator = (svg: SVGElement) => void;

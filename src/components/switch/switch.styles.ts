@@ -1,5 +1,5 @@
 import { css } from 'lit';
-import componentStyles from '../../styles/component.styles';
+import componentStyles from '../../styles/component.styles.js';
 //language=CSS
 
 export default css`
@@ -150,7 +150,7 @@ export default css`
     margin-inline-start: 0.5em;
     user-select: none;
   }
-  
+
   :host([required]) .switch__label::after {
     content: var(--sl-input-required-content);
     margin-inline-start: var(--sl-input-required-content-offset);
