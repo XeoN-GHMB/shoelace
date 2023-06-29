@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import ShoelaceElement from '../../internal/shoelace-element';
+import ShoelaceElement from '../../internal/shoelace-element.js';
 import { customElement } from 'lit/decorators.js';
 import { LocalizeController } from '../../utilities/localize.js';
 import styles from './spinner-circle.styles.js';

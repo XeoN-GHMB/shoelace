@@ -1,4 +1,4 @@
-import { expect, fixture, html } from '@open-wc/testing';
+/*import { expect, fixture, html } from '@open-wc/testing';
 import { sendKeys } from '@web/test-runner-commands';
 
 import type SlInput from '../input/input';
@@ -313,3 +313,15 @@ describe('<sl-input>', () => {
     });
   });
 });
+*/
+
+import { expect, fixture, html } from '@open-wc/testing';
+
+describe('<sl-combobox>', () => {
+  it('should render a component', async () => {
+    const el = await fixture(html` <sl-combobox></sl-combobox> `);
+
+    expect(el).to.exist;
+  });
+});
+
