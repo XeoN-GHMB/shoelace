@@ -10,6 +10,7 @@ export interface IconLibrary {
   name: string;
   resolver: IconLibraryResolver;
   mutator?: IconLibraryMutator;
+  spriteSheet?: boolean;
 }
 
 let registry: IconLibrary[] = [defaultLibrary, bootstrapLibrary, systemLibrary];
@@ -31,15 +32,13 @@ export function getIconLibrary(name?: string) {
 }
 
 /** Adds an icon library to the registry, or overrides an existing one. */
-export function registerIconLibrary(
-  name: string,
-  options: { resolver: IconLibraryResolver; mutator?: IconLibraryMutator }
-) {
+export function registerIconLibrary(name: string, options: Omit<IconLibrary, 'name'>) {
   unregisterIconLibrary(name);
   registry.push({
     name,
     resolver: options.resolver,
-    mutator: options.mutator
+    mutator: options.mutator,
+    spriteSheet: options.spriteSheet
   });
 
   // Redraw watched icons

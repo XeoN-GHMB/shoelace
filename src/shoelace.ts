@@ -31,6 +31,7 @@ export { default as SlMenu } from './components/menu/menu';
 export { default as SlMenuItem } from './components/menu-item/menu-item';
 export { default as SlMenuLabel } from './components/menu-label/menu-label';
 export { default as SlMutationObserver } from './components/mutation-observer/mutation-observer';
+export { default as SlOption } from './components/option/option';
 export { default as SlPopup } from './components/popup/popup';
 export { default as SlProgressBar } from './components/progress-bar/progress-bar';
 export { default as SlProgressRing } from './components/progress-ring/progress-ring';
@@ -71,13 +72,13 @@ export { default as SlRouterLink } from './components/router/router-link';
 export { default as SlTable } from './components/table/table';
 export { default as SlTableWrapper } from './components/table-wrapper/table-wrapper';
 export { default as SlBone } from './components/bone/bone';
-export { default as SlOption } from './components/option/option';
 /* plop:component */
 
 // Utilities
 export * from './utilities/animation';
 export * from './utilities/base-path';
 export * from './utilities/icon-library';
+export * from './utilities/form';
 
 export { hide, show, doAnimate } from './directives/hideOrShowAnimate';
 import './globExport';
