@@ -1,14 +1,60 @@
 import * as React from 'react';
 import { createComponent } from '@lit-labs/react';
-import Component from '../../components/button/button.js';
+import Component from '../../components/button/button.component.js';
 
-export default createComponent({
-  tagName: 'sl-button',
+import { type EventName } from '@lit-labs/react';
+import { SlBlurEvent } from '../../../src/events/events';
+import { SlFocusEvent } from '../../../src/events/events';
+import { SlInvalidEvent } from '../../../src/events/events';
+
+const tagName = 'sl-button';
+
+const component = createComponent({
+  tagName,
   elementClass: Component,
   react: React,
   events: {
-    onSlBlur: 'sl-blur',
-    onSlFocus: 'sl-focus',
-    onSlInvalid: 'sl-invalid'
-  }
+    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
+    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
+    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
+  },
+  displayName: 'SlButton'
 });
+
+/**
+ * @summary Buttons represent actions that are available to the user.
+ * @documentation https://shoelace.style/components/button
+ * @status stable
+ * @since 2.0
+ *
+ * @dependency sl-icon
+ * @dependency sl-spinner
+ *
+ * @event sl-blur - Emitted when the button loses focus.
+ * @event sl-focus - Emitted when the button gains focus.
+ * @event sl-invalid - Emitted when the form control has been checked for validity and its constraints aren't satisfied.
+ *
+ * @slot - The button's label.
+ * @slot prefix - A presentational prefix icon or similar element.
+ * @slot suffix - A presentational suffix icon or similar element.
+ *
+ * @csspart base - The component's base wrapper.
+ * @csspart prefix - The container that wraps the prefix.
+ * @csspart label - The button's label.
+ * @csspart suffix - The container that wraps the suffix.
+ * @csspart caret - The button's caret icon, an `<sl-icon>` element.
+ * @csspart spinner - The spinner that shows when the button is in the loading state.
+ */
+class SlComponent extends React.Component<Parameters<typeof component>[0]> {
+  constructor(...args: Parameters<typeof component>) {
+    super(...args);
+    Component.define(tagName);
+  }
+
+  render() {
+    const { children, ...props } = this.props;
+    return React.createElement(component, props, children);
+  }
+}
+
+export default SlComponent;

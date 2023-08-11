@@ -1,8 +1,7 @@
-<<<<<<< HEAD
 import { html } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
-import styles from './spinner.styles.js';
+import styles from './spinner-viur.styles.js';
 import type { CSSResultGroup } from 'lit';
 
 /**
@@ -17,8 +16,8 @@ import type { CSSResultGroup } from 'lit';
  * @cssproperty --indicator-color - The color of the indicator.
  * @cssproperty --speed - The time it takes for the spinner to complete one animation cycle.
  */
-@customElement('sl-spinner')
-export default class SlSpinner extends ShoelaceElement {
+@customElement('sl-spinner-viur')
+export default class SlSpinnerViur extends ShoelaceElement {
   static styles: CSSResultGroup = styles;
 
   render() {
@@ -38,12 +37,7 @@ export default class SlSpinner extends ShoelaceElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-spinner': SlSpinner;
+    'sl-spinner-viur': SlSpinnerViur;
   }
 }
-=======
-import SlSpinner from './spinner.component.js';
-export * from './spinner.component.js';
-export default SlSpinner;
-SlSpinner.define('sl-spinner');
->>>>>>> shoelace/current
+

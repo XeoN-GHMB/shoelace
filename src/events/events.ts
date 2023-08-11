@@ -32,3 +32,9 @@ export type { default as SlSlideChangeEvent } from './sl-slide-change';
 export type { default as SlStartEvent } from './sl-start';
 export type { default as SlTabHideEvent } from './sl-tab-hide';
 export type { default as SlTabShowEvent } from './sl-tab-show';
+export type { SlBoneChangeEvent,SlBoneInitEvent,SlBoneRelationalSelectEvent} from './sl-bone'
+export type { default as SlItemSelectEvent} from './sl-combobox'
+export type { default as SlSelectionChangedEvent} from './sl-table'
+export type {SlPageChangeEvent, SlPageBeforeChangeEvent} from './sl-page-btn'
+export type {SlOrgTreeNodeClickEvent,SlOrgTreeNodeToggleEvent} from './sl-org-tree'
+export type {SlNodeToggleEvent,SlNodeBeforeToggleEvent,SlNodeClickEvent} from './sl-org-node'

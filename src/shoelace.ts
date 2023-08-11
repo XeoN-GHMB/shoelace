@@ -45,7 +45,7 @@ export { default as SlRelativeTime } from './components/relative-time/relative-t
 export { default as SlResizeObserver } from './components/resize-observer/resize-observer.js';
 export { default as SlSelect } from './components/select/select.js';
 export { default as SlSkeleton } from './components/skeleton/skeleton.js';
-export { default as SlSpinnerCircle } from './components/spinner-circle/spinner-circle.js';
+export { default as SlSpinnerViur } from './components/spinner-viur/spinner-viur.js';
 export { default as SlSpinner } from './components/spinner/spinner.js';
 export { default as SlSplitPanel } from './components/split-panel/split-panel.js';
 export { default as SlSwitch } from './components/switch/switch.js';
@@ -61,13 +61,9 @@ export { default as SlTreeItem } from './components/tree-item/tree-item.js';
 export { default as SlVisuallyHidden } from './components/visually-hidden/visually-hidden.js';
 export { default as SlBackToTop } from './components/back-to-top/back-to-top.js';
 export { default as SlMap } from './components/map/map.js';
-export { default as SlRipple } from './components/ripple/ripple.js';
 export { default as SlOrgTree } from './components/org-tree/org-tree.js';
 export { default as SlOrgNode } from './components/org-node/org-node.js';
-export { default as SlScroll } from './components/scroll/scroll.js';
 export { default as SlPageBtn } from './components/page-btn/page-btn.js';
-export { default as SlRouter } from './components/router/router.js';
-export { default as SlRouterLink } from './components/router/router-link.js';
 export { default as SlTable } from './components/table/table.js';
 export { default as SlTableWrapper } from './components/table-wrapper/table-wrapper.js';
 export { default as SlBone } from './components/bone/bone.js';
@@ -80,7 +76,23 @@ export * from './utilities/icon-library.js';
 export * from './utilities/form.js';
 
 export { hide, show, doAnimate } from './directives/hideOrShowAnimate';
-import './globExport';
 
+// GLOB
+import { css, html, LitElement, render } from 'lit';
+import { onEvent } from './utilities/common.js';
+declare global {
+  interface Window {
+    css: typeof css;
+    LitElement: typeof LitElement;
+    html: typeof html;
+    onEvent: typeof onEvent;
+    LitRender: typeof render;
+  }
+}
+(globalThis as any).LitElement = LitElement;
+(globalThis as any).css = css;
+(globalThis as any).html = html;
+(globalThis as any).onEvent = onEvent;
+(globalThis as any).LitRender = render;
 
 export * from './events/events.js';

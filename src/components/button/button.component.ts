@@ -8,7 +8,7 @@ import { property, query, state } from 'lit/decorators.js';
 import { watch } from '../../internal/watch.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
 import SlIcon from '../icon/icon.component.js';
-import SlSpinner from '../spinner/spinner.component.js';
+import SlSpinnerViur from '../spinner-viur/spinner-viur.component.js';
 import styles from './button.styles.js';
 import type { CSSResultGroup } from 'lit';
 import type { ShoelaceFormControl } from '../../internal/shoelace-element.js';
@@ -41,7 +41,7 @@ export default class SlButton extends ShoelaceElement implements ShoelaceFormCon
   static styles: CSSResultGroup = styles;
   static dependencies = {
     'sl-icon': SlIcon,
-    'sl-spinner': SlSpinner
+    'sl-spinner': SlSpinnerViur
   };
 
   private readonly formControlController = new FormControlController(this, {

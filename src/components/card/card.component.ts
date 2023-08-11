@@ -3,6 +3,7 @@ import { HasSlotController } from '../../internal/slot.js';
 import { html } from 'lit';
 import ShoelaceElement from '../../internal/shoelace-element.js';
 import styles from './card.styles.js';
+import { property } from 'lit/decorators.js';
 import type { CSSResultGroup } from 'lit';
 
 /**

@@ -1,4 +1,10 @@
 # Changelog
+
+## 0.7.0
+- feat: updated to shoelace 2.6.0
+- removed: ripple, router, scroll, spinner-circle
+- fix: internal use spinner-viur
+
 ## 0.5.17
 - fix: multiple entries now removeable again
 

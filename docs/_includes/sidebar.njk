@@ -34,11 +34,13 @@
     <h2>Components</h2>
     <ul>
       {% for component in meta.components %}
+      {% if component.tagName | removeSlPrefix not in ['org-tree', 'org-node'] %}
         <li>
           <a href="/components/{{ component.tagName | removeSlPrefix }}">
             {{ component.name | classNameToComponentName }}
           </a>
         </li>
+        {% endif %}
       {% endfor %}
     </ul>
   </li>

@@ -8,15 +8,13 @@ layout: component
 ```html:preview
 <sl-spinner></sl-spinner>
 ```
-{% raw %}
-```jsx:react
-import { SlSpinner } from '@shoelace-style/shoelace/dist/react';
 
-const App = () => (
-  <SlSpinner />
-);
+```jsx:react
+import SlSpinner from '@shoelace-style/shoelace/dist/react/sl-spinner';
+
+const App = () => <SlSpinner />;
 ```
-{% endraw %}
+
 ## Examples
 
 ### Size
@@ -28,9 +26,11 @@ Spinners are sized based on the current font size. To change their size, set the
 <sl-spinner style="font-size: 2rem;"></sl-spinner>
 <sl-spinner style="font-size: 3rem;"></sl-spinner>
 ```
+
 {% raw %}
+
 ```jsx:react
-import { SlSpinner } from '@shoelace-style/shoelace/dist/react';
+import SlSpinner from '@shoelace-style/shoelace/dist/react/sl-spinner';
 
 const App = () => (
   <>
@@ -40,46 +40,56 @@ const App = () => (
   </>
 );
 ```
-{% endraw %}
-### Color
 
-The spinner's colors can be changed by setting the `--indicator-color`
+{% endraw %}
+
+### Track Width
+
+The width of the spinner's track can be changed by setting the `--track-width` custom property.
 
 ```html:preview
-<sl-spinner style="font-size: 3rem; --indicator-color: deeppink"></sl-spinner>
+<sl-spinner style="font-size: 50px; --track-width: 10px;"></sl-spinner>
 ```
+
 {% raw %}
+
 ```jsx:react
-import { SlSpinner } from '@shoelace-style/shoelace/dist/react';
+import SlSpinner from '@shoelace-style/shoelace/dist/react/sl-spinner';
 
 const App = () => (
-  <SlSpinner 
+  <SlSpinner
     style={{
       fontSize: '3rem',
-      '--indicator-color': 'deeppink'
-    }} 
+      '--track-width': '6px'
+    }}
   />
 );
 ```
-{% endraw %}
-### Speed
 
-The spinner's speed can be changed by setting the `--speed`
+{% endraw %}
+
+### Color
+
+The spinner's colors can be changed by setting the `--indicator-color` and `--track-color` custom properties.
 
 ```html:preview
-<sl-spinner style="font-size: 2rem; --speed: .5s"></sl-spinner>
+<sl-spinner style="font-size: 3rem; --indicator-color: deeppink; --track-color: pink;"></sl-spinner>
 ```
+
 {% raw %}
+
 ```jsx:react
-import { SlSpinner } from '@shoelace-style/shoelace/dist/react';
+import SlSpinner from '@shoelace-style/shoelace/dist/react/sl-spinner';
 
 const App = () => (
-  <SlSpinner 
+  <SlSpinner
     style={{
-      fontSize: '2rem',
-      '--speed': '.5s'
-    }} 
+      fontSize: '3rem',
+      '--indicator-color': 'deeppink',
+      '--track-color': 'pink'
+    }}
   />
 );
 ```
+
 {% endraw %}

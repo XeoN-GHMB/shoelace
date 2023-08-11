@@ -38,6 +38,8 @@ export default class SlBadge extends ShoelaceElement {
           'badge--neutral': this.variant === 'neutral',
           'badge--warning': this.variant === 'warning',
           'badge--danger': this.variant === 'danger',
+          'badge--info': this.variant === 'info',
+          'badge--secondary': this.variant === 'secondary',
           'badge--pill': this.pill,
           'badge--pulse': this.pulse
         })}

@@ -10,7 +10,7 @@ import { when } from 'lit/directives/when.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
 import SlCheckbox from '../checkbox/checkbox.component.js';
 import SlIcon from '../icon/icon.component.js';
-import SlSpinner from '../spinner/spinner.component.js';
+import SlSpinnerViur from '../spinner-viur/spinner-viur.component.js';
 import styles from './tree-item.styles.js';
 import type { CSSResultGroup, PropertyValueMap } from 'lit';
 
@@ -61,7 +61,7 @@ export default class SlTreeItem extends ShoelaceElement {
   static dependencies = {
     'sl-checkbox': SlCheckbox,
     'sl-icon': SlIcon,
-    'sl-spinner': SlSpinner
+    'sl-spinner': SlSpinnerViur
   };
 
   static isTreeItem(node: Node) {
