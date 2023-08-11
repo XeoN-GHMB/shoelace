@@ -27,7 +27,7 @@ export default css`
     user-select: none;
     cursor: pointer;
   }
-
+  
   .details__header .details-item__prefix {
     flex: 0 0 auto;
     display: flex;
@@ -46,6 +46,10 @@ export default css`
 
   .details__header .details-item__suffix ::slotted(*) {
     margin-inline-start: var(--sl-spacing-x-small);
+  }
+
+  .details__header::-webkit-details-marker {
+    display: none;
   }
 
   .details__header:focus {
