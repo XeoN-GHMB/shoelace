@@ -1,9 +1,13 @@
 # Changelog
 
-## 0.7.0
-- feat: updated to shoelace 2.6.0
+## 0.6.0
+- feat: updated to shoelace 2.7.0
 - removed: ripple, router, scroll, spinner-circle
 - fix: internal use spinner-viur
+- reverted spinner-circle to spinner
+- fix: radiobuttons always groups
+- fix: always use box-sizing:border-box
+- renamed package to @viur/shoelace
 
 ## 0.5.17
 - fix: multiple entries now removeable again

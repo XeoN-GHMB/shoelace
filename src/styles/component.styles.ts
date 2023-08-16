@@ -4,11 +4,11 @@ export default css`
   :host {
     box-sizing: border-box;
   }
-  
+
   :host *,
   :host *::before,
   :host *::after {
-    box-sizing: inherit;
+    box-sizing: border-box;
   }
 
   [hidden] {

@@ -17,6 +17,8 @@ async function build_viur_theme(name='viur'){
   if (name === "viur_dark"){
     ccode = execSync(`lessc src/ignite/dark_shoelace.less`);
   }
+  ccode+= "\n/* ViUR Defaults */";
+  ccode+= `\n${fs.readFileSync('./src/themes/_viur.css',{encoding:"utf-8"})}`;
 
   ccode+= "\n/* _utility.css */\n/* _tables.css */";
   let filespaths = globbySync('./node_modules/tinymce/skins/content/default/**/*.min.css');
