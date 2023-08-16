@@ -14,6 +14,7 @@ import styles from './page-btn.styles';
 /**
  * @since 2.0
  * @status experimental
+ * @viur 0.5
  *
  * @dependency sl-button,sl-select,sl-icon
  *

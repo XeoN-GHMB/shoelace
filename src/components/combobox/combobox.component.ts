@@ -18,8 +18,9 @@ export interface SuggestionSource {
 }
 
 /**
- * @since 2.X
- * @status beta
+ * @since 2.0
+ * @status stable
+ * @viur 0.5
  *
  * @dependency sl-input
  * @dependency sl-dropdown

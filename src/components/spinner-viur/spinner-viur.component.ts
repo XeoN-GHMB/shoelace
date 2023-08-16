@@ -6,7 +6,7 @@ import type { CSSResultGroup } from 'lit';
 
 /**
  * @summary Spinners are used to show the progress of an indeterminate operation.
- * @documentation https://shoelace.style/components/spinner
+ * @documentation https://shoelace.style/components/spinner-viur
  * @since 2.0
  * @status stable
  * @viur 0.5

@@ -5,7 +5,7 @@ import ShoelaceElement from '../../internal/shoelace-element.js';
 
 /**
  * @since 2.0
- * @status experimental
+ * @status stable
  * @viur 0.5
  *
  * @slot - The default slot.
