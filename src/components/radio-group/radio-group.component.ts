@@ -234,7 +234,7 @@ export default class SlRadioGroup extends ShoelaceElement implements ShoelaceFor
       const buttonGroup = this.shadowRoot?.querySelector('sl-button-group');
 
       if (buttonGroup) {
-        buttonGroup.disableRole = true;
+        buttonGroup.disableRole = false;
       }
     }
   }
@@ -329,9 +329,7 @@ export default class SlRadioGroup extends ShoelaceElement implements ShoelaceFor
     const hasHelpText = this.helpText ? true : !!hasHelpTextSlot;
 
     const defaultSlot = html`
-      <span @click=${this.handleRadioClick} @keydown=${this.handleKeyDown} role="presentation">
-        <slot @slotchange=${this.syncRadios}></slot>
-      </span>
+        <slot @slotchange=${this.syncRadios} @click=${this.handleRadioClick} @keydown=${this.handleKeyDown}></slot>
     `;
 
     return html`
