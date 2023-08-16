@@ -85,7 +85,7 @@
     if (theme === 'auto') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
-    return theme === 'dark';
+    return theme === 'viur_dark';
   }
 
   function setTheme(newTheme) {
@@ -96,7 +96,7 @@
     updateSelection();
 
     // Toggle the dark mode class
-    document.documentElement.classList.toggle('sl-theme-dark', isDark());
+    document.documentElement.classList.toggle('sl-theme-viur_dark', isDark());
   }
 
   function updateSelection() {
@@ -108,21 +108,21 @@
   let theme = getTheme();
 
   // Selection is not preserved when changing page, so update when opening dropdown
-  document.addEventListener('sl-show', event => {
+  document.querySelector('#theme-selector').addEventListener('sl-show', event => {
     const themeSelector = event.target.closest('#theme-selector');
     if (!themeSelector) return;
     updateSelection();
   });
 
   // Listen for selections
-  document.addEventListener('sl-select', event => {
+  document.querySelector('#theme-selector sl-menu').addEventListener('sl-select', event => {
     const menu = event.target.closest('#theme-selector sl-menu');
     if (!menu) return;
     setTheme(event.detail.item.value);
   });
 
   // Update the theme when the preference changes
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => setTheme(theme));
+  window.matchMedia('(prefers-color-scheme: viur_dark)').addEventListener('change', () => setTheme(theme));
 
   // Toggle with backslash
   document.addEventListener('keydown', event => {
@@ -131,7 +131,7 @@
       !event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()))
     ) {
       event.preventDefault();
-      setTheme(isDark() ? 'light' : 'dark');
+      setTheme(isDark() ? 'viur' : 'viur_dark');
     }
   });
 

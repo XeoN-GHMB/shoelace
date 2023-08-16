@@ -50,8 +50,8 @@
 }
 
 /* Utils */
-html.sl-theme-dark .only-light,
-html:not(.sl-theme-dark) .only-dark {
+html.sl-theme-viur_dark .only-light,
+html:not(.sl-theme-viur_dark) .only-dark {
   display: none !important;
 }
 
