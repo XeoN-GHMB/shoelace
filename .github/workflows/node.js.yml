@@ -28,7 +28,7 @@ jobs:
         cache: 'npm'
     - run: npx playwright install-deps
     - run: npm ci
-    - run: npm run vbuild
+    - run: npm run build
     - uses: JS-DevTools/npm-publish@v1
       with:
         access: "public"

@@ -269,6 +269,7 @@ describe('<sl-tab-group>', () => {
     });
 
     // TODO - this fails sporadically, likely due to a timing issue. It tests fine manually.
+    /*
     it.skip('does scroll on scroll button click', async () => {
       const numberOfElements = 15;
       const tabGroup = await fixture<SlTabGroup>(
