@@ -50,9 +50,3 @@ export default class SlBadge extends ShoelaceElement {
     `;
   }
 }
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'sl-badge': SlBadge;
-  }
-}

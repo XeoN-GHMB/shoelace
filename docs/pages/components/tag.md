@@ -16,7 +16,7 @@ layout: component
 ```
 
 ```jsx:react
-import { SlTag } from '@shoelace-style/shoelace/dist/react';
+import SlTag from '@shoelace-style/shoelace/dist/react/tag';
 
 const App = () => (
   <>
@@ -42,7 +42,7 @@ Use the `size` attribute to change a tab's size.
 ```
 
 ```jsx:react
-import { SlTag } from '@shoelace-style/shoelace/dist/react';
+import SlTag from '@shoelace-style/shoelace/dist/react/tag';
 
 const App = () => (
   <>
@@ -64,7 +64,7 @@ Use the `pill` attribute to give tabs rounded edges.
 ```
 
 ```jsx:react
-import { SlTag } from '@shoelace-style/shoelace/dist/react';
+import SlTag from '@shoelace-style/shoelace/dist/react/tag';
 
 const App = () => (
   <>
@@ -110,7 +110,7 @@ Use the `removable` attribute to add a remove button to the tag.
 ```
 
 ```jsx:react
-import { SlTag } from '@shoelace-style/shoelace/dist/react';
+import SlTag from '@shoelace-style/shoelace/dist/react/tag';
 
 const css = `
   .tags-removable sl-tag {

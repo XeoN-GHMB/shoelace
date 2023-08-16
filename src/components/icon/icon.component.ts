@@ -208,9 +208,3 @@ export default class SlIcon extends ShoelaceElement {
       :html`${this.svg}`}`;
   }
 }
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'sl-icon': SlIcon;
-  }
-}

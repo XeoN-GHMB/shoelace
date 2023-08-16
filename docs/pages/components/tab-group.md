@@ -22,7 +22,9 @@ Tab groups make use of [tabs](/components/tab) and [tab panels](/components/tab-
 ```
 {% raw %}
 ```jsx:react
-import { SlTab, SlTabGroup, SlTabPanel } from '@shoelace-style/shoelace/dist/react';
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
 
 const App = () => (
   <SlTabGroup>
@@ -68,7 +70,9 @@ Tabs can be shown on the bottom by setting `placement` to `bottom`.
 ```
 {% raw %}
 ```jsx:react
-import { SlTab, SlTabGroup, SlTabPanel } from '@shoelace-style/shoelace/dist/react';
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
 
 const App = () => (
   <SlTabGroup placement="bottom">
@@ -112,7 +116,9 @@ Tabs can be shown on the starting side by setting `placement` to `start`.
 ```
 {% raw %}
 ```jsx:react
-import { SlTab, SlTabGroup, SlTabPanel } from '@shoelace-style/shoelace/dist/react';
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
 
 const App = () => (
   <SlTabGroup placement="start">
@@ -156,7 +162,9 @@ Tabs can be shown on the ending side by setting `placement` to `end`.
 ```
 {% raw %}
 ```jsx:react
-import { SlTab, SlTabGroup, SlTabPanel } from '@shoelace-style/shoelace/dist/react';
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
 
 const App = () => (
   <SlTabGroup placement="end">
@@ -218,7 +226,9 @@ Add the `closable` attribute to a tab to show a close button. This example shows
 ```
 {% raw %}
 ```jsx:react
-import { SlTab, SlTabGroup, SlTabPanel } from '@shoelace-style/shoelace/dist/react';
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
 
 const App = () => {
   function handleClose(event) {
@@ -310,7 +320,9 @@ When there are more tabs than horizontal space allows, the nav will be scrollabl
 ```
 {% raw %}
 ```jsx:react
-import { SlTab, SlTabGroup, SlTabPanel } from '@shoelace-style/shoelace/dist/react';
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
 
 const App = () => (
   <SlTabGroup>
@@ -418,7 +430,9 @@ When focused, keyboard users can press <kbd>Left</kbd> or <kbd>Right</kbd> to se
 ```
 {% raw %}
 ```jsx:react
-import { SlTab, SlTabGroup, SlTabPanel } from '@shoelace-style/shoelace/dist/react';
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
 
 const App = () => (
   <SlTabGroup activation="manual">

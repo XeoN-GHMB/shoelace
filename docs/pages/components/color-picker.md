@@ -9,8 +9,8 @@ layout: component
 <sl-color-picker label="Select a color"></sl-color-picker>
 ```
 
-```jsx react
-import { SlColorPicker } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
 const App = () => <SlColorPicker label="Select a color" />;
 ```
@@ -29,8 +29,8 @@ Use the `value` attribute to set an initial value for the color picker.
 <sl-color-picker value="#4a90e2" label="Select a color"></sl-color-picker>
 ```
 
-```jsx react
-import { SlColorPicker } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
 const App = () => <SlColorPicker value="#4a90e2" label="Select a color" />;
 ```
@@ -43,8 +43,8 @@ Use the `opacity` attribute to enable the opacity slider. When this is enabled, 
 <sl-color-picker opacity label="Select a color"></sl-color-picker>
 ```
 
-```jsx react
-import { SlColorPicker } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
 const App = () => <SlColorPicker opacity label="Select a color" />;
 ```
@@ -62,8 +62,8 @@ To prevent users from toggling the format themselves, add the `no-format-toggle`
 <sl-color-picker format="hsv" value="hsv(55, 89%, 97%)" label="Select a color"></sl-color-picker>
 ```
 
-```jsx react
-import { SlColorPicker } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
 const App = () => (
   <>
@@ -89,8 +89,8 @@ Use the `swatches` attribute to add convenient presets to the color picker. Any 
 ></sl-color-picker>
 ```
 
-```jsx react
-import { SlColorPicker } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
 const App = () => (
   <SlColorPicker
@@ -113,8 +113,8 @@ Use the `size` attribute to change the color picker's trigger size.
 <sl-color-picker size="large" label="Select a color"></sl-color-picker>
 ```
 
-```jsx react
-import { SlColorPicker } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
 const App = () => (
   <>
@@ -133,8 +133,8 @@ The color picker can be rendered inline instead of in a dropdown using the `inli
 <sl-color-picker inline label="Select a color"></sl-color-picker>
 ```
 
-```jsx react
-import { SlColorPicker } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlColorPicker from '@shoelace-style/shoelace/dist/react/color-picker';
 
 const App = () => <SlColorPicker inline label="Select a color" />;
 ```

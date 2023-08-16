@@ -23,7 +23,7 @@ layout: component
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
 
 const App = () => (
   <SlSplitPanel>
@@ -100,7 +100,7 @@ To set the initial position in pixels instead of a percentage, use the `position
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
 
 const App = () => (
   <SlSplitPanel position="200">
@@ -154,7 +154,7 @@ Add the `vertical` attribute to render the split panel in a vertical orientation
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
 
 const App = () => (
   <SlSplitPanel vertical style={{ height: '400px' }}>
@@ -238,7 +238,7 @@ To snap panels at specific positions while dragging, add the `snap` attribute wi
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
 
 const css = `
   .split-panel-snapping {
@@ -326,7 +326,7 @@ Add the `disabled` attribute to prevent the divider from being repositioned.
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
 
 const App = () => (
   <SlSplitPanel disabled>
@@ -399,7 +399,9 @@ Try resizing the example below with each option and notice how the panels respon
 {% raw %}
 ```jsx:react
 import { useState } from 'react';
-import { SlSplitPanel, SlSelect, SlMenuItem } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
+import SlSelect from '@shoelace-style/shoelace/dist/react/select';
+import SlMenuItem from '@shoelace-style/shoelace/dist/react/menu-item';
 
 const App = () => {
   const [primary, setPrimary] = useState('');
@@ -472,7 +474,7 @@ This examples demonstrates how you can ensure both panels are at least 150px usi
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
 
 const App = () => (
   <SlSplitPanel style={{ '--min': '150px', '--max': 'calc(100% - 150px)' }}>
@@ -536,7 +538,7 @@ Create complex layouts that can be repositioned independently by nesting split p
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
 
 const App = () => (
   <SlSplitPanel>
@@ -607,7 +609,8 @@ You can target the `divider` part to apply CSS properties to the divider. To add
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel, SlIcon } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
+import SlIcon from '@shoelace-style/shoelace/dist/react/icon';
 
 const App = () => (
   <SlSplitPanel style={{ '--divider-width': '20px' }}>
@@ -690,7 +693,8 @@ Here's a more elaborate example that changes the divider's color and width and a
 ```
 {% raw %}
 ```jsx:react
-import { SlSplitPanel, SlIcon } from '@shoelace-style/shoelace/dist/react';
+import SlSplitPanel from '@shoelace-style/shoelace/dist/react/split-panel';
+import SlIcon from '@shoelace-style/shoelace/dist/react/icon';
 
 const css = `
   .split-panel-divider sl-split-panel {

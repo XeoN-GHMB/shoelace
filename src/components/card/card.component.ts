@@ -85,9 +85,3 @@ export default class SlCard extends ShoelaceElement {
     `;
   }
 }
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'sl-card': SlCard;
-  }
-}

@@ -269,9 +269,3 @@ setDefaultAnimation('details.hide', {
   ],
   options: { duration: 250, easing: 'linear' }
 });
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'sl-details': SlDetails;
-  }
-}

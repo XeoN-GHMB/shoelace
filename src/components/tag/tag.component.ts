@@ -93,9 +93,3 @@ export default class SlTag extends ShoelaceElement {
     `;
   }
 }
-
-declare global {
-  interface HTMLElementTagNameMap {
-    'sl-tag': SlTag;
-  }
-}

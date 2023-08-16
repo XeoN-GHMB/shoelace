@@ -15,8 +15,8 @@ layout: component
 </sl-details>
 ```
 
-```jsx react
-import { SlDetails } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlDetails from '@shoelace-style/shoelace/dist/react/details';
 
 const App = () => (
   <SlDetails summary="Toggle Me">
@@ -41,8 +41,8 @@ Use the `disable` attribute to prevent the details from expanding.
 </sl-details>
 ```
 
-```jsx react
-import { SlDetails } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlDetails from '@shoelace-style/shoelace/dist/react/details';
 
 const App = () => (
   <SlDetails summary="Disabled" disabled>
@@ -73,8 +73,9 @@ Use the `expand-icon` and `collapse-icon` slots to change the expand and collaps
 </style>
 ```
 
-```jsx react
-import { SlDetails, SlIcon } from '@shoelace-style/shoelace/dist/react';
+```jsx:react
+import SlDetails from '@shoelace-style/shoelace/dist/react/details';
+import SlIcon from '@shoelace-style/shoelace/dist/react/icon';
 
 const css = `
   sl-details.custom-icon::part(summary-icon) {
