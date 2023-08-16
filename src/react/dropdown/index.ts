@@ -3,10 +3,14 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/dropdown/dropdown.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlShowEvent } from '../../../src/events/events';
-import { SlAfterShowEvent } from '../../../src/events/events';
-import { SlHideEvent } from '../../../src/events/events';
-import { SlAfterHideEvent } from '../../../src/events/events';
+import type { SlShowEvent } from '../../../src/events/events';
+import type { SlAfterShowEvent } from '../../../src/events/events';
+import type { SlHideEvent } from '../../../src/events/events';
+import type { SlAfterHideEvent } from '../../../src/events/events';
+export type { SlShowEvent } from '../../../src/events/events';
+export type { SlAfterShowEvent } from '../../../src/events/events';
+export type { SlHideEvent } from '../../../src/events/events';
+export type { SlAfterHideEvent } from '../../../src/events/events';
 
 const tagName = 'sl-dropdown';
 

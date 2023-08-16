@@ -3,12 +3,18 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/tree-item/tree-item.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlExpandEvent } from '../../../src/events/events';
-import { SlAfterExpandEvent } from '../../../src/events/events';
-import { SlCollapseEvent } from '../../../src/events/events';
-import { SlAfterCollapseEvent } from '../../../src/events/events';
-import { SlLazyChangeEvent } from '../../../src/events/events';
-import { SlLazyLoadEvent } from '../../../src/events/events';
+import type { SlExpandEvent } from '../../../src/events/events';
+import type { SlAfterExpandEvent } from '../../../src/events/events';
+import type { SlCollapseEvent } from '../../../src/events/events';
+import type { SlAfterCollapseEvent } from '../../../src/events/events';
+import type { SlLazyChangeEvent } from '../../../src/events/events';
+import type { SlLazyLoadEvent } from '../../../src/events/events';
+export type { SlExpandEvent } from '../../../src/events/events';
+export type { SlAfterExpandEvent } from '../../../src/events/events';
+export type { SlCollapseEvent } from '../../../src/events/events';
+export type { SlAfterCollapseEvent } from '../../../src/events/events';
+export type { SlLazyChangeEvent } from '../../../src/events/events';
+export type { SlLazyLoadEvent } from '../../../src/events/events';
 
 const tagName = 'sl-tree-item';
 

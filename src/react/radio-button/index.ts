@@ -3,8 +3,10 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/radio-button/radio-button.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlBlurEvent } from '../../../src/events/events';
-import { SlFocusEvent } from '../../../src/events/events';
+import type { SlBlurEvent } from '../../../src/events/events';
+import type { SlFocusEvent } from '../../../src/events/events';
+export type { SlBlurEvent } from '../../../src/events/events';
+export type { SlFocusEvent } from '../../../src/events/events';
 
 const tagName = 'sl-radio-button';
 

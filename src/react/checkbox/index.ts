@@ -3,11 +3,16 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/checkbox/checkbox.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlBlurEvent } from '../../../src/events/events';
-import { SlChangeEvent } from '../../../src/events/events';
-import { SlFocusEvent } from '../../../src/events/events';
-import { SlInputEvent } from '../../../src/events/events';
-import { SlInvalidEvent } from '../../../src/events/events';
+import type { SlBlurEvent } from '../../../src/events/events';
+import type { SlChangeEvent } from '../../../src/events/events';
+import type { SlFocusEvent } from '../../../src/events/events';
+import type { SlInputEvent } from '../../../src/events/events';
+import type { SlInvalidEvent } from '../../../src/events/events';
+export type { SlBlurEvent } from '../../../src/events/events';
+export type { SlChangeEvent } from '../../../src/events/events';
+export type { SlFocusEvent } from '../../../src/events/events';
+export type { SlInputEvent } from '../../../src/events/events';
+export type { SlInvalidEvent } from '../../../src/events/events';
 
 const tagName = 'sl-checkbox';
 

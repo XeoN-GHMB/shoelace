@@ -3,8 +3,10 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/page-btn/page-btn.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlPageChangeEvent } from '../../../src/events/events';
-import { SlPageBeforeChangeEvent } from '../../../src/events/events';
+import type { SlPageChangeEvent } from '../../../src/events/events';
+import type { SlPageBeforeChangeEvent } from '../../../src/events/events';
+export type { SlPageChangeEvent } from '../../../src/events/events';
+export type { SlPageBeforeChangeEvent } from '../../../src/events/events';
 
 const tagName = 'sl-page-btn';
 
@@ -22,6 +24,7 @@ const component = createComponent({
 /**
  * @since 2.0
  * @status experimental
+ * @viur 0.5
  *
  * @dependency sl-button,sl-select,sl-icon
  *

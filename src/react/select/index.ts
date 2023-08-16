@@ -3,16 +3,26 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/select/select.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlChangeEvent } from '../../../src/events/events';
-import { SlClearEvent } from '../../../src/events/events';
-import { SlInputEvent } from '../../../src/events/events';
-import { SlFocusEvent } from '../../../src/events/events';
-import { SlBlurEvent } from '../../../src/events/events';
-import { SlShowEvent } from '../../../src/events/events';
-import { SlAfterShowEvent } from '../../../src/events/events';
-import { SlHideEvent } from '../../../src/events/events';
-import { SlAfterHideEvent } from '../../../src/events/events';
-import { SlInvalidEvent } from '../../../src/events/events';
+import type { SlChangeEvent } from '../../../src/events/events';
+import type { SlClearEvent } from '../../../src/events/events';
+import type { SlInputEvent } from '../../../src/events/events';
+import type { SlFocusEvent } from '../../../src/events/events';
+import type { SlBlurEvent } from '../../../src/events/events';
+import type { SlShowEvent } from '../../../src/events/events';
+import type { SlAfterShowEvent } from '../../../src/events/events';
+import type { SlHideEvent } from '../../../src/events/events';
+import type { SlAfterHideEvent } from '../../../src/events/events';
+import type { SlInvalidEvent } from '../../../src/events/events';
+export type { SlChangeEvent } from '../../../src/events/events';
+export type { SlClearEvent } from '../../../src/events/events';
+export type { SlInputEvent } from '../../../src/events/events';
+export type { SlFocusEvent } from '../../../src/events/events';
+export type { SlBlurEvent } from '../../../src/events/events';
+export type { SlShowEvent } from '../../../src/events/events';
+export type { SlAfterShowEvent } from '../../../src/events/events';
+export type { SlHideEvent } from '../../../src/events/events';
+export type { SlAfterHideEvent } from '../../../src/events/events';
+export type { SlInvalidEvent } from '../../../src/events/events';
 
 const tagName = 'sl-select';
 

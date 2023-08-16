@@ -3,7 +3,8 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/tree/tree.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlSelectionChangeEvent } from '../../../src/events/events';
+import type { SlSelectionChangeEvent } from '../../../src/events/events';
+export type { SlSelectionChangeEvent } from '../../../src/events/events';
 
 const tagName = 'sl-tree';
 

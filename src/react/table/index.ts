@@ -3,7 +3,8 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/table/table.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlSelectionChangedEvent } from '../../../src/events/events';
+import type { SlSelectionChangedEvent } from '../../../src/events/events';
+export type { SlSelectionChangedEvent } from '../../../src/events/events';
 
 const tagName = 'sl-table';
 

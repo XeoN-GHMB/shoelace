@@ -3,8 +3,10 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/rating/rating.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlChangeEvent } from '../../../src/events/events';
-import { SlHoverEvent } from '../../../src/events/events';
+import type { SlChangeEvent } from '../../../src/events/events';
+import type { SlHoverEvent } from '../../../src/events/events';
+export type { SlChangeEvent } from '../../../src/events/events';
+export type { SlHoverEvent } from '../../../src/events/events';
 
 const tagName = 'sl-rating';
 

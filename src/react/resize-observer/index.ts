@@ -3,7 +3,8 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/resize-observer/resize-observer.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlResizeEvent } from '../../../src/events/events';
+import type { SlResizeEvent } from '../../../src/events/events';
+export type { SlResizeEvent } from '../../../src/events/events';
 
 const tagName = 'sl-resize-observer';
 

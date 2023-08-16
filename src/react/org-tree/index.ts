@@ -3,8 +3,10 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/org-tree/org-tree.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlOrgTreeNodeClickEvent } from '../../../src/events/events';
-import { SlOrgTreeNodeToggleEvent } from '../../../src/events/events';
+import type { SlOrgTreeNodeClickEvent } from '../../../src/events/events';
+import type { SlOrgTreeNodeToggleEvent } from '../../../src/events/events';
+export type { SlOrgTreeNodeClickEvent } from '../../../src/events/events';
+export type { SlOrgTreeNodeToggleEvent } from '../../../src/events/events';
 
 const tagName = 'sl-org-tree';
 

@@ -3,9 +3,12 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/animation/animation.component.js';
 
 import { type EventName } from '@lit-labs/react';
-import { SlCancelEvent } from '../../../src/events/events';
-import { SlFinishEvent } from '../../../src/events/events';
-import { SlStartEvent } from '../../../src/events/events';
+import type { SlCancelEvent } from '../../../src/events/events';
+import type { SlFinishEvent } from '../../../src/events/events';
+import type { SlStartEvent } from '../../../src/events/events';
+export type { SlCancelEvent } from '../../../src/events/events';
+export type { SlFinishEvent } from '../../../src/events/events';
+export type { SlStartEvent } from '../../../src/events/events';
 
 const tagName = 'sl-animation';
 
