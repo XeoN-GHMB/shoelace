@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1
+- fix: radiobuttons work now as expected
+- fix: spinners now work as expected
+- docs: replaced old viur packagename
+
 ## 0.6.0
 - feat: updated to shoelace 2.7.0
 - removed: ripple, router, scroll, spinner-circle
