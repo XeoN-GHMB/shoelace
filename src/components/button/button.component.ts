@@ -41,7 +41,7 @@ export default class SlButton extends ShoelaceElement implements ShoelaceFormCon
   static styles: CSSResultGroup = styles;
   static dependencies = {
     'sl-icon': SlIcon,
-    'sl-spinner': SlSpinnerViur
+    'sl-spinner-viur': SlSpinnerViur
   };
 
   private readonly formControlController = new FormControlController(this, {
@@ -335,7 +335,7 @@ export default class SlButton extends ShoelaceElement implements ShoelaceFormCon
         ${
           this.caret ? html` <sl-icon part="caret" class="button__caret" library="system" name="caret"></sl-icon> ` : ''
         }
-        ${this.loading ? html`<sl-spinner part="spinner"></sl-spinner>` : ''}
+        ${this.loading ? html`<sl-spinner-viur part="spinner"></sl-spinner-viur>` : ''}
       </${tag}>
     `;
     /* eslint-enable lit/no-invalid-html */

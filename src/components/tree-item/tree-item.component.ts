@@ -61,7 +61,7 @@ export default class SlTreeItem extends ShoelaceElement {
   static dependencies = {
     'sl-checkbox': SlCheckbox,
     'sl-icon': SlIcon,
-    'sl-spinner': SlSpinnerViur
+    'sl-spinner-viur': SlSpinnerViur
   };
 
   static isTreeItem(node: Node) {
@@ -256,7 +256,7 @@ export default class SlTreeItem extends ShoelaceElement {
             })}
             aria-hidden="true"
           >
-            ${when(this.loading, () => html` <sl-spinner></sl-spinner> `)}
+            ${when(this.loading, () => html` <sl-spinner-viur></sl-spinner-viur> `)}
             <slot class="tree-item__expand-icon-slot" name="expand-icon">
               <sl-icon library="system" name=${isRtl ? 'chevron-left' : 'chevron-right'}></sl-icon>
             </slot>
