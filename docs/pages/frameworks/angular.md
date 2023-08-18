@@ -13,20 +13,20 @@ Angular [plays nice](https://custom-elements-everywhere.com/#angular) with custo
 To add Shoelace to your Angular app, install the package from npm.
 
 ```bash
-npm install @viur/viur-shoelace
+npm install @viur/shoelace
 ```
 
 Next, [include a theme](/getting-started/themes) and set the [base path](/getting-started/installation#setting-the-base-path) for icons and other assets. In this example, we'll import the light theme and use the CDN as a base path.
 
 ```jsx
-import '@viur/viur-shoelace/%NPMDIR%/themes/light.css';
-import { setBasePath } from '@viur/viur-shoelace/%NPMDIR%/utilities/base-path';
+import '@viur/shoelace/%NPMDIR%/themes/light.css';
+import { setBasePath } from '@viur/shoelace/%NPMDIR%/utilities/base-path';
 
-setBasePath('https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/%CDNDIR%/');
+setBasePath('https://cdn.jsdelivr.net/npm/@viur/shoelace@%VERSION%/%CDNDIR%/');
 ```
 
 :::tip
-If you'd rather not use the CDN for assets, you can create a build task that copies `node_modules/@viur/viur-shoelace/%NPMDIR%/assets` into a public folder in your app. Then you can point the base path to that folder instead.
+If you'd rather not use the CDN for assets, you can create a build task that copies `node_modules/@viur/shoelace/%NPMDIR%/assets` into a public folder in your app. Then you can point the base path to that folder instead.
 :::
 
 ## Configuration
@@ -52,7 +52,7 @@ export class AppModule {}
 ## Reference Shoelace components in your Angular component code
 
 ```js
-import { SlDrawer } from '@viur/viur-shoelace';
+import { SlDrawer } from '@viur/shoelace';
 
 @Component({
   selector: 'app-drawer-example',

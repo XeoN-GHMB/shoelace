@@ -127,7 +127,7 @@ The dark theme works by taking the light theme's [color tokens](/tokens/color) a
 To install the dark theme, add the following to the `<head>` section of your page.
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/%CDNDIR%/themes/dark.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@viur/shoelace@%VERSION%/%CDNDIR%/themes/dark.css">
 ```
 
 To activate the theme, apply the `sl-theme-viur_dark` class to the `<html>` element.

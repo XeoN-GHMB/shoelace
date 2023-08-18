@@ -17,20 +17,20 @@ These instructions are for Vue 3 and above. If you're using Vue 2, please see th
 To add Shoelace to your Vue app, install the package from npm.
 
 ```bash
-npm install @viur/viur-shoelace
+npm install @viur/shoelace
 ```
 
 Next, [include a theme](/getting-started/themes) and set the [base path](/getting-started/installation#setting-the-base-path) for icons and other assets. In this example, we'll import the light theme and use the CDN as a base path.
 
 ```jsx
-import '@viur/viur-shoelace/dist/themes/viur.css';
-import { setBasePath } from '@viur/viur-shoelace/dist/utilities/base-path';
+import '@viur/shoelace/dist/themes/viur.css';
+import { setBasePath } from '@viur/shoelace/dist/utilities/base-path';
 
-setBasePath('https://cdn.jsdelivr.net/npm/@viur/viur-shoelace@%VERSION%/%CDNDIR%/');
+setBasePath('https://cdn.jsdelivr.net/npm/@viur/shoelace@%VERSION%/%CDNDIR%/');
 ```
 
 :::tip
-If you'd rather not use the CDN for assets, you can create a build task that copies `node_modules/@viur/viur-shoelace/dist/assets` into a public folder in your app. Then you can point the base path to that folder instead.
+If you'd rather not use the CDN for assets, you can create a build task that copies `node_modules/@viur/shoelace/dist/assets` into a public folder in your app. Then you can point the base path to that folder instead.
 :::
 
 ## Configuration
@@ -102,7 +102,7 @@ export default defineConfig({
     rollupOptions: {
       output: {
         chunkFileNames: (chunkinfo) => {
-          if (chunkinfo['moduleIds'].filter(x => x.includes('node_modules/@viur/viur-shoelace/dist/components')).length > 0) {
+          if (chunkinfo['moduleIds'].filter(x => x.includes('node_modules/@viur/shoelace/dist/components')).length > 0) {
             return `[name].js`
           } else {
             return `[name]-[hash].js`
@@ -110,7 +110,7 @@ export default defineConfig({
 
         },
         manualChunks(id) {
-          if (id.includes('node_modules/@viur/viur-shoelace/dist/components')) {
+          if (id.includes('node_modules/@viur/shoelace/dist/components')) {
             return "viur-shoelace/component_" + id.split("/").slice(-2)[0];
           }
         }
@@ -137,8 +137,8 @@ export default defineConfig({
 
 <script setup>
   import { ref } from 'vue';
-  import '@viur/viur-shoelace/dist/components/qr-code/qr-code.js';
-  import '@viur/viur-shoelace/dist/components/input/input.js';
+  import '@viur/shoelace/dist/components/qr-code/qr-code.js';
+  import '@viur/shoelace/dist/components/input/input.js';
 
   const qrCode = ref();
 </script>
