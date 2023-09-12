@@ -9,17 +9,7 @@ export type { SlTabShowEvent } from '../../../src/events/events';
 export type { SlTabHideEvent } from '../../../src/events/events';
 
 const tagName = 'sl-tab-group';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlTabShow: 'sl-tab-show' as EventName<SlTabShowEvent>,
-    onSlTabHide: 'sl-tab-hide' as EventName<SlTabHideEvent>
-  },
-  displayName: 'SlTabGroup'
-});
+Component.define('sl-tab-group');
 
 /**
  * @summary Tab groups organize content into a container that shows one section at a time.
@@ -51,16 +41,15 @@ const component = createComponent({
  * @cssproperty --tab-flap-background-color - The backgroundcolor of the navigationbar
  * @cssproperty --tab-flap-color - The backgroundcolor of the active tab
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlTabShow: 'sl-tab-show' as EventName<SlTabShowEvent>,
+    onSlTabHide: 'sl-tab-hide' as EventName<SlTabHideEvent>
+  },
+  displayName: 'SlTabGroup'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

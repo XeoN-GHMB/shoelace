@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/table-wrapper/table-wrapper.component.js';
 
 const tagName = 'sl-table-wrapper';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlTableWrapper'
-});
+Component.define('sl-table-wrapper');
 
 /**
  * @since 2.0
@@ -21,16 +14,12 @@ const component = createComponent({
  *
  * @csspart search - The search Field.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlTableWrapper'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/details-group/details-group.component.js';
 
 const tagName = 'sl-details-group';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlDetailsGroup'
-});
+Component.define('sl-details-group');
 
 /**
  * @since 2.0
@@ -21,16 +14,12 @@ const component = createComponent({
  *
  * @cssproperty --details-gap - The gap between the detail boxes.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlDetailsGroup'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/breadcrumb-item/breadcrumb-item.component.js';
 
 const tagName = 'sl-breadcrumb-item';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlBreadcrumbItem'
-});
+Component.define('sl-breadcrumb-item');
 
 /**
  * @summary Breadcrumb Items are used inside [breadcrumbs](/components/breadcrumb) to represent different links.
@@ -30,16 +23,12 @@ const component = createComponent({
  * @csspart suffix - The container that wraps the suffix.
  * @csspart separator - The container that wraps the separator.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlBreadcrumbItem'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

@@ -9,17 +9,7 @@ export type { SlLoadEvent } from '../../../src/events/events';
 export type { SlErrorEvent } from '../../../src/events/events';
 
 const tagName = 'sl-animated-image';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlLoad: 'sl-load' as EventName<SlLoadEvent>,
-    onSlError: 'sl-error' as EventName<SlErrorEvent>
-  },
-  displayName: 'SlAnimatedImage'
-});
+Component.define('sl-animated-image');
 
 /**
  * @summary A component for displaying animated GIFs and WEBPs that play and pause on interaction.
@@ -40,16 +30,15 @@ const component = createComponent({
  * @cssproperty --control-box-size - The size of the icon box.
  * @cssproperty --icon-size - The size of the play/pause icons.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlLoad: 'sl-load' as EventName<SlLoadEvent>,
+    onSlError: 'sl-error' as EventName<SlErrorEvent>
+  },
+  displayName: 'SlAnimatedImage'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

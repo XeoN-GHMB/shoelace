@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/format-number/format-number.component.js';
 
 const tagName = 'sl-format-number';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlFormatNumber'
-});
+Component.define('sl-format-number');
 
 /**
  * @summary Formats a number using the specified locale and options.
@@ -18,16 +11,12 @@ const component = createComponent({
  * @status stable
  * @since 2.0
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlFormatNumber'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

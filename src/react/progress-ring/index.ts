@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/progress-ring/progress-ring.component.js';
 
 const tagName = 'sl-progress-ring';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlProgressRing'
-});
+Component.define('sl-progress-ring');
 
 /**
  * @summary Progress rings are used to show the progress of a determinate operation in a circular fashion.
@@ -30,16 +23,12 @@ const component = createComponent({
  * @cssproperty --indicator-color - The color of the indicator.
  * @cssproperty --indicator-transition-duration - The duration of the indicator's transition when the value changes.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlProgressRing'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

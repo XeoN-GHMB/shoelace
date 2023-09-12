@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/progress-bar/progress-bar.component.js';
 
 const tagName = 'sl-progress-bar';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlProgressBar'
-});
+Component.define('sl-progress-bar');
 
 /**
  * @summary Progress bars are used to show the status of an ongoing operation.
@@ -29,16 +22,12 @@ const component = createComponent({
  * @cssproperty --indicator-color - The color of the indicator.
  * @cssproperty --label-color - The color of the label.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlProgressBar'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

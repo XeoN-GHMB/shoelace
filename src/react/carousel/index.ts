@@ -7,16 +7,7 @@ import type { SlSlideChangeEvent } from '../../../src/events/events';
 export type { SlSlideChangeEvent } from '../../../src/events/events';
 
 const tagName = 'sl-carousel';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlSlideChange: 'sl-slide-change' as EventName<SlSlideChangeEvent>
-  },
-  displayName: 'SlCarousel'
-});
+Component.define('sl-carousel');
 
 /**
  * @summary Carousels display an arbitrary number of content slides along a horizontal or vertical axis.
@@ -47,16 +38,14 @@ const component = createComponent({
  * @cssproperty --scroll-hint - The amount of padding to apply to the scroll area, allowing adjacent slides to become
  *  partially visible as a scroll hint.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlSlideChange: 'sl-slide-change' as EventName<SlSlideChangeEvent>
+  },
+  displayName: 'SlCarousel'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

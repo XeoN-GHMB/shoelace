@@ -7,16 +7,7 @@ import type { SlRemoveEvent } from '../../../src/events/events';
 export type { SlRemoveEvent } from '../../../src/events/events';
 
 const tagName = 'sl-tag';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlRemove: 'sl-remove' as EventName<SlRemoveEvent>
-  },
-  displayName: 'SlTag'
-});
+Component.define('sl-tag');
 
 /**
  * @summary Tags are used as labels to organize things or to indicate a selection.
@@ -35,16 +26,14 @@ const component = createComponent({
  * @csspart remove-button - The tag's remove button, an `<sl-icon-button>`.
  * @csspart remove-button__base - The remove button's exported `base` part.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlRemove: 'sl-remove' as EventName<SlRemoveEvent>
+  },
+  displayName: 'SlTag'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

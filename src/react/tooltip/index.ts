@@ -13,19 +13,7 @@ export type { SlHideEvent } from '../../../src/events/events';
 export type { SlAfterHideEvent } from '../../../src/events/events';
 
 const tagName = 'sl-tooltip';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlShow: 'sl-show' as EventName<SlShowEvent>,
-    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
-    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
-    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>
-  },
-  displayName: 'SlTooltip'
-});
+Component.define('sl-tooltip');
 
 /**
  * @summary Tooltips display additional information based on a specific action.
@@ -55,16 +43,17 @@ const component = createComponent({
  * @animation tooltip.show - The animation to use when showing the tooltip.
  * @animation tooltip.hide - The animation to use when hiding the tooltip.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlShow: 'sl-show' as EventName<SlShowEvent>,
+    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
+    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
+    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>
+  },
+  displayName: 'SlTooltip'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

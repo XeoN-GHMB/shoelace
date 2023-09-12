@@ -15,20 +15,7 @@ export type { SlInputEvent } from '../../../src/events/events';
 export type { SlInvalidEvent } from '../../../src/events/events';
 
 const tagName = 'sl-range';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
-    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
-    onSlInput: 'sl-input' as EventName<SlInputEvent>,
-    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
-  },
-  displayName: 'SlRange'
-});
+Component.define('sl-range');
 
 /**
  * @summary Ranges allow the user to select a single value within a given range using a slider.
@@ -60,16 +47,18 @@ const component = createComponent({
  * @cssproperty --track-height - The height of the track.
  * @cssproperty --track-active-offset - The point of origin of the active track.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
+    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
+    onSlInput: 'sl-input' as EventName<SlInputEvent>,
+    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
+  },
+  displayName: 'SlRange'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

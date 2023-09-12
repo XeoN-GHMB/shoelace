@@ -11,18 +11,7 @@ export type { SlBoneInitEvent } from '../../../src/events/events';
 export type { SlBoneRelationalSelectEvent } from '../../../src/events/events';
 
 const tagName = 'sl-bone';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlBoneChange: 'sl-bone-change' as EventName<SlBoneChangeEvent>,
-    onSlBoneInit: 'sl-bone-init' as EventName<SlBoneInitEvent>,
-    onSlBoneRelationalSelect: 'sl-bone-relational-select' as EventName<SlBoneRelationalSelectEvent>
-  },
-  displayName: 'SlBone'
-});
+Component.define('sl-bone');
 
 /**
  * @since 2.0
@@ -41,16 +30,16 @@ const component = createComponent({
  *
  * @cssproperty --example - An example CSS custom property.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlBoneChange: 'sl-bone-change' as EventName<SlBoneChangeEvent>,
+    onSlBoneInit: 'sl-bone-init' as EventName<SlBoneInitEvent>,
+    onSlBoneRelationalSelect: 'sl-bone-relational-select' as EventName<SlBoneRelationalSelectEvent>
+  },
+  displayName: 'SlBone'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

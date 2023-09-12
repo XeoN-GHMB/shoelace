@@ -7,16 +7,7 @@ import type { SlMutationEvent } from '../../../src/events/events';
 export type { SlMutationEvent } from '../../../src/events/events';
 
 const tagName = 'sl-mutation-observer';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlMutation: 'sl-mutation' as EventName<SlMutationEvent>
-  },
-  displayName: 'SlMutationObserver'
-});
+Component.define('sl-mutation-observer');
 
 /**
  * @summary The Mutation Observer component offers a thin, declarative interface to the [`MutationObserver API`](https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver).
@@ -28,16 +19,14 @@ const component = createComponent({
  *
  * @slot - The content to watch for mutations.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlMutation: 'sl-mutation' as EventName<SlMutationEvent>
+  },
+  displayName: 'SlMutationObserver'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

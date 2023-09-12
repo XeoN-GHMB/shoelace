@@ -9,17 +9,7 @@ export type { SlBlurEvent } from '../../../src/events/events';
 export type { SlFocusEvent } from '../../../src/events/events';
 
 const tagName = 'sl-radio-button';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
-    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>
-  },
-  displayName: 'SlRadioButton'
-});
+Component.define('sl-radio-button');
 
 /**
  * @summary Radios buttons allow the user to select a single option from a group using a button-like control.
@@ -41,16 +31,15 @@ const component = createComponent({
  * @csspart label - The container that wraps the radio button's label.
  * @csspart suffix - The container that wraps the suffix.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
+    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>
+  },
+  displayName: 'SlRadioButton'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

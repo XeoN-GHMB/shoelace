@@ -17,21 +17,7 @@ export type { SlInputEvent } from '../../../src/events/events';
 export type { SlInvalidEvent } from '../../../src/events/events';
 
 const tagName = 'sl-input';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
-    onSlClear: 'sl-clear' as EventName<SlClearEvent>,
-    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
-    onSlInput: 'sl-input' as EventName<SlInputEvent>,
-    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
-  },
-  displayName: 'SlInput'
-});
+Component.define('sl-input');
 
 /**
  * @summary Inputs collect data from the user.
@@ -67,16 +53,19 @@ const component = createComponent({
  * @csspart password-toggle-button - The password toggle button.
  * @csspart suffix - The container that wraps the suffix.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
+    onSlClear: 'sl-clear' as EventName<SlClearEvent>,
+    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
+    onSlInput: 'sl-input' as EventName<SlInputEvent>,
+    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
+  },
+  displayName: 'SlInput'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

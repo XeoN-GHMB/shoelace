@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/spinner/spinner.component.js';
 
 const tagName = 'sl-spinner';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlSpinner'
-});
+Component.define('sl-spinner');
 
 /**
  * @summary Spinners are used to show the progress of an indeterminate operation.
@@ -25,16 +18,12 @@ const component = createComponent({
  * @cssproperty --indicator-color - The color of the spinner's indicator.
  * @cssproperty --speed - The time it takes for the spinner to complete one animation cycle.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlSpinner'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

@@ -10,3 +10,4 @@ node_modules
 /types
 src/react
 cdn
+web-types.json

@@ -13,19 +13,7 @@ export type { SlHideEvent } from '../../../src/events/events';
 export type { SlAfterHideEvent } from '../../../src/events/events';
 
 const tagName = 'sl-alert';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlShow: 'sl-show' as EventName<SlShowEvent>,
-    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
-    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
-    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>
-  },
-  displayName: 'SlAlert'
-});
+Component.define('sl-alert');
 
 /**
  * @summary Alerts are used to display important messages inline or as toast notifications.
@@ -52,16 +40,17 @@ const component = createComponent({
  * @animation alert.show - The animation to use when showing the alert.
  * @animation alert.hide - The animation to use when hiding the alert.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlShow: 'sl-show' as EventName<SlShowEvent>,
+    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
+    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
+    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>
+  },
+  displayName: 'SlAlert'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

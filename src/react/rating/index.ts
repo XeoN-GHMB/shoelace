@@ -9,17 +9,7 @@ export type { SlChangeEvent } from '../../../src/events/events';
 export type { SlHoverEvent } from '../../../src/events/events';
 
 const tagName = 'sl-rating';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
-    onSlHover: 'sl-hover' as EventName<SlHoverEvent>
-  },
-  displayName: 'SlRating'
-});
+Component.define('sl-rating');
 
 /**
  * @summary Ratings give users a way to quickly view and provide feedback.
@@ -41,16 +31,15 @@ const component = createComponent({
  * @cssproperty --symbol-size - The size of symbols.
  * @cssproperty --symbol-spacing - The spacing to use around symbols.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
+    onSlHover: 'sl-hover' as EventName<SlHoverEvent>
+  },
+  displayName: 'SlRating'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

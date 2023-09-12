@@ -15,20 +15,7 @@ export type { SlFocusEvent } from '../../../src/events/events';
 export type { SlInvalidEvent } from '../../../src/events/events';
 
 const tagName = 'sl-switch';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
-    onSlInput: 'sl-input' as EventName<SlInputEvent>,
-    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
-    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
-  },
-  displayName: 'SlSwitch'
-});
+Component.define('sl-switch');
 
 /**
  * @summary Switches allow the user to toggle an option on or off.
@@ -53,16 +40,18 @@ const component = createComponent({
  * @cssproperty --height - The height of the switch.
  * @cssproperty --thumb-size - The size of the thumb.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
+    onSlInput: 'sl-input' as EventName<SlInputEvent>,
+    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
+    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
+  },
+  displayName: 'SlSwitch'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

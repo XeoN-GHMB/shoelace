@@ -11,18 +11,7 @@ export type { SlChangeEvent } from '../../../src/events/events';
 export type { SlInputEvent } from '../../../src/events/events';
 
 const tagName = 'sl-combobox';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlItemSelect: 'sl-item-select' as EventName<SlItemSelectEvent>,
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
-    onSlInput: 'sl-input' as EventName<SlInputEvent>
-  },
-  displayName: 'SlCombobox'
-});
+Component.define('sl-combobox');
 
 /**
  * @since 2.0
@@ -42,16 +31,16 @@ const component = createComponent({
  * @csspart input - The sl-input component.
  * @csspart menu - The sl-menu component.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlItemSelect: 'sl-item-select' as EventName<SlItemSelectEvent>,
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
+    onSlInput: 'sl-input' as EventName<SlInputEvent>
+  },
+  displayName: 'SlCombobox'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/carousel-item/carousel-item.component.js';
 
 const tagName = 'sl-carousel-item';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlCarouselItem'
-});
+Component.define('sl-carousel-item');
 
 /**
  * @summary A carousel item represent a slide within a [carousel](/components/carousel).
@@ -23,16 +16,12 @@ const component = createComponent({
  * @cssproperty --aspect-ratio - The slide's aspect ratio. Inherited from the carousel by default.
  *
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlCarouselItem'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

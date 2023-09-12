@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/format-bytes/format-bytes.component.js';
 
 const tagName = 'sl-format-bytes';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlFormatBytes'
-});
+Component.define('sl-format-bytes');
 
 /**
  * @summary Formats a number as a human readable bytes value.
@@ -18,16 +11,12 @@ const component = createComponent({
  * @status stable
  * @since 2.0
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlFormatBytes'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

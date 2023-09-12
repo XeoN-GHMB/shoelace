@@ -11,18 +11,7 @@ export type { SlInputEvent } from '../../../src/events/events';
 export type { SlInvalidEvent } from '../../../src/events/events';
 
 const tagName = 'sl-radio-group';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
-    onSlInput: 'sl-input' as EventName<SlInputEvent>,
-    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
-  },
-  displayName: 'SlRadioGroup'
-});
+Component.define('sl-radio-group');
 
 /**
  * @summary Radio groups are used to group multiple [radios](/components/radio) or [radio buttons](/components/radio-button) so they function as a single form control.
@@ -47,16 +36,16 @@ const component = createComponent({
  * @csspart button-group - The button group that wraps radio buttons.
  * @csspart button-group__base - The button group's `base` part.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
+    onSlInput: 'sl-input' as EventName<SlInputEvent>,
+    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
+  },
+  displayName: 'SlRadioGroup'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

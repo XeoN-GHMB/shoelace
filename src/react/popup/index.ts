@@ -7,16 +7,7 @@ import type { SlRepositionEvent } from '../../../src/events/events';
 export type { SlRepositionEvent } from '../../../src/events/events';
 
 const tagName = 'sl-popup';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlReposition: 'sl-reposition' as EventName<SlRepositionEvent>
-  },
-  displayName: 'SlPopup'
-});
+Component.define('sl-popup');
 
 /**
  * @summary Popup is a utility that lets you declaratively anchor "popup" containers to another element.
@@ -46,16 +37,14 @@ const component = createComponent({
  *  popup can be before overflowing. Useful for positioning child elements that need to overflow. This property is only
  *  available when using `auto-size`.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlReposition: 'sl-reposition' as EventName<SlRepositionEvent>
+  },
+  displayName: 'SlPopup'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

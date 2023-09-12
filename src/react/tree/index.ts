@@ -7,16 +7,7 @@ import type { SlSelectionChangeEvent } from '../../../src/events/events';
 export type { SlSelectionChangeEvent } from '../../../src/events/events';
 
 const tagName = 'sl-tree';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlSelectionChange: 'sl-selection-change' as EventName<SlSelectionChangeEvent>
-  },
-  displayName: 'SlTree'
-});
+Component.define('sl-tree');
 
 /**
  * @summary Trees allow you to display a hierarchical list of selectable [tree items](/components/tree-item). Items with children can be expanded and collapsed as desired by the user.
@@ -39,16 +30,14 @@ const component = createComponent({
  * @cssproperty [--indent-guide-style=solid] - The style of the indentation line, e.g. solid, dotted, dashed.
  * @cssproperty [--indent-guide-width=0] - The width of the indentation line.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlSelectionChange: 'sl-selection-change' as EventName<SlSelectionChangeEvent>
+  },
+  displayName: 'SlTree'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

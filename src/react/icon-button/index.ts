@@ -9,17 +9,7 @@ export type { SlBlurEvent } from '../../../src/events/events';
 export type { SlFocusEvent } from '../../../src/events/events';
 
 const tagName = 'sl-icon-button';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
-    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>
-  },
-  displayName: 'SlIconButton'
-});
+Component.define('sl-icon-button');
 
 /**
  * @summary Icons buttons are simple, icon-only buttons that can be used for actions and in toolbars.
@@ -34,16 +24,15 @@ const component = createComponent({
  *
  * @csspart base - The component's base wrapper.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
+    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>
+  },
+  displayName: 'SlIconButton'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

@@ -17,21 +17,7 @@ export type { SlLazyChangeEvent } from '../../../src/events/events';
 export type { SlLazyLoadEvent } from '../../../src/events/events';
 
 const tagName = 'sl-tree-item';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlExpand: 'sl-expand' as EventName<SlExpandEvent>,
-    onSlAfterExpand: 'sl-after-expand' as EventName<SlAfterExpandEvent>,
-    onSlCollapse: 'sl-collapse' as EventName<SlCollapseEvent>,
-    onSlAfterCollapse: 'sl-after-collapse' as EventName<SlAfterCollapseEvent>,
-    onSlLazyChange: 'sl-lazy-change' as EventName<SlLazyChangeEvent>,
-    onSlLazyLoad: 'sl-lazy-load' as EventName<SlLazyLoadEvent>
-  },
-  displayName: 'SlTreeItem'
-});
+Component.define('sl-tree-item');
 
 /**
  * @summary A tree item serves as a hierarchical node that lives inside a [tree](/components/tree).
@@ -75,16 +61,19 @@ const component = createComponent({
  * @csspart checkbox__indeterminate-icon - The checkbox's exported `indeterminate-icon` part.
  * @csspart checkbox__label - The checkbox's exported `label` part.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlExpand: 'sl-expand' as EventName<SlExpandEvent>,
+    onSlAfterExpand: 'sl-after-expand' as EventName<SlAfterExpandEvent>,
+    onSlCollapse: 'sl-collapse' as EventName<SlCollapseEvent>,
+    onSlAfterCollapse: 'sl-after-collapse' as EventName<SlAfterCollapseEvent>,
+    onSlLazyChange: 'sl-lazy-change' as EventName<SlLazyChangeEvent>,
+    onSlLazyLoad: 'sl-lazy-load' as EventName<SlLazyLoadEvent>
+  },
+  displayName: 'SlTreeItem'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

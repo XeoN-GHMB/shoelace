@@ -7,16 +7,7 @@ import type { SlRepositionEvent } from '../../../src/events/events';
 export type { SlRepositionEvent } from '../../../src/events/events';
 
 const tagName = 'sl-split-panel';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlReposition: 'sl-reposition' as EventName<SlRepositionEvent>
-  },
-  displayName: 'SlSplitPanel'
-});
+Component.define('sl-split-panel');
 
 /**
  * @summary Split panels display two adjacent panels, allowing the user to reposition them.
@@ -42,16 +33,14 @@ const component = createComponent({
  * @cssproperty [--min=0] - The minimum allowed size of the primary panel.
  * @cssproperty [--max=100%] - The maximum allowed size of the primary panel.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlReposition: 'sl-reposition' as EventName<SlRepositionEvent>
+  },
+  displayName: 'SlSplitPanel'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

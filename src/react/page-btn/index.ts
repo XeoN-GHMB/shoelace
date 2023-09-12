@@ -9,17 +9,7 @@ export type { SlPageChangeEvent } from '../../../src/events/events';
 export type { SlPageBeforeChangeEvent } from '../../../src/events/events';
 
 const tagName = 'sl-page-btn';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlPageChange: 'sl-page-change' as EventName<SlPageChangeEvent>,
-    onSlPageBeforeChange: 'sl-page-before-change' as EventName<SlPageBeforeChangeEvent>
-  },
-  displayName: 'SlPageBtn'
-});
+Component.define('sl-page-btn');
 
 /**
  * @since 2.0
@@ -40,16 +30,15 @@ const component = createComponent({
  *
  *
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlPageChange: 'sl-page-change' as EventName<SlPageChangeEvent>,
+    onSlPageBeforeChange: 'sl-page-before-change' as EventName<SlPageBeforeChangeEvent>
+  },
+  displayName: 'SlPageBtn'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

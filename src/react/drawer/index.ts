@@ -17,21 +17,7 @@ export type { SlInitialFocusEvent } from '../../../src/events/events';
 export type { SlRequestCloseEvent } from '../../../src/events/events';
 
 const tagName = 'sl-drawer';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlShow: 'sl-show' as EventName<SlShowEvent>,
-    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
-    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
-    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>,
-    onSlInitialFocus: 'sl-initial-focus' as EventName<SlInitialFocusEvent>,
-    onSlRequestClose: 'sl-request-close' as EventName<SlRequestCloseEvent>
-  },
-  displayName: 'SlDrawer'
-});
+Component.define('sl-drawer');
 
 /**
  * @summary Drawers slide in from a container to expose additional options and information.
@@ -86,16 +72,19 @@ const component = createComponent({
  * @animation drawer.overlay.show - The animation to use when showing the drawer's overlay.
  * @animation drawer.overlay.hide - The animation to use when hiding the drawer's overlay.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlShow: 'sl-show' as EventName<SlShowEvent>,
+    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
+    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
+    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>,
+    onSlInitialFocus: 'sl-initial-focus' as EventName<SlInitialFocusEvent>,
+    onSlRequestClose: 'sl-request-close' as EventName<SlRequestCloseEvent>
+  },
+  displayName: 'SlDrawer'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

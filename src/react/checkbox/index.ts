@@ -15,20 +15,7 @@ export type { SlInputEvent } from '../../../src/events/events';
 export type { SlInvalidEvent } from '../../../src/events/events';
 
 const tagName = 'sl-checkbox';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
-    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
-    onSlInput: 'sl-input' as EventName<SlInputEvent>,
-    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
-  },
-  displayName: 'SlCheckbox'
-});
+Component.define('sl-checkbox');
 
 /**
  * @summary Checkboxes allow the user to toggle an option on or off.
@@ -54,16 +41,18 @@ const component = createComponent({
  * @csspart indeterminate-icon - The indeterminate icon, an `<sl-icon>` element.
  * @csspart label - The container that wraps the checkbox's label.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
+    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
+    onSlInput: 'sl-input' as EventName<SlInputEvent>,
+    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
+  },
+  displayName: 'SlCheckbox'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

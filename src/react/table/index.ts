@@ -7,16 +7,7 @@ import type { SlSelectionChangedEvent } from '../../../src/events/events';
 export type { SlSelectionChangedEvent } from '../../../src/events/events';
 
 const tagName = 'sl-table';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlSelectionChanged: 'sl-selectionChanged' as EventName<SlSelectionChangedEvent>
-  },
-  displayName: 'SlTable'
-});
+Component.define('sl-table');
 
 /**
  * @since 2.0
@@ -36,16 +27,14 @@ const component = createComponent({
  * @cssproperty --table-row-color-even - even row background color
  * @cssproperty --table-row-color-hover - row hover color
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlSelectionChanged: 'sl-selectionChanged' as EventName<SlSelectionChangedEvent>
+  },
+  displayName: 'SlTable'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

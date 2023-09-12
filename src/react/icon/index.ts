@@ -9,17 +9,7 @@ export type { SlLoadEvent } from '../../../src/events/events';
 export type { SlErrorEvent } from '../../../src/events/events';
 
 const tagName = 'sl-icon';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlLoad: 'sl-load' as EventName<SlLoadEvent>,
-    onSlError: 'sl-error' as EventName<SlErrorEvent>
-  },
-  displayName: 'SlIcon'
-});
+Component.define('sl-icon');
 
 /**
  * @summary Icons are symbols that can be used to represent various options within an application.
@@ -33,16 +23,15 @@ const component = createComponent({
  * @csspart svg - The internal SVG element.
  * @csspart use - The <use> element generated when using `spriteSheet: true`
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlLoad: 'sl-load' as EventName<SlLoadEvent>,
+    onSlError: 'sl-error' as EventName<SlErrorEvent>
+  },
+  displayName: 'SlIcon'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

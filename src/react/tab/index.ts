@@ -7,16 +7,7 @@ import type { SlCloseEvent } from '../../../src/events/events';
 export type { SlCloseEvent } from '../../../src/events/events';
 
 const tagName = 'sl-tab';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlClose: 'sl-close' as EventName<SlCloseEvent>
-  },
-  displayName: 'SlTab'
-});
+Component.define('sl-tab');
 
 /**
  * @summary Tabs are used inside [tab groups](/components/tab-group) to represent and activate [tab panels](/components/tab-panel).
@@ -34,16 +25,14 @@ const component = createComponent({
  * @csspart close-button - The close button, an `<sl-icon-button>`.
  * @csspart close-button__base - The close button's exported `base` part.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlClose: 'sl-close' as EventName<SlCloseEvent>
+  },
+  displayName: 'SlTab'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

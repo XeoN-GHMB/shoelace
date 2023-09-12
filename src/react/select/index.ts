@@ -25,25 +25,7 @@ export type { SlAfterHideEvent } from '../../../src/events/events';
 export type { SlInvalidEvent } from '../../../src/events/events';
 
 const tagName = 'sl-select';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
-    onSlClear: 'sl-clear' as EventName<SlClearEvent>,
-    onSlInput: 'sl-input' as EventName<SlInputEvent>,
-    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
-    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
-    onSlShow: 'sl-show' as EventName<SlShowEvent>,
-    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
-    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
-    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>,
-    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
-  },
-  displayName: 'SlSelect'
-});
+Component.define('sl-select');
 
 /**
  * @summary Selects allow you to choose items from a menu of predefined options.
@@ -90,16 +72,23 @@ const component = createComponent({
  * @csspart clear-button - The clear button.
  * @csspart expand-icon - The container that wraps the expand icon.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>,
+    onSlClear: 'sl-clear' as EventName<SlClearEvent>,
+    onSlInput: 'sl-input' as EventName<SlInputEvent>,
+    onSlFocus: 'sl-focus' as EventName<SlFocusEvent>,
+    onSlBlur: 'sl-blur' as EventName<SlBlurEvent>,
+    onSlShow: 'sl-show' as EventName<SlShowEvent>,
+    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
+    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
+    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>,
+    onSlInvalid: 'sl-invalid' as EventName<SlInvalidEvent>
+  },
+  displayName: 'SlSelect'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

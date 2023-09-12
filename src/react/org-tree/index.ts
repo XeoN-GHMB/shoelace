@@ -9,17 +9,7 @@ export type { SlOrgTreeNodeClickEvent } from '../../../src/events/events';
 export type { SlOrgTreeNodeToggleEvent } from '../../../src/events/events';
 
 const tagName = 'sl-org-tree';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlOrgTreeNodeClick: 'sl-org-tree-node-click' as EventName<SlOrgTreeNodeClickEvent>,
-    onSlOrgTreeNodeToggle: 'sl-org-tree-node-toggle' as EventName<SlOrgTreeNodeToggleEvent>
-  },
-  displayName: 'SlOrgTree'
-});
+Component.define('sl-org-tree');
 
 /**
  * @since 2.0
@@ -37,16 +27,15 @@ const component = createComponent({
  *
  * @cssproperty --example - An example CSS custom property.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlOrgTreeNodeClick: 'sl-org-tree-node-click' as EventName<SlOrgTreeNodeClickEvent>,
+    onSlOrgTreeNodeToggle: 'sl-org-tree-node-toggle' as EventName<SlOrgTreeNodeToggleEvent>
+  },
+  displayName: 'SlOrgTree'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

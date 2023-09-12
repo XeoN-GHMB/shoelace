@@ -11,18 +11,7 @@ export type { SlNodeToggleEvent } from '../../../src/events/events';
 export type { SlNodeBeforeToggleEvent } from '../../../src/events/events';
 
 const tagName = 'sl-org-node';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlNodeClick: 'sl-node-click' as EventName<SlNodeClickEvent>,
-    onSlNodeToggle: 'sl-node-toggle' as EventName<SlNodeToggleEvent>,
-    onSlNodeBeforeToggle: 'sl-node-before-toggle' as EventName<SlNodeBeforeToggleEvent>
-  },
-  displayName: 'SlOrgNode'
-});
+Component.define('sl-org-node');
 
 /**
  * @since 2.0
@@ -37,16 +26,16 @@ const component = createComponent({
  *
  *  @cssproperty --example - An example CSS custom property.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlNodeClick: 'sl-node-click' as EventName<SlNodeClickEvent>,
+    onSlNodeToggle: 'sl-node-toggle' as EventName<SlNodeToggleEvent>,
+    onSlNodeBeforeToggle: 'sl-node-before-toggle' as EventName<SlNodeBeforeToggleEvent>
+  },
+  displayName: 'SlOrgNode'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

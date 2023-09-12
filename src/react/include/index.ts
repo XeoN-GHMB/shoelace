@@ -9,17 +9,7 @@ export type { SlLoadEvent } from '../../../src/events/events';
 export type { SlErrorEvent } from '../../../src/events/events';
 
 const tagName = 'sl-include';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlLoad: 'sl-load' as EventName<SlLoadEvent>,
-    onSlError: 'sl-error' as EventName<SlErrorEvent>
-  },
-  displayName: 'SlInclude'
-});
+Component.define('sl-include');
 
 /**
  * @summary Includes give you the power to embed external HTML files into the page.
@@ -30,16 +20,15 @@ const component = createComponent({
  * @event sl-load - Emitted when the included file is loaded.
  * @event {{ status: number }} sl-error - Emitted when the included file fails to load due to an error.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlLoad: 'sl-load' as EventName<SlLoadEvent>,
+    onSlError: 'sl-error' as EventName<SlErrorEvent>
+  },
+  displayName: 'SlInclude'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

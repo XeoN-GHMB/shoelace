@@ -3,14 +3,7 @@ import { createComponent } from '@lit-labs/react';
 import Component from '../../components/tab-panel/tab-panel.component.js';
 
 const tagName = 'sl-tab-panel';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {},
-  displayName: 'SlTabPanel'
-});
+Component.define('sl-tab-panel');
 
 /**
  * @summary Tab panels are used inside [tab groups](/components/tab-group) to display tabbed content.
@@ -24,16 +17,12 @@ const component = createComponent({
  *
  * @cssproperty --padding - The tab panel's padding.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {},
+  displayName: 'SlTabPanel'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

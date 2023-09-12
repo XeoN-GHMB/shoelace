@@ -7,16 +7,7 @@ import type { SlChangeEvent } from '../../../src/events/events';
 export type { SlChangeEvent } from '../../../src/events/events';
 
 const tagName = 'sl-image-comparer';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlChange: 'sl-change' as EventName<SlChangeEvent>
-  },
-  displayName: 'SlImageComparer'
-});
+Component.define('sl-image-comparer');
 
 /**
  * @summary Compare visual differences between similar photos with a sliding panel.
@@ -41,16 +32,14 @@ const component = createComponent({
  * @cssproperty --divider-width - The width of the dividing line.
  * @cssproperty --handle-size - The size of the compare handle.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlChange: 'sl-change' as EventName<SlChangeEvent>
+  },
+  displayName: 'SlImageComparer'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

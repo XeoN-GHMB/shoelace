@@ -13,19 +13,7 @@ export type { SlHideEvent } from '../../../src/events/events';
 export type { SlAfterHideEvent } from '../../../src/events/events';
 
 const tagName = 'sl-dropdown';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlShow: 'sl-show' as EventName<SlShowEvent>,
-    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
-    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
-    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>
-  },
-  displayName: 'SlDropdown'
-});
+Component.define('sl-dropdown');
 
 /**
  * @summary Dropdowns expose additional content that "drops down" in a panel.
@@ -50,16 +38,17 @@ const component = createComponent({
  * @animation dropdown.show - The animation to use when showing the dropdown.
  * @animation dropdown.hide - The animation to use when hiding the dropdown.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlShow: 'sl-show' as EventName<SlShowEvent>,
+    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
+    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
+    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>
+  },
+  displayName: 'SlDropdown'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

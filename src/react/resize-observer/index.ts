@@ -7,16 +7,7 @@ import type { SlResizeEvent } from '../../../src/events/events';
 export type { SlResizeEvent } from '../../../src/events/events';
 
 const tagName = 'sl-resize-observer';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlResize: 'sl-resize' as EventName<SlResizeEvent>
-  },
-  displayName: 'SlResizeObserver'
-});
+Component.define('sl-resize-observer');
 
 /**
  * @summary The Resize Observer component offers a thin, declarative interface to the [`ResizeObserver API`](https://developer.mozilla.org/en-US/docs/Web/API/ResizeObserver).
@@ -28,16 +19,14 @@ const component = createComponent({
  *
  * @event {{ entries: ResizeObserverEntry[] }} sl-resize - Emitted when the element is resized.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlResize: 'sl-resize' as EventName<SlResizeEvent>
+  },
+  displayName: 'SlResizeObserver'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

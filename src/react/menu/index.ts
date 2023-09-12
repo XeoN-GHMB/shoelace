@@ -7,16 +7,7 @@ import type { SlSelectEvent } from '../../../src/events/events';
 export type { SlSelectEvent } from '../../../src/events/events';
 
 const tagName = 'sl-menu';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlSelect: 'sl-select' as EventName<SlSelectEvent>
-  },
-  displayName: 'SlMenu'
-});
+Component.define('sl-menu');
 
 /**
  * @summary Menus provide a list of options for the user to choose from.
@@ -28,16 +19,14 @@ const component = createComponent({
  *
  * @event {{ item: SlMenuItem }} sl-select - Emitted when a menu item is selected.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlSelect: 'sl-select' as EventName<SlSelectEvent>
+  },
+  displayName: 'SlMenu'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;

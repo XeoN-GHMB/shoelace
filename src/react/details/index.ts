@@ -13,19 +13,7 @@ export type { SlHideEvent } from '../../../src/events/events';
 export type { SlAfterHideEvent } from '../../../src/events/events';
 
 const tagName = 'sl-details';
-
-const component = createComponent({
-  tagName,
-  elementClass: Component,
-  react: React,
-  events: {
-    onSlShow: 'sl-show' as EventName<SlShowEvent>,
-    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
-    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
-    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>
-  },
-  displayName: 'SlDetails'
-});
+Component.define('sl-details');
 
 /**
  * @summary Details show a brief summary and expand to show additional content.
@@ -54,16 +42,17 @@ const component = createComponent({
  * @animation details.show - The animation to use when showing details. You can use `height: auto` with this animation.
  * @animation details.hide - The animation to use when hiding details. You can use `height: auto` with this animation.
  */
-class SlComponent extends React.Component<Parameters<typeof component>[0]> {
-  constructor(...args: Parameters<typeof component>) {
-    super(...args);
-    Component.define(tagName);
-  }
+const reactWrapper = createComponent({
+  tagName,
+  elementClass: Component,
+  react: React,
+  events: {
+    onSlShow: 'sl-show' as EventName<SlShowEvent>,
+    onSlAfterShow: 'sl-after-show' as EventName<SlAfterShowEvent>,
+    onSlHide: 'sl-hide' as EventName<SlHideEvent>,
+    onSlAfterHide: 'sl-after-hide' as EventName<SlAfterHideEvent>
+  },
+  displayName: 'SlDetails'
+});
 
-  render() {
-    const { children, ...props } = this.props;
-    return React.createElement(component, props, children);
-  }
-}
-
-export default SlComponent;
+export default reactWrapper;
