@@ -1,5 +1,7 @@
 # Changelog
 
+## 0.6.2
+- fix: Combobox is available again
 ## 0.6.1
 - fix: radiobuttons work now as expected
 - fix: spinners now work as expected

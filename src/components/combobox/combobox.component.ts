@@ -1,9 +1,10 @@
-import { html} from 'lit';
+import { html } from 'lit/static-html.js';
 import {customElement, property, query, state} from 'lit/decorators.js';
-import type SlMenuItem from '../menu-item/menu-item';
-import type SlDropdown from '../dropdown/dropdown';
-import type SlMenu from '../menu/menu';
-import styles from './combobox.styles';
+import SlMenuItem from '../menu-item/menu-item.component.js';
+import SlDropdown from '../dropdown/dropdown.component.js';
+import SlMenu from '../menu/menu.component.js';
+import SlInput from '../input/input.component.js';
+import styles from './combobox.styles.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {scrollIntoView} from "../../internal/scroll";
 import ShoelaceElement from '../../internal/shoelace-element';
@@ -38,6 +39,13 @@ export interface SuggestionSource {
 @customElement('sl-combobox')
 export default class SlCombobox extends ShoelaceElement {
   static styles = styles;
+
+  static dependencies = {
+    'sl-input': SlInput,
+    'sl-dropdown': SlDropdown,
+    'sl-menu': SlMenu,
+    'sl-menu-item': SlMenuItem,
+  };
 
   private comboboxId = comboboxIds++;
   private resizeObserver: ResizeObserver;
