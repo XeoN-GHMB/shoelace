@@ -64,6 +64,10 @@ Component.define('sl-dialog');
  * @animation dialog.denyClose - The animation to use when a request to close the dialog is denied.
  * @animation dialog.overlay.show - The animation to use when showing the dialog's overlay.
  * @animation dialog.overlay.hide - The animation to use when hiding the dialog's overlay.
+ *
+ * @property modal - Exposes the internal modal utility that controls focus trapping. To temporarily disable focus
+ *   trapping and allow third-party modals spawned from an active Shoelace modal, call `modal.activateExternal()` when
+ *   the third-party modal opens. Upon closing, call `modal.deactivateExternal()` to restore Shoelace's focus trapping.
  */
 const reactWrapper = createComponent({
   tagName,

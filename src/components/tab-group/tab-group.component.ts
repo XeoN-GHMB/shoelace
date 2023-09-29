@@ -122,6 +122,7 @@ export default class SlTabGroup extends ShoelaceElement {
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.mutationObserver.disconnect();
     this.resizeObserver.unobserve(this.nav);
   }

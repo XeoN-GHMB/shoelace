@@ -1,6 +1,7 @@
 _site
 .cache
 .DS_Store
+cdn
 dist
 docs/assets/images/sprite.svg
 node_modules
@@ -9,5 +10,3 @@ node_modules
 /out
 /types
 src/react
-cdn
-web-types.json

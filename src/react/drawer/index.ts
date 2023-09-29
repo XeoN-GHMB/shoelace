@@ -71,6 +71,10 @@ Component.define('sl-drawer');
  * @animation drawer.denyClose - The animation to use when a request to close the drawer is denied.
  * @animation drawer.overlay.show - The animation to use when showing the drawer's overlay.
  * @animation drawer.overlay.hide - The animation to use when hiding the drawer's overlay.
+ *
+ * @property modal - Exposes the internal modal utility that controls focus trapping. To temporarily disable focus
+ *   trapping and allow third-party modals spawned from an active Shoelace modal, call `modal.activateExternal()` when
+ *   the third-party modal opens. Upon closing, call `modal.deactivateExternal()` to restore Shoelace's focus trapping.
  */
 const reactWrapper = createComponent({
   tagName,

@@ -100,6 +100,7 @@ export default class SlDetails extends ShoelaceElement {
   }
 
   disconnectedCallback() {
+    super.disconnectedCallback();
     this.detailsObserver.disconnect();
   }
 
