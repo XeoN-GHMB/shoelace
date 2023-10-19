@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/icon/icon.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlLoadEvent } from '../../../src/events/events';
 import type { SlErrorEvent } from '../../../src/events/events';
 export type { SlLoadEvent } from '../../../src/events/events';

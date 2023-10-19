@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/bone/bone.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlBoneChangeEvent } from '../../../src/events/events';
 import type { SlBoneInitEvent } from '../../../src/events/events';
 import type { SlBoneRelationalSelectEvent } from '../../../src/events/events';

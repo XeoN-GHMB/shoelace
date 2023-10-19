@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/resize-observer/resize-observer.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlResizeEvent } from '../../../src/events/events';
 export type { SlResizeEvent } from '../../../src/events/events';
 

@@ -24,7 +24,10 @@ export default css`
     vertical-align: middle;
     overflow: hidden;
     cursor: text;
-    transition: var(--sl-transition-fast) color, var(--sl-transition-fast) border, var(--sl-transition-fast) box-shadow,
+    transition:
+      var(--sl-transition-fast) color,
+      var(--sl-transition-fast) border,
+      var(--sl-transition-fast) box-shadow,
       var(--sl-transition-fast) background-color;
   }
 
@@ -130,6 +133,7 @@ export default css`
   .input__control::placeholder {
     color: var(--sl-input-placeholder-color);
     user-select: none;
+    -webkit-user-select: none;
   }
 
   .input:hover:not(.input--disabled) .input__control {

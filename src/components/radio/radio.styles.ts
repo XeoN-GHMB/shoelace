@@ -57,8 +57,11 @@ export default css`
     border-radius: 50%;
     background-color: var(--sl-input-background-color);
     color: transparent;
-    transition: var(--sl-transition-fast) border-color, var(--sl-transition-fast) background-color,
-      var(--sl-transition-fast) color, var(--sl-transition-fast) box-shadow;
+    transition:
+      var(--sl-transition-fast) border-color,
+      var(--sl-transition-fast) background-color,
+      var(--sl-transition-fast) color,
+      var(--sl-transition-fast) box-shadow;
   }
 
   .radio__input {
@@ -111,5 +114,6 @@ export default css`
     line-height: var(--toggle-size);
     margin-inline-start: 0.5em;
     user-select: none;
+    -webkit-user-select: none;
   }
 `;

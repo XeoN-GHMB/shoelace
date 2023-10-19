@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/visually-hidden/visually-hidden.component.js';
 
 const tagName = 'sl-visually-hidden';

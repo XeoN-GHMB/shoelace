@@ -8,6 +8,8 @@ import styles from './combobox.styles.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {scrollIntoView} from "../../internal/scroll";
 import ShoelaceElement from '../../internal/shoelace-element';
+import type { SlChangeEvent } from '../../events/sl-change.js';
+import type { SlInputEvent } from '../../events/sl-input.js';
 
 export interface Suggestion {
   text: string;
@@ -28,7 +30,8 @@ export interface SuggestionSource {
  * @dependency sl-menu
  * @dependency sl-menu-item
  *
- * @event {{ item: SlMenuItem }} sl-item-select - Emitted when a suggestion is selected.
+ * @event {{ item: SlMenuItem }} sl-item-select - DEPRECATED - Emitted when a suggestion is selected.
+ * @event {{ item: SlMenuItem }} sl-select - Emitted when a suggestion is selected.
  * @event sl-change - Emitted when the input's value changes.
  * @event sl-input - Emitted when the input receives input.
  *
@@ -56,6 +59,9 @@ export default class SlCombobox extends ShoelaceElement {
 
   @state() activeItemIndex: number = -1;
   @state() suggestions: Array<{ text: string; value: string }> = [];
+
+  /** The current input */
+  @property({ type: String }) value = '';
 
   /** The combobox's size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
@@ -106,6 +112,7 @@ export default class SlCombobox extends ShoelaceElement {
 
   clear() {
     this.input.value = '';
+    this.value = '';
     this.dropdown.focusOnTrigger();
     this.dropdown.hide();
   }
@@ -136,7 +143,7 @@ export default class SlCombobox extends ShoelaceElement {
 
       // Focus on a menu item
       if (this.activeItemIndex !== -1) {
-        menuItems[this.activeItemIndex].active = false;
+        menuItems[this.activeItemIndex].focus();
       }
 
       if (event.key === 'ArrowDown') {
@@ -152,10 +159,6 @@ export default class SlCombobox extends ShoelaceElement {
           this.activeItemIndex--;
         }
       }
-
-        this.menu.setCurrentItem(menuItems[this.activeItemIndex]);
-        menuItems[this.activeItemIndex].active = true;
-
         scrollIntoView(menuItems[this.activeItemIndex], this.dropdown.panel);
 
         return;
@@ -165,45 +168,57 @@ export default class SlCombobox extends ShoelaceElement {
       event.preventDefault();
       const item = menuItems[this.activeItemIndex];
       if (item) {
-        this.onItemSelected(item);
+        this.input.value = item.textContent ?? '';
+        this.value = item.textContent ?? '';
+        this.dropdown.hide();
+        //@ts-ignore
+        const oldevent = this.emit('sl-item-select', {
+          detail: {item},
+          cancelable: true,
+        });
+        this.emit('sl-change'); //also emit change
       }
     }
   }
 
   handleInputFocus = () => {
-    if (this.input.value == '') {
+    if (this.input.value === '') {
       return;
     }
     this.dropdown.show();
   };
 
-  onItemSelected(item: SlMenuItem) {
+  onItemSelected(event: CustomEvent ) {
+    let item = event.detail.item as SlMenuItem
+    this.input.value = item.textContent ?? '';
+    this.value = item.textContent ?? '';
+
+
     //@ts-ignore
-    const event = this.emit('sl-item-select', {
+    const oldevent = this.emit('sl-item-select', {
       detail: {item},
       cancelable: true,
     });
-    if (!event.defaultPrevented) {
+    this.emit('sl-change'); //also emit change
+
+    if (!event.defaultPrevented || !oldevent.defaultPrevented) {
       this.dropdown.hide();
-      this.input.value = item.textContent ?? '';
     }
+    this.prepareSuggestions(this.value)
   }
 
-  handleSlInput(event: CustomEvent) {
+  handleSlInput(event: SlInputEvent) {
     event.stopPropagation();
+    const target = event.target as HTMLInputElement;
+    this.value = target.value
     this.emit('sl-input');
 
-    if (this.activeItemIndex !== -1) {
-      this.menu.getAllItems()[this.activeItemIndex].active = false;
-      this.activeItemIndex = -1;
-    }
-
-    if (this.input.value === '') {
+    if (this.value === '') {
       this.dropdown.hide();
       return
     }
 
-    this.prepareSuggestions(this.input.value)
+    this.prepareSuggestions(this.value)
       .then(() => this.dropdown.show())
   }
 
@@ -217,9 +232,10 @@ export default class SlCombobox extends ShoelaceElement {
     if (this.dropdown) this.dropdown.reposition();
   }
 
-  handleSlChange(event: CustomEvent) {
+  handleSlChange(event: SlChangeEvent) {
     event.stopPropagation();
-    console.log(this)
+    const target = event.target as HTMLInputElement;
+    this.value = target.value
     this.emit('sl-change');
   }
 
@@ -230,7 +246,7 @@ export default class SlCombobox extends ShoelaceElement {
 
     let items = await this.source(text);
 
-    this.suggestions = this.highlightSearchTextInSuggestions(items, this.input.value);
+    this.suggestions = this.highlightSearchTextInSuggestions(items, this.value);
   }
 
   highlightSearchTextInSuggestions(items: Suggestion[], searchText: string) {
@@ -312,7 +328,7 @@ export default class SlCombobox extends ShoelaceElement {
           part="menu"
           id=${`sl-combobox-menu-${this.comboboxId}`}
           role="listbox"
-          @sl-select=${(selectEvent: CustomEvent) => this.onItemSelected(selectEvent.detail.item)}
+          @sl-select=${(selectEvent: CustomEvent) => this.onItemSelected(selectEvent)}
           not-tabbable
         >
           ${this.suggestions.length === 0

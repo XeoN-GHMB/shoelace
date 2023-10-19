@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/carousel/carousel.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlSlideChangeEvent } from '../../../src/events/events';
 export type { SlSlideChangeEvent } from '../../../src/events/events';
 
@@ -34,7 +34,7 @@ Component.define('sl-carousel');
  * @csspart navigation-button--next - Applied to the next button.
  *
  * @cssproperty --slide-gap - The space between each slide.
- * @cssproperty --aspect-ratio - The aspect ratio of each slide.
+ * @cssproperty [--aspect-ratio=16/9] - The aspect ratio of each slide.
  * @cssproperty --scroll-hint - The amount of padding to apply to the scroll area, allowing adjacent slides to become
  *  partially visible as a scroll hint.
  */

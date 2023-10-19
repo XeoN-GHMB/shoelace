@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/split-panel/split-panel.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlRepositionEvent } from '../../../src/events/events';
 export type { SlRepositionEvent } from '../../../src/events/events';
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/format-date/format-date.component.js';
 
 const tagName = 'sl-format-date';

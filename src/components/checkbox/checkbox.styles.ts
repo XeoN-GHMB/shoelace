@@ -47,9 +47,11 @@ export default css`
     /*border-radius: 2px;*/
     background-color: var(--sl-input-background-color);
     color: var(--sl-color-neutral-0);
-
-    transition: var(--sl-transition-fast) border-color, var(--sl-transition-fast) background-color,
-      var(--sl-transition-fast) color, var(--sl-transition-fast) box-shadow;
+    transition:
+      var(--sl-transition-fast) border-color,
+      var(--sl-transition-fast) background-color,
+      var(--sl-transition-fast) color,
+      var(--sl-transition-fast) box-shadow;
   }
 
   .checkbox__input {
@@ -114,5 +116,6 @@ export default css`
     line-height: var(--toggle-size);
     margin-inline-start: 0.5em;
     user-select: none;
+    -webkit-user-select: none;
   }
 `;

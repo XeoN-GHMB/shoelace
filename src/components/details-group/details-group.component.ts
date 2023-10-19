@@ -16,7 +16,7 @@ import ShoelaceElement from '../../internal/shoelace-element.js';
 export default class SlDetailsGroup extends ShoelaceElement {
   static styles = styles;
 
-  @queryAssignedNodes('', true)
+  @queryAssignedNodes({flatten:true})
   currentSlotNodes: any;
 
   hasChanged() {

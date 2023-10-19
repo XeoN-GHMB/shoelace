@@ -8,13 +8,6 @@ export default css`
     width: 100%;
   }
 
-  sl-menu-item .highlight {
-    color: var(--sl-color-primary-500);
-  }
-
-  sl-menu-item[active] .highlight {
-    color: var(--sl-color-primary-100);
-  }
 
   sl-menu::part(base) {
     padding: 0;
@@ -24,6 +17,15 @@ export default css`
   sl-menu-item:focus[tabindex='0'] .highlight {
     color: var(--sl-color-white);
   }
+
+  sl-menu-item .highlight {
+    color: var(--sl-color-primary-500);
+  }
+
+  sl-menu-item[active] .highlight {
+    color: var(--sl-color-primary-100);
+  }
+
 
   .input__prefix,
   .input__suffix {

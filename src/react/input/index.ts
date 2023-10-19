@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/input/input.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlBlurEvent } from '../../../src/events/events';
 import type { SlChangeEvent } from '../../../src/events/events';
 import type { SlClearEvent } from '../../../src/events/events';

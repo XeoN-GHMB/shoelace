@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/animation/animation.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlCancelEvent } from '../../../src/events/events';
 import type { SlFinishEvent } from '../../../src/events/events';
 import type { SlStartEvent } from '../../../src/events/events';

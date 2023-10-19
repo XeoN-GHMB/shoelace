@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/back-to-top/back-to-top.component.js';
 
 const tagName = 'sl-back-to-top';

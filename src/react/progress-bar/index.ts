@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/progress-bar/progress-bar.component.js';
 
 const tagName = 'sl-progress-bar';

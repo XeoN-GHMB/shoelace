@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/combobox/combobox.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlItemSelectEvent } from '../../../src/events/events';
+import type { SlSelectEvent } from '../../../src/events/events';
 import type { SlChangeEvent } from '../../../src/events/events';
 import type { SlInputEvent } from '../../../src/events/events';
 export type { SlItemSelectEvent } from '../../../src/events/events';
+export type { SlSelectEvent } from '../../../src/events/events';
 export type { SlChangeEvent } from '../../../src/events/events';
 export type { SlInputEvent } from '../../../src/events/events';
 
@@ -23,7 +25,8 @@ Component.define('sl-combobox');
  * @dependency sl-menu
  * @dependency sl-menu-item
  *
- * @event {{ item: SlMenuItem }} sl-item-select - Emitted when a suggestion is selected.
+ * @event {{ item: SlMenuItem }} sl-item-select - DEPRECATED - Emitted when a suggestion is selected.
+ * @event {{ item: SlMenuItem }} sl-select - Emitted when a suggestion is selected.
  * @event sl-change - Emitted when the input's value changes.
  * @event sl-input - Emitted when the input receives input.
  *
@@ -37,6 +40,7 @@ const reactWrapper = createComponent({
   react: React,
   events: {
     onSlItemSelect: 'sl-item-select' as EventName<SlItemSelectEvent>,
+    onSlSelect: 'sl-select' as EventName<SlSelectEvent>,
     onSlChange: 'sl-change' as EventName<SlChangeEvent>,
     onSlInput: 'sl-input' as EventName<SlInputEvent>
   },

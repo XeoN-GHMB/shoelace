@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/org-node/org-node.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlNodeClickEvent } from '../../../src/events/events';
 import type { SlNodeToggleEvent } from '../../../src/events/events';
 import type { SlNodeBeforeToggleEvent } from '../../../src/events/events';

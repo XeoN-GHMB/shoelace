@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/rating/rating.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlChangeEvent } from '../../../src/events/events';
 import type { SlHoverEvent } from '../../../src/events/events';
 export type { SlChangeEvent } from '../../../src/events/events';

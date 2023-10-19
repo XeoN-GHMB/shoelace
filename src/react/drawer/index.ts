@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { createComponent } from '@lit-labs/react';
+import { createComponent } from '@lit/react';
 import Component from '../../components/drawer/drawer.component.js';
 
-import { type EventName } from '@lit-labs/react';
+import { type EventName } from '@lit/react';
 import type { SlShowEvent } from '../../../src/events/events';
 import type { SlAfterShowEvent } from '../../../src/events/events';
 import type { SlHideEvent } from '../../../src/events/events';
