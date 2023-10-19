@@ -33,6 +33,7 @@ Component.define('sl-combobox');
  * @csspart base - The component's base wrapper, a sl-dropdown.
  * @csspart input - The sl-input component.
  * @csspart menu - The sl-menu component.
+ * @csspart menu-item - The sl-menu-item component.
  */
 const reactWrapper = createComponent({
   tagName,

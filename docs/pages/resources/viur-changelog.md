@@ -1,7 +1,17 @@
 # Changelog
 
+## 0.6.3
+- feat: updated shoelace to 2.10
+- fix: Combobox now emits sl-change
+- fix: Combobox sl-item-change is deprecated
+- fix: Combobox uses focus() for dropdown highlighting
+- fix: Combobox Dropdown selection also emit sl-change
+- fix: Compobox now has a value property
+- fix: suggestions and event emitting now works as expected
+
 ## 0.6.2
 - fix: Combobox is available again
+
 ## 0.6.1
 - fix: radiobuttons work now as expected
 - fix: spinners now work as expected

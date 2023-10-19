@@ -38,6 +38,7 @@ export interface SuggestionSource {
  * @csspart base - The component's base wrapper, a sl-dropdown.
  * @csspart input - The sl-input component.
  * @csspart menu - The sl-menu component.
+ * @csspart menu-item - The sl-menu-item component.
  */
 @customElement('sl-combobox')
 export default class SlCombobox extends ShoelaceElement {
@@ -335,7 +336,12 @@ export default class SlCombobox extends ShoelaceElement {
             ? html`
               <sl-menu-item disabled>${this.emptyMessage}</sl-menu-item>`
             : this.suggestions.map((item, index) => html`
-              <sl-menu-item value=${item.value} id=${this.menuItemId(index)}>${unsafeHTML(item.text)}</sl-menu-item>`)}
+              <sl-menu-item value=${item.value} id=${this.menuItemId(index)}
+              part="menu-item"
+              exportparts="base:menu-item__base, prefix:menu-item__prefix, suffix:menu-item__suffix, submenu-icon:menu-item__submenu-icon, label:menu-item__label, checked-icon:menu-item__checked-icon"
+
+
+              >${unsafeHTML(item.text)}</sl-menu-item>`)}
         </sl-menu>
       </sl-dropdown>
     `;
