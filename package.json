@@ -1,7 +1,7 @@
 {
   "name": "@viur/shoelace",
   "description": "A forward-thinking library of web components.",
-  "version": "0.6.3-v2.11.0",
+  "version": "0.7.0-v2.11.2",
   "homepage": "https://github.com/viur-framework/viur-shoelace",
   "author": "Cory LaViska",
   "contributors": [
@@ -54,7 +54,6 @@
     "prettier:check": "prettier --check --loglevel warn .",
     "lint": "eslint src --max-warnings 0",
     "lint:fix": "eslint src --max-warnings 0 --fix",
-    "ts-check": "tsc --noEmit --project ./tsconfig.json",
     "create": "plop --plopfile scripts/plop/plopfile.js",
     "test": "web-test-runner --group default",
     "test:component": "web-test-runner -- --watch --group",
