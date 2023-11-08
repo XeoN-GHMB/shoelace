@@ -37,4 +37,3 @@ layout: component
 </sl-bar>
 ```
 
-[component-metadata:sl-bar]
