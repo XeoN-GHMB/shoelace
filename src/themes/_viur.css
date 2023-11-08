@@ -1,1 +1,291 @@
 /* VIUR CUSTOMS*/
+.form-control--unwrapped .input {
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: stretch;
+  justify-content: start;
+  position: relative;
+  width: 100%;
+  font-family: var(--sl-input-font-family);
+  font-weight: var(--sl-input-font-weight);
+  letter-spacing: var(--sl-input-letter-spacing);
+  vertical-align: middle;
+  overflow: hidden;
+  cursor: text;
+  transition:
+    var(--sl-transition-fast) color,
+    var(--sl-transition-fast) border,
+    var(--sl-transition-fast) box-shadow,
+    var(--sl-transition-fast) background-color;
+}
+
+/* Standard inputs */
+.form-control--unwrapped .input--standard {
+  background-color: var(--sl-input-background-color);
+  border: solid var(--sl-input-border-width) var(--sl-input-border-color);
+}
+
+.form-control--unwrapped .input--standard:hover:not(.input--disabled) {
+  background-color: var(--sl-input-background-color-hover);
+  border-color: var(--sl-input-border-color-hover);
+}
+
+.form-control--unwrapped .input--standard.input--focused:not(.input--disabled) {
+  background-color: var(--sl-input-background-color-focus);
+  border-color: var(--sl-input-border-color-focus);
+  box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-input-focus-ring-color);
+}
+
+.form-control--unwrapped .input--standard.input--focused:not(.input--disabled) .input__control {
+  color: var(--sl-input-color-focus);
+}
+
+.form-control--unwrapped .input--standard.input--disabled {
+  background-color: var(--sl-input-background-color-disabled);
+  border-color: var(--sl-input-border-color-disabled);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-control--unwrapped .input--standard.input--disabled .input__control {
+  color: var(--sl-input-color-disabled);
+}
+
+.form-control--unwrapped .input--standard.input--disabled .input__control::placeholder {
+  color: var(--sl-input-placeholder-color-disabled);
+}
+
+/* Filled inputs */
+.form-control--unwrapped .input--filled {
+  border: none;
+  background-color: var(--sl-input-filled-background-color);
+  color: var(--sl-input-color);
+}
+
+.form-control--unwrapped .input--filled:hover:not(.input--disabled) {
+  background-color: var(--sl-input-filled-background-color-hover);
+}
+
+.form-control--unwrapped .input--filled.input--focused:not(.input--disabled) {
+  background-color: var(--sl-input-filled-background-color-focus);
+  outline: var(--sl-focus-ring);
+  outline-offset: var(--sl-focus-ring-offset);
+}
+
+.form-control--unwrapped .input--filled.input--disabled {
+  background-color: var(--sl-input-filled-background-color-disabled);
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-control--unwrapped .input__control {
+  flex: 1 1 auto;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  min-width: 0;
+  height: 100%;
+  color: var(--sl-input-color);
+  border: none;
+  background: inherit;
+  box-shadow: none;
+  padding: 0;
+  margin: 0;
+  cursor: inherit;
+  -webkit-appearance: none;
+}
+
+.form-control--unwrapped .input__control::-webkit-search-decoration,
+.form-control--unwrapped .input__control::-webkit-search-cancel-button,
+.form-control--unwrapped .input__control::-webkit-search-results-button,
+.form-control--unwrapped .input__control::-webkit-search-results-decoration {
+  -webkit-appearance: none;
+}
+
+.form-control--unwrapped .input__control:-webkit-autofill,
+.form-control--unwrapped .input__control:-webkit-autofill:hover,
+.form-control--unwrapped .input__control:-webkit-autofill:focus,
+.form-control--unwrapped .input__control:-webkit-autofill:active {
+  box-shadow: 0 0 0 var(--sl-input-height-large) var(--sl-input-background-color-hover) inset !important;
+  -webkit-text-fill-color: var(--sl-color-primary-500);
+  caret-color: var(--sl-input-color);
+}
+
+.form-control--unwrapped .input--filled .input__control:-webkit-autofill,
+.form-control--unwrapped .input--filled .input__control:-webkit-autofill:hover,
+.form-control--unwrapped .input--filled .input__control:-webkit-autofill:focus,
+.form-control--unwrapped .input--filled .input__control:-webkit-autofill:active {
+  box-shadow: 0 0 0 var(--sl-input-height-large) var(--sl-input-filled-background-color) inset !important;
+}
+
+.form-control--unwrapped .input__control::placeholder {
+  color: var(--sl-input-placeholder-color);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.form-control--unwrapped .input:hover:not(.input--disabled) .input__control {
+  color: var(--sl-input-color-hover);
+}
+
+.form-control--unwrapped .input__control:focus {
+  outline: none;
+}
+
+.form-control--unwrapped .input__prefix,
+.form-control--unwrapped .input__suffix {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  cursor: default;
+}
+
+.form-control--unwrapped .input__prefix ::slotted(sl-icon),
+.form-control--unwrapped .input__suffix ::slotted(sl-icon) {
+  color: var(--sl-input-icon-color);
+}
+
+/*
+ * Size modifiers
+ */
+
+ .form-control--unwrapped .input--small {
+  border-radius: var(--sl-input-border-radius-small);
+  font-size: var(--sl-input-font-size-small);
+  height: var(--sl-input-height-small);
+}
+
+.form-control--unwrapped .input--small .input__control {
+  height: calc(var(--sl-input-height-small) - var(--sl-input-border-width) * 2);
+  padding: 0 var(--sl-input-spacing-small);
+}
+
+.form-control--unwrapped .input--small .input__clear,
+.form-control--unwrapped .input--small .input__password-toggle {
+  width: calc(1em + var(--sl-input-spacing-small) * 2);
+}
+
+.form-control--unwrapped .input--small .input__prefix ::slotted(*) {
+  margin-inline-start: var(--sl-input-spacing-small);
+}
+
+.form-control--unwrapped .input--small .input__suffix ::slotted(*) {
+  margin-inline-end: var(--sl-input-spacing-small);
+}
+
+.form-control--unwrapped .input--medium {
+  border-radius: var(--sl-input-border-radius-medium);
+  font-size: var(--sl-input-font-size-medium);
+  height: var(--sl-input-height-medium);
+}
+
+.form-control--unwrapped .input--medium .input__control {
+  height: calc(var(--sl-input-height-medium) - var(--sl-input-border-width) * 2);
+  padding: 0 var(--sl-input-spacing-medium);
+}
+
+.form-control--unwrapped .input--medium .input__clear,
+.form-control--unwrapped .input--medium .input__password-toggle {
+  width: calc(1em + var(--sl-input-spacing-medium) * 2);
+}
+
+.form-control--unwrapped .input--medium .input__prefix ::slotted(*) {
+  margin-inline-start: var(--sl-input-spacing-medium);
+}
+
+.form-control--unwrapped .input--medium .input__suffix ::slotted(*) {
+  margin-inline-end: var(--sl-input-spacing-medium);
+}
+
+.form-control--unwrapped .input--large {
+  border-radius: var(--sl-input-border-radius-large);
+  font-size: var(--sl-input-font-size-large);
+  height: var(--sl-input-height-large);
+}
+
+.form-control--unwrapped .input--large .input__control {
+  height: calc(var(--sl-input-height-large) - var(--sl-input-border-width) * 2);
+  padding: 0 var(--sl-input-spacing-large);
+}
+
+.form-control--unwrapped .input--large .input__clear,
+.form-control--unwrapped .input--large .input__password-toggle {
+  width: calc(1em + var(--sl-input-spacing-large) * 2);
+}
+
+.form-control--unwrapped .input--large .input__prefix ::slotted(*) {
+  margin-inline-start: var(--sl-input-spacing-large);
+}
+
+.form-control--unwrapped .input--large .input__suffix ::slotted(*) {
+  margin-inline-end: var(--sl-input-spacing-large);
+}
+
+/*
+ * Pill modifier
+ */
+
+ .form-control--unwrapped .input--pill.input--small {
+  border-radius: var(--sl-input-height-small);
+}
+
+.form-control--unwrapped .input--pill.input--medium {
+  border-radius: var(--sl-input-height-medium);
+}
+
+.form-control--unwrapped .input--pill.input--large {
+  border-radius: var(--sl-input-height-large);
+}
+
+/*
+ * Clearable + Password Toggle
+ */
+
+.form-control--unwrapped .input__clear:not(.input__clear--visible) {
+  visibility: hidden;
+}
+
+.form-control--unwrapped .input__clear,
+.form-control--unwrapped .input__password-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: inherit;
+  color: var(--sl-input-icon-color);
+  border: none;
+  background: none;
+  padding: 0;
+  transition: var(--sl-transition-fast) color;
+  cursor: pointer;
+}
+
+.form-control--unwrapped .input__clear:hover,
+.form-control--unwrapped .input__password-toggle:hover {
+  color: var(--sl-input-icon-color-hover);
+}
+
+.form-control--unwrapped .input__clear:focus,
+.form-control--unwrapped .input__password-toggle:focus {
+  outline: none;
+}
+
+.form-control--unwrapped .input--empty .input__clear {
+  visibility: hidden;
+}
+
+/* Don't show the browser's password toggle in Edge */
+.form-control--unwrapped ::-ms-reveal {
+  display: none;
+}
+
+/* Hide the built-in number spinner */
+.form-control--unwrapped .input--no-spin-buttons input[type='number']::-webkit-outer-spin-button,
+.form-control--unwrapped .input--no-spin-buttons input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  display: none;
+}
+
+.form-control--unwrapped :host(.sl-button-group__button--last:not(.sl-button-group__button--first)) .input {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}

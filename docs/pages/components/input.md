@@ -83,8 +83,12 @@ const App = () => <SlInput placeholder="Clearable" clearable />;
 
 Add the `password-toggle` attribute to add a toggle button that will show the password when activated.
 
+Add the `unwrap` attribute remove the shadowdom and allow Passwordmanagers to autofill the input.
+
 ```html:preview
-<sl-input type="password" placeholder="Password Toggle" password-toggle></sl-input>
+<sl-input type="password" placeholder="Normal Password Toggle" password-toggle></sl-input>
+<sl-input type="password" placeholder="Unwrapped Password Toggle" password-toggle unwrap></sl-input>
+
 ```
 
 ```jsx:react

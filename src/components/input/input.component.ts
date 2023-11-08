@@ -193,6 +193,16 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
    */
   @property() inputmode: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url';
 
+  @property({ type: Boolean, reflect: true }) unwrap = false;
+
+  createRenderRoot(): any{
+    if (this.unwrap){
+      return this;
+    }
+    const t=super.createRenderRoot();
+    return this.renderOptions.renderBefore??=t.firstChild,t
+  }
+
   //
   // NOTE: We use an in-memory input for these getters/setters instead of the one in the template because the properties
   // can be set before the component is rendered.
@@ -418,7 +428,8 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
           'form-control--medium': this.size === 'medium',
           'form-control--large': this.size === 'large',
           'form-control--has-label': hasLabel,
-          'form-control--has-help-text': hasHelpText
+          'form-control--has-help-text': hasHelpText,
+          'form-control--unwrapped':this.unwrap
         })}
       >
         <label
