@@ -68,6 +68,7 @@ export { default as SlPageBtn } from './components/page-btn/page-btn.js';
 export { default as SlTable } from './components/table/table.js';
 export { default as SlTableWrapper } from './components/table-wrapper/table-wrapper.js';
 export { default as SlBone } from './components/bone/bone.js';
+export { default as SlBar } from './components/bar/bar.js';
 /* plop:component */
 
 // Utilities
