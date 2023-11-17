@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+- feat: updated shoelace to 2.11
+- feat: buttongroups now can handle inputs, selects and comboboxes
+- feat: added a bar component
+- feat: inputs can have a `upwrap` attribute to disable shadowroot to expose the input
+
 ## 0.6.3
 - feat: updated shoelace to 2.10
 - fix: Combobox now emits sl-change
