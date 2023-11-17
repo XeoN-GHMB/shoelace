@@ -64,4 +64,17 @@ export default css`
   sl-input[size="large"] .input__suffix ::slotted(*) {
     padding-right: var(--sl-input-spacing-large);
   }
+  
+  :host(.sl-button-group__button--last:not(.sl-button-group__button--first)) sl-input::part(base) {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  :host(.sl-button-group__button--first:not(.sl-button-group__button--last)) sl-input::part(base) {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+  
+  :host(.sl-button-group__button--inner) sl-input::part(base) {
+    border-radius: 0;
+  }
 `;

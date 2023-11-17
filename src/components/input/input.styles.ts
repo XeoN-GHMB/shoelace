@@ -301,5 +301,13 @@ export default css`
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
+  :host(.sl-button-group__button--first:not(.sl-button-group__button--last)) .input {
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+  }
+  
+  :host(.sl-button-group__button--inner) .input {
+    border-radius: 0;
+  }
 
 `;

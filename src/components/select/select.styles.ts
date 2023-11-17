@@ -332,16 +332,16 @@ export default css`
   }
 
   /* Button Group classse*/
-  :host(.sl-button-group__button--inner) .select__control {
+  :host(.sl-button-group__button--inner) .select__combobox {
     border-radius: 0;
   }
 
-  :host(.sl-button-group__button--first:not(.sl-button-group__button--last)) .select__control {
+  :host(.sl-button-group__button--first:not(.sl-button-group__button--last)) .select__combobox {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
   }
 
-  :host(.sl-button-group__button--last:not(.sl-button-group__button--first)) .select__control {
+  :host(.sl-button-group__button--last:not(.sl-button-group__button--first)) .select__combobox {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
