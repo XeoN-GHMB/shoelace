@@ -65,9 +65,7 @@ export { default as SlMap } from './components/map/map.js';
 export { default as SlOrgTree } from './components/org-tree/org-tree.js';
 export { default as SlOrgNode } from './components/org-node/org-node.js';
 export { default as SlPagination } from './components/pagination/pagination.js';
-export { default as SlTable } from './components/table/table.js';
 export { default as SlTableWrapper } from './components/table-wrapper/table-wrapper.js';
-export { default as SlBone } from './components/bone/bone.js';
 export { default as SlBar } from './components/bar/bar.js';
 /* plop:component */
 
