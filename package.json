@@ -31,8 +31,15 @@
     "./dist/react/*": "./dist/react/*",
     "./dist/translations/*": "./dist/translations/*"
   },
-  "files": ["dist", "cdn"],
-  "keywords": ["web components", "custom elements", "components"],
+  "files": [
+    "dist",
+    "cdn"
+  ],
+  "keywords": [
+    "web components",
+    "custom elements",
+    "components"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/viur-framework/viur-shoelace.git"
@@ -144,6 +151,12 @@
     "ora": "^7.0.1",
     "pascal-case": "^3.1.2",
     "plop": "^4.0.0",
+    "postcss": "^8.4.31",
+    "postcss-cli": "^10.1.0",
+    "postcss-discard-comments": "^6.0.0",
+    "postcss-focus": "^7.0.0",
+    "postcss-import": "^15.1.0",
+    "postcss-zindex": "^6.0.0",
     "prettier": "^3.0.3",
     "prismjs": "^1.29.0",
     "react": "^18.2.0",
@@ -158,9 +171,13 @@
     "user-agent-data-types": "^0.3.1"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "^0.19.2"
+    "@esbuild/linux-x64": "^0.19.8",
+    "@esbuild/darwin-x64": "^0.19.8"
   },
   "lint-staged": {
-    "*.{ts,js}": ["eslint --max-warnings 0 --cache --fix", "prettier --write"]
+    "*.{ts,js}": [
+      "eslint --max-warnings 0 --cache --fix",
+      "prettier --write"
+    ]
   }
 }

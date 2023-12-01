@@ -16,7 +16,7 @@
 /* Light theme */
 :root {
   color-scheme: normal;
-
+  /*
   --sl-color-primary-50: var(--sl-color-sky-50);
   --sl-color-primary-100: var(--sl-color-sky-100);
   --sl-color-primary-200: var(--sl-color-sky-200);
@@ -28,7 +28,7 @@
   --sl-color-primary-800: var(--sl-color-sky-800);
   --sl-color-primary-900: var(--sl-color-sky-900);
   --sl-color-primary-950: var(--sl-color-sky-950);
-
+  */
   --docs-overlay-color: hsl(240 3.8% 46.1% / 33%);
   --docs-shadow-x-small: 0 1px 2px hsl(240 3.8% 46.1% / 12%);
   --docs-shadow-small: 0 1px 2px hsl(240 3.8% 46.1% / 24%);

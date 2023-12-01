@@ -13,10 +13,14 @@ import {execSync} from "child_process";
 
 // build viur theme
 async function build_viur_theme(name='viur'){
-  let ccode = execSync(`lessc src/ignite/shoelace.less`);
+  let ccode =""
   if (name === "viur_dark"){
-    ccode = execSync(`lessc src/ignite/dark_shoelace.less`);
+    return ""
+    ccode = execSync(`postcss src/ignite/themes/dark.css -u postcss-import`);
+  }else{
+     ccode = execSync(`postcss src/ignite/themes/light.css -u postcss-import`);
   }
+  ccode+= execSync(`postcss src/ignite/shoelace.css -u postcss-import`);
   ccode+= "\n/* ViUR Defaults */";
   ccode+= `\n${fs.readFileSync('./src/themes/_viur.css',{encoding:"utf-8"})}`;
 
