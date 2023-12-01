@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0
+- feat: updated shoelace to 2.12
+- chore: renamed sl-page-btn to sl-pagination
+- BREAKING: removed bone component
+- BREAKING: removed table component
+- BREAKING: set bootstrap as default icon library. to use viur icons use library="viur"
+- BREAKING: switch from ignite 4 to ignite 5
+
 ## 0.7.0
 - feat: updated shoelace to 2.11
 - feat: buttongroups now can handle inputs, selects and comboboxes
