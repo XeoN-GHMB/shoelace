@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/carousel/carousel.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlSlideChangeEvent } from '../../../src/events/events';
-export type { SlSlideChangeEvent } from '../../../src/events/events';
+import type { SlSlideChangeEvent } from '../../events/events';
+export type { SlSlideChangeEvent } from '../../events/events';
 
 const tagName = 'sl-carousel';
 Component.define('sl-carousel');

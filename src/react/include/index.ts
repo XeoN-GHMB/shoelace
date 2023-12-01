@@ -3,10 +3,10 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/include/include.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlLoadEvent } from '../../../src/events/events';
-import type { SlErrorEvent } from '../../../src/events/events';
-export type { SlLoadEvent } from '../../../src/events/events';
-export type { SlErrorEvent } from '../../../src/events/events';
+import type { SlLoadEvent } from '../../events/events';
+import type { SlErrorEvent } from '../../events/events';
+export type { SlLoadEvent } from '../../events/events';
+export type { SlErrorEvent } from '../../events/events';
 
 const tagName = 'sl-include';
 Component.define('sl-include');

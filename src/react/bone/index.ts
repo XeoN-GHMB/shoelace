@@ -3,12 +3,12 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/bone/bone.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlBoneChangeEvent } from '../../../src/events/events';
-import type { SlBoneInitEvent } from '../../../src/events/events';
-import type { SlBoneRelationalSelectEvent } from '../../../src/events/events';
-export type { SlBoneChangeEvent } from '../../../src/events/events';
-export type { SlBoneInitEvent } from '../../../src/events/events';
-export type { SlBoneRelationalSelectEvent } from '../../../src/events/events';
+import type { SlBoneChangeEvent } from '../../events/events';
+import type { SlBoneInitEvent } from '../../events/events';
+import type { SlBoneRelationalSelectEvent } from '../../events/events';
+export type { SlBoneChangeEvent } from '../../events/events';
+export type { SlBoneInitEvent } from '../../events/events';
+export type { SlBoneRelationalSelectEvent } from '../../events/events';
 
 const tagName = 'sl-bone';
 Component.define('sl-bone');

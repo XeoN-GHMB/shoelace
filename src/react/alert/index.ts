@@ -3,14 +3,14 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/alert/alert.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlShowEvent } from '../../../src/events/events';
-import type { SlAfterShowEvent } from '../../../src/events/events';
-import type { SlHideEvent } from '../../../src/events/events';
-import type { SlAfterHideEvent } from '../../../src/events/events';
-export type { SlShowEvent } from '../../../src/events/events';
-export type { SlAfterShowEvent } from '../../../src/events/events';
-export type { SlHideEvent } from '../../../src/events/events';
-export type { SlAfterHideEvent } from '../../../src/events/events';
+import type { SlShowEvent } from '../../events/events';
+import type { SlAfterShowEvent } from '../../events/events';
+import type { SlHideEvent } from '../../events/events';
+import type { SlAfterHideEvent } from '../../events/events';
+export type { SlShowEvent } from '../../events/events';
+export type { SlAfterShowEvent } from '../../events/events';
+export type { SlHideEvent } from '../../events/events';
+export type { SlAfterHideEvent } from '../../events/events';
 
 const tagName = 'sl-alert';
 Component.define('sl-alert');

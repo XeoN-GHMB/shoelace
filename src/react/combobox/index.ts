@@ -3,14 +3,14 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/combobox/combobox.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlItemSelectEvent } from '../../../src/events/events';
-import type { SlSelectEvent } from '../../../src/events/events';
-import type { SlChangeEvent } from '../../../src/events/events';
-import type { SlInputEvent } from '../../../src/events/events';
-export type { SlItemSelectEvent } from '../../../src/events/events';
-export type { SlSelectEvent } from '../../../src/events/events';
-export type { SlChangeEvent } from '../../../src/events/events';
-export type { SlInputEvent } from '../../../src/events/events';
+import type { SlItemSelectEvent } from '../../events/events';
+import type { SlSelectEvent } from '../../events/events';
+import type { SlChangeEvent } from '../../events/events';
+import type { SlInputEvent } from '../../events/events';
+export type { SlItemSelectEvent } from '../../events/events';
+export type { SlSelectEvent } from '../../events/events';
+export type { SlChangeEvent } from '../../events/events';
+export type { SlInputEvent } from '../../events/events';
 
 const tagName = 'sl-combobox';
 Component.define('sl-combobox');

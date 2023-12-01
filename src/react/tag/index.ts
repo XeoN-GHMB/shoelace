@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/tag/tag.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlRemoveEvent } from '../../../src/events/events';
-export type { SlRemoveEvent } from '../../../src/events/events';
+import type { SlRemoveEvent } from '../../events/events';
+export type { SlRemoveEvent } from '../../events/events';
 
 const tagName = 'sl-tag';
 Component.define('sl-tag');

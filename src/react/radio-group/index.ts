@@ -3,12 +3,12 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/radio-group/radio-group.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlChangeEvent } from '../../../src/events/events';
-import type { SlInputEvent } from '../../../src/events/events';
-import type { SlInvalidEvent } from '../../../src/events/events';
-export type { SlChangeEvent } from '../../../src/events/events';
-export type { SlInputEvent } from '../../../src/events/events';
-export type { SlInvalidEvent } from '../../../src/events/events';
+import type { SlChangeEvent } from '../../events/events';
+import type { SlInputEvent } from '../../events/events';
+import type { SlInvalidEvent } from '../../events/events';
+export type { SlChangeEvent } from '../../events/events';
+export type { SlInputEvent } from '../../events/events';
+export type { SlInvalidEvent } from '../../events/events';
 
 const tagName = 'sl-radio-group';
 Component.define('sl-radio-group');

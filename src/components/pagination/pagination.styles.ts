@@ -24,7 +24,7 @@ export default css`
   }
 
   .pageCountSpan {
-    margin: 0 3px;
+    margin: auto 5px;
   }
 
   div[part=pageWrap] {

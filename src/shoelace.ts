@@ -64,7 +64,7 @@ export { default as SlBackToTop } from './components/back-to-top/back-to-top.js'
 export { default as SlMap } from './components/map/map.js';
 export { default as SlOrgTree } from './components/org-tree/org-tree.js';
 export { default as SlOrgNode } from './components/org-node/org-node.js';
-export { default as SlPageBtn } from './components/page-btn/page-btn.js';
+export { default as SlPagination } from './components/pagination/pagination.js';
 export { default as SlTable } from './components/table/table.js';
 export { default as SlTableWrapper } from './components/table-wrapper/table-wrapper.js';
 export { default as SlBone } from './components/bone/bone.js';

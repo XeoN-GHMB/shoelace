@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/card/card.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlChangeEvent } from '../../../src/events/events';
-export type { SlChangeEvent } from '../../../src/events/events';
+import type { SlChangeEvent } from '../../events/events';
+export type { SlChangeEvent } from '../../events/events';
 
 const tagName = 'sl-card';
 Component.define('sl-card');

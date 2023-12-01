@@ -9,7 +9,9 @@ import { getResouceValue } from '../../utilities/getResouce.js';
 import SlButton from '../button/button.js';
 import SlIcon from '../icon/icon.component.js'
 import SlSelect from '../select/select.component.js'
-import styles from './page-btn.styles';
+import SlOption from '../option/option.component.js'
+import SlInput from '../input/input.component.js'
+import styles from './pagination.styles';
 
 /**
  * @since 2.0
@@ -31,12 +33,14 @@ import styles from './page-btn.styles';
  *
  */
 @resourceLocal()
-@customElement('sl-page-btn')
-export default class SlPageBtn extends ShoelaceElement {
+@customElement('sl-pagination')
+export default class SlPagination extends ShoelaceElement {
   static styles = styles;
   static dependencies = {
     'sl-icon': SlIcon,
-    'sl-select': SlSelect
+    'sl-select': SlSelect,
+    'sl-option': SlOption,
+    'sl-input': SlInput
   };
   /** Current page */
   @property({ type: Number, reflect: true, attribute: 'value' }) value = 1;
@@ -78,7 +82,7 @@ export default class SlPageBtn extends ShoelaceElement {
     }
   }
   _renderSimple() {
-    return html`<sl-input size="small" type="number" step="1" min="1" max=${this.pageCount} .value=${this.value + ''}></sl-input><span class="pageCountSpan">共${this.pageCount}页</span>`;
+    return html`<sl-input size="small" type="number" step="1" min="1" max=${this.pageCount} .value=${this.value + ''}></sl-input><span part="page" class="pageCountSpan">von ${this.pageCount}</span>`;
   }
   _renderPageButton() {
     const pageCount = this.pageCount;
@@ -114,7 +118,7 @@ export default class SlPageBtn extends ShoelaceElement {
     }
     if (this.showSizeChange) {
       result.push(html`<sl-select size="small" .hoist=${true} part="show-size-change" .value=${this.pageSize + ''}>
-        ${repeat(this.pageSizeOptions, (value, _index) => html`<sl-menu-item .value=${value + ''}>${value}条</sl-menu-item>`)}
+        ${repeat(this.pageSizeOptions, (value, _index) => html`<sl-option .value=${value + ''}>${value}</sl-option>`)}
       </sl-select>`);
     }
     return result;
@@ -136,11 +140,14 @@ export default class SlPageBtn extends ShoelaceElement {
       } else {
         this.goToPage(tempNo);
       }
+      });
       this._eventDispose2 = onEvent(baseDiv, 'sl-input,sl-select[part=show-size-change]', 'sl-change', (event: Event) => {
         let el = (event as any).delegateTarget as HTMLElement;
         //@ts-ignore
         const beforeEvent = this.emit('sl-page-before-change');
         if (!beforeEvent.defaultPrevented) {
+          console.log("FF")
+          console.log(el.matches('sl-select[part=show-size-change]'))
           if (el.matches('sl-select[part=show-size-change]')) {
             this.pageSize = Number((el as any).value);
           } else {
@@ -153,6 +160,7 @@ export default class SlPageBtn extends ShoelaceElement {
             if (value > this.pageCount) {
               value = this.pageCount;
             }
+            console.log("GHHH");
             (el as any).value = value;
             this.value = value;
           }
@@ -162,7 +170,7 @@ export default class SlPageBtn extends ShoelaceElement {
           });
         }
       });
-    });
+
   }
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -218,7 +226,7 @@ export default class SlPageBtn extends ShoelaceElement {
         : html`
             ${this.showFirst
               ? html`<sl-tooltip content="${getResouceValue('pageBtn.first')}"
-                  ><sl-button size="small" ?disabled=${this.value == 1} data-page-no="first" variant="text"><sl-icon part="first" name="chevron-bar-left"></sl-icon></sl-button
+                  ><sl-button size="small" ?disabled=${this.value == 1} data-page-no="first" variant="text"><sl-icon part="first" library="bootstrap" name="chevron-bar-left"></sl-icon></sl-button
                 ></sl-tooltip>`
               : nothing}
             <sl-tooltip content="${getResouceValue('pageBtn.prev')}">
@@ -230,7 +238,7 @@ export default class SlPageBtn extends ShoelaceElement {
             ></sl-tooltip>
             ${this.showLast
               ? html`<sl-tooltip content="${getResouceValue('pageBtn.last')}"
-                  ><sl-button size="small" ?disabled=${this.value == this.pageCount} data-page-no="last" variant="text"><sl-icon part="part" name="chevron-bar-right"></sl-icon></sl-button
+                  ><sl-button size="small" ?disabled=${this.value == this.pageCount} data-page-no="last" variant="text"><sl-icon part="last" library="bootstrap" name="chevron-bar-right"></sl-icon></sl-button
                 ></sl-tooltip>`
               : nothing}
           `}
@@ -241,6 +249,6 @@ export default class SlPageBtn extends ShoelaceElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sl-page-btn': SlPageBtn;
+    'sl-pagination': SlPagination;
   }
 }

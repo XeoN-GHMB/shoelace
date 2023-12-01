@@ -3,12 +3,12 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/button/button.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlBlurEvent } from '../../../src/events/events';
-import type { SlFocusEvent } from '../../../src/events/events';
-import type { SlInvalidEvent } from '../../../src/events/events';
-export type { SlBlurEvent } from '../../../src/events/events';
-export type { SlFocusEvent } from '../../../src/events/events';
-export type { SlInvalidEvent } from '../../../src/events/events';
+import type { SlBlurEvent } from '../../events/events';
+import type { SlFocusEvent } from '../../events/events';
+import type { SlInvalidEvent } from '../../events/events';
+export type { SlBlurEvent } from '../../events/events';
+export type { SlFocusEvent } from '../../events/events';
+export type { SlInvalidEvent } from '../../events/events';
 
 const tagName = 'sl-button';
 Component.define('sl-button');

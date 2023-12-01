@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/popup/popup.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlRepositionEvent } from '../../../src/events/events';
-export type { SlRepositionEvent } from '../../../src/events/events';
+import type { SlRepositionEvent } from '../../events/events';
+export type { SlRepositionEvent } from '../../events/events';
 
 const tagName = 'sl-popup';
 Component.define('sl-popup');

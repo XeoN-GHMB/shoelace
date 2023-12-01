@@ -3,12 +3,12 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/org-node/org-node.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlNodeClickEvent } from '../../../src/events/events';
-import type { SlNodeToggleEvent } from '../../../src/events/events';
-import type { SlNodeBeforeToggleEvent } from '../../../src/events/events';
-export type { SlNodeClickEvent } from '../../../src/events/events';
-export type { SlNodeToggleEvent } from '../../../src/events/events';
-export type { SlNodeBeforeToggleEvent } from '../../../src/events/events';
+import type { SlNodeClickEvent } from '../../events/events';
+import type { SlNodeToggleEvent } from '../../events/events';
+import type { SlNodeBeforeToggleEvent } from '../../events/events';
+export type { SlNodeClickEvent } from '../../events/events';
+export type { SlNodeToggleEvent } from '../../events/events';
+export type { SlNodeBeforeToggleEvent } from '../../events/events';
 
 const tagName = 'sl-org-node';
 Component.define('sl-org-node');
