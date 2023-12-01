@@ -5,39 +5,17 @@ meta:
 layout: component
 ---
 
-Icons are symbols that can be used to represent various options within an application.
-
-This Fork uses primarly the [ViUR Icons](https://github.com/viur-framework/viur-icons) project. These icons are part of the `default` icon library. If you prefer, you can register [custom icon libraries](#icon-libraries) as well.
-
-Click or tap on an icon below to copy its name and use it like this.
-
-```html
-<sl-icon name="icon-name-here"></sl-icon>
-```
-
-<div class="icon-search2">
-  <div class="icon-search-controls">
-    <sl-input placeholder="Search Icons" clearable>
-      <sl-icon slot="prefix" name="search"></sl-icon>
-    </sl-input>
-  </div>
-  <div class="icon-list"></div>
-  <input type="text" class="icon-copy-input">
-</div>
-
-
-## Bootstrap Library
-Shoelace comes bundled with over 1,500 icons courtesy of the [Bootstrap Icons](https://icons.getbootstrap.com/) project. These icons are registered as additional icon library.
-To use this icons, set the `library` to `bootstrap`.
+Shoelace comes bundled with over 1,500 icons courtesy of the [Bootstrap Icons](https://icons.getbootstrap.com/) project. These icons are registered as default icon library.
 
 ```html
 <!-- This will show the icon located at /assets/bootstrap-icons/heart.svg -->
-<sl-icon library="bootstrap" name="heart"></sl-icon>
+<sl-icon name="heart"></sl-icon>
 ```
 
 :::tip
 Depending on how you're loading Shoelace, you may need to copy icon assets and/or [set the base path](/getting-started/installation/#setting-the-base-path) so Shoelace knows where to load them from. Otherwise, icons may not appear and you'll see 404 Not Found errors in the dev console.
 :::
+
 
 ## Default Icons
 
@@ -60,6 +38,27 @@ All available icons in the `default` icon library are shown below. Click or tap 
   </div>
   <div class="icon-list"></div>
   <input type="text" class="icon-copy-input" aria-hidden="true" tabindex="-1">
+</div>
+
+## ViUR Library
+Icons are symbols that can be used to represent various options within an application.
+
+This Fork uses primarly the [ViUR Icons](https://github.com/viur-framework/viur-icons) project. These icons can be used with the `viur` icon library. If you prefer, you can register [custom icon libraries](#icon-libraries) as well.
+
+Click or tap on an icon below to copy its name and use it like this.
+
+```html
+<sl-icon library="viur" name="icon-name-here"></sl-icon>
+```
+
+<div class="icon-search2">
+  <div class="icon-search-controls">
+    <sl-input placeholder="Search Icons" clearable>
+      <sl-icon slot="prefix" name="search"></sl-icon>
+    </sl-input>
+  </div>
+  <div class="icon-list"></div>
+  <input type="text" class="icon-copy-input">
 </div>
 
 ## Examples

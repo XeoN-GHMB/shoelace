@@ -54,6 +54,6 @@ Follow [@shoelace_style](https://twitter.com/shoelace_style) on Twitter for gene
 **Please avoid using Twitter for support questions.** The [discussion forum](https://github.com/shoelace-style/shoelace/discussions) is a much better place to share code snippets, screenshots, and other troubleshooting info. You'll have much better luck there, as more users will have a chance to help you.
 
 <sl-button variant="primary" href="https://twitter.com/shoelace_style" target="_blank">
-  <sl-icon library="bootstrap" name="twitter" slot="prefix"></sl-icon>
+  <sl-icon name="twitter" slot="prefix"></sl-icon>
   Follow on Twitter
 </sl-button>
