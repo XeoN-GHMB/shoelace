@@ -520,7 +520,7 @@ export default css`
     visibility: hidden;
   }
 
-  .button--loading sl-spinner-viur {
+  .button--loading sl-spinner {
     --indicator-color: currentColor;
     position: absolute;
     font-size: 1em;
