@@ -1,9 +1,9 @@
 import { html, TemplateResult } from 'lit';
 import { customElement, property, query } from 'lit/decorators.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
-import { customStyle } from '../../internal/customStyle';
-import SlOrgNode, { defaultRoleRender, OrgNodeDataType } from '../org-node/org-node.component';
-import styles from './org-tree.styles';
+import { customStyle } from '../../internal/customStyle.js';
+import SlOrgNode, { defaultRoleRender, OrgNodeDataType } from '../org-node/org-node.component.js';
+import styles from './org-tree.styles.js';
 
 /**
  * @since 2.0

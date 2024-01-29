@@ -1,4 +1,4 @@
-import { addEvent, onEvent } from './common';
+import { addEvent, onEvent } from './common.js';
 export type Poniter = {
   x: number;
   y: number;

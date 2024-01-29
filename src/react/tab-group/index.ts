@@ -3,10 +3,10 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/tab-group/tab-group.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlTabShowEvent } from '../../events/events';
-import type { SlTabHideEvent } from '../../events/events';
-export type { SlTabShowEvent } from '../../events/events';
-export type { SlTabHideEvent } from '../../events/events';
+import type { SlTabShowEvent } from '../../events/events.js';
+import type { SlTabHideEvent } from '../../events/events.js';
+export type { SlTabShowEvent } from '../../events/events.js';
+export type { SlTabHideEvent } from '../../events/events.js';
 
 const tagName = 'sl-tab-group';
 Component.define('sl-tab-group');

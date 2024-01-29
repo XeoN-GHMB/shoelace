@@ -3,12 +3,12 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/radio-group/radio-group.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlChangeEvent } from '../../events/events';
-import type { SlInputEvent } from '../../events/events';
-import type { SlInvalidEvent } from '../../events/events';
-export type { SlChangeEvent } from '../../events/events';
-export type { SlInputEvent } from '../../events/events';
-export type { SlInvalidEvent } from '../../events/events';
+import type { SlChangeEvent } from '../../events/events.js';
+import type { SlInputEvent } from '../../events/events.js';
+import type { SlInvalidEvent } from '../../events/events.js';
+export type { SlChangeEvent } from '../../events/events.js';
+export type { SlInputEvent } from '../../events/events.js';
+export type { SlInvalidEvent } from '../../events/events.js';
 
 const tagName = 'sl-radio-group';
 Component.define('sl-radio-group');
@@ -24,6 +24,7 @@ Component.define('sl-radio-group');
  * @slot - The default slot where `<sl-radio>` or `<sl-radio-button>` elements are placed.
  * @slot label - The radio group's label. Required for proper accessibility. Alternatively, you can use the `label`
  *  attribute.
+ * @slot help-text - Text that describes how to use the radio group. Alternatively, you can use the `help-text` attribute.
  *
  * @event sl-change - Emitted when the radio group's selected value changes.
  * @event sl-input - Emitted when the radio group receives user input.

@@ -1,4 +1,4 @@
-import { getCssValue } from './common';
+import { getCssValue } from './common.js';
 
 export function getTransformPara(elem: HTMLElement) {
   // var elem = document.getElementById(id);

@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/split-panel/split-panel.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlRepositionEvent } from '../../events/events';
-export type { SlRepositionEvent } from '../../events/events';
+import type { SlRepositionEvent } from '../../events/events.js';
+export type { SlRepositionEvent } from '../../events/events.js';
 
 const tagName = 'sl-split-panel';
 Component.define('sl-split-panel');

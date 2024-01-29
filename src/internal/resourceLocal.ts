@@ -1,6 +1,6 @@
 import { ReactiveElement } from 'lit';
-import { addEvent } from '../utilities/common';
-import { resouce_changeEvent } from '../utilities/getResouce';
+import { addEvent } from '../utilities/common.js';
+import { resouce_changeEvent } from '../utilities/getResouce.js';
 
 export default function resourceLocal() {
   return function (target: typeof ReactiveElement) {

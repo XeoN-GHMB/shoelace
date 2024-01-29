@@ -75,7 +75,7 @@ export * from './utilities/base-path.js';
 export * from './utilities/icon-library.js';
 export * from './utilities/form.js';
 
-export { hide, show, doAnimate } from './directives/hideOrShowAnimate';
+export { hide, show, doAnimate } from './directives/hideOrShowAnimate.js';
 
 // GLOB
 import { css, html, LitElement, render } from 'lit';

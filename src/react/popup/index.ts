@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/popup/popup.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlRepositionEvent } from '../../events/events';
-export type { SlRepositionEvent } from '../../events/events';
+import type { SlRepositionEvent } from '../../events/events.js';
+export type { SlRepositionEvent } from '../../events/events.js';
 
 const tagName = 'sl-popup';
 Component.define('sl-popup');
@@ -26,6 +26,7 @@ Component.define('sl-popup');
  *  assigned dynamically as the popup moves. This is most useful for applying a background color to match the popup, and
  *  maybe a border or box shadow.
  * @csspart popup - The popup's container. Useful for setting a background color, box shadow, etc.
+ * @csspart hover-bridge - The hover bridge element. Only available when the `hover-bridge` option is enabled.
  *
  * @cssproperty [--arrow-size=6px] - The size of the arrow. Note that an arrow won't be shown unless the `arrow`
  *  attribute is used.

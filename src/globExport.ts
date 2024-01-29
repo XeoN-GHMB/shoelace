@@ -1,5 +1,5 @@
 import { css, html, LitElement, render } from 'lit';
-import { onEvent } from './utilities/common';
+import { onEvent } from './utilities/common.js';
 declare global {
   interface Window {
     css: typeof css;

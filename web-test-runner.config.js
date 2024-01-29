@@ -7,7 +7,9 @@ export default {
   files: 'src/**/*.test.ts',
   concurrentBrowsers: 1,
   browserStartTimeout: 100000,
-  nodeResolve: true,
+  nodeResolve: {
+    exportConditions: ['production', 'default']
+  },
   testFramework: {
     config: {
       timeout: 3000,

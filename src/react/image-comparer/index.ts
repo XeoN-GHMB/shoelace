@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/image-comparer/image-comparer.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlChangeEvent } from '../../events/events';
-export type { SlChangeEvent } from '../../events/events';
+import type { SlChangeEvent } from '../../events/events.js';
+export type { SlChangeEvent } from '../../events/events.js';
 
 const tagName = 'sl-image-comparer';
 Component.define('sl-image-comparer');

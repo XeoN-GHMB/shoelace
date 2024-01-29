@@ -3,12 +3,12 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/animation/animation.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlCancelEvent } from '../../events/events';
-import type { SlFinishEvent } from '../../events/events';
-import type { SlStartEvent } from '../../events/events';
-export type { SlCancelEvent } from '../../events/events';
-export type { SlFinishEvent } from '../../events/events';
-export type { SlStartEvent } from '../../events/events';
+import type { SlCancelEvent } from '../../events/events.js';
+import type { SlFinishEvent } from '../../events/events.js';
+import type { SlStartEvent } from '../../events/events.js';
+export type { SlCancelEvent } from '../../events/events.js';
+export type { SlFinishEvent } from '../../events/events.js';
+export type { SlStartEvent } from '../../events/events.js';
 
 const tagName = 'sl-animation';
 Component.define('sl-animation');

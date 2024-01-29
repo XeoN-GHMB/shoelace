@@ -2,7 +2,7 @@ import { html, PropertyValues, TemplateResult } from 'lit';
 import { classMap } from 'lit/directives/class-map.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
 import { customElement, property, queryAll } from 'lit/decorators.js';
-import styles from './org-node.styles';
+import styles from './org-node.styles.js';
 export type OrgNodeDataType = {
   /**
    * 内置组织架构图数据

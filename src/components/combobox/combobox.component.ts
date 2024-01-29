@@ -6,8 +6,8 @@ import SlMenu from '../menu/menu.component.js';
 import SlInput from '../input/input.component.js';
 import styles from './combobox.styles.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
-import {scrollIntoView} from "../../internal/scroll";
-import ShoelaceElement from '../../internal/shoelace-element';
+import {scrollIntoView} from "../../internal/scroll.js";
+import ShoelaceElement from '../../internal/shoelace-element.js';
 import type { SlChangeEvent } from '../../events/sl-change.js';
 import type { SlInputEvent } from '../../events/sl-input.js';
 

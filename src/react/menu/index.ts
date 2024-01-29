@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/menu/menu.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlSelectEvent } from '../../events/events';
-export type { SlSelectEvent } from '../../events/events';
+import type { SlSelectEvent } from '../../events/events.js';
+export type { SlSelectEvent } from '../../events/events.js';
 
 const tagName = 'sl-menu';
 Component.define('sl-menu');

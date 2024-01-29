@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { customElement, queryAssignedNodes } from 'lit/decorators.js';
-import styles from './details-group.styles';
+import styles from './details-group.styles.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
 
 /**

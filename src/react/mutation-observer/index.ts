@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/mutation-observer/mutation-observer.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlMutationEvent } from '../../events/events';
-export type { SlMutationEvent } from '../../events/events';
+import type { SlMutationEvent } from '../../events/events.js';
+export type { SlMutationEvent } from '../../events/events.js';
 
 const tagName = 'sl-mutation-observer';
 Component.define('sl-mutation-observer');

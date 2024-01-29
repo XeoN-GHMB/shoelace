@@ -7,14 +7,6 @@ export default css`
   :host {
     --submenu-offset: -2px;
 
-    /* Private */
-    --safe-triangle-cursor-x: 0;
-    --safe-triangle-cursor-y: 0;
-    --safe-triangle-submenu-start-x: 0;
-    --safe-triangle-submenu-start-y: 0;
-    --safe-triangle-submenu-end-x: 0;
-    --safe-triangle-submenu-end-y: 0;
-
     display: block;
   }
 
@@ -50,6 +42,26 @@ export default css`
     background-color: var(--sl-color-primary-500);
     color: var(--sl-color-neutral-0);
   }
+
+  .menu-item.menu-item--loading {
+    outline: none;
+    cursor: wait;
+  }
+
+  .menu-item.menu-item--loading *:not(sl-spinner) {
+    opacity: 0.5;
+  }
+
+  .menu-item--loading sl-spinner {
+    --indicator-color: currentColor;
+    --track-width: 1px;
+    position: absolute;
+    font-size: 0.75em;
+    top: calc(50% - 0.5em);
+    left: 0.65rem;
+    opacity: 1;
+  }
+
   .menu-item .menu-item__label {
     flex: 1 1 auto;
     display: inline-block;
@@ -87,9 +99,9 @@ export default css`
     bottom: 0;
     left: 0;
     clip-path: polygon(
-      var(--safe-triangle-cursor-x) var(--safe-triangle-cursor-y),
-      var(--safe-triangle-submenu-start-x) var(--safe-triangle-submenu-start-y),
-      var(--safe-triangle-submenu-end-x) var(--safe-triangle-submenu-end-y)
+      var(--safe-triangle-cursor-x, 0) var(--safe-triangle-cursor-y, 0),
+      var(--safe-triangle-submenu-start-x, 0) var(--safe-triangle-submenu-start-y, 0),
+      var(--safe-triangle-submenu-end-x, 0) var(--safe-triangle-submenu-end-y, 0)
     );
   }
 

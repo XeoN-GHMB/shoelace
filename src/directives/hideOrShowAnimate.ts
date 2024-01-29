@@ -1,8 +1,8 @@
-import { animations } from '../components/animation/animations';
+import { animations } from '../components/animation/animations.js';
 import { ElementPart, nothing } from 'lit';
 import { directive, Directive } from 'lit/directive.js';
-import { animateTo, animate_hide, animate_show, shimKeyframesHeightAuto } from '../internal/animate';
-import { getCssValue } from '../utilities/common';
+import { animateTo, animate_hide, animate_show, shimKeyframesHeightAuto } from '../internal/animate.js';
+import { getCssValue } from '../utilities/common.js';
 const transitionDuration = 300;
 
 export type HideShowOption = {

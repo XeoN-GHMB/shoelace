@@ -1,6 +1,6 @@
 import { nothing } from 'lit';
 import { directive, Directive, ElementPart } from 'lit/directive.js';
-import { isArray, isObject } from '../utilities/common';
+import { isArray, isObject } from '../utilities/common.js';
 
 export type SpreadResult = {
   [key in string]: string | number | Array<string> | { [k: string]: string | boolean } | EventListenerObject | EventListener;

@@ -11,7 +11,7 @@ import SlIcon from '../icon/icon.component.js'
 import SlSelect from '../select/select.component.js'
 import SlOption from '../option/option.component.js'
 import SlInput from '../input/input.component.js'
-import styles from './pagination.styles';
+import styles from './pagination.styles.js';
 
 /**
  * @since 2.0

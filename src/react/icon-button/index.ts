@@ -3,10 +3,10 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/icon-button/icon-button.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlBlurEvent } from '../../events/events';
-import type { SlFocusEvent } from '../../events/events';
-export type { SlBlurEvent } from '../../events/events';
-export type { SlFocusEvent } from '../../events/events';
+import type { SlBlurEvent } from '../../events/events.js';
+import type { SlFocusEvent } from '../../events/events.js';
+export type { SlBlurEvent } from '../../events/events.js';
+export type { SlFocusEvent } from '../../events/events.js';
 
 const tagName = 'sl-icon-button';
 Component.define('sl-icon-button');

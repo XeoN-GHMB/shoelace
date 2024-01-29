@@ -1,7 +1,7 @@
 import { html } from 'lit';
 import {customElement, property, query} from 'lit/decorators.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
-import styles from './map.styles';
+import styles from './map.styles.js';
 // @ts-ignore
 import {map, tileLayer, popup} from 'leaflet'
 

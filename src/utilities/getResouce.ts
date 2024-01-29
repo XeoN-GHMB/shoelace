@@ -1,7 +1,7 @@
-import { emit } from '../internal/event';
-import resouceZh from '../resources/resource.zh';
-import resouceDe from '../resources/resource.de';
-import resouceEn from '../resources/resource.en';
+import { emit } from '../internal/event.js';
+import resouceZh from '../resources/resource.zh.js';
+import resouceDe from '../resources/resource.de.js';
+import resouceEn from '../resources/resource.en.js';
 let currentLocal = 'en';
 type ResouceType = typeof resouceZh;
 /**

@@ -3,10 +3,10 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/animated-image/animated-image.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlLoadEvent } from '../../events/events';
-import type { SlErrorEvent } from '../../events/events';
-export type { SlLoadEvent } from '../../events/events';
-export type { SlErrorEvent } from '../../events/events';
+import type { SlLoadEvent } from '../../events/events.js';
+import type { SlErrorEvent } from '../../events/events.js';
+export type { SlLoadEvent } from '../../events/events.js';
+export type { SlErrorEvent } from '../../events/events.js';
 
 const tagName = 'sl-animated-image';
 Component.define('sl-animated-image');

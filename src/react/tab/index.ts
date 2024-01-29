@@ -3,8 +3,8 @@ import { createComponent } from '@lit/react';
 import Component from '../../components/tab/tab.component.js';
 
 import { type EventName } from '@lit/react';
-import type { SlCloseEvent } from '../../events/events';
-export type { SlCloseEvent } from '../../events/events';
+import type { SlCloseEvent } from '../../events/events.js';
+export type { SlCloseEvent } from '../../events/events.js';
 
 const tagName = 'sl-tab';
 Component.define('sl-tab');

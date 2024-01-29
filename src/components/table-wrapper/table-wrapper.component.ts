@@ -1,10 +1,10 @@
 import { html } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import ShoelaceElement from '../../internal/shoelace-element';
-import styles from './table-wrapper.styles';
+import ShoelaceElement from '../../internal/shoelace-element.js';
+import styles from './table-wrapper.styles.js';
 // @ts-ignore
 import naturalCompare from 'string-natural-compare';
-import {watchProps} from "../../internal/watchProps";
+import {watchProps} from "../../internal/watchProps.js";
 
 /**
  * @since 2.0

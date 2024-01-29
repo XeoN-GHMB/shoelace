@@ -35,89 +35,20 @@ If you'd rather not use the CDN for assets, you can create a build task that cop
 
 ## Configuration
 
-You'll need to tell Vue to ignore Shoelace components. This is pretty easy because they all start with `sl-`.
-
-```js
-import { fileURLToPath, URL } from 'url';
-
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: tag => tag.startsWith('sl-')
-        }
-      }
-    })
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
-    }
-  }
-});
-```
+If you haven't configured your Vue.js project to work with custom elements/web components, follow [the instructions here](https://vuejs.org/guide/extras/web-components.html#using-custom-elements-in-vue) based on your project type to ensure your project will not throw an error when it encounters a custom element.
 
 Now you can start using Shoelace components in your app!
 
-## Local and optimized Configuration
-This config copies the assets to public/viur-shoelace and chunks the components without hashing
+## Types
 
-```js
-import { fileURLToPath, URL } from 'url';
+Once you have configured your application for custom elements, you should be able to use Shoelace in your application without it causing any errors. Unfortunately, this doesn't register the custom elements to behave like components built using Vue. To provide autocomplete information and type safety for your components, you can import the Shoelace Vue types into your `tsconfig.json` to get better integration in your standard Vue and JSX templates.
 
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import copy from 'rollup-plugin-copy'
-
-// https://vitejs.dev/config/
-export default defineConfig({
-  plugins: [
-    copy({
-      targets: [
-        {
-          src: path.join(__dirname, "node_modules", "@viur", "viur-shoelace", "dist", "assets"),
-          dest: path.join(__dirname, 'public', "viur-shoelace")
-        }
-      ]
-    }),
-    vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: tag => tag.startsWith('sl-')
-        }
-      }
-    })
-  ],
-  resolve: {
-    alias: {
-      "@": path.resolve(__dirname, "./src")
-    }
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        chunkFileNames: (chunkinfo) => {
-          if (chunkinfo['moduleIds'].filter(x => x.includes('node_modules/@viur/shoelace/dist/components')).length > 0) {
-            return `[name].js`
-          } else {
-            return `[name]-[hash].js`
-          }
-
-        },
-        manualChunks(id) {
-          if (id.includes('node_modules/@viur/shoelace/dist/components')) {
-            return "viur-shoelace/component_" + id.split("/").slice(-2)[0];
-          }
-        }
-      }
-    }
+```json
+{
+  "compilerOptions": {
+    "types": ["@shoelace-style/shoelace/dist/types/vue"]
   }
-});
+}
 ```
 
 ## Usage
@@ -182,7 +113,7 @@ Are you using Shoelace with Vue? [Help us improve this page!](https://github.com
 
 ### Slots
 
-To use Shoelace components with slots, follow the Vue documentation on using [slots with custom elements](https://vuejs.org/guide/extras/web-components.html#building-custom-elements-with-vue).
+Slots in Shoelace/web components are functionally the same as basic slots in Vue. Slots can be assigned to elements using the `slot` attribute followed by the name of the slot it is being assigned to.
 
 Here is an example:
 
