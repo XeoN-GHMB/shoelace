@@ -10,6 +10,7 @@ import {scrollIntoView} from "../../internal/scroll.js";
 import ShoelaceElement from '../../internal/shoelace-element.js';
 import type { SlChangeEvent } from '../../events/sl-change.js';
 import type { SlInputEvent } from '../../events/sl-input.js';
+import { watch } from '../../internal/watch.js';
 
 export interface Suggestion {
   text: string;
@@ -111,6 +112,10 @@ export default class SlCombobox extends ShoelaceElement {
     this.resizeObserver.unobserve(this.input);
   }
 
+  firstUpdated() {
+    this.input.value = this.value
+    this.prepareSuggestions(this.value)
+  }
   clear() {
     this.input.value = '';
     this.value = '';

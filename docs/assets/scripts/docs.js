@@ -96,7 +96,8 @@
     updateSelection();
 
     // Toggle the dark mode class
-    document.documentElement.classList.toggle('sl-theme-viur_dark', isDark());
+    document.documentElement.classList.toggle('sl-theme-viur-dark', isDark());
+    document.documentElement.classList.toggle('sl-theme-viur', !isDark());
   }
 
   function updateSelection() {
@@ -122,7 +123,7 @@
   });
 
   // Update the theme when the preference changes
-  window.matchMedia('(prefers-color-scheme: viur_dark)').addEventListener('change', () => setTheme(theme));
+  window.matchMedia('(prefers-color-scheme: viur-dark)').addEventListener('change', () => setTheme(theme));
 
   // Toggle with backslash
   document.addEventListener('keydown', event => {
@@ -131,7 +132,7 @@
       !event.composedPath().some(el => ['input', 'textarea'].includes(el?.tagName?.toLowerCase()))
     ) {
       event.preventDefault();
-      setTheme(isDark() ? 'viur' : 'viur_dark');
+      setTheme(isDark() ? 'viur' : 'viur-dark');
     }
   });
 

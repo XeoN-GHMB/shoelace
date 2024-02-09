@@ -15,27 +15,13 @@ import {execSync} from "child_process";
 async function build_viur_theme(name='viur'){
   let ccode =""
   if (name === "viur_dark"){
-    return ""
-    ccode = execSync(`postcss src/ignite/themes/dark.css -u postcss-import`);
+    ccode = ":host, "+execSync(`postcss src/ignite/themes/dark.css -u postcss-import --no-map`);
   }else{
-     ccode = execSync(`postcss src/ignite/themes/light.css -u postcss-import`);
+     ccode = ":host, "+execSync(`postcss src/ignite/themes/light.css -u postcss-import --no-map`);
   }
-  ccode+= execSync(`postcss src/ignite/shoelace.css -u postcss-import`);
+  ccode+= execSync(`postcss src/ignite/shoelace.css -u postcss-import --no-map`);
   ccode+= "\n/* ViUR Defaults */";
   ccode+= `\n${fs.readFileSync('./src/themes/_viur.css',{encoding:"utf-8"})}`;
-
-  ccode+= "\n/* _utility.css */\n/* _tables.css */";
-  let filespaths = globbySync('./node_modules/tinymce/skins/content/default/**/*.min.css');
-  for (const path of filespaths)
-  {
-    ccode+= `\n${fs.readFileSync(path,{encoding:"utf-8"})}`;
-  }
-  filespaths = globbySync('./node_modules/tinymce/skins/ui/oxide/**/*.min.css');
-  for (const path of filespaths)
-  {
-    ccode+= `\n${fs.readFileSync(path,{encoding:"utf-8"})}`;
-  }
-
 
   await fs.writeFileSync(`./src/themes/${name}.css`, ccode,'utf8' );
 }

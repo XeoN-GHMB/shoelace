@@ -46,7 +46,7 @@
       (() => {
         const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
         const theme = localStorage.getItem('theme');
-        document.documentElement.classList.toggle('sl-theme-viur_dark', theme === 'dark' || (theme === 'auto' && prefersDark));
+        document.documentElement.classList.toggle('sl-theme-viur-dark', theme === 'dark' || (theme === 'auto' && prefersDark));
         document.documentElement.classList.toggle('sl-theme-viur', theme !== 'dark' || (theme === 'auto' && prefersDark));
       })();
     </script>
