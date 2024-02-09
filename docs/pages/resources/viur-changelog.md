@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+- chore: testing Darkmode
+- fix: Combobox now can have a defaultvalue
+
 ## 1.0.0
 - feat: updated shoelace to 2.12
 - chore: renamed sl-page-btn to sl-pagination
