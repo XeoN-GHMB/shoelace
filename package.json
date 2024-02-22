@@ -1,7 +1,7 @@
 {
   "name": "@viur/shoelace",
   "description": "A forward-thinking library of web components.",
-  "version": "1.0.1-v2.13.1",
+  "version": "1.0.2-v2.14.0",
   "homepage": "https://github.com/viur-framework/viur-shoelace",
   "author": "Cory LaViska",
   "contributors": [
@@ -56,6 +56,7 @@
     "build": "node scripts/build.js",
     "verify": "npm run prettier:check && npm run lint && npm run build && npm run test",
     "vbuild": "npm run build && npm run test",
+    "prepare": "npx playwright install",
     "_postinstall": "npx playwright install",
     "_prepublishOnly": "npm run verify",
     "prettier": "prettier --write --loglevel warn .",

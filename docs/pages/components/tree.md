@@ -95,7 +95,7 @@ The `selection` attribute lets you change the selection behavior of the tree.
     Item 1
     <sl-tree-item>
       Item A
-      <sl-tree-item>Item Z</sl-tree-item>
+      <sl-tree-item class="tree-item">Item Z</sl-tree-item>
       <sl-tree-item>Item Y</sl-tree-item>
       <sl-tree-item>Item X</sl-tree-item>
     </sl-tree-item>
@@ -109,7 +109,10 @@ The `selection` attribute lets you change the selection behavior of the tree.
 <script>
   const selectionMode = document.querySelector('#selection-mode');
   const tree = document.querySelector('.tree-selectable');
-
+  const item = document.querySelector('.tree-item');
+  item.addEventListener("sl-select",(e)=>{
+    console.log(e)
+  })
   selectionMode.addEventListener('sl-change', () => {
     tree.querySelectorAll('sl-tree-item').forEach(item => (item.selected = false));
     tree.selection = selectionMode.value;

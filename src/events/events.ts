@@ -27,6 +27,7 @@ export type { SlRepositionEvent } from './sl-reposition.js';
 export type { SlRequestCloseEvent } from './sl-request-close.js';
 export type { SlResizeEvent } from './sl-resize.js';
 export type { SlSelectEvent } from './sl-select.js';
+export type { SlSelectItemEvent } from './sl-select-item.js';
 export type { SlSelectionChangeEvent } from './sl-selection-change.js';
 export type { SlShowEvent } from './sl-show.js';
 export type { SlSlideChangeEvent } from './sl-slide-change.js';

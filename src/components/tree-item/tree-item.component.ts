@@ -7,10 +7,11 @@ import { LocalizeController } from '../../utilities/localize.js';
 import { property, query, state } from 'lit/decorators.js';
 import { watch } from '../../internal/watch.js';
 import { when } from 'lit/directives/when.js';
+import componentStyles from '../../styles/component.styles.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
 import SlCheckbox from '../checkbox/checkbox.component.js';
 import SlIcon from '../icon/icon.component.js';
-import SlSpinnerViur from '../spinner-viur/spinner-viur.component.js';
+import SlSpinner from '../spinner/spinner.component.js';
 import styles from './tree-item.styles.js';
 import type { CSSResultGroup, PropertyValueMap } from 'lit';
 
@@ -57,11 +58,11 @@ import type { CSSResultGroup, PropertyValueMap } from 'lit';
  * @csspart checkbox__label - The checkbox's exported `label` part.
  */
 export default class SlTreeItem extends ShoelaceElement {
-  static styles: CSSResultGroup = styles;
+  static styles: CSSResultGroup = [componentStyles, styles];
   static dependencies = {
     'sl-checkbox': SlCheckbox,
     'sl-icon': SlIcon,
-    'sl-spinner-viur': SlSpinnerViur
+    'sl-spinner': SlSpinner
   };
 
   static isTreeItem(node: Node) {
@@ -86,6 +87,11 @@ export default class SlTreeItem extends ShoelaceElement {
 
   /** Enables lazy loading behavior. */
   @property({ type: Boolean, reflect: true }) lazy = false;
+
+  @property({ type: String, reflect: true }) name = "";
+  @property({ type: String, reflect: true }) value = "";
+  @property({ type: String, reflect: true }) icon = "";
+  @property({ type: String, reflect: true }) library = "default";
 
   @query('slot:not([name])') defaultSlot: HTMLSlotElement;
   @query('slot[name=children]') childrenSlot: HTMLSlotElement;
@@ -179,6 +185,18 @@ export default class SlTreeItem extends ShoelaceElement {
   @watch('selected')
   handleSelectedChange() {
     this.setAttribute('aria-selected', this.selected ? 'true' : 'false');
+
+    if(this.selected){
+      // @ts-ignore
+      this.emit("sl-select-item",{detail:{
+        'name':this.name,
+        "value":this.value,
+        "icon":this.icon,
+        "library":this.library},bubbles:false,
+        "path":this.getPathToRoot(this)
+      })
+    }
+
   }
 
   @watch('expanded', { waitUntilFirstUpdate: true })
@@ -207,7 +225,19 @@ export default class SlTreeItem extends ShoelaceElement {
 
   @watch('lazy', { waitUntilFirstUpdate: true })
   handleLazyChange() {
+    if(!this.lazy){
+      this.loading = false;
+    }
     this.emit('sl-lazy-change');
+  }
+  // @ts-ignore
+  getPathToRoot(node){
+    let path = []
+    while(node && node.nodeName.toLowerCase() !== "sl-tree"){
+      path.unshift(node)
+      node = node.parentNode
+    }
+    return path
   }
 
   /** Gets all the nested tree items in this node. */
@@ -256,7 +286,7 @@ export default class SlTreeItem extends ShoelaceElement {
             })}
             aria-hidden="true"
           >
-            ${when(this.loading, () => html` <sl-spinner-viur></sl-spinner-viur> `)}
+            ${when(this.loading, () => html` <sl-spinner></sl-spinner> `)}
             <slot class="tree-item__expand-icon-slot" name="expand-icon">
               <sl-icon library="system" name=${isRtl ? 'chevron-left' : 'chevron-right'}></sl-icon>
             </slot>
@@ -288,7 +318,8 @@ export default class SlTreeItem extends ShoelaceElement {
             `
           )}
 
-          <slot class="tree-item__label" part="label"></slot>
+          <slot class="tree-item__label" part="label">
+          </slot>
         </div>
 
         <div class="tree-item__children" part="children" role="group">

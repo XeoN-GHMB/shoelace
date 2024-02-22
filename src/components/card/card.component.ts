@@ -1,6 +1,7 @@
 import { classMap } from 'lit/directives/class-map.js';
 import { HasSlotController } from '../../internal/slot.js';
 import { html } from 'lit';
+import componentStyles from '../../styles/component.styles.js';
 import ShoelaceElement from '../../internal/shoelace-element.js';
 import styles from './card.styles.js';
 import { property } from 'lit/decorators.js';
@@ -31,7 +32,7 @@ import type { CSSResultGroup } from 'lit';
  * @cssproperty --padding - The padding to use for the card's sections.
  */
 export default class SlCard extends ShoelaceElement {
-  static styles: CSSResultGroup = styles;
+  static styles: CSSResultGroup = [componentStyles, styles];
 
   /** Allows selecting the card via click or programmatically. */
   @property({ type: Boolean, reflect: true }) selectable = false;

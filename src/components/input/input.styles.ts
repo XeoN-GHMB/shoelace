@@ -1,12 +1,6 @@
 import { css } from 'lit';
-import componentStyles from '../../styles/component.styles.js';
-import formControlStyles from '../../styles/form-control.styles.js';
-//language=CSS
 
 export default css`
-  ${componentStyles}
-  ${formControlStyles}
-
   :host {
     display: block;
   }
@@ -305,7 +299,7 @@ export default css`
     border-start-end-radius: 0;
     border-end-end-radius: 0;
   }
-  
+
   :host(.sl-button-group__button--inner) .input {
     border-radius: 0;
   }
