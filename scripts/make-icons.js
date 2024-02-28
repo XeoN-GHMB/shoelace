@@ -8,6 +8,7 @@ import { deleteAsync } from 'del';
 import download from 'download';
 import fm from 'front-matter';
 import fs from 'fs/promises';
+import fso from 'fs';
 import { globby } from 'globby';
 import path from 'path';
 import jsdom from 'jsdom';
@@ -27,6 +28,32 @@ try {
   // Download the source from GitHub (since not everything is published to npm)
   await download(url, './.cache/icons', { extract: true });
 }
+
+let source = path.join(srcPath, "icons")
+const filesDir = fso.readdirSync(source);
+
+// Iteriere über jede Datei
+filesDir.forEach((file) => {
+    const filePath = path.join(source, file);
+
+    // Prüfe, ob es sich um eine Datei handelt
+    const stats = fso.statSync(filePath);
+    if (stats.isFile()) {
+        // Extrahiere den ersten Buchstaben der Datei
+        const firstLetter = file.charAt(0).toLowerCase();
+
+        // Erstelle den Unterordner im Zielordner, falls er nicht existiert
+        const subFolder = path.join(source, firstLetter);
+        if (!fso.existsSync(subFolder)) {
+          fso.mkdirSync(subFolder);
+        }
+
+        // Verschiebe die Datei in den entsprechenden Unterordner
+        const newFilePath = path.join(subFolder, file);
+        fso.renameSync(filePath, newFilePath);
+        console.log(`Datei ${file} wurde nach ${subFolder} verschoben.`);
+    }
+});
 
 // Copy icons
 await fs.mkdir(iconDir, { recursive: true });

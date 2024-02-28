@@ -3,7 +3,7 @@ import type { IconLibrary } from './library.js';
 
 const library: IconLibrary = {
   name: 'viur',
-  resolver: name => getBasePath(`/assets/icons/${name}.svg`),
+  resolver: (name,sprite=false) => getBasePath(`/assets/icons/${name}.svg`),
   mutator: svg => {
     svg.setAttribute('fill', 'currentColor');
     //svg.setAttribute('stroke', 'currentColor');

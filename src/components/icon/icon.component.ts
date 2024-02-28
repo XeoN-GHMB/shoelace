@@ -116,11 +116,11 @@ export default class SlIcon extends ShoelaceElement {
     unwatchIcon(this);
   }
 
-  private getIconSource(): IconSource {
+  private getIconSource(sprite): IconSource {
     const library = getIconLibrary(this.library);
     if (this.name && library) {
       return {
-        url: library.resolver(this.name),
+        url: library.resolver(this.name,sprite),
         fromLibrary: true
       };
     }
@@ -132,7 +132,7 @@ export default class SlIcon extends ShoelaceElement {
   }
 
   private getDir(){
-    const { url} = this.getIconSource();
+    const { url} = this.getIconSource(true);
     return url?.substring(0, url?.lastIndexOf("/"))
   }
 

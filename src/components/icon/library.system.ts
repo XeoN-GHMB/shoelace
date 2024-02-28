@@ -136,7 +136,7 @@ const icons = {
 
 const systemLibrary: IconLibrary = {
   name: 'system',
-  resolver: (name: keyof typeof icons) => {
+  resolver: (name: keyof typeof icons,sprite=false) => {
     if (name in icons) {
       return `data:image/svg+xml,${encodeURIComponent(icons[name])}`;
     }
