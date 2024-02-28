@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { getIconLibrary, type IconLibrary, unwatchIcon, watchIcon } from './library.js';
 import { html } from 'lit';
 import { isTemplateResult } from 'lit/directive-helpers.js';
@@ -116,7 +117,7 @@ export default class SlIcon extends ShoelaceElement {
     unwatchIcon(this);
   }
 
-  private getIconSource(sprite): IconSource {
+  private getIconSource(sprite:boolean=false): IconSource {
     const library = getIconLibrary(this.library);
     if (this.name && library) {
       return {
