@@ -2,6 +2,14 @@ import { css } from 'lit';
 
 export default css`
   :host {
+    --font-weight: var(--sl-font-weight-semibold);
+    --letter-spacing: var(--sl-letter-spacing-normal);
+    --border-radius: var(--sl-border-radius-small);
+    --border-width: 1px;
+    --border-style: solid;
+    --border-color: var(--sl-color-neutral-0);
+    --color: var(--sl-color-neutral-0);
+    --background: var(--sl-color-neutral-600);
     display: inline-flex;
   }
 
@@ -10,57 +18,61 @@ export default css`
     align-items: center;
     justify-content: center;
     font-size: max(12px, 0.75em);
-    font-weight: var(--sl-font-weight-semibold);
-    letter-spacing: var(--sl-letter-spacing-normal);
+    font-weight: var(--font-weight);
+    letter-spacing: var(--letter-spacing);
     line-height: 1;
-    border-radius: var(--sl-border-radius-small);
-    border: solid 1px var(--sl-color-neutral-0);
+    border-radius: var(--border-radius);
+    border-width: var(--border-width);
+    border-style: var(--border-style);
+    border-color: var(--border-color);
     white-space: nowrap;
     padding: 0.35em 0.6em;
     user-select: none;
     -webkit-user-select: none;
     cursor: inherit;
+    color: var(--color);
+    background: var(--background);
   }
 
   /* Variant modifiers */
   .badge--primary {
-    background-color: var(--sl-color-primary-600);
-    color: var(--sl-color-neutral-0);
+    --background: var(--sl-color-primary-600);
+    --color: var(--sl-color-neutral-0);
   }
 
   .badge--success {
-    background-color: var(--sl-color-success-600);
-    color: var(--sl-color-neutral-0);
+    --background: var(--sl-color-success-600);
+    --color: var(--sl-color-neutral-0);
   }
 
   .badge--neutral {
-    background-color: var(--sl-color-neutral-600);
-    color: var(--sl-color-neutral-0);
+    --background: var(--sl-color-neutral-600);
+    --color: var(--sl-color-neutral-0);
   }
 
   .badge--warning {
-    background-color: var(--sl-color-warning-600);
-    color: var(--sl-color-neutral-0);
+    --background: var(--sl-color-warning-600);
+    --color: var(--sl-color-neutral-0);
   }
 
   .badge--danger {
-    background-color: var(--sl-color-danger-600);
-    color: var(--sl-color-neutral-0);
+    --background: var(--sl-color-danger-600);
+    --color: var(--sl-color-neutral-0);
   }
 
   .badge--info {
-    background-color: var(--sl-color-info-600);
-    color: var(--sl-color-neutral-0);
+    --background: var(--sl-color-info-600);
+    --color: var(--sl-color-neutral-0);
   }
 
   .badge--secondary {
-    background-color: var(--sl-color-secondary-600);
-    color: var(--sl-color-neutral-0);
+    --background: var(--sl-color-secondary-600);
+    --color: var(--sl-color-neutral-0);
   }
 
   /* Pill modifier */
   .badge--pill {
-    border-radius: var(--sl-border-radius-pill);
+    --border-radius: var(--sl-border-radius-pill);
   }
 
   /* Pulse modifier */

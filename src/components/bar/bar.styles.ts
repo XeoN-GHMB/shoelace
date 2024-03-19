@@ -14,30 +14,26 @@ export default css`
     justify-content: space-between;
   }
 
-  ::slotted(*){
-    width:100%;
-  }
-
-  .bar-group{
+  ::slotted(*) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
+    width:100%;
   }
 
-  .bar-group--left{
+  .bar-group {
+    display: flex;
+  }
+
+  .bar-group--left {
     justify-content: flex-start;
   }
-  .bar-group--center{
+  .bar-group--center {
     justify-content: center;
   }
-  .bar-group--right{
+  .bar-group--right {
     justify-content: flex-end;
   }
-
-  @media (min-width: 40em) {
-
-  }
-
 
   @media (max-width: 39.95em) {
     :host {
