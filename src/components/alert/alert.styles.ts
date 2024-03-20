@@ -5,7 +5,7 @@ export default css`
   :host {
     display: contents;
 
-    --background-color: var(--sl-panel-background-color);
+    --background: var(--sl-panel-background-color);
     --border-width: calc(var(--sl-panel-border-width) * 3) var(--sl-panel-border-width) var(--sl-panel-border-width) var(--sl-panel-border-width);
     --border-style: solid;
     --border-color: var(--sl-panel-border-color);
@@ -24,7 +24,7 @@ export default css`
     position: relative;
     display: flex;
     align-items: stretch;
-    background-color: var(--background-color);
+    background: var(--background-color);
     border-width: var(--border-width);
     border-style: var(--border-style);
     border-color: var(--border-color);

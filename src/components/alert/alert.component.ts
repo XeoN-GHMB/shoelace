@@ -37,6 +37,18 @@ const toastStack = Object.assign(document.createElement('div'), { className: 'sl
  * @csspart close-button - The close button, an `<sl-icon-button>`.
  * @csspart close-button__base - The close button's exported `base` part.
  *
+ * @cssproperty --background - The background of the alert message.
+ * @cssproperty --border-width - The border width of the alert message.
+ * @cssproperty --border-style - The border style of the alert message.
+ * @cssproperty --border-color - The border color of the alert message.
+ * @cssproperty --border-radius - The border radius of the alert message.
+ * @cssproperty --font-family - The font style used in the alert text.
+ * @cssproperty --font-size - The font size of the alert text.
+ * @cssproperty --font-weight - The font weight of the alert text.
+ * @cssproperty --color - The color of the alert text.
+ * @cssproperty --icon-color - The color of the alert icon.
+ * @cssproperty --icon-size - The size of the alert icon.
+ *
  * @animation alert.show - The animation to use when showing the alert.
  * @animation alert.hide - The animation to use when hiding the alert.
  */
