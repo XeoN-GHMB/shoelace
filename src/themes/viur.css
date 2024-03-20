@@ -33,17 +33,17 @@ It imports all css files in their intended order for easy mass-inclusion.
 
   /* Color Primitives */
   /* Gray scale */
-  --ignt-color-gray-50: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 80%);
-  --ignt-color-gray-100: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 75%);
-  --ignt-color-gray-200: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 55%);
-  --ignt-color-gray-300: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 35%);
-  --ignt-color-gray-400: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 15%);
+  --ignt-color-gray-50: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 95%);
+  --ignt-color-gray-100: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 90%);
+  --ignt-color-gray-200: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 75%);
+  --ignt-color-gray-300: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 60%);
+  --ignt-color-gray-400: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-down) 25%);
   --ignt-color-gray-500: var(--ignt-color-gray);
   --ignt-color-gray-600: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 15%);
-  --ignt-color-gray-700: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 30%);
-  --ignt-color-gray-800: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 50%);
-  --ignt-color-gray-900: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 60%);
-  --ignt-color-gray-950: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 65%);
+  --ignt-color-gray-700: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 40%);
+  --ignt-color-gray-800: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 60%);
+  --ignt-color-gray-900: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 70%);
+  --ignt-color-gray-950: color-mix(in srgb, var(--ignt-color-gray), var(--ignt-mix-color-up) 80%);
 
   /* Red */
   --ignt-color-red-50: color-mix(in srgb, var(--ignt-color-red-500), var(--ignt-mix-color-down) 70%);
@@ -456,7 +456,7 @@ It imports all css files in their intended order for easy mass-inclusion.
 
   /* Font Stacks */
   /* Default font stack. */
-  --ignt-font-sans: 'Source Sans Pro', 'Open Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+  --ignt-font-sans: 'Source Sans Pro', 'Open Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
   --ignt-font-serif: Georgia, 'Times New Roman', serif;
 
   /* Fonts for headlines, blockquotes and alike. */
@@ -467,16 +467,16 @@ It imports all css files in their intended order for easy mass-inclusion.
   --ignt-font-mono: 'Source Code Pro', Courier, monospace;
 
   /* Font sizes */
-  --ignt-font-size-3x-small: 0.3rem; /* ~5px */
-  --ignt-font-size-2x-small: 0.625rem; /* 10px */
-  --ignt-font-size-x-small: 0.75rem; /* 12px */
-  --ignt-font-size-small: 0.875rem; /* 14px */
-  --ignt-font-size-medium: 1rem; /* 16px */
-  --ignt-font-size-large: 1.25rem; /* 20px */
-  --ignt-font-size-x-large: 1.5rem; /* 24px */
-  --ignt-font-size-2x-large: 2.25rem; /* 36px */
-  --ignt-font-size-3x-large: 3rem; /* 48px */
-  --ignt-font-size-4x-large: 4.5rem; /* 72px */
+  --ignt-font-size-3x-small: 0.3em; /* ~5px */
+  --ignt-font-size-2x-small: 0.625em; /* 10px */
+  --ignt-font-size-x-small: 0.75em; /* 12px */
+  --ignt-font-size-small: 0.875em; /* 14px */
+  --ignt-font-size-medium: 1em; /* 16px */
+  --ignt-font-size-large: 1.25em; /* 20px */
+  --ignt-font-size-x-large: 1.5em; /* 24px */
+  --ignt-font-size-2x-large: 2.25em; /* 36px */
+  --ignt-font-size-3x-large: 3em; /* 48px */
+  --ignt-font-size-4x-large: 4.5em; /* 72px */
 
   /* Font weights */
   --ignt-font-weight-light: 300;
@@ -502,7 +502,9 @@ It imports all css files in their intended order for easy mass-inclusion.
   /* Different widths and heights */
   --ignt-page-width-default: 1400px; /* max-width of the centered container */
   --ignt-paragraph-width-default: 77ch; /* max-width of text paragraphs: 77 characters */
-  --ignt-item-height-default: 2em;
+  --ignt-input-height-small: 1.25rem;
+  --ignt-input-height-medium: 1.75rem;
+  --ignt-input-height-large: 2rem;
 
   /* Z-indexes */
   --ignt-z-index-drawer: 0;
@@ -511,6 +513,7 @@ It imports all css files in their intended order for easy mass-inclusion.
   --ignt-z-index-dropdown: 300;
   --ignt-z-index-toast: 400;
   --ignt-z-index-tooltip: 500;
+  --ignt-z-index-dev: 600;
 
   /* ORDER!!! */
   --ignt-order-header: 0;
@@ -971,9 +974,9 @@ Prefixes and objects:
   --sl-button-font-size-large: var(--sl-font-size-medium);
 
   /* Inputs */
-  --sl-input-height-small: 1.875rem; /* 30px */
-  --sl-input-height-medium: 2.5rem; /* 40px */
-  --sl-input-height-large: 3.125rem; /* 50px */
+  --sl-input-height-small: var(--ignt-input-height-small);
+  --sl-input-height-medium: var(--ignt-input-height-medium);
+  --sl-input-height-large: var(--ignt-input-height-large);
   --sl-input-background-color: var(--sl-color-neutral-0);
   --sl-input-background-color-hover: var(--sl-input-background-color);
   --sl-input-background-color-focus: var(--sl-input-background-color);
@@ -1069,7 +1072,7 @@ Prefixes and objects:
 }
 }
 
-/* the viur shoelace adapter™ (ViSA) */
+/* the ignite shoelace adapter (ISA) */
 
 
 /* ViUR Defaults */
