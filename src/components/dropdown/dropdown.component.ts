@@ -331,7 +331,7 @@ export default class SlDropdown extends ShoelaceElement {
    * is activated.
    */
   reposition() {
-    this.popup.reposition();
+    this.popup?.reposition();
   }
 
   addOpenListeners() {

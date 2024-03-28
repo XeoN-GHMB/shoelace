@@ -44,11 +44,20 @@ export class HasSlotController implements ReactiveController {
   }
 
   hostConnected() {
-    this.host.shadowRoot!.addEventListener('slotchange', this.handleSlotChange);
+    if(this.host.shadowRoot){
+      this.host.shadowRoot!.addEventListener('slotchange', this.handleSlotChange);
+    }else{
+      this.host!.addEventListener('slotchange', this.handleSlotChange);
+    }
+
   }
 
   hostDisconnected() {
-    this.host.shadowRoot!.removeEventListener('slotchange', this.handleSlotChange);
+    if(this.host.shadowRoot){
+      this.host.shadowRoot!.removeEventListener('slotchange', this.handleSlotChange);
+    }else{
+      this.host!.removeEventListener('slotchange', this.handleSlotChange);
+    }
   }
 
   private handleSlotChange = (event: Event) => {
