@@ -3,6 +3,25 @@ import { css } from 'lit';
 export default css`
   :host {
     display: block;
+    --font-size: var(--sl-input-font-size-medium);
+    --font-family: var(--sl-input-font-family);
+    --font-weight: var(--sl-input-font-weight);
+    --letter-spacing: var(--sl-input-letter-spacing);
+    --transition: var(--sl-transition-fast) color,
+                  var(--sl-transition-fast) border,
+                  var(--sl-transition-fast) box-shadow,
+                  var(--sl-transition-fast) background-color;
+    --background: var(--sl-input-background-color);
+    --color: var(--sl-input-color);
+    --caret-color: var(--sl-input-color);
+    --placeholder-color: var(--sl-input-placeholder-color);
+    --icon-color: var(--sl-input-icon-color);
+    --border-width: var(--sl-input-border-width);
+    --border-style: solid;
+    --border-color: var(--sl-input-border-color);
+    --border-radius: 0;
+    --box-shadow: none;
+    --box-shadow-inset: none;
   }
 
   .input {
@@ -12,74 +31,79 @@ export default css`
     justify-content: start;
     position: relative;
     width: 100%;
-    font-family: var(--sl-input-font-family);
-    font-weight: var(--sl-input-font-weight);
-    letter-spacing: var(--sl-input-letter-spacing);
+    font-size: var(--font-size);
+    font-family: var(--font-family);
+    font-weight: var(--font-weight);
+    letter-spacing: var(--letter-spacing);
     vertical-align: middle;
     overflow: hidden;
     cursor: text;
-    transition:
-      var(--sl-transition-fast) color,
-      var(--sl-transition-fast) border,
-      var(--sl-transition-fast) box-shadow,
-      var(--sl-transition-fast) background-color;
+    transition: var(--transition);
+    background: var(--background);
+    border-width: var(--border-width);
+    border-style: var(--border-style);
+    border-color: var(--border-color);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
   }
 
   /* Standard inputs */
   .input--standard {
-    background-color: var(--sl-input-background-color);
-    border: solid var(--sl-input-border-width) var(--sl-input-border-color);
+    --background: var(--sl-input-background-color);
+    --border-width: var(--sl-input-border-width);
+    --border-style: solid;
+    --border-color: var(--sl-input-border-color);
   }
 
   .input--standard:hover:not(.input--disabled) {
-    background-color: var(--sl-input-background-color-hover);
-    border-color: var(--sl-input-border-color-hover);
+    --background: var(--sl-input-background-color-hover);
+    --border-color: var(--sl-input-border-color-hover);
   }
 
   .input--standard.input--focused:not(.input--disabled) {
-    background-color: var(--sl-input-background-color-focus);
-    border-color: var(--sl-input-border-color-focus);
-    box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-input-focus-ring-color);
+    --background: var(--sl-input-background-color-focus);
+    --border-color: var(--sl-input-border-color-focus);
+    --box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-input-focus-ring-color);
   }
 
   .input--standard.input--focused:not(.input--disabled) .input__control {
-    color: var(--sl-input-color-focus);
+    --color: var(--sl-input-color-focus);
   }
 
   .input--standard.input--disabled {
-    background-color: var(--sl-input-background-color-disabled);
-    border-color: var(--sl-input-border-color-disabled);
+    --background: var(--sl-input-background-color-disabled);
+    --border-color: var(--sl-input-border-color-disabled);
     opacity: 0.5;
     cursor: not-allowed;
   }
 
   .input--standard.input--disabled .input__control {
-    color: var(--sl-input-color-disabled);
+    --color: var(--sl-input-color-disabled);
   }
 
   .input--standard.input--disabled .input__control::placeholder {
-    color: var(--sl-input-placeholder-color-disabled);
+    --color: var(--sl-input-placeholder-color-disabled);
   }
 
   /* Filled inputs */
   .input--filled {
-    border: none;
-    background-color: var(--sl-input-filled-background-color);
-    color: var(--sl-input-color);
+    --border-style: none;
+    --background: var(--sl-input-filled-background-color);
+    --color: var(--sl-input-color);
   }
 
   .input--filled:hover:not(.input--disabled) {
-    background-color: var(--sl-input-filled-background-color-hover);
+    --background: var(--sl-input-filled-background-color-hover);
   }
 
   .input--filled.input--focused:not(.input--disabled) {
-    background-color: var(--sl-input-filled-background-color-focus);
+    --background: var(--sl-input-filled-background-color-focus);
     outline: var(--sl-focus-ring);
     outline-offset: var(--sl-focus-ring-offset);
   }
 
   .input--filled.input--disabled {
-    background-color: var(--sl-input-filled-background-color-disabled);
+    --background: var(--sl-input-filled-background-color-disabled);
     opacity: 0.5;
     cursor: not-allowed;
   }
@@ -91,10 +115,10 @@ export default css`
     font-weight: inherit;
     min-width: 0;
     height: 100%;
-    color: var(--sl-input-color);
+    color: var(--color);
     border: none;
     background: inherit;
-    box-shadow: none;
+    box-shadow: var(--box-shadow-inset);
     padding: 0;
     margin: 0;
     cursor: inherit;
@@ -112,26 +136,26 @@ export default css`
   .input__control:-webkit-autofill:hover,
   .input__control:-webkit-autofill:focus,
   .input__control:-webkit-autofill:active {
-    box-shadow: 0 0 0 var(--sl-input-height-large) var(--sl-input-background-color-hover) inset !important;
+    --box-shadow-inset: 0 0 0 var(--sl-input-height-large) var(--sl-input-background-color-hover) inset !important;
     -webkit-text-fill-color: var(--sl-color-primary-500);
-    caret-color: var(--sl-input-color);
+    caret-color: var(--caret-color);
   }
 
   .input--filled .input__control:-webkit-autofill,
   .input--filled .input__control:-webkit-autofill:hover,
   .input--filled .input__control:-webkit-autofill:focus,
   .input--filled .input__control:-webkit-autofill:active {
-    box-shadow: 0 0 0 var(--sl-input-height-large) var(--sl-input-filled-background-color) inset !important;
+    --box-shadow-inset: 0 0 0 var(--sl-input-height-large) var(--sl-input-filled-background-color) inset !important;
   }
 
   .input__control::placeholder {
-    color: var(--sl-input-placeholder-color);
+    color: var(--placeholder-color);
     user-select: none;
     -webkit-user-select: none;
   }
 
   .input:hover:not(.input--disabled) .input__control {
-    color: var(--sl-input-color-hover);
+    --color: var(--sl-input-color-hover);
   }
 
   .input__control:focus {
@@ -148,7 +172,7 @@ export default css`
 
   .input__prefix ::slotted(sl-icon),
   .input__suffix ::slotted(sl-icon) {
-    color: var(--sl-input-icon-color);
+    color: var(--icon-color);
   }
 
   /*
@@ -156,8 +180,8 @@ export default css`
    */
 
   .input--small {
-    border-radius: var(--sl-input-border-radius-small);
-    font-size: var(--sl-input-font-size-small);
+    --border-radius: var(--sl-input-border-radius-small);
+    --font-size: var(--sl-input-font-size-small);
     height: var(--sl-input-height-small);
   }
 
@@ -180,8 +204,8 @@ export default css`
   }
 
   .input--medium {
-    border-radius: var(--sl-input-border-radius-medium);
-    font-size: var(--sl-input-font-size-medium);
+    --border-radius: var(--sl-input-border-radius-medium);
+    --font-size: var(--sl-input-font-size-medium);
     height: var(--sl-input-height-medium);
   }
 
@@ -204,8 +228,8 @@ export default css`
   }
 
   .input--large {
-    border-radius: var(--sl-input-border-radius-large);
-    font-size: var(--sl-input-font-size-large);
+    --border-radius: var(--sl-input-border-radius-large);
+    --font-size: var(--sl-input-font-size-large);
     height: var(--sl-input-height-large);
   }
 
@@ -232,15 +256,15 @@ export default css`
    */
 
   .input--pill.input--small {
-    border-radius: var(--sl-input-height-small);
+    --border-radius: var(--sl-input-height-small);
   }
 
   .input--pill.input--medium {
-    border-radius: var(--sl-input-height-medium);
+    --border-radius: var(--sl-input-height-medium);
   }
 
   .input--pill.input--large {
-    border-radius: var(--sl-input-height-large);
+    --border-radius: var(--sl-input-height-large);
   }
 
   /*
@@ -253,21 +277,21 @@ export default css`
 
   .input__clear,
   .input__password-toggle {
+    --color: var(--sl-input-icon-color);
+    --transition: var(--sl-transition-fast) color;
+    --font-size: inherit;
+    --background: none;
+    --border-style: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    font-size: inherit;
-    color: var(--sl-input-icon-color);
-    border: none;
-    background: none;
     padding: 0;
-    transition: var(--sl-transition-fast) color;
     cursor: pointer;
   }
 
   .input__clear:hover,
   .input__password-toggle:hover {
-    color: var(--sl-input-icon-color-hover);
+    --color: var(--sl-input-icon-color-hover);
   }
 
   .input__clear:focus,
@@ -301,7 +325,7 @@ export default css`
   }
 
   :host(.sl-button-group__button--inner) .input {
-    border-radius: 0;
+    --border-radius: 0;
   }
 
 `;
