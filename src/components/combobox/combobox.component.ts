@@ -99,7 +99,7 @@ export default class SlCombobox extends ShoelaceElement {
 
   /** The source property is a function executed on user input. The search result is displayed in the suggestions list. */
   @property() source?: SuggestionSource;
-
+  /** If true the suggestions are shown even if the Input is empty */
   @property() openEmpty: boolean = false;
 
   connectedCallback() {
