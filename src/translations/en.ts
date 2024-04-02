@@ -16,12 +16,14 @@ const translation: Translation = {
   goToSlide: (slide, count) => `Go to slide ${slide} of ${count}`,
   hidePassword: 'Hide password',
   loading: 'Loading',
+  nextMonth: 'Next month',
   nextSlide: 'Next slide',
   numOptionsSelected: num => {
     if (num === 0) return 'No options selected';
     if (num === 1) return '1 option selected';
     return `${num} options selected`;
   },
+  previousMonth: 'Previous month',
   previousSlide: 'Previous slide',
   progress: 'Progress',
   remove: 'Remove',

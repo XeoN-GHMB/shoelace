@@ -9,6 +9,7 @@ export { default as SlBreadcrumb } from './components/breadcrumb/breadcrumb.js';
 export { default as SlBreadcrumbItem } from './components/breadcrumb-item/breadcrumb-item.js';
 export { default as SlButton } from './components/button/button.js';
 export { default as SlButtonGroup } from './components/button-group/button-group.js';
+export { default as SlCalendar } from './components/calendar/calendar.js';
 export { default as SlCard } from './components/card/card.js';
 export { default as SlCarousel } from './components/carousel/carousel.js';
 export { default as SlCarouselItem } from './components/carousel-item/carousel-item.js';
