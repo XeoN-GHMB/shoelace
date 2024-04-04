@@ -1,4 +1,8 @@
 # Changelog
+## 1.0.3
+- feat: updated shoelace to 2.15
+- comboxbox fixes
+- no shadowroot input fixes
 
 ## 1.0.1
 - chore: testing Darkmode

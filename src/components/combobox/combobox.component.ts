@@ -108,7 +108,12 @@ export default class SlCombobox extends ShoelaceElement {
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.resizeObserver.unobserve(this.input);
+    if (this.input){
+      this.resizeObserver.unobserve(this.input);
+    }else{
+      this.resizeObserver.disconnect()
+    }
+
   }
 
   firstUpdated() {

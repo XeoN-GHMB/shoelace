@@ -50,6 +50,8 @@ Component.define('sl-tree-item');
  * @csspart item--selected - Applied when the tree item is selected.
  * @csspart indentation - The tree item's indentation container.
  * @csspart expand-button - The container that wraps the tree item's expand button and spinner.
+ * @csspart spinner - The spinner that shows when a lazy tree item is in the loading state.
+ * @csspart spinner__base - The spinner's base part.
  * @csspart label - The tree item's label.
  * @csspart children - The container that wraps the tree item's nested children.
  * @csspart checkbox - The checkbox that shows when using multiselect.
