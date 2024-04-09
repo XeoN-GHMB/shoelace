@@ -3,12 +3,19 @@ import { css } from 'lit';
 export default css`
   :host {
     display: block;
+    --border-color: var(--sl-color-neutral-200);
+    --border-width: 1px;
+    --border-style: solid;
+    --border-radius: var(--sl-border-radius-medium);
+    --background: var(--sl-color-neutral-0);
   }
 
   .details {
-    border: solid 1px var(--sl-color-neutral-200);
-    border-radius: var(--sl-border-radius-medium);
-    background-color: var(--sl-color-neutral-0);
+    border-color: var(--border-color);
+    border-width: var(--border-width);
+    border-style: var(--border-style);
+    border-radius: var(--border-radius);
+    background: var(--background);
     overflow-anchor: none;
   }
 
@@ -25,7 +32,7 @@ export default css`
     -webkit-user-select: none;
     cursor: pointer;
   }
-  
+
   .details__header .details-item__prefix {
     flex: 0 0 auto;
     display: flex;
