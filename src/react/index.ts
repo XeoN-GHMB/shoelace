@@ -1,6 +1,6 @@
+export { default as SlAlert } from './alert/index.js';
 export { default as SlAnimatedImage } from './animated-image/index.js';
 export { default as SlAnimation } from './animation/index.js';
-export { default as SlAlert } from './alert/index.js';
 export { default as SlAvatar } from './avatar/index.js';
 export { default as SlBackToTop } from './back-to-top/index.js';
 export { default as SlBadge } from './badge/index.js';
@@ -64,7 +64,7 @@ export { default as SlTabPanel } from './tab-panel/index.js';
 export { default as SlTableWrapper } from './table-wrapper/index.js';
 export { default as SlTag } from './tag/index.js';
 export { default as SlTextarea } from './textarea/index.js';
-export { default as SlTree } from './tree/index.js';
 export { default as SlTooltip } from './tooltip/index.js';
+export { default as SlTree } from './tree/index.js';
 export { default as SlTreeItem } from './tree-item/index.js';
 export { default as SlVisuallyHidden } from './visually-hidden/index.js';

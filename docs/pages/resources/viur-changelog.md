@@ -1,10 +1,12 @@
 # Changelog
+## 1.0.6
+- fix: updated bar element
+
 ## 1.0.5
 - chore: updated ignite to 5.0.2
 - feat: experimental multi-range component
 - feat: experimental calendar
 - fix: combobox empty popups
-
 
 ## 1.0.3
 - feat: updated shoelace to 2.15
