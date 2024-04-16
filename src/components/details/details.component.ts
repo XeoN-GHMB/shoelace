@@ -36,6 +36,13 @@ import type { CSSResultGroup } from 'lit';
  * @csspart summary-icon - The container that wraps the expand/collapse icons.
  * @csspart content - The details content.
  *
+ * @cssproperty --background - The background of the detail container.
+ * @cssproperty --border-width - The border width of the detail container.
+ * @cssproperty --border-style - The border style of the detail container.
+ * @cssproperty --border-color - The border color of the detail container.
+ * @cssproperty --border-radius - The border radius of the detail container.
+ * @cssproperty --color - The color of the detail text.
+ *
  * @animation details.show - The animation to use when showing details. You can use `height: auto` with this animation.
  * @animation details.hide - The animation to use when hiding details. You can use `height: auto` with this animation.
  */

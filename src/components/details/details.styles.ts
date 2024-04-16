@@ -8,6 +8,7 @@ export default css`
     --border-style: solid;
     --border-radius: var(--sl-border-radius-medium);
     --background: var(--sl-color-neutral-0);
+    --color: inherit;
   }
 
   .details {
@@ -16,6 +17,7 @@ export default css`
     border-style: var(--border-style);
     border-radius: var(--border-radius);
     background: var(--background);
+    color: var(--color);
     overflow-anchor: none;
   }
 
