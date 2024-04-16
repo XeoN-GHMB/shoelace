@@ -1,4 +1,4 @@
-import { html } from 'lit/static-html.js';
+import {html} from 'lit/static-html.js';
 import {customElement, property, query, state} from 'lit/decorators.js';
 import SlMenuItem from '../menu-item/menu-item.component.js';
 import SlDropdown from '../dropdown/dropdown.component.js';
@@ -8,8 +8,8 @@ import styles from './combobox.styles.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {scrollIntoView} from "../../internal/scroll.js";
 import ShoelaceElement from '../../internal/shoelace-element.js';
-import type { SlChangeEvent } from '../../events/sl-change.js';
-import type { SlInputEvent } from '../../events/sl-input.js';
+import type {SlChangeEvent} from '../../events/sl-change.js';
+import type {SlInputEvent} from '../../events/sl-input.js';
 
 export interface Suggestion {
   text: string;
@@ -62,7 +62,7 @@ export default class SlCombobox extends ShoelaceElement {
   @state() suggestions: Array<{ text: string; value: string }> = [];
 
   /** The current input */
-  @property({ type: String }) value = '';
+  @property({type: String}) value = '';
 
   /** The combobox's size. */
   @property({reflect: true}) size: 'small' | 'medium' | 'large' = 'medium';
@@ -99,6 +99,8 @@ export default class SlCombobox extends ShoelaceElement {
 
   /** The source property is a function executed on user input. The search result is displayed in the suggestions list. */
   @property() source?: SuggestionSource;
+  /** If true the suggestions are shown even if the Input is empty */
+  @property() openEmpty: boolean = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -120,6 +122,7 @@ export default class SlCombobox extends ShoelaceElement {
     this.input.value = this.value
     this.prepareSuggestions(this.value)
   }
+
   clear() {
     this.input.value = '';
     this.value = '';
@@ -169,9 +172,9 @@ export default class SlCombobox extends ShoelaceElement {
           this.activeItemIndex--;
         }
       }
-        scrollIntoView(menuItems[this.activeItemIndex], this.dropdown.panel);
+      scrollIntoView(menuItems[this.activeItemIndex], this.dropdown.panel);
 
-        return;
+      return;
     }
 
     if (event.key === 'Enter' && this.activeItemIndex !== -1) {
@@ -193,12 +196,16 @@ export default class SlCombobox extends ShoelaceElement {
 
   handleInputFocus = () => {
     if (this.input.value === '') {
+      if (this.openEmpty) {
+        this.prepareSuggestions("");
+        this.dropdown.show();
+      }
       return;
     }
     this.dropdown.show();
   };
 
-  onItemSelected(event: CustomEvent ) {
+  onItemSelected(event: CustomEvent) {
     let item = event.detail.item as SlMenuItem
     this.input.value = item.textContent ?? '';
     this.value = item.textContent ?? '';
@@ -275,7 +282,7 @@ export default class SlCombobox extends ShoelaceElement {
     );
   }
 
-  activeDescendant(): string|null {
+  activeDescendant(): string | null {
     if (this.activeItemIndex === -1) {
       return null;
     }
@@ -303,7 +310,7 @@ export default class SlCombobox extends ShoelaceElement {
           slot="trigger"
           type="text"
           role="combobox"
-          aria-expanded=${this.dropdown? 'true' : 'false'}
+          aria-expanded=${this.dropdown ? 'true' : 'false'}
           size=${this.size}
           label=${this.label}
           placeholder=${this.placeholder}
@@ -346,11 +353,12 @@ export default class SlCombobox extends ShoelaceElement {
               <sl-menu-item disabled>${this.emptyMessage}</sl-menu-item>`
             : this.suggestions.map((item, index) => html`
               <sl-menu-item value=${item.value} id=${this.menuItemId(index)}
-              part="menu-item"
-              exportparts="base:menu-item__base, prefix:menu-item__prefix, suffix:menu-item__suffix, submenu-icon:menu-item__submenu-icon, label:menu-item__label, checked-icon:menu-item__checked-icon"
+                            part="menu-item"
+                            exportparts="base:menu-item__base, prefix:menu-item__prefix, suffix:menu-item__suffix, submenu-icon:menu-item__submenu-icon, label:menu-item__label, checked-icon:menu-item__checked-icon"
 
 
-              >${unsafeHTML(item.text)}</sl-menu-item>`)}
+              >${unsafeHTML(item.text)}
+              </sl-menu-item>`)}
         </sl-menu>
       </sl-dropdown>
     `;
