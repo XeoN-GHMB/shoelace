@@ -23,6 +23,7 @@ npm install @viur/shoelace
 Next, [include a theme](/getting-started/themes) and set the [base path](/getting-started/installation#setting-the-base-path) for icons and other assets. In this example, we'll import the light theme and use the CDN as a base path.
 
 ```jsx
+// main.js or main.ts
 import '@viur/shoelace/dist/themes/viur.css';
 import { setBasePath } from '@viur/shoelace/dist/utilities/base-path';
 
