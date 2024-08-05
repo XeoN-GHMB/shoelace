@@ -2,6 +2,10 @@ import * as React from 'react';
 import { createComponent } from '@lit/react';
 import Component from '../../components/avatar/avatar.component.js';
 
+import { type EventName } from '@lit/react';
+import type { SlErrorEvent } from '../../events/events.js';
+export type { SlErrorEvent } from '../../events/events.js';
+
 const tagName = 'sl-avatar';
 Component.define('sl-avatar');
 
@@ -12,6 +16,9 @@ Component.define('sl-avatar');
  * @since 2.0
  *
  * @dependency sl-icon
+ *
+ * @event sl-error - The image could not be loaded. This may because of an invalid URL, a temporary network condition, or some
+ * unknown cause.
  *
  * @slot icon - The default icon to use when no image or initials are present. Works best with `<sl-icon>`.
  *
@@ -26,7 +33,9 @@ const reactWrapper = createComponent({
   tagName,
   elementClass: Component,
   react: React,
-  events: {},
+  events: {
+    onSlError: 'sl-error' as EventName<SlErrorEvent>
+  },
   displayName: 'SlAvatar'
 });
 

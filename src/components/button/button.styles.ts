@@ -80,7 +80,7 @@ export default css`
   /* Default */
   .button--standard.button--default {
     background-color: var(--sl-color-neutral-100);
-    border-color: var(--sl-color-neutral-300);
+    border-color: var(--sl-input-border-color);
     color: var(--sl-color-neutral-700);
   }
 
@@ -240,7 +240,7 @@ export default css`
 
   /* Default */
   .button--outline.button--default {
-    border-color: var(--sl-color-neutral-300);
+    border-color: var(--sl-input-border-color);
     color: var(--sl-color-neutral-700);
   }
 

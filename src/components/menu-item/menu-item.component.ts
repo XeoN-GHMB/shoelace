@@ -1,7 +1,6 @@
 import { classMap } from 'lit/directives/class-map.js';
 import { getTextContent, HasSlotController } from '../../internal/slot.js';
 import { html } from 'lit';
-import { LocalizeController } from '../../utilities/localize.js';
 import { property, query } from 'lit/decorators.js';
 import { SubmenuController } from './submenu-controller.js';
 import { watch } from '../../internal/watch.js';
@@ -70,9 +69,8 @@ export default class SlMenuItem extends ShoelaceElement {
   /** Draws the menu item in an active state. */
   @property({ type: Boolean, reflect: true }) active = false;
 
-  private readonly localize = new LocalizeController(this);
   private readonly hasSlotController = new HasSlotController(this, 'submenu');
-  private submenuController: SubmenuController = new SubmenuController(this, this.hasSlotController, this.localize);
+  private submenuController: SubmenuController = new SubmenuController(this, this.hasSlotController);
 
   connectedCallback() {
     super.connectedCallback();
@@ -159,7 +157,7 @@ export default class SlMenuItem extends ShoelaceElement {
   }
 
   render() {
-    const isRtl = this.localize.dir() === 'rtl';
+    const isRtl = this.matches(':dir(rtl)');
     const isSubmenuExpanded = this.submenuController.isExpanded();
 
     return html`

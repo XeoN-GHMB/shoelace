@@ -157,7 +157,7 @@ export default class SlCarousel extends ShoelaceElement {
   private handleKeyDown(event: KeyboardEvent) {
     if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
       const target = event.target as HTMLElement;
-      const isRtl = this.localize.dir() === 'rtl';
+      const isRtl = this.matches(':dir(rtl)');
       const isFocusInPagination = target.closest('[part~="pagination-item"]') !== null;
       const isNext =
         event.key === 'ArrowDown' || (!isRtl && event.key === 'ArrowRight') || (isRtl && event.key === 'ArrowLeft');
@@ -492,7 +492,7 @@ export default class SlCarousel extends ShoelaceElement {
     const currentPage = this.getCurrentPage();
     const prevEnabled = this.canScrollPrev();
     const nextEnabled = this.canScrollNext();
-    const isLtr = this.localize.dir() === 'ltr';
+    const isLtr = this.matches(':dir(ltr)');
 
     return html`
       <div part="base" class="carousel">
