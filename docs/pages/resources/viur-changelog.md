@@ -1,4 +1,7 @@
 # Changelog
+## 1.0.7
+- feat: multi-range component can now have a suffix value 
+
 ## 1.0.6
 - fix: updated bar element
 

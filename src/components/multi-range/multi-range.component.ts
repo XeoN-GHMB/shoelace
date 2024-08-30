@@ -77,6 +77,9 @@ export default class SlMultiRange extends ShoelaceElement implements ShoelaceFor
   /** The interval at which the range will increase and decrease. */
   @property({ type: Number }) step = 1;
 
+  /** Set a suffix for units like currency, ...  */
+  @property({ type: String }) suffix = "";
+
   /** The preferred placement of the range's tooltip. */
   @property() tooltip: 'top' | 'bottom' | 'none' = 'top';
 
@@ -126,6 +129,7 @@ export default class SlMultiRange extends ShoelaceElement implements ShoelaceFor
   #hasFocus = false;
   #validationError = '';
   #nextId = 1;
+  #formatterfunction:((value: number) => string) = (value)=>value.toString()
 
   get #rtl() {
     return this.#localize.dir() === 'rtl';
@@ -133,7 +137,8 @@ export default class SlMultiRange extends ShoelaceElement implements ShoelaceFor
 
   constructor() {
     super();
-    this.tooltipFormatter = this.#localize.number.bind(this.#localize);
+    this.tooltipFormatter = (value) => this.#localize.number.bind(this.#localize)(value);
+    this.#formatterfunction = (value) =>this.tooltipFormatter(value) + this.suffix
   }
 
   override render(): unknown {
@@ -454,7 +459,7 @@ export default class SlMultiRange extends ShoelaceElement implements ShoelaceFor
 
   #moveHandle(handle: HTMLDivElement, value: number): void {
     handle.setAttribute('aria-valuenow', value.toString());
-    handle.setAttribute('aria-valuetext', this.tooltipFormatter(value));
+    handle.setAttribute('aria-valuetext', this.#formatterfunction(value));
     const pos = (value - this.min) / (this.max - this.min);
     handle.style.insetInlineStart = `calc( ${100 * pos}% - var(--thumb-size) * ${pos} )`;
     this.#updateTooltip(handle);
@@ -477,7 +482,7 @@ export default class SlMultiRange extends ShoelaceElement implements ShoelaceFor
     let pos = (value - this.min) / (this.max - this.min);
     if (this.#rtl) pos = 1.0 - pos;
     this.tooltipElem.style.translate = `calc( ${pos} * ( ${this.baseDiv.offsetWidth}px - var(--thumb-size) ) - 50% + (var(--thumb-size) / 2) )`;
-    this.tooltipElem.innerText = this.tooltipFormatter(value);
+    this.tooltipElem.innerText = this.#formatterfunction(value);
   }
 
   #onFocusHandle(event: FocusEvent): void {

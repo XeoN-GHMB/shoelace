@@ -107,3 +107,37 @@ const App = () => <SlRange value={'25,75'} style={{
 ```
 
 {% endraw %}
+
+
+### Formatter and Suffix
+You can customize the display with a formatter and a suffix. So a number can be formatted as a currency and a suffix can be added
+
+```html:preview
+<sl-multi-range label="Currency" id="formater_test" min="1" max="100000" value="0,100000" style="margin-bottom:50px;display:block"></sl-multi-range>
+<script>
+    const element = document.querySelector('#formater_test');
+    element.tooltipFormatter = (value) => new Intl.NumberFormat('de-DE', {
+          style: 'currency', // decimal, percent, unit ...
+          maximumFractionDigits: 0,
+          currency: 'EUR',
+        }).format(value);
+</script>
+
+<sl-multi-range label="Select length" id="formater_suffix_test" min="1" max="2000" value="0,2000" suffix="mm"></sl-multi-range>
+<script>
+    const element = document.querySelector('#formater_suffix_test');
+    element.tooltipFormatter = (value) => value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    
+    //or
+    /*
+    new Intl.NumberFormat('de-DE', {
+          style: 'unit',
+          maximumFractionDigits: 0,
+          unit:"millimeter",
+          unitDisplay: 'short'
+        }).format(value);
+    
+    */
+</script>
+
+```
