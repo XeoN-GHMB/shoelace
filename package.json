@@ -1,7 +1,7 @@
 {
   "name": "@viur/shoelace",
   "description": "A forward-thinking library of web components.",
-  "version": "1.0.7-v2.16.0",
+  "version": "1.0.8-v2.16.0",
   "homepage": "https://github.com/viur-framework/viur-shoelace",
   "author": "Cory LaViska",
   "contributors": [
@@ -94,7 +94,6 @@
     "composed-offset-position": "^0.0.4",
     "leaflet": "^1.7.1",
     "lit": "^3.0.0",
-    "path-to-regexp": "^6.2.0",
     "qr-creator": "^1.0.0",
     "string-natural-compare": "^3.0.1"
   },
@@ -139,7 +138,7 @@
     "globby": "^13.2.2",
     "husky": "^8.0.3",
     "jsdom": "^22.1.0",
-    "jsonata": "^2.0.3",
+    "jsonata": "^2.0.4",
     "less": "^4.1.2",
     "lint-staged": "^14.0.1",
     "lunr": "^2.3.9",
