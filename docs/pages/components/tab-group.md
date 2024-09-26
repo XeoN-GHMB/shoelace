@@ -20,7 +20,7 @@ Tab groups make use of [tabs](/components/tab) and [tab panels](/components/tab-
   <sl-tab-panel name="disabled">This is a disabled tab panel.</sl-tab-panel>
 </sl-tab-group>
 ```
-{% raw %}
+
 ```jsx:react
 import SlTab from '@shoelace-style/shoelace/dist/react/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
@@ -48,7 +48,7 @@ const App = () => (
   </SlTabGroup>
 );
 ```
-{% endraw %}
+
 ## Examples
 
 ### Tabs on Bottom
@@ -68,7 +68,7 @@ Tabs can be shown on the bottom by setting `placement` to `bottom`.
   <sl-tab-panel name="disabled">This is a disabled tab panel.</sl-tab-panel>
 </sl-tab-group>
 ```
-{% raw %}
+
 ```jsx:react
 import SlTab from '@shoelace-style/shoelace/dist/react/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
@@ -96,7 +96,7 @@ const App = () => (
   </SlTabGroup>
 );
 ```
-{% endraw %}
+
 ### Tabs on Start
 
 Tabs can be shown on the starting side by setting `placement` to `start`.
@@ -114,7 +114,7 @@ Tabs can be shown on the starting side by setting `placement` to `start`.
   <sl-tab-panel name="disabled">This is a disabled tab panel.</sl-tab-panel>
 </sl-tab-group>
 ```
-{% raw %}
+
 ```jsx:react
 import SlTab from '@shoelace-style/shoelace/dist/react/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
@@ -142,7 +142,7 @@ const App = () => (
   </SlTabGroup>
 );
 ```
-{% endraw %}
+
 ### Tabs on End
 
 Tabs can be shown on the ending side by setting `placement` to `end`.
@@ -160,7 +160,7 @@ Tabs can be shown on the ending side by setting `placement` to `end`.
   <sl-tab-panel name="disabled">This is a disabled tab panel.</sl-tab-panel>
 </sl-tab-group>
 ```
-{% raw %}
+
 ```jsx:react
 import SlTab from '@shoelace-style/shoelace/dist/react/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
@@ -188,7 +188,7 @@ const App = () => (
   </SlTabGroup>
 );
 ```
-{% endraw %}
+
 ### Closable Tabs
 
 Add the `closable` attribute to a tab to show a close button. This example shows how you can dynamically remove tabs from the DOM when the close button is activated.
@@ -224,7 +224,7 @@ Add the `closable` attribute to a tab to show a close button. This example shows
   });
 </script>
 ```
-{% raw %}
+
 ```jsx:react
 import SlTab from '@shoelace-style/shoelace/dist/react/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
@@ -268,7 +268,7 @@ const App = () => {
   );
 };
 ```
-{% endraw %}
+
 ### Scrolling Tabs
 
 When there are more tabs than horizontal space allows, the nav will be scrollable.
@@ -318,7 +318,7 @@ When there are more tabs than horizontal space allows, the nav will be scrollabl
   <sl-tab-panel name="tab-20">Tab panel 20</sl-tab-panel>
 </sl-tab-group>
 ```
-{% raw %}
+
 ```jsx:react
 import SlTab from '@shoelace-style/shoelace/dist/react/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
@@ -410,10 +410,152 @@ const App = () => (
   </SlTabGroup>
 );
 ```
-{% endraw %}
+
+### Fixed scroll controls
+
+When tabs are scrolled all the way to one side, the scroll button on that side can't be clicked. Set the `fixed-scroll-controls` attribute to keep the effected button visible in that case.
+
+```html:preview
+<sl-tab-group fixed-scroll-controls>
+  <sl-tab slot="nav" panel="tab-1">Tab 1</sl-tab>
+  <sl-tab slot="nav" panel="tab-2">Tab 2</sl-tab>
+  <sl-tab slot="nav" panel="tab-3">Tab 3</sl-tab>
+  <sl-tab slot="nav" panel="tab-4">Tab 4</sl-tab>
+  <sl-tab slot="nav" panel="tab-5">Tab 5</sl-tab>
+  <sl-tab slot="nav" panel="tab-6">Tab 6</sl-tab>
+  <sl-tab slot="nav" panel="tab-7">Tab 7</sl-tab>
+  <sl-tab slot="nav" panel="tab-8">Tab 8</sl-tab>
+  <sl-tab slot="nav" panel="tab-9">Tab 9</sl-tab>
+  <sl-tab slot="nav" panel="tab-10">Tab 10</sl-tab>
+  <sl-tab slot="nav" panel="tab-11">Tab 11</sl-tab>
+  <sl-tab slot="nav" panel="tab-12">Tab 12</sl-tab>
+  <sl-tab slot="nav" panel="tab-13">Tab 13</sl-tab>
+  <sl-tab slot="nav" panel="tab-14">Tab 14</sl-tab>
+  <sl-tab slot="nav" panel="tab-15">Tab 15</sl-tab>
+  <sl-tab slot="nav" panel="tab-16">Tab 16</sl-tab>
+  <sl-tab slot="nav" panel="tab-17">Tab 17</sl-tab>
+  <sl-tab slot="nav" panel="tab-18">Tab 18</sl-tab>
+  <sl-tab slot="nav" panel="tab-19">Tab 19</sl-tab>
+  <sl-tab slot="nav" panel="tab-20">Tab 20</sl-tab>
+
+  <sl-tab-panel name="tab-1">Tab panel 1</sl-tab-panel>
+  <sl-tab-panel name="tab-2">Tab panel 2</sl-tab-panel>
+  <sl-tab-panel name="tab-3">Tab panel 3</sl-tab-panel>
+  <sl-tab-panel name="tab-4">Tab panel 4</sl-tab-panel>
+  <sl-tab-panel name="tab-5">Tab panel 5</sl-tab-panel>
+  <sl-tab-panel name="tab-6">Tab panel 6</sl-tab-panel>
+  <sl-tab-panel name="tab-7">Tab panel 7</sl-tab-panel>
+  <sl-tab-panel name="tab-8">Tab panel 8</sl-tab-panel>
+  <sl-tab-panel name="tab-9">Tab panel 9</sl-tab-panel>
+  <sl-tab-panel name="tab-10">Tab panel 10</sl-tab-panel>
+  <sl-tab-panel name="tab-11">Tab panel 11</sl-tab-panel>
+  <sl-tab-panel name="tab-12">Tab panel 12</sl-tab-panel>
+  <sl-tab-panel name="tab-13">Tab panel 13</sl-tab-panel>
+  <sl-tab-panel name="tab-14">Tab panel 14</sl-tab-panel>
+  <sl-tab-panel name="tab-15">Tab panel 15</sl-tab-panel>
+  <sl-tab-panel name="tab-16">Tab panel 16</sl-tab-panel>
+  <sl-tab-panel name="tab-17">Tab panel 17</sl-tab-panel>
+  <sl-tab-panel name="tab-18">Tab panel 18</sl-tab-panel>
+  <sl-tab-panel name="tab-19">Tab panel 19</sl-tab-panel>
+  <sl-tab-panel name="tab-20">Tab panel 20</sl-tab-panel>
+</sl-tab-group>
+```
+
+```jsx:react
+import SlTab from '@shoelace-style/shoelace/dist/react/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/react/tab-panel';
+
+const App = () => (
+  <SlTabGroup auto-hide-scroll-buttons>
+    <SlTab slot="nav" panel="tab-1">
+      Tab 1
+    </SlTab>
+    <SlTab slot="nav" panel="tab-2">
+      Tab 2
+    </SlTab>
+    <SlTab slot="nav" panel="tab-3">
+      Tab 3
+    </SlTab>
+    <SlTab slot="nav" panel="tab-4">
+      Tab 4
+    </SlTab>
+    <SlTab slot="nav" panel="tab-5">
+      Tab 5
+    </SlTab>
+    <SlTab slot="nav" panel="tab-6">
+      Tab 6
+    </SlTab>
+    <SlTab slot="nav" panel="tab-7">
+      Tab 7
+    </SlTab>
+    <SlTab slot="nav" panel="tab-8">
+      Tab 8
+    </SlTab>
+    <SlTab slot="nav" panel="tab-9">
+      Tab 9
+    </SlTab>
+    <SlTab slot="nav" panel="tab-10">
+      Tab 10
+    </SlTab>
+    <SlTab slot="nav" panel="tab-11">
+      Tab 11
+    </SlTab>
+    <SlTab slot="nav" panel="tab-12">
+      Tab 12
+    </SlTab>
+    <SlTab slot="nav" panel="tab-13">
+      Tab 13
+    </SlTab>
+    <SlTab slot="nav" panel="tab-14">
+      Tab 14
+    </SlTab>
+    <SlTab slot="nav" panel="tab-15">
+      Tab 15
+    </SlTab>
+    <SlTab slot="nav" panel="tab-16">
+      Tab 16
+    </SlTab>
+    <SlTab slot="nav" panel="tab-17">
+      Tab 17
+    </SlTab>
+    <SlTab slot="nav" panel="tab-18">
+      Tab 18
+    </SlTab>
+    <SlTab slot="nav" panel="tab-19">
+      Tab 19
+    </SlTab>
+    <SlTab slot="nav" panel="tab-20">
+      Tab 20
+    </SlTab>
+
+    <SlTabPanel name="tab-1">Tab panel 1</SlTabPanel>
+    <SlTabPanel name="tab-2">Tab panel 2</SlTabPanel>
+    <SlTabPanel name="tab-3">Tab panel 3</SlTabPanel>
+    <SlTabPanel name="tab-4">Tab panel 4</SlTabPanel>
+    <SlTabPanel name="tab-5">Tab panel 5</SlTabPanel>
+    <SlTabPanel name="tab-6">Tab panel 6</SlTabPanel>
+    <SlTabPanel name="tab-7">Tab panel 7</SlTabPanel>
+    <SlTabPanel name="tab-8">Tab panel 8</SlTabPanel>
+    <SlTabPanel name="tab-9">Tab panel 9</SlTabPanel>
+    <SlTabPanel name="tab-10">Tab panel 10</SlTabPanel>
+    <SlTabPanel name="tab-11">Tab panel 11</SlTabPanel>
+    <SlTabPanel name="tab-12">Tab panel 12</SlTabPanel>
+    <SlTabPanel name="tab-13">Tab panel 13</SlTabPanel>
+    <SlTabPanel name="tab-14">Tab panel 14</SlTabPanel>
+    <SlTabPanel name="tab-15">Tab panel 15</SlTabPanel>
+    <SlTabPanel name="tab-16">Tab panel 16</SlTabPanel>
+    <SlTabPanel name="tab-17">Tab panel 17</SlTabPanel>
+    <SlTabPanel name="tab-18">Tab panel 18</SlTabPanel>
+    <SlTabPanel name="tab-19">Tab panel 19</SlTabPanel>
+    <SlTabPanel name="tab-20">Tab panel 20</SlTabPanel>
+  </SlTabGroup>
+);
+```
+
 ### Manual Activation
 
-When focused, keyboard users can press <kbd>Left</kbd> or <kbd>Right</kbd> to select the desired tab. By default, the corresponding tab panel will be shown immediately (automatic activation). You can change this behavior by setting `activation="manual"` which will require the user to press <kbd>Space</kbd> or <kbd>Enter</kbd> before showing the tab panel (manual activation).
+When focused, keyboard users can press [[Left]] or [[Right]] to select the desired tab. By default, the corresponding tab panel will be shown immediately (automatic activation). You can change this behavior by setting `activation="manual"` which will require the user to press [[Space]] or [[Enter]] before showing the tab panel (manual activation).
 
 ```html:preview
 <sl-tab-group activation="manual">
@@ -428,7 +570,7 @@ When focused, keyboard users can press <kbd>Left</kbd> or <kbd>Right</kbd> to se
   <sl-tab-panel name="disabled">This is a disabled tab panel.</sl-tab-panel>
 </sl-tab-group>
 ```
-{% raw %}
+
 ```jsx:react
 import SlTab from '@shoelace-style/shoelace/dist/react/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/react/tab-group';
@@ -456,48 +598,3 @@ const App = () => (
   </SlTabGroup>
 );
 ```
-{% endraw %}
-### Variant Flap
-
-Use the `variant` attribute to activate the "flap" style
-
-```html:preview
-<sl-tab-group variant="flap">
-  <sl-tab slot="nav" panel="general">General</sl-tab>
-  <sl-tab slot="nav" panel="custom">Custom</sl-tab>
-  <sl-tab slot="nav" panel="advanced" closable>Advanced</sl-tab>
-  <sl-tab slot="nav" panel="disabled" disabled>Disabled</sl-tab>
-
-  <sl-tab-panel name="general">This is the general tab panel.</sl-tab-panel>
-  <sl-tab-panel name="custom">This is the custom tab panel.</sl-tab-panel>
-  <sl-tab-panel name="advanced">This is the advanced tab panel.</sl-tab-panel>
-  <sl-tab-panel name="disabled">This is a disabled tab panel.</sl-tab-panel>
-</sl-tab-group>
-```
-{% raw %}
-```jsx:react
-import { SlTab, SlTabGroup, SlTabPanel } from '@shoelace-style/shoelace/dist/react';
-
-const App = () => (
-  <SlTabGroup placement="bottom">
-    <SlTab slot="nav" panel="general">
-      General
-    </SlTab>
-    <SlTab slot="nav" panel="custom">
-      Custom
-    </SlTab>
-    <SlTab slot="nav" panel="advanced">
-      Advanced
-    </SlTab>
-    <SlTab slot="nav" panel="disabled" disabled>
-      Disabled
-    </SlTab>
-
-    <SlTabPanel name="general">This is the general tab panel.</SlTabPanel>
-    <SlTabPanel name="custom">This is the custom tab panel.</SlTabPanel>
-    <SlTabPanel name="advanced">This is the advanced tab panel.</SlTabPanel>
-    <SlTabPanel name="disabled">This is a disabled tab panel.</SlTabPanel>
-  </SlTabGroup>
-);
-```
-{% endraw %}
