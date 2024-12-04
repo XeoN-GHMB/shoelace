@@ -174,8 +174,8 @@
     "user-agent-data-types": "^0.4.2"
   },
   "optionalDependencies": {
-    "@esbuild/linux-x64": "^0.19.8",
-    "@esbuild/darwin-x64": "^0.19.8"
+    "@esbuild/linux-x64": "^0.24.0",
+    "@esbuild/darwin-x64": "^0.24.0"
   },
   "lint-staged": {
     "*.{ts,js}": [
