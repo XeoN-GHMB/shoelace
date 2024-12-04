@@ -1,6 +1,5 @@
 import '../../../dist/shoelace.js';
-import { aTimeout, expect, fixture, html, waitUntil } from '@open-wc/testing';
-import sinon from 'sinon';
+import { aTimeout, expect, fixture, html } from '@open-wc/testing';
 import type SlOption from './option.js';
 
 describe('<sl-option>', () => {
@@ -30,17 +29,6 @@ describe('<sl-option>', () => {
     el.disabled = true;
     await aTimeout(100);
     expect(el.getAttribute('aria-disabled')).to.equal('true');
-  });
-
-  it('emits the slotchange event when the label changes', async () => {
-    const el = await fixture<SlOption>(html` <sl-option>Text</sl-option> `);
-    const slotChangeHandler = sinon.spy();
-
-    el.addEventListener('slotchange', slotChangeHandler);
-    el.textContent = 'New Text';
-    await waitUntil(() => slotChangeHandler.calledOnce);
-
-    expect(slotChangeHandler).to.have.been.calledOnce;
   });
 
   it('should convert non-string values to string', async () => {

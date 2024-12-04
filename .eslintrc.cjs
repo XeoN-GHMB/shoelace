@@ -79,6 +79,7 @@ module.exports = {
         '@typescript-eslint/no-unnecessary-boolean-literal-compare': 'warn',
         '@typescript-eslint/no-unnecessary-condition': 'off',
         '@typescript-eslint/no-unnecessary-qualifier': 'warn',
+        '@typescript-eslint/no-unnecessary-type-assertion': 'off',
         '@typescript-eslint/non-nullable-type-assertion-style': 'warn',
         '@typescript-eslint/prefer-for-of': 'warn',
         '@typescript-eslint/prefer-optional-chain': 'warn',

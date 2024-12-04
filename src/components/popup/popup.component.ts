@@ -272,8 +272,8 @@ export default class SlPopup extends ShoelaceElement {
   }
 
   private start() {
-    // We can't start the positioner without an anchor
-    if (!this.anchorEl) {
+    // We can't start the positioner without an anchor or when the popup is inactive
+    if (!this.anchorEl || !this.active) {
       return;
     }
 

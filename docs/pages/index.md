@@ -110,7 +110,7 @@ If you need to support IE11 or pre-Chromium Edge, this library isn't for you. Al
 
 ## License
 
-Shoelace was created in New Hampshire by [Cory LaViska](https://twitter.com/claviska). It's available under the terms of the [MIT license](https://github.com/shoelace-style/shoelace/blob/next/LICENSE.md).
+Shoelace was created in New Hampshire by [Cory LaViska](https://twitter.com/cory_laviska). It's available under the terms of the [MIT license](https://github.com/shoelace-style/shoelace/blob/next/LICENSE.md).
 
 ## Attribution
 

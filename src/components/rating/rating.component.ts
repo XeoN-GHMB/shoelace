@@ -240,7 +240,7 @@ export default class SlRating extends ShoelaceElement {
         aria-valuenow=${this.value}
         aria-valuemin=${0}
         aria-valuemax=${this.max}
-        tabindex=${this.disabled ? '-1' : '0'}
+        tabindex=${this.disabled || this.readonly ? '-1' : '0'}
         @click=${this.handleClick}
         @keydown=${this.handleKeyDown}
         @mouseenter=${this.handleMouseEnter}

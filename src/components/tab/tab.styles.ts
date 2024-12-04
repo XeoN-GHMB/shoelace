@@ -32,11 +32,8 @@ export default css`
     outline: transparent;
   }
 
-  :host(:focus-visible):not([disabled]) {
-    color: var(--sl-color-primary-600);
-  }
-
   :host(:focus-visible) {
+    color: var(--sl-color-primary-600);
     outline: var(--sl-focus-ring);
     outline-offset: calc(-1 * var(--sl-focus-ring-width) - var(--sl-focus-ring-offset));
   }

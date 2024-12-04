@@ -38,7 +38,9 @@ export default class SlSplitPanel extends ShoelaceElement {
   static styles: CSSResultGroup = [componentStyles, styles];
 
   private cachedPositionInPixels: number;
+  private isCollapsed = false;
   private readonly localize = new LocalizeController(this);
+  private positionBeforeCollapsing = 0;
   private resizeObserver: ResizeObserver;
   private size: number;
 
@@ -166,7 +168,7 @@ export default class SlSplitPanel extends ShoelaceElement {
       return;
     }
 
-    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key)) {
+    if (['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End', 'Enter'].includes(event.key)) {
       let newPosition = this.position;
       const incr = (event.shiftKey ? 10 : 1) * (this.primary === 'end' ? -1 : 1);
 
@@ -186,6 +188,24 @@ export default class SlSplitPanel extends ShoelaceElement {
 
       if (event.key === 'End') {
         newPosition = this.primary === 'end' ? 0 : 100;
+      }
+
+      // Collapse/expand the primary panel when enter is pressed
+      if (event.key === 'Enter') {
+        if (this.isCollapsed) {
+          newPosition = this.positionBeforeCollapsing;
+          this.isCollapsed = false;
+        } else {
+          const positionBeforeCollapsing = this.position;
+
+          newPosition = 0;
+
+          // Wait for position to update before setting the collapsed state
+          requestAnimationFrame(() => {
+            this.isCollapsed = true;
+            this.positionBeforeCollapsing = positionBeforeCollapsing;
+          });
+        }
       }
 
       this.position = clamp(newPosition, 0, 100);
@@ -213,6 +233,8 @@ export default class SlSplitPanel extends ShoelaceElement {
   @watch('position')
   handlePositionChange() {
     this.cachedPositionInPixels = this.percentageToPixels(this.position);
+    this.isCollapsed = false;
+    this.positionBeforeCollapsing = 0;
     this.positionInPixels = this.percentageToPixels(this.position);
     this.emit('sl-reposition');
   }

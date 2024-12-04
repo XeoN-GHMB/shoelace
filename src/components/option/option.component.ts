@@ -31,7 +31,6 @@ export default class SlOption extends ShoelaceElement {
   static styles: CSSResultGroup = [componentStyles, styles];
   static dependencies = { 'sl-icon': SlIcon };
 
-  private cachedTextLabel: string;
   // @ts-expect-error - Controller is currently unused
   private readonly localize = new LocalizeController(this);
 
@@ -58,19 +57,13 @@ export default class SlOption extends ShoelaceElement {
   }
 
   private handleDefaultSlotChange() {
-    const textLabel = this.getTextLabel();
-
-    // Ignore the first time the label is set
-    if (typeof this.cachedTextLabel === 'undefined') {
-      this.cachedTextLabel = textLabel;
-      return;
-    }
-
-    // When the label changes, emit a slotchange event so parent controls see it
-    if (textLabel !== this.cachedTextLabel) {
-      this.cachedTextLabel = textLabel;
-      this.emit('slotchange', { bubbles: true, composed: false, cancelable: false });
-    }
+    // When the label changes, tell the controller to update
+    customElements.whenDefined('sl-select').then(() => {
+      const controller = this.closest('sl-select');
+      if (controller) {
+        controller.handleDefaultSlotChange();
+      }
+    });
   }
 
   private handleMouseEnter() {

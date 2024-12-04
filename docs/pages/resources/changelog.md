@@ -12,9 +12,28 @@ Components with the <sl-badge variant="warning" pill>Experimental</sl-badge> bad
 
 New versions of Shoelace are released as-needed and generally occur when a critical mass of changes have accumulated. At any time, you can see what's coming in the next release by visiting [next.shoelace.style](https://next.shoelace.style).
 
+## 2.19.0
+
+- Added Norwegian translations for Bokmål and Nynorsk [#2268]
+- Added Ukrainian translation [#2270]
+- Added community maintained docs for Svelte [#2262]
+- Fixed a bug in `<sl-select>` when setting the value property before the element connected. [#2255]
+- Fixed a bug in `<sl-select>` where it was using the wrong tag name. [#2287]
+- Fixed a bug in `<sl-carousel>` that caused the navigation icons to be reversed
+- Fixed a bug in `<sl-carousel>` that caused interactive elements to be activated when dragging [#2196]
+- Fixed a bug in `<sl-carousel>` that caused out of order slides when used inside a resize observer [#2260]
+- Fixed a bug in `<sl-rating>` that allowed tabbing into the rating when readonly [#2271]
+- Fixed a bug in `<sl-select>` where it was using the wrong tag name,. [#2287]
+- Fixed a bug in `<sl-select>` that prevented label changes in `<sl-option>` from updating the controller [#1971]
+- Fixed a bug in `<sl-select>` that caused the placeholder to display incorrectly when using `placeholder` and `multiple` [#2292]
+- Fixed a bug in `<sl-textarea>` that caused a console warning in Firefox when typing [#2107]
+- Improved accessibility of `<sl-split-panel>` by adding support for <kbd>Enter</kbd> to align with ARIA APG's [window splitter pattern](https://www.w3.org/WAI/ARIA/apg/patterns/windowsplitter/) [#2234]
+- Improved performance of `<sl-range>` by skipping positioning logic when tooltip isn't shown [#2064]
+- Updated many dependencies to their latest versions
+
 ## 2.18.0
 
-- Added Finnish translations [#2211]
+- Added Finnish translation [#2211]
 - Added the `.focus` function to `<sl-radio-group>` [#2192]
 - Fixed a bug in `<sl-tab-group>` when removed from the DOM too quickly. [#2218]
 - Fixed a bug with `<sl-select>` not respecting its initial value. [#2204]

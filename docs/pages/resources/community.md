@@ -49,7 +49,7 @@ You can post questions on Stack Overflow using [the "shoelace" tag](https://stac
 
 ## Twitter
 
-Follow [@shoelace_style](https://twitter.com/shoelace_style) on Twitter for general updates and announcements about Shoelace. This is a great place to say "hi" or to share something you're working on. You're also welcome to follow [@claviska](https://twitter.com/claviska), the creator, for tweets about web components, web development, and life.
+Follow [@shoelace_style](https://twitter.com/shoelace_style) on Twitter for general updates and announcements about Shoelace. This is a great place to say "hi" or to share something you're working on. You're also welcome to follow [@cory_laviska](https://twitter.com/cory_laviska), the creator, for tweets about web components, web development, and life.
 
 **Please avoid using Twitter for support questions.** The [discussion forum](https://github.com/shoelace-style/shoelace/discussions) is a much better place to share code snippets, screenshots, and other troubleshooting info. You'll have much better luck there, as more users will have a chance to help you.
 
