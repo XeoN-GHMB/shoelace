@@ -1,7 +1,7 @@
 {
   "name": "@viur/shoelace",
   "description": "A forward-thinking library of web components.",
-  "version": "1.0.8-v2.19.0",
+  "version": "1.0.8-v2.19.1",
   "homepage": "https://github.com/viur-framework/viur-shoelace",
   "author": "Cory LaViska",
   "contributors": [
@@ -106,7 +106,7 @@
     "@open-wc/testing": "^4.0.0",
     "@types/crypto-js": "^4.1.0",
     "@types/mocha": "^10.0.10",
-    "@types/react": "^18.3.12",
+    "@types/react": "^18.3.13",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "@web/dev-server-esbuild": "^1.0.3",
@@ -160,7 +160,7 @@
     "postcss-focus": "^7.0.0",
     "postcss-import": "^15.1.0",
     "postcss-zindex": "^6.0.0",
-    "prettier": "^3.4.1",
+    "prettier": "^3.4.2",
     "prismjs": "^1.29.0",
     "react": "^18.3.1",
     "recursive-copy": "^2.0.14",

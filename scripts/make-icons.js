@@ -23,7 +23,7 @@ const version = iconPackageData.version;
 const srcPath = `./.cache/icons/icons-${version}`;
 const url = `https://github.com/twbs/icons/archive/v${version}.zip`;
 try {
-  await fs.stat(`${srcPath}/LICENSE.md`);
+  await fs.stat(`${srcPath}/LICENSE`);
 } catch {
   // Download the source from GitHub (since not everything is published to npm)
   await download(url, './.cache/icons', { extract: true });

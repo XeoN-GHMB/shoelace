@@ -510,21 +510,36 @@ export default class SlCarousel extends ShoelaceElement {
   }
 
   private scrollToSlide(slide: HTMLElement, behavior: ScrollBehavior = 'smooth') {
-    const scrollContainer = this.scrollContainer;
-    const scrollContainerRect = scrollContainer.getBoundingClientRect();
-    const nextSlideRect = slide.getBoundingClientRect();
+    // Since the geometry doesn't happen until rAF, we don't know if we'll be scrolling or not...
+    // It's best to assume that we will and cleanup in the else case below if we didn't need to
+    this.pendingSlideChange = true;
+    window.requestAnimationFrame(() => {
+      // This can happen if goToSlide is called before the scroll container is rendered
+      // We will have correctly set the activeSlide in goToSlide which will get picked up when initializeSlides is called.
+      if (!this.scrollContainer) {
+        return;
+      }
 
-    const nextLeft = nextSlideRect.left - scrollContainerRect.left;
-    const nextTop = nextSlideRect.top - scrollContainerRect.top;
+      const scrollContainer = this.scrollContainer;
+      const scrollContainerRect = scrollContainer.getBoundingClientRect();
+      const nextSlideRect = slide.getBoundingClientRect();
 
-    if (nextLeft || nextTop) {
-      this.pendingSlideChange = true;
-      scrollContainer.scrollTo({
-        left: nextLeft + scrollContainer.scrollLeft,
-        top: nextTop + scrollContainer.scrollTop,
-        behavior
-      });
-    }
+      const nextLeft = nextSlideRect.left - scrollContainerRect.left;
+      const nextTop = nextSlideRect.top - scrollContainerRect.top;
+
+      if (nextLeft || nextTop) {
+        // This is here just in case someone set it back to false
+        // between rAF being requested and the callback actually running
+        this.pendingSlideChange = true;
+        scrollContainer.scrollTo({
+          left: nextLeft + scrollContainer.scrollLeft,
+          top: nextTop + scrollContainer.scrollTop,
+          behavior
+        });
+      } else {
+        this.pendingSlideChange = false;
+      }
+    });
   }
 
   render() {
