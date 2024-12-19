@@ -418,6 +418,11 @@ export default class SlInput extends ShoelaceElement implements ShoelaceFormCont
     this.formControlController.updateValidity();
   }
 
+  /** Gets the Raw Form element */
+  getFormElement(){
+    return this.input
+  }
+  
   render() {
     const hasLabelSlot = this.hasSlotController.test('label');
     const hasHelpTextSlot = this.hasSlotController.test('help-text');

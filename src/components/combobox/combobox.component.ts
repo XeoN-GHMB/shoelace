@@ -5,11 +5,19 @@ import SlDropdown from '../dropdown/dropdown.component.js';
 import SlMenu from '../menu/menu.component.js';
 import SlInput from '../input/input.component.js';
 import styles from './combobox.styles.js';
+import componentStyles from '../../styles/component.styles.js';
+import formControlStyles from '../../styles/form-control.styles.js';
 import {unsafeHTML} from 'lit/directives/unsafe-html.js';
 import {scrollIntoView} from "../../internal/scroll.js";
 import ShoelaceElement from '../../internal/shoelace-element.js';
 import type {SlChangeEvent} from '../../events/sl-change.js';
 import type {SlInputEvent} from '../../events/sl-input.js';
+
+import { defaultValue } from '../../internal/default-value.js';
+import { FormControlController, validValidityState } from '../../internal/form.js';
+import { HasSlotController } from '../../internal/slot.js';
+
+import type { CSSResultGroup } from 'lit';
 
 export interface Suggestion {
   text: string;
@@ -42,7 +50,13 @@ export interface SuggestionSource {
  */
 @customElement('sl-combobox')
 export default class SlCombobox extends ShoelaceElement {
-  static styles = styles;
+  static styles: CSSResultGroup = [componentStyles, formControlStyles, styles];
+
+  private readonly formControlController = new FormControlController(this, {
+    assumeInteractionOn: ['sl-blur', 'sl-input']
+  });
+
+  private readonly hasSlotController = new HasSlotController(this, 'help-text');
 
   static dependencies = {
     'sl-input': SlInput,
@@ -60,6 +74,9 @@ export default class SlCombobox extends ShoelaceElement {
 
   @state() activeItemIndex: number = -1;
   @state() suggestions: Array<{ text: string; value: string }> = [];
+
+  /** The default value of the form control. Primarily used for resetting the form control. */
+  @defaultValue() defaultValue = '';
 
   /** The current input */
   @property({type: String}) value = '';
@@ -102,6 +119,9 @@ export default class SlCombobox extends ShoelaceElement {
   /** If true the suggestions are shown even if the Input is empty */
   @property() openEmpty: boolean = false;
 
+  /** Makes the switch a required field. */
+  @property({ type: Boolean, reflect: true }) required = false;
+
   connectedCallback() {
     super.connectedCallback();
     this.resizeObserver = new ResizeObserver(() => this.resizeMenu());
@@ -121,6 +141,7 @@ export default class SlCombobox extends ShoelaceElement {
   firstUpdated() {
     this.input.value = this.value
     this.prepareSuggestions(this.value)
+    this.formControlController.updateValidity();
   }
 
   clear() {
@@ -207,8 +228,8 @@ export default class SlCombobox extends ShoelaceElement {
 
   onItemSelected(event: CustomEvent) {
     let item = event.detail.item as SlMenuItem
-    this.input.value = item.textContent ?? '';
-    this.value = item.textContent ?? '';
+    this.input.value = item.textContent.trim() ?? '';
+    this.value = item.textContent.trim() ?? '';
 
 
     //@ts-ignore
@@ -254,6 +275,7 @@ export default class SlCombobox extends ShoelaceElement {
     const target = event.target as HTMLInputElement;
     this.value = target.value
     this.emit('sl-change');
+    this.formControlController.updateValidity();
   }
 
   async prepareSuggestions(text: string) {
@@ -282,6 +304,46 @@ export default class SlCombobox extends ShoelaceElement {
     );
   }
 
+  /** Gets the validity state object */
+  get validity() {
+    if(this.input.getFormElement()){
+      return this.input.getFormElement().validity;
+    }
+    
+    return validValidityState;
+  }
+
+  /** Gets the validation message */
+  get validationMessage() {
+    return this.input.validationMessage;
+  }
+
+  private handleInvalid(event: Event) {
+    this.formControlController.setValidity(false);
+    this.formControlController.emitInvalidEvent(event);
+  }
+
+  /** Checks for validity but does not show a validation message. Returns `true` when valid and `false` when invalid. */
+  checkValidity() {
+    return this.input.checkValidity();
+  }
+
+  /** Gets the associated form, if one exists. */
+  getForm(): HTMLFormElement | null {
+    return this.formControlController.getForm();
+  }
+
+  /** Checks for validity and shows the browser's validation message if the control is invalid. */
+  reportValidity() {
+    return this.input.reportValidity();
+  }
+
+  /** Sets a custom validation message. Pass an empty string to restore validity. */
+  setCustomValidity(message: string) {
+    this.input.setCustomValidity(message);
+    this.formControlController.updateValidity();
+  }
+
   activeDescendant(): string | null {
     if (this.activeItemIndex === -1) {
       return null;
@@ -295,6 +357,9 @@ export default class SlCombobox extends ShoelaceElement {
   }
 
   render() {
+    const hasHelpTextSlot = this.hasSlotController.test('help-text');
+    const hasHelpText = this.helpText ? true : !!hasHelpTextSlot;
+
     return html`
       <sl-dropdown
         part="base"
@@ -317,6 +382,7 @@ export default class SlCombobox extends ShoelaceElement {
           help-text=${this.helpText}
           ?clearable=${this.clearable}
           ?disabled=${this.disabled}
+          .required=${this.required}
           ?pill=${this.pill}
           ?spellcheck=${false}
           autocapitalize="off"
@@ -332,6 +398,7 @@ export default class SlCombobox extends ShoelaceElement {
           @click=${this.ignoreInputClick}
           @sl-clear=${this.clear}
           @sl-focus=${this.handleInputFocus}
+          @sl-invalid=${this.handleInvalid}
         >
           <span class="input__prefix" slot="prefix">
             <slot name="prefix"></slot>
