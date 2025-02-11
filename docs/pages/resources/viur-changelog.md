@@ -1,4 +1,7 @@
 # Changelog
+## 1.0.9
+- feat: Carousels now reset their timer in autoplay mode when they are paused.
+
 ## 1.0.7
 - feat: multi-range component can now have a suffix value 
 

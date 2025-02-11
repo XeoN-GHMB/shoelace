@@ -8,7 +8,6 @@ export class AutoplayController implements ReactiveController {
   private host: ReactiveElement;
   private timerId = 0;
   private tickCallback: () => void;
-  private activeInteractions = 0;
 
   paused = false;
   stopped = true;
@@ -22,28 +21,34 @@ export class AutoplayController implements ReactiveController {
 
   hostConnected(): void {
     this.host.addEventListener('mouseenter', this.pause);
-    this.host.addEventListener('mouseleave', this.resume);
+    // @ts-ignore
+    this.host.addEventListener('mouseleave', ()=>this.start( this.host.autoplayInterval ));
     this.host.addEventListener('focusin', this.pause);
-    this.host.addEventListener('focusout', this.resume);
+    // @ts-ignore
+    this.host.addEventListener('focusout', ()=>this.start( this.host.autoplayInterval ));
     this.host.addEventListener('touchstart', this.pause, { passive: true });
-    this.host.addEventListener('touchend', this.resume);
+    // @ts-ignore
+    this.host.addEventListener('touchend', ()=>this.start( this.host.autoplayInterval ));
   }
 
   hostDisconnected(): void {
     this.stop();
 
     this.host.removeEventListener('mouseenter', this.pause);
-    this.host.removeEventListener('mouseleave', this.resume);
+    // @ts-ignore
+    this.host.removeEventListener('mouseleave', ()=>this.start( this.host.autoplayInterval ));
     this.host.removeEventListener('focusin', this.pause);
-    this.host.removeEventListener('focusout', this.resume);
+    // @ts-ignore
+    this.host.removeEventListener('focusout', ()=>this.start( this.host.autoplayInterval ));
     this.host.removeEventListener('touchstart', this.pause);
-    this.host.removeEventListener('touchend', this.resume);
+    // @ts-ignore
+    this.host.removeEventListener('touchend', ()=>this.start( this.host.autoplayInterval ));
   }
 
   start(interval: number) {
     this.stop();
-
     this.stopped = false;
+    this.paused = false;
     this.timerId = window.setInterval(() => {
       if (!this.paused) {
         this.tickCallback();
@@ -58,16 +63,12 @@ export class AutoplayController implements ReactiveController {
   }
 
   pause = () => {
-    if (!this.activeInteractions++) {
-      this.paused = true;
-      this.host.requestUpdate();
-    }
+    this.paused = true;
+    this.host.requestUpdate();
   };
 
   resume = () => {
-    if (!--this.activeInteractions) {
-      this.paused = false;
-      this.host.requestUpdate();
-    }
+    this.paused = false;
+    this.host.requestUpdate();
   };
 }
