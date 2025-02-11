@@ -1,4 +1,6 @@
 # Changelog
+## 1.0.10
+- feat: Carousels now reset their timer while sliding.
 ## 1.0.9
 - feat: Carousels now reset their timer in autoplay mode when they are paused.
 

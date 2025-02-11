@@ -8,6 +8,8 @@ export class AutoplayController implements ReactiveController {
   private host: ReactiveElement;
   private timerId = 0;
   private tickCallback: () => void;
+  private activeInteractions = 0;
+
 
   paused = false;
   stopped = true;
@@ -21,28 +23,22 @@ export class AutoplayController implements ReactiveController {
 
   hostConnected(): void {
     this.host.addEventListener('mouseenter', this.pause);
-    // @ts-ignore
-    this.host.addEventListener('mouseleave', ()=>this.start( this.host.autoplayInterval ));
+    this.host.addEventListener('mouseleave', this.resume);
     this.host.addEventListener('focusin', this.pause);
-    // @ts-ignore
-    this.host.addEventListener('focusout', ()=>this.start( this.host.autoplayInterval ));
+    this.host.addEventListener('focusout', this.resume);
     this.host.addEventListener('touchstart', this.pause, { passive: true });
-    // @ts-ignore
-    this.host.addEventListener('touchend', ()=>this.start( this.host.autoplayInterval ));
+    this.host.addEventListener('touchend', this.resume);
   }
 
   hostDisconnected(): void {
     this.stop();
 
     this.host.removeEventListener('mouseenter', this.pause);
-    // @ts-ignore
-    this.host.removeEventListener('mouseleave', ()=>this.start( this.host.autoplayInterval ));
+    this.host.removeEventListener('mouseleave', this.resume);
     this.host.removeEventListener('focusin', this.pause);
-    // @ts-ignore
-    this.host.removeEventListener('focusout', ()=>this.start( this.host.autoplayInterval ));
+    this.host.removeEventListener('focusout', this.resume);
     this.host.removeEventListener('touchstart', this.pause);
-    // @ts-ignore
-    this.host.removeEventListener('touchend', ()=>this.start( this.host.autoplayInterval ));
+    this.host.removeEventListener('touchend', this.resume);
   }
 
   start(interval: number) {
@@ -63,12 +59,16 @@ export class AutoplayController implements ReactiveController {
   }
 
   pause = () => {
-    this.paused = true;
-    this.host.requestUpdate();
+    if (!this.activeInteractions++) {
+      this.paused = true;
+      this.host.requestUpdate();
+    }
   };
 
   resume = () => {
-    this.paused = false;
-    this.host.requestUpdate();
+    if (!--this.activeInteractions) {
+      this.paused = false;
+      this.host.requestUpdate();
+    }
   };
 }

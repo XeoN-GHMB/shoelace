@@ -477,6 +477,10 @@ export default class SlCarousel extends ShoelaceElement {
    * @param behavior - The behavior used for scrolling.
    */
   goToSlide(index: number, behavior: ScrollBehavior = 'smooth') {
+    if (this.autoplay) {
+      this.autoplayController.stop();
+    }
+
     const { slidesPerPage, loop } = this;
 
     const slides = this.getSlides();
@@ -507,6 +511,10 @@ export default class SlCarousel extends ShoelaceElement {
     const nextSlide = slidesWithClones[nextSlideIndex];
 
     this.scrollToSlide(nextSlide, prefersReducedMotion() ? 'auto' : behavior);
+
+    if (this.autoplay) {
+      this.autoplayController.start(this.autoplayInterval);
+    }
   }
 
   private scrollToSlide(slide: HTMLElement, behavior: ScrollBehavior = 'smooth') {
